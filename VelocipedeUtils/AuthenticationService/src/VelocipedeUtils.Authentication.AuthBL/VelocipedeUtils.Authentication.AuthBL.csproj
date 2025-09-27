@@ -7,9 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="VelocipedeUtils.Shared.DbConnections" Version="1.0.0-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../VelocipedeUtils.Authentication.Models/VelocipedeUtils.Authentication.Models.csproj" />
     <ProjectReference Include="../../../Shared/src/Communication/VelocipedeUtils.Shared.Communication.csproj" />
-    <ProjectReference Include="../../../Shared/src/DbConnections/VelocipedeUtils.Shared.DbConnections.csproj" />
     <ProjectReference Include="../../../Shared/src/Models/VelocipedeUtils.Shared.Models.csproj" />
   </ItemGroup>
 
