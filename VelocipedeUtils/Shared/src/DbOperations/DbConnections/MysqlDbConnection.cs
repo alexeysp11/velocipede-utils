@@ -7,7 +7,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// MySQL database connection.
     /// </summary>
-    public class MysqlDbConnection : BaseDbConnection, ICommonDbConnection
+    public class MysqlDbConnection : ICommonDbConnection
     {
         private string DataSource { get; set; }
         private string ConnectionString { get; set; }
@@ -49,7 +49,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public new string GetSqlFromDataTable(DataTable dt, string tableName)
         {
-            return base.GetSqlFromDataTable(dt, tableName);
+            return GetSqlFromDataTable(dt, tableName);
         }
 
         private DataTable GetDataTable(MySqlDataReader reader)

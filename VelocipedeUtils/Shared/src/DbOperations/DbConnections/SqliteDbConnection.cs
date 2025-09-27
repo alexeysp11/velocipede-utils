@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Class for using SQLite database
     /// </summary>
-    public class SqliteDbConnection : BaseDbConnection, ICommonDbConnection 
+    public class SqliteDbConnection : ICommonDbConnection 
     {
         private string ConnectionString { get; set; }
         private string AbsolutePathToDb { get; set; }
@@ -71,7 +71,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public new string GetSqlFromDataTable(DataTable dt, string tableName)
         {
-            return base.GetSqlFromDataTable(dt, tableName);
+            return GetSqlFromDataTable(dt, tableName);
         }
     }
 }

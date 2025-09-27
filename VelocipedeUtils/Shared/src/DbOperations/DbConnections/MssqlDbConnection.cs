@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// MS SQL database connection.
     /// </summary>
-    public class MssqlDbConnection : BaseDbConnection, ICommonDbConnection
+    public class MssqlDbConnection : ICommonDbConnection
     {
         private string DataSource { get; set; }
         private string ConnectionString { get; set; }
@@ -61,7 +61,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public new string GetSqlFromDataTable(DataTable dt, string tableName)
         {
-            return base.GetSqlFromDataTable(dt, tableName);
+            return GetSqlFromDataTable(dt, tableName);
         }
 
         private DataTable GetDataTable(SqlDataReader reader)

@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Oracle database connection.
     /// </summary>
-    public class OracleDbConnection : BaseDbConnection, ICommonDbConnection
+    public class OracleDbConnection : ICommonDbConnection
     {
         private string DataSource { get; set; }
         private string ConnectionString { get; set; }
@@ -43,7 +43,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public new string GetSqlFromDataTable(DataTable dt, string tableName)
         {
-            return base.GetSqlFromDataTable(dt, tableName);
+            return GetSqlFromDataTable(dt, tableName);
         }
     }
 }

@@ -3,11 +3,11 @@ using System.Data;
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
-    /// Base database connection.
+    /// Extension methods for <see cref="ICommonDbConnection"/>.
     /// </summary>
-    public abstract class BaseDbConnection
+    public static class ICommonDbConnectionExtensions
     {
-        public string GetSqlFromDataTable(DataTable dt, string tableName)
+        public static string GetSqlFromDataTable(this ICommonDbConnection connection, DataTable dt, string tableName)
         {
             if (dt == null)
                 throw new System.Exception("Data table could not be null");

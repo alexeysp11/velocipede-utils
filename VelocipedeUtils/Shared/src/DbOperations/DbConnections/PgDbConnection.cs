@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// PostgreSQL database connection.
     /// </summary>
-    public class PgDbConnection : BaseDbConnection, ICommonDbConnection
+    public class PgDbConnection : ICommonDbConnection
     {
         private string DataSource { get; set; }
         private string ConnectionString { get; set; }
@@ -42,7 +42,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public new string GetSqlFromDataTable(DataTable dt, string tableName)
         {
-            return base.GetSqlFromDataTable(dt, tableName);
+            return GetSqlFromDataTable(dt, tableName);
         }
 
         private DataTable GetDataTable(NpgsqlDataReader reader)
