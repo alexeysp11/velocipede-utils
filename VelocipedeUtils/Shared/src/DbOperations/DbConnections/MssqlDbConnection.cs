@@ -21,11 +21,61 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             DataSource = dataSource;
         }
 
+        public void CreateDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OpenDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DisplayTablesInDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetAllDataFromTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetColumnsOfTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetForeignKeys(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetTriggers(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetSqlDefinition(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CreateTemporaryTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ClearTemporaryTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public DataTable ExecuteSqlCommand(string sqlRequest)
         {
             DataTable table = new DataTable();
             SqlConnection connection = null;
-            try 
+            try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
                 builder.ConnectionString = string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource;
@@ -54,11 +104,6 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 if (connection != null) connection.Close();
             }
             return table;
-        }
-
-        public string GetSqlFromDataTable(DataTable dt, string tableName)
-        {
-            return GetSqlFromDataTable(dt, tableName);
         }
 
         private DataTable GetDataTable(SqlDataReader reader)

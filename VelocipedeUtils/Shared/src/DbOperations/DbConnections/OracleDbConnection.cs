@@ -21,6 +21,56 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             DataSource = dataSource;
         }
 
+        public void CreateDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OpenDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void DisplayTablesInDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetAllDataFromTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetColumnsOfTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetForeignKeys(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetTriggers(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void GetSqlDefinition(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CreateTemporaryTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ClearTemporaryTable(string tableName)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public DataTable ExecuteSqlCommand(string sqlRequest)
         {
             DataTable table = new DataTable();
