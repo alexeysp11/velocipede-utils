@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp3.1;net6.0;net8.0</TargetFrameworks>
-    <PackageId>VelocipedeUtils.Shared.DbConnections</PackageId>
+    <PackageId>VelocipedeUtils.Shared.DbOperations</PackageId>
     <Version>1.0.0-alpha</Version>
     <Authors>alexeysp11</Authors>
     <PackageDescription>The library offers operations with databases such as SQLite, PostgreSQL, MySQL, MS SQL, Oracle, making it easy to retrieve and insert data from various sources.</PackageDescription>
