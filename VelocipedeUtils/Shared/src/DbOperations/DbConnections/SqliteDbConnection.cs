@@ -12,14 +12,18 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
 
-        private string DatabaseFilePath { get; set; }
+        public string DatabaseFilePath { get; set; }
 
-        public SqliteDbConnection(string path = null)
+        public SqliteDbConnection(string connectionString = null, string path = null)
         {
-            SetPathToDb(path);
+            ConnectionString = connectionString;
+            if (!string.IsNullOrEmpty(path))
+            {
+                SetDatabaseFilePath(path);
+            }
         }
 
-        public void SetPathToDb(string path)
+        public void SetDatabaseFilePath(string path)
         {
             if (!System.IO.File.Exists(path))
                 throw new System.Exception($"Database file '{path}' does not exists");
