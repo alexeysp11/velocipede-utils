@@ -1,4 +1,5 @@
 using System.Data;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -13,13 +14,13 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         string ConnectionString { get; set; }
 
         /// <summary>
+        /// Database type.
+        /// </summary>
+        DatabaseType DatabaseType { get; }
+
+        /// <summary>
         /// Execute SQL command.
         /// </summary>
         DataTable ExecuteSqlCommand(string sqlRequest);
-        
-        /// <summary>
-        /// Gets SQL definition of the DataTable object.
-        /// </summary>
-        string GetSqlFromDataTable(DataTable dt, string tableName);
     }
 }

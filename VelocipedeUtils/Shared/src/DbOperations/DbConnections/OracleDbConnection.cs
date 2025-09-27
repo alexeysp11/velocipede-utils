@@ -1,5 +1,6 @@
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -9,8 +10,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     public class OracleDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
+        public DatabaseType DatabaseType => DatabaseType.Oracle;
+
         private string DataSource { get; set; }
-        
+
         public OracleDbConnection() { }
 
         public OracleDbConnection(string dataSource)
@@ -33,11 +36,6 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 }
             }
             return table;
-        }
-
-        public new string GetSqlFromDataTable(DataTable dt, string tableName)
-        {
-            return GetSqlFromDataTable(dt, tableName);
         }
     }
 }

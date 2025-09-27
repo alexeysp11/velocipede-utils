@@ -7,12 +7,18 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public static class ICommonDbConnectionExtensions
     {
+        /// <summary>
+        /// Set connection string.
+        /// </summary>
         public static ICommonDbConnection SetConnectionString(this ICommonDbConnection connection, string connectionString)
         {
             connection.ConnectionString = connectionString;
             return connection;
         }
 
+        /// <summary>
+        /// Gets SQL definition of the DataTable object.
+        /// </summary>
         public static string GetSqlFromDataTable(this ICommonDbConnection connection, DataTable dt, string tableName)
         {
             if (dt == null)

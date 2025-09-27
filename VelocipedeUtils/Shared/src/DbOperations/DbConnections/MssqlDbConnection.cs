@@ -1,5 +1,6 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -9,6 +10,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     public class MssqlDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
+        public DatabaseType DatabaseType => DatabaseType.MSSQL;
+
         private string DataSource { get; set; }
 
         public MssqlDbConnection() { }
@@ -53,7 +56,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return table;
         }
 
-        public new string GetSqlFromDataTable(DataTable dt, string tableName)
+        public string GetSqlFromDataTable(DataTable dt, string tableName)
         {
             return GetSqlFromDataTable(dt, tableName);
         }

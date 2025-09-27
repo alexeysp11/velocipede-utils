@@ -1,5 +1,6 @@
 using System.Data;
 using Npgsql;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -9,6 +10,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     public class PgDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
+        public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+
         private string DataSource { get; set; }
 
         public PgDbConnection() { }
@@ -32,11 +35,6 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 }
             }
             return table;
-        }
-
-        public new string GetSqlFromDataTable(DataTable dt, string tableName)
-        {
-            return GetSqlFromDataTable(dt, tableName);
         }
 
         private DataTable GetDataTable(NpgsqlDataReader reader)

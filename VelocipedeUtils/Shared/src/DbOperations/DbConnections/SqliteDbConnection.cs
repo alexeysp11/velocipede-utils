@@ -1,5 +1,6 @@
 using System.Data;
 using Microsoft.Data.Sqlite;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -9,6 +10,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     public class SqliteDbConnection : ICommonDbConnection 
     {
         public string ConnectionString { get; set; }
+        public DatabaseType DatabaseType => DatabaseType.SQLite;
+
         private string AbsolutePathToDb { get; set; }
 
         public SqliteDbConnection() : this(string.Empty)
@@ -60,11 +63,6 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 }
             }
             return table;
-        }
-
-        public new string GetSqlFromDataTable(DataTable dt, string tableName)
-        {
-            return GetSqlFromDataTable(dt, tableName);
         }
     }
 }
