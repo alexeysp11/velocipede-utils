@@ -9,20 +9,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public class MysqlDbConnection : ICommonDbConnection
     {
+        public string ConnectionString { get; set; }
         private string DataSource { get; set; }
-        private string ConnectionString { get; set; }
 
         public MysqlDbConnection() { }
 
         public MysqlDbConnection(string dataSource)
         {
             DataSource = dataSource;
-        }
-
-        public ICommonDbConnection SetConnectionString(string connectionString)
-        {
-            ConnectionString = connectionString;
-            return this;
         }
 
         public DataTable ExecuteSqlCommand(string sqlRequest)

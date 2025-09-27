@@ -8,6 +8,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     public interface ICommonDbConnection
     {
         /// <summary>
+        /// Connection string.
+        /// </summary>
+        string ConnectionString { get; set; }
+
+        /// <summary>
         /// Execute SQL command.
         /// </summary>
         DataTable ExecuteSqlCommand(string sqlRequest);
@@ -16,10 +21,5 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Gets SQL definition of the DataTable object.
         /// </summary>
         string GetSqlFromDataTable(DataTable dt, string tableName);
-
-        /// <summary>
-        /// Sets connection string.
-        /// </summary>
-        ICommonDbConnection SetConnectionString(string connectionString);
     }
 }

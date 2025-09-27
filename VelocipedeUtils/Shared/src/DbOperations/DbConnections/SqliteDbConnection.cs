@@ -8,11 +8,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public class SqliteDbConnection : ICommonDbConnection 
     {
-        private string ConnectionString { get; set; }
+        public string ConnectionString { get; set; }
         private string AbsolutePathToDb { get; set; }
 
-        public SqliteDbConnection() 
-            : this(string.Empty)
+        public SqliteDbConnection() : this(string.Empty)
         {
         }
         
@@ -26,12 +25,6 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 throw;
             }
-        }
-
-        public ICommonDbConnection SetConnectionString(string connectionString)
-        {
-            ConnectionString = connectionString;
-            return this;
         }
 
         public void SetPathToDb(string path)

@@ -8,20 +8,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public class PgDbConnection : ICommonDbConnection
     {
+        public string ConnectionString { get; set; }
         private string DataSource { get; set; }
-        private string ConnectionString { get; set; }
 
         public PgDbConnection() { }
 
         public PgDbConnection(string dataSource)
         {
             DataSource = dataSource;
-        }
-
-        public ICommonDbConnection SetConnectionString(string connectionString)
-        {
-            ConnectionString = connectionString;
-            return this;
         }
 
         public DataTable ExecuteSqlCommand(string sqlRequest)
