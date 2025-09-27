@@ -60,6 +60,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
                 DatabaseType.PostgreSQL => new PgDbConnection(connectionString),
                 DatabaseType.MSSQL => new MssqlDbConnection(connectionString),
                 DatabaseType.MySQL => new MysqlDbConnection(connectionString),
+                DatabaseType.Oracle => new OracleDbConnection(connectionString),
                 _ => throw new ArgumentException("Specified database type is not valid", nameof(databaseType))
             };
         }
