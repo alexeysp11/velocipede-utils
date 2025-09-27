@@ -1,7 +1,7 @@
 using System.Data;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
 {
     public class MssqlDbConnectionTest 
     {
@@ -22,7 +22,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections
             // Act 
             dbConnection.ExecuteSqlCommand(sqlInsert);
             DataTable table = dbConnection.ExecuteSqlCommand(sqlSelect);
-            System.Console.WriteLine(table);
+            Console.WriteLine(table);
             dbConnection.ExecuteSqlCommand(sqlDelete);
 
             // Assert 
@@ -41,7 +41,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections
             Action act = () => dbConnection.GetSqlFromDataTable(dt, tableName);
 
             // Assert 
-            System.Exception exception = Assert.Throws<System.Exception>(act);
+            Exception exception = Assert.Throws<Exception>(act);
         }
     }
 }

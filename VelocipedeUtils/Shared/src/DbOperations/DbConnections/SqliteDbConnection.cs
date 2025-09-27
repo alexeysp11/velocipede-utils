@@ -12,29 +12,19 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
 
-        private string AbsolutePathToDb { get; set; }
+        private string DatabaseFilePath { get; set; }
 
-        public SqliteDbConnection() : this(string.Empty)
+        public SqliteDbConnection(string path = null)
         {
-        }
-        
-        public SqliteDbConnection(string path)
-        {
-            try
-            {
-                SetPathToDb(path);
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
+            SetPathToDb(path);
         }
 
         public void SetPathToDb(string path)
         {
-            if (!System.IO.File.Exists(path)) throw new System.Exception($"Database file '{path}' does not exists");
-            
-            AbsolutePathToDb = path;
+            if (!System.IO.File.Exists(path))
+                throw new System.Exception($"Database file '{path}' does not exists");
+
+            DatabaseFilePath = path;
         }
 
         public void CreateDb()
@@ -94,22 +84,15 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         {
             DataTable table = new DataTable();
             var connectionStringBuilder = new SqliteConnectionStringBuilder();
-            connectionStringBuilder.DataSource = AbsolutePathToDb;
+            connectionStringBuilder.DataSource = DatabaseFilePath;
             using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
             {
-                try
+                connection.Open();
+                var selectCmd = connection.CreateCommand();
+                selectCmd.CommandText = sqlRequest;
+                using (var reader = selectCmd.ExecuteReader())
                 {
-                    connection.Open();
-                    var selectCmd = connection.CreateCommand();
-                    selectCmd.CommandText = sqlRequest;
-                    using (var reader = selectCmd.ExecuteReader())
-                    {
-                        table.Load(reader);
-                    }
-                }
-                catch (System.Exception)
-                {
-                    throw;
+                    table.Load(reader);
                 }
             }
             return table;

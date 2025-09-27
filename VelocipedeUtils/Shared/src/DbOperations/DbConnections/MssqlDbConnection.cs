@@ -12,13 +12,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
 
-        private string DataSource { get; set; }
-
         public MssqlDbConnection() { }
 
-        public MssqlDbConnection(string dataSource)
+        public MssqlDbConnection(string connectionString = null)
         {
-            DataSource = dataSource;
+            ConnectionString = connectionString;
         }
 
         public void CreateDb()
@@ -77,9 +75,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             SqlConnection connection = null;
             try
             {
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.ConnectionString = string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource;
-                using (connection = new SqlConnection(builder.ConnectionString))
+                using (connection = new SqlConnection(ConnectionString))
                 {
                     connection.Open();
                     using (SqlCommand command = new SqlCommand(sqlRequest, connection))

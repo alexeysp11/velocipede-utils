@@ -13,13 +13,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MySQL;
 
-        private string DataSource { get; set; }
-
         public MysqlDbConnection() { }
 
-        public MysqlDbConnection(string dataSource)
+        public MysqlDbConnection(string connectionString = null)
         {
-            DataSource = dataSource;
+            ConnectionString = connectionString;
         }
 
         public void CreateDb()
@@ -78,7 +76,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             MySqlConnection connection = null;
             try
             {
-                connection = new MySqlConnection(string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource);
+                connection = new MySqlConnection(ConnectionString);
                 connection.Open();
                 var reader = new MySqlCommand(sqlRequest, connection).ExecuteReader();
                 table = GetDataTable(reader);

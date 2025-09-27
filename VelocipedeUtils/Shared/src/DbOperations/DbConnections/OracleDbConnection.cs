@@ -12,13 +12,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.Oracle;
 
-        private string DataSource { get; set; }
-
-        public OracleDbConnection() { }
-
-        public OracleDbConnection(string dataSource)
+        public OracleDbConnection(string connectionString = null)
         {
-            DataSource = dataSource;
+            ConnectionString = connectionString;
         }
 
         public void CreateDb()
@@ -74,7 +70,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public DataTable ExecuteSqlCommand(string sqlRequest)
         {
             DataTable table = new DataTable();
-            using (OracleConnection con = new OracleConnection(string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource))
+            using (OracleConnection con = new OracleConnection(ConnectionString))
             {
                 using (OracleCommand cmd = new OracleCommand(sqlRequest, con))
                 {

@@ -12,13 +12,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
 
-        private string DataSource { get; set; }
-
-        public PgDbConnection() { }
-
-        public PgDbConnection(string dataSource)
+        public PgDbConnection(string connectionString = null)
         {
-            DataSource = dataSource;
+            ConnectionString = connectionString;
         }
 
         public void CreateDb()
@@ -74,7 +70,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public DataTable ExecuteSqlCommand(string sqlRequest)
         {
             DataTable table = new DataTable();
-            using (var conn = new NpgsqlConnection(string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource))
+            using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 conn.Open();
                 using (var command = new NpgsqlCommand(sqlRequest, conn))
