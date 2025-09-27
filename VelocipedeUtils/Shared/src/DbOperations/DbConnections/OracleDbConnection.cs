@@ -1,7 +1,7 @@
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 
-namespace VelocipedeUtils.Shared.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
     /// Oracle database connection.
@@ -9,7 +9,7 @@ namespace VelocipedeUtils.Shared.DbConnections
     public class OracleDbConnection : BaseDbConnection, ICommonDbConnection
     {
         private string DataSource { get; set; }
-        private string ConnString { get; set; }
+        private string ConnectionString { get; set; }
         
         public OracleDbConnection() { }
 
@@ -18,16 +18,16 @@ namespace VelocipedeUtils.Shared.DbConnections
             DataSource = dataSource;
         }
 
-        public ICommonDbConnection SetConnString(string connString)
+        public ICommonDbConnection SetConnectionString(string connectionString)
         {
-            ConnString = connString;
+            ConnectionString = connectionString;
             return this;
         }
 
         public DataTable ExecuteSqlCommand(string sqlRequest)
         {
             DataTable table = new DataTable();
-            using (OracleConnection con = new OracleConnection(string.IsNullOrEmpty(DataSource) ? ConnString : DataSource))
+            using (OracleConnection con = new OracleConnection(string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource))
             {
                 using (OracleCommand cmd = new OracleCommand(sqlRequest, con))
                 {

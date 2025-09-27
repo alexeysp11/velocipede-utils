@@ -1,7 +1,7 @@
 using System.Data;
 using Microsoft.Data.SqlClient;
 
-namespace VelocipedeUtils.Shared.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
     /// MS SQL database connection.
@@ -9,7 +9,7 @@ namespace VelocipedeUtils.Shared.DbConnections
     public class MssqlDbConnection : BaseDbConnection, ICommonDbConnection
     {
         private string DataSource { get; set; }
-        private string ConnString { get; set; }
+        private string ConnectionString { get; set; }
 
         public MssqlDbConnection() { }
 
@@ -18,9 +18,9 @@ namespace VelocipedeUtils.Shared.DbConnections
             DataSource = dataSource;
         }
 
-        public ICommonDbConnection SetConnString(string connString)
+        public ICommonDbConnection SetConnectionString(string connectionString)
         {
-            ConnString = connString;
+            ConnectionString = connectionString;
             return this;
         }
 
@@ -31,7 +31,7 @@ namespace VelocipedeUtils.Shared.DbConnections
             try 
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder.ConnectionString = string.IsNullOrEmpty(DataSource) ? ConnString : DataSource;
+                builder.ConnectionString = string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource;
                 using (connection = new SqlConnection(builder.ConnectionString))
                 {
                     connection.Open();

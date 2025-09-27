@@ -1,11 +1,11 @@
 using System.Data;
 
-namespace VelocipedeUtils.Shared.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
     /// Base database connection.
     /// </summary>
-    public abstract class BaseDbConnection 
+    public abstract class BaseDbConnection
     {
         public string GetSqlFromDataTable(DataTable dt, string tableName)
         {

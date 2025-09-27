@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace VelocipedeUtils.Shared.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
     /// Interface for database connections.
@@ -20,6 +20,6 @@ namespace VelocipedeUtils.Shared.DbConnections
         /// <summary>
         /// Sets connection string.
         /// </summary>
-        ICommonDbConnection SetConnString(string connString);
+        ICommonDbConnection SetConnectionString(string connectionString);
     }
 }

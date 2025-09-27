@@ -1,41 +1,48 @@
 using System.Data;
-using Npgsql;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 
-namespace VelocipedeUtils.Shared.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
-    /// PostgreSQL database connection.
+    /// MySQL database connection.
     /// </summary>
-    public class PgDbConnection : BaseDbConnection, ICommonDbConnection
+    public class MysqlDbConnection : BaseDbConnection, ICommonDbConnection
     {
         private string DataSource { get; set; }
-        private string ConnString { get; set; }
+        private string ConnectionString { get; set; }
 
-        public PgDbConnection() { }
+        public MysqlDbConnection() { }
 
-        public PgDbConnection(string dataSource)
+        public MysqlDbConnection(string dataSource)
         {
             DataSource = dataSource;
         }
 
-        public ICommonDbConnection SetConnString(string connString)
+        public ICommonDbConnection SetConnectionString(string connectionString)
         {
-            ConnString = connString;
+            ConnectionString = connectionString;
             return this;
         }
 
         public DataTable ExecuteSqlCommand(string sqlRequest)
         {
             DataTable table = new DataTable();
-            using (var conn = new NpgsqlConnection(string.IsNullOrEmpty(DataSource) ? ConnString : DataSource))
+            MySqlConnection connection = null;
+            try
             {
-                conn.Open();
-                using (var command = new NpgsqlCommand(sqlRequest, conn))
-                {
-                    var reader = command.ExecuteReader();
-                    table = GetDataTable(reader);
-                    reader.Close();
-                }
+                connection = new MySqlConnection(string.IsNullOrEmpty(DataSource) ? ConnectionString : DataSource);
+                connection.Open();
+                var reader = new MySqlCommand(sqlRequest, connection).ExecuteReader();
+                table = GetDataTable(reader);
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (connection != null) connection.Close();
             }
             return table;
         }
@@ -45,7 +52,7 @@ namespace VelocipedeUtils.Shared.DbConnections
             return base.GetSqlFromDataTable(dt, tableName);
         }
 
-        private DataTable GetDataTable(NpgsqlDataReader reader)
+        private DataTable GetDataTable(MySqlDataReader reader)
         {
             DataTable table = new DataTable();
             if (reader.FieldCount == 0) return table;

@@ -1,14 +1,14 @@
 using System.Data;
 using Microsoft.Data.Sqlite;
 
-namespace VelocipedeUtils.Shared.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
     /// Class for using SQLite database
     /// </summary>
     public class SqliteDbConnection : BaseDbConnection, ICommonDbConnection 
     {
-        private string ConnString { get; set; }
+        private string ConnectionString { get; set; }
         private string AbsolutePathToDb { get; set; }
 
         public SqliteDbConnection() 
@@ -28,9 +28,9 @@ namespace VelocipedeUtils.Shared.DbConnections
             }
         }
 
-        public ICommonDbConnection SetConnString(string connString)
+        public ICommonDbConnection SetConnectionString(string connectionString)
         {
-            ConnString = connString;
+            ConnectionString = connectionString;
             return this;
         }
 
@@ -38,7 +38,7 @@ namespace VelocipedeUtils.Shared.DbConnections
         {
             if (!System.IO.File.Exists(path)) throw new System.Exception($"Database file '{path}' does not exists");
             
-            this.AbsolutePathToDb = path;
+            AbsolutePathToDb = path;
         }
 
         /// <summary>

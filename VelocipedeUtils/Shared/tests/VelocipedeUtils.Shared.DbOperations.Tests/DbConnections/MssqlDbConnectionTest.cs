@@ -1,9 +1,7 @@
-using System;
 using System.Data;
-using Xunit;
-using VelocipedeUtils.Shared.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 
-namespace Cims.Tests.VelocipedeUtils.Shared.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections
 {
     public class MssqlDbConnectionTest 
     {
