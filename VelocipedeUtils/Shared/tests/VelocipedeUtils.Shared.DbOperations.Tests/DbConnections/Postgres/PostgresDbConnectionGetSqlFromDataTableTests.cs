@@ -2,9 +2,9 @@
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
 {
-    public sealed class SqliteDbConnectionGetSqlFromDataTableTests : BaseDbConnectionGetSqlFromDataTableTests
+    public sealed class PostgresDbConnectionGetSqlFromDataTableTests : BaseDbConnectionGetSqlFromDataTableTests
     {
-        public SqliteDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.PostgreSQL)
+        public PostgresDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.PostgreSQL)
         {
         }
     }

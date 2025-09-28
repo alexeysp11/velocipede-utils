@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using Oracle.ManagedDataAccess.Client;
 using VelocipedeUtils.Shared.DbOperations.Enums;
@@ -19,6 +20,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public bool DbExists()
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException($"Connection string should not be null or empty: {ConnectionString}");
+
             throw new System.NotImplementedException();
         }
 

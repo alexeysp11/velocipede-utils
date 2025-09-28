@@ -2,9 +2,9 @@
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Oracle
 {
-    public sealed class PostgresDbConnectionGetSqlFromDataTableTests : BaseDbConnectionGetSqlFromDataTableTests
+    public sealed class OracleDbConnectionGetSqlFromDataTableTests : BaseDbConnectionGetSqlFromDataTableTests
     {
-        public PostgresDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.Oracle)
+        public OracleDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.Oracle)
         {
         }
     }

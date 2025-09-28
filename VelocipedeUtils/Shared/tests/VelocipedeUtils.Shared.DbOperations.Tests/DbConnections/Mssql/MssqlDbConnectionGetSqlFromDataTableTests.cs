@@ -2,9 +2,9 @@
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
 {
-    public sealed class MysqlDbConnectionGetSqlFromDataTableTests : BaseDbConnectionGetSqlFromDataTableTests
+    public sealed class MssqlDbConnectionGetSqlFromDataTableTests : BaseDbConnectionGetSqlFromDataTableTests
     {
-        public MysqlDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.MSSQL)
+        public MssqlDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.MSSQL)
         {
         }
     }
