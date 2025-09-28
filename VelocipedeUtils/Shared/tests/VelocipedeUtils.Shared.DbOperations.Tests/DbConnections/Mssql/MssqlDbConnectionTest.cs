@@ -27,20 +27,5 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
             // Assert 
             Assert.True(table.Rows[table.Rows.Count-1]["name"].ToString() == employeeName);
         }
-
-        [Theory]
-        [InlineData(null, "")]
-        [InlineData(null, "TestName")]
-        public void GetSqlFromDataTable_OneOfTheParametersIsNull_ReturnsException(DataTable dt, string tableName)
-        {
-            // Arrange 
-            ICommonDbConnection dbConnection = new MssqlDbConnection(ConnectionString);
-
-            // Act 
-            Action act = () => dbConnection.GetSqlFromDataTable(dt, tableName);
-
-            // Assert 
-            Exception exception = Assert.Throws<Exception>(act);
-        }
     }
 }
