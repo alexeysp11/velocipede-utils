@@ -73,5 +73,18 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
             // Assert.
             resultConnectionString.Should().Be(expectedConnectionString);
         }
+
+        [Theory]
+        [InlineData("mydatabase.db")]
+        [InlineData("relative-path/mydatabase.db")]
+        public void IsDatabaseFilePathValid_ResultEqualsToFileExists(string path)
+        {
+            // Arrange & Act.
+            bool result = SqliteDbConnection.IsDatabaseFilePathValid(path);
+            bool expected = File.Exists(path);
+
+            // Assert.
+            result.Should().Be(expected);
+        }
     }
 }
