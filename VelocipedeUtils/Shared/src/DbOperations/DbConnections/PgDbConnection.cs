@@ -8,10 +8,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// PostgreSQL database connection.
     /// </summary>
-    public class PgDbConnection : ICommonDbConnection
+    public sealed class PgDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+        public bool IsConnected { get; private set; }
 
         public PgDbConnection(string connectionString = null)
         {
@@ -35,6 +36,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         public void OpenDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CloseDb()
         {
             throw new System.NotImplementedException();
         }

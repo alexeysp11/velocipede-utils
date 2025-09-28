@@ -8,10 +8,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Oracle database connection.
     /// </summary>
-    public class OracleDbConnection : ICommonDbConnection
+    public sealed class OracleDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.Oracle;
+        public bool IsConnected { get; private set; }
 
         public OracleDbConnection(string connectionString = null)
         {
@@ -35,6 +36,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         public void OpenDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CloseDb()
         {
             throw new System.NotImplementedException();
         }

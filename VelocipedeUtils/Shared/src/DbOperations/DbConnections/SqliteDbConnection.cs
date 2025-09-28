@@ -9,10 +9,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Class for using SQLite database
     /// </summary>
-    public class SqliteDbConnection : ICommonDbConnection
+    public sealed class SqliteDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
+        public bool IsConnected { get; private set; }
 
         /// <summary>
         /// Database file path.
@@ -41,6 +42,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         public void OpenDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CloseDb()
         {
             throw new System.NotImplementedException();
         }

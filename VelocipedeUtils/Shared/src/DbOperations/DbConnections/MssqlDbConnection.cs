@@ -8,10 +8,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// MS SQL database connection.
     /// </summary>
-    public class MssqlDbConnection : ICommonDbConnection
+    public sealed class MssqlDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
+        public bool IsConnected { get; private set; }
 
         public MssqlDbConnection(string connectionString = null)
         {
@@ -35,6 +36,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         public void OpenDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CloseDb()
         {
             throw new System.NotImplementedException();
         }

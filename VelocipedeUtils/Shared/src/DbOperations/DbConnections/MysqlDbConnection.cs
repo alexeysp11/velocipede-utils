@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using MySql.Data;
 using MySql.Data.MySqlClient;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
@@ -9,10 +8,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// MySQL database connection.
     /// </summary>
-    public class MysqlDbConnection : ICommonDbConnection
+    public sealed class MysqlDbConnection : ICommonDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MySQL;
+        public bool IsConnected { get; private set; }
 
         public MysqlDbConnection(string connectionString = null)
         {
@@ -36,6 +36,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         public void OpenDb()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void CloseDb()
         {
             throw new System.NotImplementedException();
         }

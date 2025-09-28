@@ -19,6 +19,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         DatabaseType DatabaseType { get; }
 
         /// <summary>
+        /// Whether the instance is connected to the specified database.
+        /// </summary>
+        bool IsConnected { get; }
+
+        /// <summary>
         /// Whether database specified in the connection string exists.
         /// </summary>
         bool DbExists();
@@ -29,9 +34,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         void CreateDb();
 
         /// <summary>
-        /// Open the specified database.
+        /// Connect to the specified database.
         /// </summary>
         void OpenDb();
+
+        /// <summary>
+        /// Disconnect from the specified database.
+        /// </summary>
+        void CloseDb();
 
         /// <summary>
         /// Display tables in the database.
