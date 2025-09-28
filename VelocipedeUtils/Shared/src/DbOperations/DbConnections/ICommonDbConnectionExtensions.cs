@@ -27,6 +27,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 throw new ArgumentNullException(nameof(dt), "Data table could not be null");
             if (string.IsNullOrEmpty(tableName))
                 throw new ArgumentNullException(nameof(tableName), "Table name is not assigned");
+            if (dt.Columns.Count == 0)
+                throw new ArgumentException("Data table could not be empty");
 
             var sbSqlRequest = new StringBuilder();
             var sbSqlInsert = new StringBuilder();
@@ -36,8 +38,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             sbSqlInsert.Append("INSERT INTO " + tableName + " (");
             foreach (DataColumn column in dt.Columns)
             {
-                sbSqlRequest.Append("\n" + column.ColumnName + " TEXT" + (i != dt.Columns.Count - 1 ? "," : ");\n"));
-                sbSqlInsert.Append(column.ColumnName + (i != dt.Columns.Count - 1 ? "," : ")\nVALUES ("));
+                sbSqlRequest.Append(column.ColumnName + " TEXT" + (i != dt.Columns.Count - 1 ? "," : ");\r\n"));
+                sbSqlInsert.Append(column.ColumnName + (i != dt.Columns.Count - 1 ? "," : ") VALUES ("));
                 i += 1;
             }
             foreach (DataRow row in dt.Rows)
@@ -46,7 +48,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 sbSqlRequest.Append(sbSqlInsert.ToString());
                 foreach(DataColumn column in dt.Columns)
                 {
-                    sbSqlRequest.Append("'" + row[column].ToString() + "'" + (i != dt.Columns.Count - 1 ? "," : ");\n"));
+                    sbSqlRequest.Append("'" + row[column].ToString() + "'" + (i != dt.Columns.Count - 1 ? "," : ");\r\n"));
                     i += 1;
                 }
             }
