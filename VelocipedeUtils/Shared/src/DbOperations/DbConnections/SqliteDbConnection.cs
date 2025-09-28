@@ -110,7 +110,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get connection string by database file path.
         /// </summary>
-        public static string GetConnectionStringByPath(string path)
+        public static string GetConnectionString(string path)
         {
             var connectionStringBuilder = new SqliteConnectionStringBuilder();
             connectionStringBuilder.DataSource = path;
