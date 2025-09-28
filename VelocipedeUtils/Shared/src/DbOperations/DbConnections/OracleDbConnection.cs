@@ -28,6 +28,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public void CreateDb()
         {
+            if (DbExists())
+                throw new InvalidOperationException($"Database already exists");
+
             throw new System.NotImplementedException();
         }
 
