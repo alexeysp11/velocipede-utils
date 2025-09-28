@@ -19,6 +19,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         DatabaseType DatabaseType { get; }
 
         /// <summary>
+        /// Whether database specified in the connection string exists.
+        /// </summary>
+        bool DbExists();
+
+        /// <summary>
         /// Create database.
         /// </summary>
         void CreateDb();

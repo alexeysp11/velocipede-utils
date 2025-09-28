@@ -17,6 +17,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             ConnectionString = connectionString;
         }
 
+        public bool DbExists()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public void CreateDb()
         {
             throw new System.NotImplementedException();

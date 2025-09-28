@@ -1,3 +1,4 @@
+using System;
 using System.Data;
 using System.IO;
 using Microsoft.Data.Sqlite;
@@ -23,9 +24,20 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             ConnectionString = connectionString;
         }
 
+        public bool DbExists()
+        {
+            if (string.IsNullOrEmpty(DatabaseFilePath))
+                throw new InvalidOperationException($"Database file path is not specified in connection string: {ConnectionString}");
+
+            return File.Exists(DatabaseFilePath);
+        }
+
         public void CreateDb()
         {
-            throw new System.NotImplementedException();
+            if (DbExists())
+                throw new InvalidOperationException($"Database file already exists");
+
+            File.WriteAllText(DatabaseFilePath, string.Empty);
         }
 
         public void OpenDb()

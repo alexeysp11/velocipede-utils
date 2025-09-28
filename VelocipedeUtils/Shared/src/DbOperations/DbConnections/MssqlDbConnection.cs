@@ -12,11 +12,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
 
-        public MssqlDbConnection() { }
-
         public MssqlDbConnection(string connectionString = null)
         {
             ConnectionString = connectionString;
+        }
+
+        public bool DbExists()
+        {
+            throw new System.NotImplementedException();
         }
 
         public void CreateDb()

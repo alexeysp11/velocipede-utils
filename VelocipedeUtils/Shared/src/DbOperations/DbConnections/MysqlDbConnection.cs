@@ -13,11 +13,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MySQL;
 
-        public MysqlDbConnection() { }
-
         public MysqlDbConnection(string connectionString = null)
         {
             ConnectionString = connectionString;
+        }
+
+        public bool DbExists()
+        {
+            throw new System.NotImplementedException();
         }
 
         public void CreateDb()
