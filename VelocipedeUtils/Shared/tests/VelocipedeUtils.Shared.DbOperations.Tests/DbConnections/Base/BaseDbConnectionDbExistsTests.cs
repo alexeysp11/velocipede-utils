@@ -4,15 +4,13 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
 {
-    public abstract class BaseDbConnectionCreatingTests
+    public abstract class BaseDbConnectionDbExistsTests
     {
         private readonly DatabaseType _databaseType;
-        protected string _connectionString;
 
-        protected BaseDbConnectionCreatingTests(DatabaseType databaseType)
+        protected BaseDbConnectionDbExistsTests(DatabaseType databaseType)
         {
             _databaseType = databaseType;
-            _connectionString = "";
         }
 
         [Theory]
