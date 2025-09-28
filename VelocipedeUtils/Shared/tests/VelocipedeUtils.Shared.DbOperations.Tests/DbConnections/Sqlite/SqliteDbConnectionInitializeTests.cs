@@ -38,6 +38,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
         [InlineData("Data Source='mydatabase.db';", "mydatabase.db")]
         [InlineData("Data Source='mydatabase.db';Mode=ReadWriteCreate;Foreign Keys=True;", "mydatabase.db")]
         [InlineData("Data Source='mydatabase.db';Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;", "mydatabase.db")]
+        [InlineData("Data Source=relative-path/mydatabase.db;", "relative-path/mydatabase.db")]
         [InlineData("Data Source='relative-path/mydatabase.db';", "relative-path/mydatabase.db")]
         [InlineData("Data Source='relative-path/mydatabase.db';Mode=ReadWriteCreate;Foreign Keys=True;", "relative-path/mydatabase.db")]
         [InlineData("Data Source='relative-path/mydatabase.db';Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;", "relative-path/mydatabase.db")]
@@ -58,6 +59,19 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
             // Assert.
             staticPath.Should().Be(expectedPath);
             staticPath.Should().Be(instancePath);
+        }
+
+
+        [Theory]
+        [InlineData("mydatabase.db", "Data Source=mydatabase.db")]
+        [InlineData("relative-path/mydatabase.db", "Data Source=relative-path/mydatabase.db")]
+        public void GetConnectionString_StaticGetter_ConnectionStringEqualsToExpected(string path, string expectedConnectionString)
+        {
+            // Arrange & Act.
+            string resultConnectionString = SqliteDbConnection.GetConnectionString(path);
+
+            // Assert.
+            resultConnectionString.Should().Be(expectedConnectionString);
         }
     }
 }
