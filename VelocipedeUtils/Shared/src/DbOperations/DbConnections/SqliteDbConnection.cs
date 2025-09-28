@@ -29,60 +29,61 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return File.Exists(DatabaseName);
         }
 
-        public void CreateDb()
+        public ICommonDbConnection CreateDb()
         {
             if (DbExists())
                 throw new InvalidOperationException($"Database file already exists");
 
             File.Create(DatabaseName);
+            return this;
         }
 
-        public void OpenDb()
+        public ICommonDbConnection OpenDb()
         {
             throw new System.NotImplementedException();
         }
 
-        public void CloseDb()
+        public ICommonDbConnection CloseDb()
         {
             throw new System.NotImplementedException();
         }
 
-        public void DisplayTablesInDb()
+        public ICommonDbConnection GetTablesInDb()
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetAllDataFromTable(string tableName)
+        public ICommonDbConnection GetAllDataFromTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetColumnsOfTable(string tableName)
+        public ICommonDbConnection GetColumnsOfTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetForeignKeys(string tableName)
+        public ICommonDbConnection GetForeignKeys(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetTriggers(string tableName)
+        public ICommonDbConnection GetTriggers(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetSqlDefinition(string tableName)
+        public ICommonDbConnection GetSqlDefinition(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void CreateTemporaryTable(string tableName)
+        public ICommonDbConnection CreateTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void ClearTemporaryTable(string tableName)
+        public ICommonDbConnection ClearTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
@@ -90,9 +91,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Executes SQL string and returns DataTable
         /// </summary>
-        public DataTable ExecuteSqlCommand(string sqlRequest)
+        public ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            DataTable table = new DataTable();
+            dtResult = new DataTable();
             using (var connection = new SqliteConnection(ConnectionString))
             {
                 connection.Open();
@@ -100,10 +101,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 selectCmd.CommandText = sqlRequest;
                 using (var reader = selectCmd.ExecuteReader())
                 {
-                    table.Load(reader);
+                    dtResult.Load(reader);
                 }
             }
-            return table;
+            return this;
         }
 
         /// <summary>

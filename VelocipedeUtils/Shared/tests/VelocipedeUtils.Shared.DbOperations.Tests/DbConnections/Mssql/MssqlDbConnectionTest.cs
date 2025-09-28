@@ -19,13 +19,14 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
             ICommonDbConnection dbConnection = new MssqlDbConnection(ConnectionString);
 
             // Act 
-            dbConnection.ExecuteSqlCommand(sqlInsert);
-            DataTable table = dbConnection.ExecuteSqlCommand(sqlSelect);
-            Console.WriteLine(table);
-            dbConnection.ExecuteSqlCommand(sqlDelete);
+            dbConnection
+                .ExecuteSqlCommand(sqlInsert)
+                .ExecuteSqlCommand(sqlSelect, out DataTable dtSelectResult)
+                .ExecuteSqlCommand(sqlDelete);
+            Console.WriteLine(dtSelectResult);
 
             // Assert 
-            Assert.True(table.Rows[table.Rows.Count-1]["name"].ToString() == employeeName);
+            Assert.True(dtSelectResult.Rows[dtSelectResult.Rows.Count-1]["name"].ToString() == employeeName);
         }
     }
 }

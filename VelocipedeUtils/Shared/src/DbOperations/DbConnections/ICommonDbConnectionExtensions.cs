@@ -19,6 +19,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
+        /// Execute SQL command without return.
+        /// </summary>
+        public static ICommonDbConnection ExecuteSqlCommand(this ICommonDbConnection connection, string sql)
+        {
+            return connection.ExecuteSqlCommand(sql, out _);
+        }
+
+        /// <summary>
         /// Gets SQL definition of the DataTable object.
         /// </summary>
         public static string GetSqlFromDataTable(this ICommonDbConnection connection, DataTable dt, string tableName)

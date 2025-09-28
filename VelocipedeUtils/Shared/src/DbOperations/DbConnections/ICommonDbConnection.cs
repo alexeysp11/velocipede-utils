@@ -36,68 +36,68 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Create database.
         /// </summary>
-        void CreateDb();
+        ICommonDbConnection CreateDb();
 
         /// <summary>
         /// Connect to the specified database.
         /// </summary>
-        void OpenDb();
+        ICommonDbConnection OpenDb();
 
         /// <summary>
         /// Disconnect from the specified database.
         /// </summary>
-        void CloseDb();
+        ICommonDbConnection CloseDb();
 
         /// <summary>
-        /// Display tables in the database.
+        /// Get tables in the current database.
         /// </summary>
-        void DisplayTablesInDb();
+        ICommonDbConnection GetTablesInDb();
 
         /// <summary>
         /// Get all data from the table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        void GetAllDataFromTable(string tableName);
+        ICommonDbConnection GetAllDataFromTable(string tableName);
 
         /// <summary>
         /// Get columns of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        void GetColumnsOfTable(string tableName);
+        ICommonDbConnection GetColumnsOfTable(string tableName);
 
         /// <summary>
         /// Get foreign keys of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        void GetForeignKeys(string tableName);
+        ICommonDbConnection GetForeignKeys(string tableName);
 
         /// <summary>
         /// Get triggers of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        void GetTriggers(string tableName);
+        ICommonDbConnection GetTriggers(string tableName);
 
         /// <summary>
         /// Get SQL definition of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        void GetSqlDefinition(string tableName);
+        ICommonDbConnection GetSqlDefinition(string tableName);
 
         /// <summary>
         /// Create temporary table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        void CreateTemporaryTable(string tableName);
+        ICommonDbConnection CreateTemporaryTable(string tableName);
 
         /// <summary>
         /// Clear temporary table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        void ClearTemporaryTable(string tableName);
+        ICommonDbConnection ClearTemporaryTable(string tableName);
 
         /// <summary>
         /// Execute SQL command.
         /// </summary>
-        DataTable ExecuteSqlCommand(string sqlRequest);
+        ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
     }
 }

@@ -28,7 +28,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             throw new System.NotImplementedException();
         }
 
-        public void CreateDb()
+        public ICommonDbConnection CreateDb()
         {
             if (DbExists())
                 throw new InvalidOperationException($"Database already exists");
@@ -36,59 +36,59 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             throw new System.NotImplementedException();
         }
 
-        public void OpenDb()
+        public ICommonDbConnection OpenDb()
         {
             throw new System.NotImplementedException();
         }
 
-        public void CloseDb()
+        public ICommonDbConnection CloseDb()
         {
             throw new System.NotImplementedException();
         }
 
-        public void DisplayTablesInDb()
+        public ICommonDbConnection GetTablesInDb()
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetAllDataFromTable(string tableName)
+        public ICommonDbConnection GetAllDataFromTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetColumnsOfTable(string tableName)
+        public ICommonDbConnection GetColumnsOfTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetForeignKeys(string tableName)
+        public ICommonDbConnection GetForeignKeys(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetTriggers(string tableName)
+        public ICommonDbConnection GetTriggers(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void GetSqlDefinition(string tableName)
+        public ICommonDbConnection GetSqlDefinition(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void CreateTemporaryTable(string tableName)
+        public ICommonDbConnection CreateTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public void ClearTemporaryTable(string tableName)
+        public ICommonDbConnection ClearTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public DataTable ExecuteSqlCommand(string sqlRequest)
+        public ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            DataTable table = new DataTable();
+            dtResult = new DataTable();
             SqlConnection connection = null;
             try
             {
@@ -99,24 +99,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                     {
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
-                            table = GetDataTable(reader);
+                            dtResult = GetDataTable(reader);
                         }
                     }
                 }
             }
-            catch (SqlException)
-            {
-                throw;
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
             finally
             {
-                if (connection != null) connection.Close();
+                if (connection != null)
+                    connection.Close();
             }
-            return table;
+            return this;
         }
 
         private DataTable GetDataTable(SqlDataReader reader)
