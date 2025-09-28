@@ -46,14 +46,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
         {
             // Arrange.
             ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(DatabaseType.SQLite, connectionString);
-            if (dbConnection == null || dbConnection.DatabaseType != DatabaseType.SQLite)
-            {
-                throw new InvalidOperationException("Incorrect type of the created database connection: SQLite expected");
-            }
-            SqliteDbConnection sqliteDbConnection = (SqliteDbConnection)dbConnection;
 
             // Act.
-            string instancePath = sqliteDbConnection.DatabaseFilePath;
+            string instancePath = dbConnection.DatabaseName;
             string staticPath = SqliteDbConnection.GetDatabaseFilePath(connectionString);
 
             // Assert.

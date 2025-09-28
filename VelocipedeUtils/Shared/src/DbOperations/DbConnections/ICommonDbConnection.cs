@@ -19,6 +19,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         DatabaseType DatabaseType { get; }
 
         /// <summary>
+        /// Database name.
+        /// </summary>
+        string DatabaseName { get; }
+
+        /// <summary>
         /// Whether the instance is connected to the specified database.
         /// </summary>
         bool IsConnected { get; }

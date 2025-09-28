@@ -12,6 +12,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
+        public string DatabaseName { get; }
         public bool IsConnected { get; private set; }
 
         public MssqlDbConnection(string connectionString = null)

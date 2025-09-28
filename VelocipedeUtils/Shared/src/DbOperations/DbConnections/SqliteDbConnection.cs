@@ -13,12 +13,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
+        public string DatabaseName => GetDatabaseFilePath(ConnectionString);
         public bool IsConnected { get; private set; }
-
-        /// <summary>
-        /// Database file path.
-        /// </summary>
-        public string DatabaseFilePath => GetDatabaseFilePath(ConnectionString);
 
         public SqliteDbConnection(string connectionString = null)
         {
@@ -27,10 +23,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public bool DbExists()
         {
-            if (string.IsNullOrEmpty(DatabaseFilePath))
+            if (string.IsNullOrEmpty(DatabaseName))
                 throw new InvalidOperationException($"Database file path is not specified in connection string: {ConnectionString}");
 
-            return File.Exists(DatabaseFilePath);
+            return File.Exists(DatabaseName);
         }
 
         public void CreateDb()
@@ -38,7 +34,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (DbExists())
                 throw new InvalidOperationException($"Database file already exists");
 
-            File.Create(DatabaseFilePath);
+            File.Create(DatabaseName);
         }
 
         public void OpenDb()

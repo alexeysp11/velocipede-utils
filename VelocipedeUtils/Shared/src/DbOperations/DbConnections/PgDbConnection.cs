@@ -12,6 +12,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+        public string DatabaseName { get; }
         public bool IsConnected { get; private set; }
 
         public PgDbConnection(string connectionString = null)
