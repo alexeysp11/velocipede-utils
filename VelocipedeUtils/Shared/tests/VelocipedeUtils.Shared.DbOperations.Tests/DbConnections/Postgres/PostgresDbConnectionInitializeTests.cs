@@ -3,9 +3,9 @@ using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
 {
-    public sealed class PostgresInitializeTests : BaseDbConnectionInitializeTests
+    public sealed class PostgresDbConnectionInitializeTests : BaseDbConnectionInitializeTests
     {
-        public PostgresInitializeTests() : base(DatabaseType.PostgreSQL)
+        public PostgresDbConnectionInitializeTests() : base(DatabaseType.PostgreSQL)
         {
             _connectionString = "Host=localhost;Port=5432;Username=myuser;Password=mypassword;Database=mydatabase;";
         }

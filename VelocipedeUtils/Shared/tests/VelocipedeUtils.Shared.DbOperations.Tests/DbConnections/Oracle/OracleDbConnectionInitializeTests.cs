@@ -3,9 +3,9 @@ using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Oracle
 {
-    public sealed class OracleInitializeTests : BaseDbConnectionInitializeTests
+    public sealed class OracleDbConnectionInitializeTests : BaseDbConnectionInitializeTests
     {
-        public OracleInitializeTests() : base(DatabaseType.Oracle)
+        public OracleDbConnectionInitializeTests() : base(DatabaseType.Oracle)
         {
             _connectionString = "Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=1521))(CONNECT_DATA=(SERVICE_NAME=MyService)));User ID=myusername;Password=mypassword;";
         }

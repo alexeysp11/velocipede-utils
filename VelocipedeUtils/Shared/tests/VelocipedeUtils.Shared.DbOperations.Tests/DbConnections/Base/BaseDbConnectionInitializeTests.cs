@@ -9,7 +9,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         private readonly DatabaseType _databaseType;
         protected string _connectionString;
 
-        public BaseDbConnectionInitializeTests(DatabaseType databaseType)
+        protected BaseDbConnectionInitializeTests(DatabaseType databaseType)
         {
             _databaseType = databaseType;
             _connectionString = string.Empty;
@@ -19,7 +19,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void DatabaseType_ShouldBeEqualToSpecified()
         {
             // Arrange.
-            ICommonDbConnection dbConnection = InitializeDbConnection(_databaseType);
+            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
 
             // Act & Assert.
             dbConnection.DatabaseType.Should().Be(_databaseType);
@@ -29,7 +29,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void SetConnectionString_SetEmptyWhenCreatingAndChange_ChangedToSpecified()
         {
             // Arrange.
-            ICommonDbConnection dbConnection = InitializeDbConnection(_databaseType);
+            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
 
             // Act.
             string initialConnectionString = dbConnection.ConnectionString;
@@ -45,24 +45,11 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void SetConnectionString_SpecifyWhenCreating_EqualsToSpecified()
         {
             // Arrange.
-            ICommonDbConnection dbConnection = InitializeDbConnection(_databaseType, _connectionString);
+            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType, _connectionString);
 
             // Act & Assert.
             _connectionString.Should().NotBeNullOrEmpty();
             dbConnection.ConnectionString.Should().Be(_connectionString);
-        }
-
-        private ICommonDbConnection InitializeDbConnection(DatabaseType databaseType, string? connectionString = null)
-        {
-            return databaseType switch
-            {
-                DatabaseType.SQLite => new SqliteDbConnection(connectionString),
-                DatabaseType.PostgreSQL => new PgDbConnection(connectionString),
-                DatabaseType.MSSQL => new MssqlDbConnection(connectionString),
-                DatabaseType.MySQL => new MysqlDbConnection(connectionString),
-                DatabaseType.Oracle => new OracleDbConnection(connectionString),
-                _ => throw new ArgumentException("Specified database type is not valid", nameof(databaseType))
-            };
         }
     }
 }

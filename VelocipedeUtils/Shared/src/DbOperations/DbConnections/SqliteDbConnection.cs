@@ -1,4 +1,5 @@
 using System.Data;
+using System.IO;
 using Microsoft.Data.Sqlite;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
@@ -12,23 +13,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
 
-        public string DatabaseFilePath { get; set; }
+        /// <summary>
+        /// Database file path.
+        /// </summary>
+        public string DatabaseFilePath => GetDatabaseFilePath(ConnectionString);
 
-        public SqliteDbConnection(string connectionString = null, string path = null)
+        public SqliteDbConnection(string connectionString = null)
         {
             ConnectionString = connectionString;
-            if (!string.IsNullOrEmpty(path))
-            {
-                SetDatabaseFilePath(path);
-            }
-        }
-
-        public void SetDatabaseFilePath(string path)
-        {
-            if (!System.IO.File.Exists(path))
-                throw new System.Exception($"Database file '{path}' does not exists");
-
-            DatabaseFilePath = path;
         }
 
         public void CreateDb()
@@ -87,9 +79,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public DataTable ExecuteSqlCommand(string sqlRequest)
         {
             DataTable table = new DataTable();
-            var connectionStringBuilder = new SqliteConnectionStringBuilder();
-            connectionStringBuilder.DataSource = DatabaseFilePath;
-            using (var connection = new SqliteConnection(connectionStringBuilder.ConnectionString))
+            using (var connection = new SqliteConnection(ConnectionString))
             {
                 connection.Open();
                 var selectCmd = connection.CreateCommand();
@@ -100,6 +90,31 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 }
             }
             return table;
+        }
+
+        /// <summary>
+        /// Check if the specified database file path is valid.
+        /// </summary>
+        public static bool IsDatabaseFilePathValid(string path) => File.Exists(path);
+
+        /// <summary>
+        /// Get database file path by connection string.
+        /// </summary>
+        public static string GetDatabaseFilePath(string connectionString)
+        {
+            var connectionStringBuilder = new SqliteConnectionStringBuilder();
+            connectionStringBuilder.ConnectionString = connectionString;
+            return connectionStringBuilder.DataSource;
+        }
+
+        /// <summary>
+        /// Get connection string by database file path.
+        /// </summary>
+        public static string GetConnectionStringByPath(string path)
+        {
+            var connectionStringBuilder = new SqliteConnectionStringBuilder();
+            connectionStringBuilder.DataSource = path;
+            return connectionStringBuilder.ConnectionString;
         }
     }
 }
