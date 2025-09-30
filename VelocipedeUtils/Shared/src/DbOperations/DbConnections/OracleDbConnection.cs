@@ -64,9 +64,15 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection GetColumnsOfTable(string tableName)
+        public ICommonDbConnection GetColumns(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string[] tn = tableName.Split('.');
+            string sql = string.Format(@"
+SELECT column_name, data_type, data_length
+FROM USER_TAB_COLUMNS
+WHERE UPPER(table_name) = UPPER('{0}')", tn[0], tn[1]);
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
         public ICommonDbConnection GetForeignKeys(string tableName)

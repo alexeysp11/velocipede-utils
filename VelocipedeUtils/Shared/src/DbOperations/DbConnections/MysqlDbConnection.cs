@@ -59,17 +59,30 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public ICommonDbConnection GetTablesInDb(out List<string> tables)
         {
-            throw new NotImplementedException();
-
-            string databaseName = "";
-            string sql = $"SELECT table_name AS name FROM information_schema.tables WHERE table_schema = '{databaseName}';";
+            string sql = $"SELECT table_name AS name FROM information_schema.tables WHERE table_schema = '{DatabaseName}';";
             Query(sql, out tables);
             return this;
         }
 
-        public ICommonDbConnection GetColumnsOfTable(string tableName)
+        public ICommonDbConnection GetColumns(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format(@"
+SELECT 
+`COLUMN_NAME`,
+`ORDINAL_POSITION`,
+`COLUMN_DEFAULT`,
+`IS_NULLABLE`,
+`DATA_TYPE`,
+`CHARACTER_MAXIMUM_LENGTH`,
+`NUMERIC_PRECISION`,
+`COLUMN_TYPE`,
+`COLUMN_COMMENT`,
+`GENERATION_EXPRESSION`
+FROM `INFORMATION_SCHEMA`.`COLUMNS`
+WHERE UPPER(`TABLE_SCHEMA`) LIKE UPPER('{0}')
+AND UPPER(`TABLE_NAME`) LIKE UPPER('{1}')", DatabaseName, tableName);
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
         public ICommonDbConnection GetForeignKeys(string tableName)

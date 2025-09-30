@@ -64,7 +64,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection GetColumnsOfTable(string tableName)
+        public ICommonDbConnection GetColumns(string tableName, out DataTable dtResult)
         {
             throw new System.NotImplementedException();
         }

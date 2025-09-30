@@ -58,7 +58,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get columns of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetColumnsOfTable(string tableName);
+        ICommonDbConnection GetColumns(string tableName, out DataTable dtResult);
 
         /// <summary>
         /// Get foreign keys of the specified table.
