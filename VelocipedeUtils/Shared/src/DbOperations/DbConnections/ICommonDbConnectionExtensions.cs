@@ -19,6 +19,18 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
+        /// Create database if not exists.
+        /// </summary>
+        public static ICommonDbConnection CreateDbIfNotExists(this ICommonDbConnection connection)
+        {
+            if (!connection.DbExists())
+            {
+                connection.CreateDb();
+            }
+            return connection;
+        }
+
+        /// <summary>
         /// Execute SQL command without return.
         /// </summary>
         public static ICommonDbConnection ExecuteSqlCommand(this ICommonDbConnection connection, string sql)
