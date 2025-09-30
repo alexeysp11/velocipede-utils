@@ -69,12 +69,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection GetForeignKeys(string tableName)
+        public ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection GetTriggers(string tableName)
+        public ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
             throw new System.NotImplementedException();
         }

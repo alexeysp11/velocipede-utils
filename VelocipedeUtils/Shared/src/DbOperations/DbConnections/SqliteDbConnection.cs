@@ -82,14 +82,18 @@ ORDER BY 1";
             return this;
         }
 
-        public ICommonDbConnection GetForeignKeys(string tableName)
+        public ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string sql = $"PRAGMA foreign_key_list('{tableName}');";
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
-        public ICommonDbConnection GetTriggers(string tableName)
+        public ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string sql = $"SELECT * FROM sqlite_master WHERE type = 'trigger' AND tbl_name LIKE '{tableName}';";
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
         public ICommonDbConnection GetSqlDefinition(string tableName)

@@ -85,14 +85,28 @@ AND UPPER(`TABLE_NAME`) LIKE UPPER('{1}')", DatabaseName, tableName);
             return this;
         }
 
-        public ICommonDbConnection GetForeignKeys(string tableName)
+        public ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format(@"
+SELECT
+    TABLE_NAME,COLUMN_NAME,
+    CONSTRAINT_NAME,
+    REFERENCED_TABLE_NAME,
+    REFERENCED_COLUMN_NAME
+FROM
+    INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE
+    UPPER(REFERENCED_TABLE_SCHEMA) LIKE UPPER('{0}')
+    AND UPPER(REFERENCED_TABLE_NAME) LIKE UPPER('{1}');", DatabaseName, tableName);
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
-        public ICommonDbConnection GetTriggers(string tableName)
+        public ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format("SHOW TRIGGERS LIKE '{0}'", tableName);
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
         public ICommonDbConnection GetSqlDefinition(string tableName)

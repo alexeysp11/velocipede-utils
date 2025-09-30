@@ -64,13 +64,13 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get foreign keys of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetForeignKeys(string tableName);
+        ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult);
 
         /// <summary>
         /// Get triggers of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetTriggers(string tableName);
+        ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult);
 
         /// <summary>
         /// Get SQL definition of the specified table.

@@ -75,14 +75,21 @@ WHERE UPPER(table_name) = UPPER('{0}')", tn[0], tn[1]);
             return this;
         }
 
-        public ICommonDbConnection GetForeignKeys(string tableName)
+        public ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format(@"
+SELECT *
+FROM all_constraints
+WHERE r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE UPPER(table_name) LIKE UPPER('{0}'))", tableName);
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
-        public ICommonDbConnection GetTriggers(string tableName)
+        public ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format(@"SELECT * FROM all_triggers WHERE UPPER(table_name) LIKE UPPER('{0}')", tableName);
+            ExecuteSqlCommand(sql, out dtResult);
+            return this;
         }
 
         public ICommonDbConnection GetSqlDefinition(string tableName)
