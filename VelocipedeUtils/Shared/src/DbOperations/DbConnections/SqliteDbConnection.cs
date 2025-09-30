@@ -14,7 +14,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
         public string DatabaseName => GetDatabaseFilePath(ConnectionString);
-        public bool IsConnected { get; private set; }
+        public bool IsConnected => _connection != null;
+
+        private SqliteConnection _connection;
 
         public SqliteDbConnection(string connectionString = null)
         {
@@ -40,12 +42,21 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public ICommonDbConnection OpenDb()
         {
-            throw new System.NotImplementedException();
+            CloseDb();
+            _connection = new SqliteConnection(ConnectionString);
+            _connection.Open();
+            return this;
         }
 
         public ICommonDbConnection CloseDb()
         {
-            throw new System.NotImplementedException();
+            if (_connection != null)
+            {
+                _connection.Close();
+                _connection.Dispose();
+                _connection = null;
+            }
+            return this;
         }
 
         public ICommonDbConnection GetTablesInDb()
@@ -89,21 +100,48 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
-        /// Executes SQL string and returns DataTable
+        /// Executes SQL string and returns DataTable.
         /// </summary>
         public ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            dtResult = new DataTable();
-            using (var connection = new SqliteConnection(ConnectionString))
+            // Initialize connection.
+            bool newConnectionUsed = true;
+            SqliteConnection localConnection = null;
+            if (_connection != null)
             {
-                connection.Open();
-                var selectCmd = connection.CreateCommand();
+                newConnectionUsed = false;
+                localConnection = _connection;
+            }
+            else
+            {
+                localConnection = new SqliteConnection(ConnectionString);
+            }
+            if (localConnection.State != ConnectionState.Open)
+            {
+                localConnection.Open();
+            }
+
+            // Execute SQL command and dispose connection if necessary.
+            dtResult = new DataTable();
+            try
+            {
+                var selectCmd = localConnection.CreateCommand();
                 selectCmd.CommandText = sqlRequest;
                 using (var reader = selectCmd.ExecuteReader())
                 {
                     dtResult.Load(reader);
                 }
             }
+            finally
+            {
+                if (newConnectionUsed)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+
             return this;
         }
 
