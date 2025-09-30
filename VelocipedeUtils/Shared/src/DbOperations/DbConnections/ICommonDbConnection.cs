@@ -76,7 +76,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get SQL definition of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetSqlDefinition(string tableName);
+        ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition);
 
         /// <summary>
         /// Create temporary table.
@@ -99,5 +99,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Query using Dapper.
         /// </summary>
         ICommonDbConnection Query<T>(string sqlRequest, out List<T> result);
+
+        /// <summary>
+        /// Query first or default using Dapper.
+        /// </summary>
+        ICommonDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result);
     }
 }

@@ -96,7 +96,7 @@ ORDER BY 1";
             return this;
         }
 
-        public ICommonDbConnection GetSqlDefinition(string tableName)
+        public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
             throw new System.NotImplementedException();
         }
@@ -180,6 +180,43 @@ ORDER BY 1";
             try
             {
                 result = localConnection.Query<T>(sqlRequest).ToList();
+            }
+            finally
+            {
+                if (newConnectionUsed)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+
+            return this;
+        }
+
+        public ICommonDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        {
+            // Initialize connection.
+            bool newConnectionUsed = true;
+            SqliteConnection localConnection = null;
+            if (_connection != null)
+            {
+                newConnectionUsed = false;
+                localConnection = _connection;
+            }
+            else
+            {
+                localConnection = new SqliteConnection(ConnectionString);
+            }
+            if (localConnection.State != ConnectionState.Open)
+            {
+                localConnection.Open();
+            }
+
+            // Execute SQL command and dispose connection if necessary.
+            try
+            {
+                result = localConnection.QueryFirstOrDefault<T>(sqlRequest);
             }
             finally
             {

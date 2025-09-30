@@ -109,7 +109,7 @@ WHERE
             return this;
         }
 
-        public ICommonDbConnection GetSqlDefinition(string tableName)
+        public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
             throw new System.NotImplementedException();
         }
@@ -184,6 +184,43 @@ WHERE
             return this;
         }
 
+        public ICommonDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        {
+            // Initialize connection.
+            bool newConnectionUsed = true;
+            MySqlConnection localConnection = null;
+            if (_connection != null)
+            {
+                newConnectionUsed = false;
+                localConnection = _connection;
+            }
+            else
+            {
+                localConnection = new MySqlConnection(ConnectionString);
+            }
+            if (localConnection.State != ConnectionState.Open)
+            {
+                localConnection.Open();
+            }
+
+            // Execute SQL command and dispose connection if necessary.
+            try
+            {
+                result = localConnection.QueryFirstOrDefault<T>(sqlRequest);
+            }
+            finally
+            {
+                if (newConnectionUsed)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+
+            return this;
+        }
+
         private DataTable GetDataTable(MySqlDataReader reader)
         {
             DataTable table = new DataTable();
@@ -205,6 +242,5 @@ WHERE
             }
             return table;
         }
-
     }
 }
