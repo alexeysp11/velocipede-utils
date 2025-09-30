@@ -98,7 +98,8 @@ ORDER BY 1";
 
         public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format(@"SELECT sql FROM sqlite_master WHERE type='table' AND name LIKE '{0}'", tableName);
+            return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 
         public ICommonDbConnection CreateTemporaryTable(string tableName)

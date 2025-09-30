@@ -94,7 +94,11 @@ WHERE r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE UP
 
         public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format(@"
+select dbms_metadata.get_ddl('TABLE', table_name) as sql
+from user_tables ut
+WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
+            return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 
         public ICommonDbConnection CreateTemporaryTable(string tableName)

@@ -111,7 +111,8 @@ WHERE
 
         public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
-            throw new System.NotImplementedException();
+            string sql = string.Format("SHOW CREATE TABLE {0}", tableName);
+            return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 
         public ICommonDbConnection CreateTemporaryTable(string tableName)
