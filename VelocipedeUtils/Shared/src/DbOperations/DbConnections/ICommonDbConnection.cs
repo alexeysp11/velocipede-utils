@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
@@ -51,13 +52,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get tables in the current database.
         /// </summary>
-        ICommonDbConnection GetTablesInDb();
-
-        /// <summary>
-        /// Get all data from the table.
-        /// </summary>
-        /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetAllDataFromTable(string tableName);
+        ICommonDbConnection GetTablesInDb(out List<string> tables);
 
         /// <summary>
         /// Get columns of the specified table.
@@ -99,5 +94,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Execute SQL command.
         /// </summary>
         ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
+
+        /// <summary>
+        /// Query using Dapper.
+        /// </summary>
+        ICommonDbConnection Query<T>(string sqlRequest, out List<T> result);
     }
 }

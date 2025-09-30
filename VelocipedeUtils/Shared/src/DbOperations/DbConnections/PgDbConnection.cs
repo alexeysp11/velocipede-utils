@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using Dapper;
 using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
@@ -10,6 +13,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public sealed class PgDbConnection : ICommonDbConnection
     {
+        private NpgsqlConnection _connection;
+
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
         public string DatabaseName { get; }
@@ -43,17 +48,20 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public ICommonDbConnection CloseDb()
         {
-            throw new System.NotImplementedException();
+            if (_connection != null)
+            {
+                _connection.Close();
+                _connection.Dispose();
+                _connection = null;
+            }
+            return this;
         }
 
-        public ICommonDbConnection GetTablesInDb()
+        public ICommonDbConnection GetTablesInDb(out List<string> tables)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public ICommonDbConnection GetAllDataFromTable(string tableName)
-        {
-            throw new System.NotImplementedException();
+            string sql = "SELECT t.schemaname || '.' || t.relname AS name FROM (SELECT schemaname, relname FROM pg_stat_user_tables) t";
+            Query(sql, out tables);
+            return this;
         }
 
         public ICommonDbConnection GetColumnsOfTable(string tableName)
@@ -88,17 +96,80 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            dtResult = new DataTable();
-            using (var conn = new NpgsqlConnection(ConnectionString))
+            // Initialize connection.
+            bool newConnectionUsed = true;
+            NpgsqlConnection localConnection = null;
+            if (_connection != null)
             {
-                conn.Open();
-                using (var command = new NpgsqlCommand(sqlRequest, conn))
+                newConnectionUsed = false;
+                localConnection = _connection;
+            }
+            else
+            {
+                localConnection = new NpgsqlConnection(ConnectionString);
+            }
+            if (localConnection.State != ConnectionState.Open)
+            {
+                localConnection.Open();
+            }
+
+            // Execute SQL command and dispose connection if necessary.
+            dtResult = new DataTable();
+            try
+            {
+                using (var command = new NpgsqlCommand(sqlRequest, localConnection))
                 {
                     var reader = command.ExecuteReader();
                     dtResult = GetDataTable(reader);
                     reader.Close();
                 }
             }
+            finally
+            {
+                if (newConnectionUsed)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+            return this;
+        }
+
+        public ICommonDbConnection Query<T>(string sqlRequest, out List<T> result)
+        {
+            // Initialize connection.
+            bool newConnectionUsed = true;
+            NpgsqlConnection localConnection = null;
+            if (_connection != null)
+            {
+                newConnectionUsed = false;
+                localConnection = _connection;
+            }
+            else
+            {
+                localConnection = new NpgsqlConnection(ConnectionString);
+            }
+            if (localConnection.State != ConnectionState.Open)
+            {
+                localConnection.Open();
+            }
+
+            // Execute SQL command and dispose connection if necessary.
+            try
+            {
+                result = localConnection.Query<T>(sqlRequest).ToList();
+            }
+            finally
+            {
+                if (newConnectionUsed)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+
             return this;
         }
 

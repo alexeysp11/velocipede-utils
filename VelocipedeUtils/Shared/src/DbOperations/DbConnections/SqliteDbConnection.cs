@@ -1,8 +1,11 @@
+using Dapper;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using Microsoft.Data.Sqlite;
 using VelocipedeUtils.Shared.DbOperations.Enums;
+using System.Linq;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -59,14 +62,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection GetTablesInDb()
+        public ICommonDbConnection GetTablesInDb(out List<string> tables)
         {
-            throw new System.NotImplementedException();
-        }
-
-        public ICommonDbConnection GetAllDataFromTable(string tableName)
-        {
-            throw new System.NotImplementedException();
+            string sql = @"
+SELECT name FROM sqlite_master
+WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
+UNION ALL
+SELECT name FROM sqlite_temp_master
+WHERE type IN ('table','view')
+ORDER BY 1";
+            Query(sql, out tables);
+            return this;
         }
 
         public ICommonDbConnection GetColumnsOfTable(string tableName)
@@ -131,6 +137,43 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 {
                     dtResult.Load(reader);
                 }
+            }
+            finally
+            {
+                if (newConnectionUsed)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+
+            return this;
+        }
+
+        public ICommonDbConnection Query<T>(string sqlRequest, out List<T> result)
+        {
+            // Initialize connection.
+            bool newConnectionUsed = true;
+            SqliteConnection localConnection = null;
+            if (_connection != null)
+            {
+                newConnectionUsed = false;
+                localConnection = _connection;
+            }
+            else
+            {
+                localConnection = new SqliteConnection(ConnectionString);
+            }
+            if (localConnection.State != ConnectionState.Open)
+            {
+                localConnection.Open();
+            }
+
+            // Execute SQL command and dispose connection if necessary.
+            try
+            {
+                result = localConnection.Query<T>(sqlRequest).ToList();
             }
             finally
             {

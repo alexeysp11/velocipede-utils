@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using Dapper;
 using MySql.Data.MySqlClient;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
@@ -14,6 +17,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public DatabaseType DatabaseType => DatabaseType.MySQL;
         public string DatabaseName { get; }
         public bool IsConnected { get; private set; }
+
+        private MySqlConnection _connection;
 
         public MysqlDbConnection(string connectionString = null)
         {
@@ -43,17 +48,23 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public ICommonDbConnection CloseDb()
         {
-            throw new System.NotImplementedException();
+            if (_connection != null)
+            {
+                _connection.Close();
+                _connection.Dispose();
+                _connection = null;
+            }
+            return this;
         }
 
-        public ICommonDbConnection GetTablesInDb()
+        public ICommonDbConnection GetTablesInDb(out List<string> tables)
         {
-            throw new System.NotImplementedException();
-        }
+            throw new NotImplementedException();
 
-        public ICommonDbConnection GetAllDataFromTable(string tableName)
-        {
-            throw new System.NotImplementedException();
+            string databaseName = "";
+            string sql = $"SELECT table_name AS name FROM information_schema.tables WHERE table_schema = '{databaseName}';";
+            Query(sql, out tables);
+            return this;
         }
 
         public ICommonDbConnection GetColumnsOfTable(string tableName)
@@ -106,6 +117,43 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 if (connection != null)
                     connection.Close();
             }
+            return this;
+        }
+
+        public ICommonDbConnection Query<T>(string sqlRequest, out List<T> result)
+        {
+            // Initialize connection.
+            bool newConnectionUsed = true;
+            MySqlConnection localConnection = null;
+            if (_connection != null)
+            {
+                newConnectionUsed = false;
+                localConnection = _connection;
+            }
+            else
+            {
+                localConnection = new MySqlConnection(ConnectionString);
+            }
+            if (localConnection.State != ConnectionState.Open)
+            {
+                localConnection.Open();
+            }
+
+            // Execute SQL command and dispose connection if necessary.
+            try
+            {
+                result = localConnection.Query<T>(sqlRequest).ToList();
+            }
+            finally
+            {
+                if (newConnectionUsed)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+
             return this;
         }
 

@@ -31,6 +31,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
+        /// Get all data from the table.
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        public static ICommonDbConnection GetAllDataFromTable(this ICommonDbConnection connection, string tableName, out DataTable dtResult)
+        {
+            string sql = $"SELECT * FROM {tableName}";
+            return connection.ExecuteSqlCommand(sql, out dtResult);
+        }
+
+        /// <summary>
         /// Execute SQL command without return.
         /// </summary>
         public static ICommonDbConnection ExecuteSqlCommand(this ICommonDbConnection connection, string sql)
