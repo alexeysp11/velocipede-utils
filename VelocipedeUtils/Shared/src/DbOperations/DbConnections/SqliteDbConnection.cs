@@ -16,7 +16,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
-        public string DatabaseName => GetDatabaseFilePath(ConnectionString);
+        public string DatabaseName => GetDatabaseName(ConnectionString);
         public bool IsConnected => _connection != null;
 
         private SqliteConnection _connection;
@@ -240,7 +240,7 @@ ORDER BY 1";
         /// <summary>
         /// Get database file path by connection string.
         /// </summary>
-        public static string GetDatabaseFilePath(string connectionString)
+        public static string GetDatabaseName(string connectionString)
         {
             var connectionStringBuilder = new SqliteConnectionStringBuilder();
             connectionStringBuilder.ConnectionString = connectionString;

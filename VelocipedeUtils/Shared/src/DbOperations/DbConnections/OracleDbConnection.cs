@@ -15,8 +15,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.Oracle;
-        public string DatabaseName { get; }
-        public bool IsConnected { get; private set; }
+        public string DatabaseName => GetDatabaseName(ConnectionString);
+        public bool IsConnected => _connection != null;
 
         private OracleConnection _connection;
 
@@ -203,6 +203,26 @@ WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
             }
 
             return this;
+        }
+
+        /// <summary>
+        /// Get database name by connection string.
+        /// </summary>
+        public static string GetDatabaseName(string connectionString)
+        {
+            var connectionStringBuilder = new OracleConnectionStringBuilder();
+            connectionStringBuilder.ConnectionString = connectionString;
+            return connectionStringBuilder.DataSource;
+        }
+
+        /// <summary>
+        /// Get connection string by database name.
+        /// </summary>
+        public static string GetConnectionString(string databaseName)
+        {
+            var connectionStringBuilder = new OracleConnectionStringBuilder();
+            connectionStringBuilder.DataSource = databaseName;
+            return connectionStringBuilder.ConnectionString;
         }
     }
 }

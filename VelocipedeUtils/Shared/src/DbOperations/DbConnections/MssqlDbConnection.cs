@@ -15,8 +15,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
-        public string DatabaseName { get; }
-        public bool IsConnected { get; private set; }
+        public string DatabaseName => GetDatabaseName(ConnectionString);
+        public bool IsConnected => _connection != null;
 
         private SqlConnection _connection;
 
@@ -217,6 +217,26 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 table.Rows.Add(row);
             }
             return table;
+        }
+
+        /// <summary>
+        /// Get database name by connection string.
+        /// </summary>
+        public static string GetDatabaseName(string connectionString)
+        {
+            var connectionStringBuilder = new SqlConnectionStringBuilder();
+            connectionStringBuilder.ConnectionString = connectionString;
+            return connectionStringBuilder.InitialCatalog;
+        }
+
+        /// <summary>
+        /// Get connection string by database name.
+        /// </summary>
+        public static string GetConnectionString(string databaseName)
+        {
+            var connectionStringBuilder = new SqlConnectionStringBuilder();
+            connectionStringBuilder.InitialCatalog = databaseName;
+            return connectionStringBuilder.ConnectionString;
         }
     }
 }

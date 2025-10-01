@@ -25,7 +25,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
         public void GetDatabaseFilePath_StaticGetter_PathEqualsToExpected(string connectionString, string expectedPath)
         {
             // Arrange & Act.
-            string resultPath = SqliteDbConnection.GetDatabaseFilePath(connectionString);
+            string resultPath = SqliteDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
             resultPath.Should().Be(expectedPath);
@@ -49,7 +49,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
 
             // Act.
             string instancePath = dbConnection.DatabaseName;
-            string staticPath = SqliteDbConnection.GetDatabaseFilePath(connectionString);
+            string staticPath = SqliteDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
             staticPath.Should().Be(expectedPath);

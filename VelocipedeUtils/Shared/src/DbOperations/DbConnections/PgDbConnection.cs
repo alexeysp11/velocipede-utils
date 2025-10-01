@@ -17,8 +17,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
-        public string DatabaseName { get; }
-        public bool IsConnected { get; private set; }
+        public string DatabaseName => GetDatabaseName(ConnectionString);
+        public bool IsConnected => _connection != null;
 
         public PgDbConnection(string connectionString = null)
         {
@@ -312,6 +312,26 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
                 table.Rows.Add(row);
             }
             return table;
+        }
+
+        /// <summary>
+        /// Get database name by connection string.
+        /// </summary>
+        public static string GetDatabaseName(string connectionString)
+        {
+            var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
+            connectionStringBuilder.ConnectionString = connectionString;
+            return connectionStringBuilder.Database;
+        }
+
+        /// <summary>
+        /// Get connection string by database name.
+        /// </summary>
+        public static string GetConnectionString(string databaseName)
+        {
+            var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
+            connectionStringBuilder.Database = databaseName;
+            return connectionStringBuilder.ConnectionString;
         }
     }
 }
