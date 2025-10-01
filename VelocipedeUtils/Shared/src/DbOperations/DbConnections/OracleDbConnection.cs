@@ -43,7 +43,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public ICommonDbConnection OpenDb()
         {
-            throw new System.NotImplementedException();
+            CloseDb();
+            _connection = new OracleConnection(ConnectionString);
+            _connection.Open();
+            return this;
         }
 
         public ICommonDbConnection CloseDb()
