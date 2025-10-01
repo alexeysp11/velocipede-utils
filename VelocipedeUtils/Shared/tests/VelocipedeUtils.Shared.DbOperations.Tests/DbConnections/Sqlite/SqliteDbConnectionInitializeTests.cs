@@ -22,13 +22,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
         [InlineData("Data Source='relative-path/mydatabase.db';", "relative-path/mydatabase.db")]
         [InlineData("Data Source='relative-path/mydatabase.db';Mode=ReadWriteCreate;Foreign Keys=True;", "relative-path/mydatabase.db")]
         [InlineData("Data Source='relative-path/mydatabase.db';Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;", "relative-path/mydatabase.db")]
-        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expectedPath)
+        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
         {
             // Arrange & Act.
-            string resultPath = SqliteDbConnection.GetDatabaseName(connectionString);
+            string result = SqliteDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
-            resultPath.Should().Be(expectedPath);
+            result.Should().Be(expected);
         }
 
         [Theory]

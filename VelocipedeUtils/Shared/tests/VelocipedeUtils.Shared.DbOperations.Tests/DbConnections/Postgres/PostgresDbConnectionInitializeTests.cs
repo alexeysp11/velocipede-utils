@@ -32,13 +32,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
         [InlineData("Host=localhost;Port=5432;Username=myuser;Database=mydatabase;SSLMode=Prefer;Minimum Pool Size=5;", "mydatabase")]
         [InlineData("Host=localhost;Port=5432;Username=myuser;Database=mydatabase;SSLMode=Prefer;Maximum Pool Size=25;", "mydatabase")]
         [InlineData("Host=localhost;Port=5432;Username=myuser;Database=mydatabase;SSLMode=Prefer;Minimum Pool Size=5;Maximum Pool Size=25;", "mydatabase")]
-        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expectedPath)
+        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
         {
             // Arrange & Act.
-            string resultPath = PgDbConnection.GetDatabaseName(connectionString);
+            string result = PgDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
-            resultPath.Should().Be(expectedPath);
+            result.Should().Be(expected);
         }
     }
 }

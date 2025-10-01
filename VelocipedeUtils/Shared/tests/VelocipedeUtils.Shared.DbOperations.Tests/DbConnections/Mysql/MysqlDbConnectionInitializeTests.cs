@@ -25,13 +25,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mysql
         [InlineData("Server=localhost;Port=3306;Database=my_database;Uid=root;Pwd=password;SslMode=None;", "my_database")]
         [InlineData("Server=localhost;Port=3306;Database=my_database;Uid=root;Pwd=password;SslMode=None;Connection Timeout=30;", "my_database")]
         [InlineData("Server=localhost;Port=3306;Database=my_database;Uid=root;Pwd=password;SslMode=None;Connection Timeout=30;Pooling=false", "my_database")]
-        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expectedPath)
+        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
         {
             // Arrange & Act.
-            string resultPath = MysqlDbConnection.GetDatabaseName(connectionString);
+            string result = MysqlDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
-            resultPath.Should().Be(expectedPath);
+            result.Should().Be(expected);
         }
     }
 }

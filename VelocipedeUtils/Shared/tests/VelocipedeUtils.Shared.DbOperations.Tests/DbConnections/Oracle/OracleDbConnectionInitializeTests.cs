@@ -22,13 +22,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Oracle
         [InlineData("Data Source=ORCL;User ID=scott;Password=tiger;Connection Lifetime=60;Enlist=true;", "ORCL")]
         [InlineData("Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)));", "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)))")]
         [InlineData("Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)));User ID=scott;", "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)))")]
-        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expectedPath)
+        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
         {
             // Arrange & Act.
-            string resultPath = OracleDbConnection.GetDatabaseName(connectionString);
+            string result = OracleDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
-            resultPath.Should().Be(expectedPath);
+            result.Should().Be(expected);
         }
     }
 }

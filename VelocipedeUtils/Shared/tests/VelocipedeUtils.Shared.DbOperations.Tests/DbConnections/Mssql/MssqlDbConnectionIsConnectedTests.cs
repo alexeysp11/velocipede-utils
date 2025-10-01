@@ -38,13 +38,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
         [InlineData("Data Source='myServer';Database='myDatabase';User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
         [InlineData("Data Source='myServer';Database='myDatabase';User Id=myUsername;Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
         [InlineData("Data Source='myServer';Database='myDatabase';User Id='myUsername';Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expectedPath)
+        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
         {
             // Arrange & Act.
-            string resultPath = MssqlDbConnection.GetDatabaseName(connectionString);
+            string result = MssqlDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
-            resultPath.Should().Be(expectedPath);
+            result.Should().Be(expected);
         }
     }
 }
