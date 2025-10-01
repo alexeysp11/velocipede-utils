@@ -1,15 +1,21 @@
-﻿using FluentAssertions;
+﻿using Dapper;
+using FluentAssertions;
+using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
+using VelocipedeUtils.Shared.DbOperations.Tests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
 {
-    public sealed class PostgresDbConnectionInitializeTests : BaseDbConnectionInitializeTests
+    public sealed class PostgresDbConnectionInitializeTests : BaseDbConnectionInitializeTests, IClassFixture<PgDatabaseFixture>
     {
-        public PostgresDbConnectionInitializeTests() : base(DatabaseType.PostgreSQL)
+        private PgDatabaseFixture _fixture;
+
+        public PostgresDbConnectionInitializeTests(PgDatabaseFixture fixture) : base(DatabaseType.PostgreSQL)
         {
-            _connectionString = "Host=localhost;Port=5432;Username=myuser;Password=mypassword;Database=mydatabase;";
+            _fixture = fixture;
+            _connectionString = $"Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mydatabase;";
         }
 
         [Theory]
@@ -39,6 +45,21 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
 
             // Assert.
             result.Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task Database_CanRunQuery()
+        {
+            // Arrange.
+            await using NpgsqlConnection connection = new(_fixture.ConnectionString);
+            connection.Open();
+
+            // Act.
+            const int expected = 1;
+            var actual = await connection.QueryFirstAsync<int>("SELECT 1");
+
+            // Assert.
+            actual.Should().Be(expected);
         }
     }
 }
