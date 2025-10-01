@@ -13,15 +13,15 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Oracle
         }
 
         [Theory]
-        [InlineData("Data Source=mydatabase.db;", "mydatabase.db")]
-        [InlineData("Data Source=mydatabase.db;Mode=ReadWriteCreate;Foreign Keys=True;", "mydatabase.db")]
-        [InlineData("Data Source=mydatabase.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;", "mydatabase.db")]
-        [InlineData("Data Source='mydatabase.db';", "mydatabase.db")]
-        [InlineData("Data Source='mydatabase.db';Mode=ReadWriteCreate;Foreign Keys=True;", "mydatabase.db")]
-        [InlineData("Data Source='mydatabase.db';Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;", "mydatabase.db")]
-        [InlineData("Data Source='relative-path/mydatabase.db';", "relative-path/mydatabase.db")]
-        [InlineData("Data Source='relative-path/mydatabase.db';Mode=ReadWriteCreate;Foreign Keys=True;", "relative-path/mydatabase.db")]
-        [InlineData("Data Source='relative-path/mydatabase.db';Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;", "relative-path/mydatabase.db")]
+        [InlineData("Data Source=ORCL;", "ORCL")]
+        [InlineData("Data Source=ORCL;User ID=scott;", "ORCL")]
+        [InlineData("Data Source=ORCL;User ID=scott;Password=tiger;", "ORCL")]
+        [InlineData("Data Source=ORCL;User ID=scott;Password=tiger;Connection Lifetime=60;", "ORCL")]
+        [InlineData("Data Source=ORCL;User ID=scott;Password=tiger;Pooling=true;Min Pool Size=5;Connection Lifetime=60;", "ORCL")]
+        [InlineData("Data Source=ORCL;User ID=scott;Password=tiger;Pooling=true;Min Pool Size=5;Max Pool Size=20;Connection Lifetime=60;", "ORCL")]
+        [InlineData("Data Source=ORCL;User ID=scott;Password=tiger;Connection Lifetime=60;Enlist=true;", "ORCL")]
+        [InlineData("Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)));", "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)))")]
+        [InlineData("Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)));User ID=scott;", "(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyService)))")]
         public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expectedPath)
         {
             // Arrange & Act.
