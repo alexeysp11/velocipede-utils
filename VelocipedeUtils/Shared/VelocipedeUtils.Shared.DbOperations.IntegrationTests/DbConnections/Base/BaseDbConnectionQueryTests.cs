@@ -6,12 +6,12 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base
 {
-    public abstract class BaseDbConnectionInitializeTests
+    public abstract class BaseDbConnectionQueryTests
     {
         protected IDatabaseFixture _fixture;
         protected readonly string _connectionString;
 
-        protected BaseDbConnectionInitializeTests(IDatabaseFixture fixture)
+        protected BaseDbConnectionQueryTests(IDatabaseFixture fixture)
         {
             _fixture = fixture;
             _connectionString = _fixture.ConnectionString;

@@ -3,9 +3,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mysql
 {
-    public sealed class MysqlDbConnectionInitializeTests : BaseDbConnectionInitializeTests, IClassFixture<MysqlDatabaseFixture>
+    public sealed class MysqlDbConnectionQueryTests : BaseDbConnectionQueryTests, IClassFixture<MysqlDatabaseFixture>
     {
-        public MysqlDbConnectionInitializeTests(MysqlDatabaseFixture fixture) : base(fixture)
+        public MysqlDbConnectionQueryTests(MysqlDatabaseFixture fixture) : base(fixture)
         {
         }
     }
