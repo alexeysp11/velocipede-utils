@@ -1,16 +1,34 @@
-﻿using VelocipedeUtils.Shared.DbOperations.Enums;
+﻿using System.Data.Common;
+using Dapper;
+using FluentAssertions;
+using VelocipedeUtils.Shared.DbOperations.Tests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base
 {
     public abstract class BaseDbConnectionInitializeTests
     {
-        private DatabaseType _databaseType;
-        protected string _connectionString;
+        protected IDatabaseFixture _fixture;
+        protected readonly string _connectionString;
 
-        protected BaseDbConnectionInitializeTests(DatabaseType databaseType)
+        protected BaseDbConnectionInitializeTests(IDatabaseFixture fixture)
         {
-            _databaseType = databaseType;
-            _connectionString = string.Empty;
+            _fixture = fixture;
+            _connectionString = _fixture.ConnectionString;
+        }
+
+        [Fact]
+        public async Task Database_CanRunQuery()
+        {
+            // Arrange.
+            await using DbConnection connection = _fixture.GetDbConnection();
+            connection.Open();
+
+            // Act.
+            const int expected = 1;
+            var actual = await connection.QueryFirstAsync<int>("SELECT 1");
+
+            // Assert.
+            actual.Should().Be(expected);
         }
     }
 }
