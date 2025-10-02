@@ -1,4 +1,5 @@
-﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
+﻿using VelocipedeUtils.Shared.DbOperations.Factories;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {

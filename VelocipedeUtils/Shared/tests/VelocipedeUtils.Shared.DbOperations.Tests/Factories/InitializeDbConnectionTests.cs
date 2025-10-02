@@ -1,8 +1,9 @@
 ﻿using FluentAssertions;
+using VelocipedeUtils.Shared.DbOperations.Factories;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Creator
+namespace VelocipedeUtils.Shared.DbOperations.Tests.Factories
 {
     public class InitializeDbConnectionTests
     {

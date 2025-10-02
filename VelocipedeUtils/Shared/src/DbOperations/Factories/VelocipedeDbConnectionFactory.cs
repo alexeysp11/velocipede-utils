@@ -1,7 +1,8 @@
 ﻿using System;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.DbConnections
+namespace VelocipedeUtils.Shared.DbOperations.Factories
 {
     /// <summary>
     /// Class for creating database connections.

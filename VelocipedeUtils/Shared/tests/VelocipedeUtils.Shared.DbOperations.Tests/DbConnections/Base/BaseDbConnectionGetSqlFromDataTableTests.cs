@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using FluentAssertions;
+using VelocipedeUtils.Shared.DbOperations.Factories;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
