@@ -1,5 +1,5 @@
-﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base;
-using VelocipedeUtils.Shared.DbOperations.Tests.DatabaseFixtures;
+﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres
 {

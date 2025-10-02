@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using Dapper;
 using FluentAssertions;
-using VelocipedeUtils.Shared.DbOperations.Tests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base
 {

@@ -1,23 +1,22 @@
 ﻿using System.Data.Common;
-using Npgsql;
-using Testcontainers.PostgreSql;
+using Microsoft.Data.SqlClient;
+using Testcontainers.MsSql;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {
-    public class PgDatabaseFixture : IDatabaseFixture
+    public sealed class MssqlDatabaseFixture : IDatabaseFixture
     {
-        private readonly PostgreSqlContainer container =
-            new PostgreSqlBuilder()
-                .WithEnvironment("POSTGRES_HOST_AUTH_METHOD", "password")
+        private readonly MsSqlContainer container =
+            new MsSqlBuilder()
                 .Build();
 
         public string ConnectionString => container.GetConnectionString();
         public string ContainerId => $"{container.Id}";
-        public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+        public DatabaseType DatabaseType => DatabaseType.MSSQL;
 
         public DbConnection GetDbConnection()
-            => new NpgsqlConnection(ConnectionString);
+            => new SqlConnection(ConnectionString);
 
         public Task InitializeAsync()
             => container.StartAsync();

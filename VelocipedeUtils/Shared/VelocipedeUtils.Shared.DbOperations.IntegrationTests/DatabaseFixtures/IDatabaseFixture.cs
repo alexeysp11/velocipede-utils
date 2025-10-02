@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DatabaseFixtures
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {
     public interface IDatabaseFixture : IAsyncLifetime
     {
