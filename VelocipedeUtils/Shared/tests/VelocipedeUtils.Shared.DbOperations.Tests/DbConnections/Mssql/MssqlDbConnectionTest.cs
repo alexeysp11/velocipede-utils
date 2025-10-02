@@ -16,7 +16,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
             string sqlInsert = $"INSERT INTO studying.dbo.emp (emp_id, name) SELECT MAX(e.emp_id), '{employeeName}' FROM studying.dbo.emp e WHERE NOT EXISTS ({sqlSelect})";
             string sqlDelete = $"DELETE FROM studying.dbo.emp WHERE name = '{employeeName}'";
 
-            ICommonDbConnection dbConnection = new MssqlDbConnection(ConnectionString);
+            IVelocipedeDbConnection dbConnection = new MssqlDbConnection(ConnectionString);
 
             // Act.
             dbConnection

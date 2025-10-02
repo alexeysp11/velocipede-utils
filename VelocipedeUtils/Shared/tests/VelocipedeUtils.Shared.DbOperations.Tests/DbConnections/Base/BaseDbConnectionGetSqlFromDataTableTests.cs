@@ -21,7 +21,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void GetSqlFromDataTable_DataTableIsNull_ThrowsArgumentNullException(string tableName)
         {
             // Arrange.
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
             Action act = () => dbConnection.GetSqlFromDataTable(dt: null, tableName);
 
             // Act & Assert.
@@ -35,7 +35,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         {
             // Arrange.
             DataTable dtEmployees = InitializeEmployeesDataTable();
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
             Action act = () => dbConnection.GetSqlFromDataTable(dtEmployees, tableName);
 
             // Act & Assert.
@@ -48,7 +48,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void GetSqlFromDataTable_EmptyDataTableAndTableNameIsNullOrEmpty_ThrowsArgumentNullException(string tableName)
         {
             // Arrange.
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
             Action act = () => dbConnection.GetSqlFromDataTable(dt: new DataTable(), tableName: tableName);
 
             // Act & Assert.
@@ -59,7 +59,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void GetSqlFromDataTable_EmptyDataTable_ThrowsArgumentException()
         {
             // Arrange.
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
             Action act = () => dbConnection.GetSqlFromDataTable(dt: new DataTable(), tableName: "TestDataTable");
 
             // Act & Assert.
@@ -71,7 +71,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         {
             // Arrange.
             DataTable dtEmployees = InitializeEmployeesDataTable();
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
             string expectedSql = @"CREATE TABLE IF NOT EXISTS Employees (EmployeeID TEXT,FirstName TEXT,LastName TEXT,HireDate TEXT);
 INSERT INTO Employees (EmployeeID,FirstName,LastName,HireDate) VALUES ('101','John','Doe','5/15/2020 12:00:00 AM');
 INSERT INTO Employees (EmployeeID,FirstName,LastName,HireDate) VALUES ('102','Jane','Smith','8/20/2019 12:00:00 AM');
@@ -90,7 +90,7 @@ INSERT INTO Employees (EmployeeID,FirstName,LastName,HireDate) VALUES ('103','Pe
         {
             // Arrange.
             DataTable dtEmployees = InitializeEmployeesDataTable(addRows: false);
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
             string expectedSql = @"CREATE TABLE IF NOT EXISTS Employees (EmployeeID TEXT,FirstName TEXT,LastName TEXT,HireDate TEXT);
 ";
 

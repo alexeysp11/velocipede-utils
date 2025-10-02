@@ -12,7 +12,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Class for using SQLite database
     /// </summary>
-    public sealed class SqliteDbConnection : ICommonDbConnection
+    public sealed class SqliteDbConnection : IVelocipedeDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
@@ -34,7 +34,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return File.Exists(DatabaseName);
         }
 
-        public ICommonDbConnection CreateDb()
+        public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
                 throw new InvalidOperationException($"Database file already exists");
@@ -43,7 +43,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection OpenDb()
+        public IVelocipedeDbConnection OpenDb()
         {
             CloseDb();
             _connection = new SqliteConnection(ConnectionString);
@@ -51,7 +51,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection CloseDb()
+        public IVelocipedeDbConnection CloseDb()
         {
             if (_connection != null)
             {
@@ -62,7 +62,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection GetTablesInDb(out List<string> tables)
+        public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
             string sql = @"
 SELECT name FROM sqlite_master
@@ -75,39 +75,39 @@ ORDER BY 1";
             return this;
         }
 
-        public ICommonDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
         {
             string sql = $"PRAGMA table_info({tableName});";
             ExecuteSqlCommand(sql, out dtResult);
             return this;
         }
 
-        public ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
         {
             string sql = $"PRAGMA foreign_key_list('{tableName}');";
             ExecuteSqlCommand(sql, out dtResult);
             return this;
         }
 
-        public ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
             string sql = $"SELECT * FROM sqlite_master WHERE type = 'trigger' AND tbl_name LIKE '{tableName}';";
             ExecuteSqlCommand(sql, out dtResult);
             return this;
         }
 
-        public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
             string sql = string.Format(@"SELECT sql FROM sqlite_master WHERE type='table' AND name LIKE '{0}'", tableName);
             return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 
-        public ICommonDbConnection CreateTemporaryTable(string tableName)
+        public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection ClearTemporaryTable(string tableName)
+        public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
@@ -115,7 +115,7 @@ ORDER BY 1";
         /// <summary>
         /// Executes SQL string and returns DataTable.
         /// </summary>
-        public ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
             // Initialize connection.
             bool newConnectionUsed = true;
@@ -158,7 +158,7 @@ ORDER BY 1";
             return this;
         }
 
-        public ICommonDbConnection Query<T>(string sqlRequest, out List<T> result)
+        public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;
@@ -195,7 +195,7 @@ ORDER BY 1";
             return this;
         }
 
-        public ICommonDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;

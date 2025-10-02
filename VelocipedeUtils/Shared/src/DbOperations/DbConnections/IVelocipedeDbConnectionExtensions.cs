@@ -5,14 +5,14 @@ using System.Text;
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
-    /// Extension methods for <see cref="ICommonDbConnection"/>.
+    /// Extension methods for <see cref="IVelocipedeDbConnection"/>.
     /// </summary>
-    public static class ICommonDbConnectionExtensions
+    public static class IVelocipedeDbConnectionExtensions
     {
         /// <summary>
         /// Set connection string.
         /// </summary>
-        public static ICommonDbConnection SetConnectionString(this ICommonDbConnection connection, string connectionString)
+        public static IVelocipedeDbConnection SetConnectionString(this IVelocipedeDbConnection connection, string connectionString)
         {
             connection.ConnectionString = connectionString;
             return connection;
@@ -21,7 +21,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Create database if not exists.
         /// </summary>
-        public static ICommonDbConnection CreateDbIfNotExists(this ICommonDbConnection connection)
+        public static IVelocipedeDbConnection CreateDbIfNotExists(this IVelocipedeDbConnection connection)
         {
             if (!connection.DbExists())
             {
@@ -34,7 +34,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get all data from the table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        public static ICommonDbConnection GetAllDataFromTable(this ICommonDbConnection connection, string tableName, out DataTable dtResult)
+        public static IVelocipedeDbConnection GetAllDataFromTable(this IVelocipedeDbConnection connection, string tableName, out DataTable dtResult)
         {
             string sql = $"SELECT * FROM {tableName}";
             return connection.ExecuteSqlCommand(sql, out dtResult);
@@ -43,7 +43,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Execute SQL command without return.
         /// </summary>
-        public static ICommonDbConnection ExecuteSqlCommand(this ICommonDbConnection connection, string sql)
+        public static IVelocipedeDbConnection ExecuteSqlCommand(this IVelocipedeDbConnection connection, string sql)
         {
             return connection.ExecuteSqlCommand(sql, out _);
         }
@@ -51,7 +51,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Gets SQL definition of the DataTable object.
         /// </summary>
-        public static string GetSqlFromDataTable(this ICommonDbConnection connection, DataTable dt, string tableName)
+        public static string GetSqlFromDataTable(this IVelocipedeDbConnection connection, DataTable dt, string tableName)
         {
             if (dt == null)
                 throw new ArgumentNullException(nameof(dt), "Data table could not be null");

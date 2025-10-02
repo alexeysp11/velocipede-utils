@@ -19,7 +19,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void DbExists_ConnectionStringIsNullOrEmpty_ThrowsInvalidOperationException(string connectionString)
         {
             // Arrange.
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(_databaseType, connectionString);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType, connectionString);
             Action act = () => dbConnection.DbExists();
 
             // Act & Assert.

@@ -11,7 +11,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// MS SQL database connection.
     /// </summary>
-    public sealed class MssqlDbConnection : ICommonDbConnection
+    public sealed class MssqlDbConnection : IVelocipedeDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
@@ -33,7 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection CreateDb()
+        public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
                 throw new InvalidOperationException($"Database already exists");
@@ -41,7 +41,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection OpenDb()
+        public IVelocipedeDbConnection OpenDb()
         {
             CloseDb();
             _connection = new SqlConnection(ConnectionString);
@@ -49,7 +49,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection CloseDb()
+        public IVelocipedeDbConnection CloseDb()
         {
             if (_connection != null)
             {
@@ -60,44 +60,44 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection GetTablesInDb(out List<string> tables)
+        public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
             string sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
             Query(sql, out tables);
             return this;
         }
 
-        public ICommonDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection CreateTemporaryTable(string tableName)
+        public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection ClearTemporaryTable(string tableName)
+        public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
             dtResult = new DataTable();
             SqlConnection connection = null;
@@ -123,7 +123,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection Query<T>(string sqlRequest, out List<T> result)
+        public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;
@@ -160,7 +160,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;

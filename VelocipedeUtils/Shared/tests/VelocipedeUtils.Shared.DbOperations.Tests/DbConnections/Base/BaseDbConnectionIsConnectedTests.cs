@@ -21,7 +21,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void IsConnected_InstanceCreatedAndNoConnectionString_NotConnected(string connectionString)
         {
             // Arrange.
-            ICommonDbConnection connection = DbConnectionsCreator.InitializeDbConnection(_databaseType, connectionString);
+            IVelocipedeDbConnection connection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType, connectionString);
 
             // Act & Assert.
             connection.IsConnected.Should().BeFalse();
@@ -31,7 +31,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void IsConnected_InstanceCreatedAndConnectionStringSet_NotConnected()
         {
             // Arrange.
-            ICommonDbConnection connection = DbConnectionsCreator.InitializeDbConnection(_databaseType, _connectionString);
+            IVelocipedeDbConnection connection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType, _connectionString);
 
             // Act & Assert.
             connection.IsConnected.Should().BeFalse();

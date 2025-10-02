@@ -6,12 +6,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Class for creating database connections.
     /// </summary>
-    public static class DbConnectionsCreator
+    public static class VelocipedeDbConnectionFactory
     {
         /// <summary>
         /// Initialize database connection.
         /// </summary>
-        public static ICommonDbConnection InitializeDbConnection(DatabaseType databaseType, string connectionString = null)
+        public static IVelocipedeDbConnection InitializeDbConnection(DatabaseType databaseType, string connectionString = null)
         {
             return databaseType switch
             {

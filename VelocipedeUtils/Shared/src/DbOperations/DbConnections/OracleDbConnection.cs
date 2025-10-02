@@ -11,7 +11,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Oracle database connection.
     /// </summary>
-    public sealed class OracleDbConnection : ICommonDbConnection
+    public sealed class OracleDbConnection : IVelocipedeDbConnection
     {
         public string ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.Oracle;
@@ -33,7 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection CreateDb()
+        public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
                 throw new InvalidOperationException($"Database already exists");
@@ -41,7 +41,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection OpenDb()
+        public IVelocipedeDbConnection OpenDb()
         {
             CloseDb();
             _connection = new OracleConnection(ConnectionString);
@@ -49,7 +49,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection CloseDb()
+        public IVelocipedeDbConnection CloseDb()
         {
             if (_connection != null)
             {
@@ -60,14 +60,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public ICommonDbConnection GetTablesInDb(out List<string> tables)
+        public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
             string sql = "SELECT table_name AS name FROM user_tables";
             Query(sql, out tables);
             return this;
         }
 
-        public ICommonDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
         {
             string[] tn = tableName.Split('.');
             string sql = string.Format(@"
@@ -78,7 +78,7 @@ WHERE UPPER(table_name) = UPPER('{0}')", tn[0], tn[1]);
             return this;
         }
 
-        public ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
         {
             string sql = string.Format(@"
 SELECT *
@@ -88,14 +88,14 @@ WHERE r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE UP
             return this;
         }
 
-        public ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
             string sql = string.Format(@"SELECT * FROM all_triggers WHERE UPPER(table_name) LIKE UPPER('{0}')", tableName);
             ExecuteSqlCommand(sql, out dtResult);
             return this;
         }
 
-        public ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
             string sql = string.Format(@"
 select dbms_metadata.get_ddl('TABLE', table_name) as sql
@@ -104,17 +104,17 @@ WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
             return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 
-        public ICommonDbConnection CreateTemporaryTable(string tableName)
+        public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection ClearTemporaryTable(string tableName)
+        public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
             throw new System.NotImplementedException();
         }
 
-        public ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
             dtResult = new DataTable();
             using (OracleConnection con = new OracleConnection(ConnectionString))
@@ -131,7 +131,7 @@ WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
             return this;
         }
 
-        public ICommonDbConnection Query<T>(string sqlRequest, out List<T> result)
+        public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;
@@ -168,7 +168,7 @@ WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
             return this;
         }
 
-        public ICommonDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;

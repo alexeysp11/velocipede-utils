@@ -1,6 +1,7 @@
 ﻿using System.Data.Common;
 using Dapper;
 using FluentAssertions;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base
@@ -17,7 +18,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
         }
 
         [Fact]
-        public async Task Database_CanRunQuery()
+        public async Task InitializeDatabase_CanRunQuery()
         {
             // Arrange.
             await using DbConnection connection = _fixture.GetDbConnection();
@@ -29,6 +30,15 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 
             // Assert.
             actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void QueryFirstOrDefault_GetOneRecord()
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
         }
     }
 }

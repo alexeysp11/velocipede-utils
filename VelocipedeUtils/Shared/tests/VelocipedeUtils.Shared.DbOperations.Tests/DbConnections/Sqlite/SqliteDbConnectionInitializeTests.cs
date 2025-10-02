@@ -45,7 +45,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
         public void GetDatabaseFilePath_InstanceAndDatabaseFilePathField_PathEqualsToExpected(string connectionString, string expectedPath)
         {
             // Arrange.
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(DatabaseType.SQLite, connectionString);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(DatabaseType.SQLite, connectionString);
 
             // Act.
             string instancePath = dbConnection.DatabaseName;

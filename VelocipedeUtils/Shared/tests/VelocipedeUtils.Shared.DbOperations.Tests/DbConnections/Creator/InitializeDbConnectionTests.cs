@@ -25,7 +25,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Creator
         public void InitializeDbConnection_CreatedWithSpecifiedParams(DatabaseType databaseType, string? connectionString = null)
         {
             // Arrange & Act.
-            ICommonDbConnection dbConnection = DbConnectionsCreator.InitializeDbConnection(databaseType, connectionString);
+            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
 
             // Assert.
             dbConnection.Should().NotBeNull();

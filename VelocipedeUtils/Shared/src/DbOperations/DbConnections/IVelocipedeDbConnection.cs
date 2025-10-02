@@ -7,7 +7,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Interface for database connections.
     /// </summary>
-    public interface ICommonDbConnection
+    public interface IVelocipedeDbConnection
     {
         /// <summary>
         /// Connection string.
@@ -37,72 +37,72 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Create database.
         /// </summary>
-        ICommonDbConnection CreateDb();
+        IVelocipedeDbConnection CreateDb();
 
         /// <summary>
         /// Connect to the specified database.
         /// </summary>
-        ICommonDbConnection OpenDb();
+        IVelocipedeDbConnection OpenDb();
 
         /// <summary>
         /// Disconnect from the specified database.
         /// </summary>
-        ICommonDbConnection CloseDb();
+        IVelocipedeDbConnection CloseDb();
 
         /// <summary>
         /// Get tables in the current database.
         /// </summary>
-        ICommonDbConnection GetTablesInDb(out List<string> tables);
+        IVelocipedeDbConnection GetTablesInDb(out List<string> tables);
 
         /// <summary>
         /// Get columns of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetColumns(string tableName, out DataTable dtResult);
+        IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult);
 
         /// <summary>
         /// Get foreign keys of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetForeignKeys(string tableName, out DataTable dtResult);
+        IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult);
 
         /// <summary>
         /// Get triggers of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetTriggers(string tableName, out DataTable dtResult);
+        IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult);
 
         /// <summary>
         /// Get SQL definition of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection GetSqlDefinition(string tableName, out string sqlDefinition);
+        IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition);
 
         /// <summary>
         /// Create temporary table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection CreateTemporaryTable(string tableName);
+        IVelocipedeDbConnection CreateTemporaryTable(string tableName);
 
         /// <summary>
         /// Clear temporary table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        ICommonDbConnection ClearTemporaryTable(string tableName);
+        IVelocipedeDbConnection ClearTemporaryTable(string tableName);
 
         /// <summary>
         /// Execute SQL command.
         /// </summary>
-        ICommonDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
+        IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
 
         /// <summary>
         /// Query using Dapper.
         /// </summary>
-        ICommonDbConnection Query<T>(string sqlRequest, out List<T> result);
+        IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result);
 
         /// <summary>
         /// Query first or default using Dapper.
         /// </summary>
-        ICommonDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result);
+        IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result);
     }
 }
