@@ -18,27 +18,40 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
         }
 
         [Fact]
-        public async Task InitializeDatabase_CanRunQuery()
+        public async Task InitializeDatabaseInContainers_CanRunQuery()
         {
             // Arrange.
+            const int expected = 1;
             await using DbConnection connection = _fixture.GetDbConnection();
             connection.Open();
 
             // Act.
-            const int expected = 1;
-            var actual = await connection.QueryFirstAsync<int>("SELECT 1");
+            int result = await connection.QueryFirstAsync<int>("SELECT 1");
 
             // Assert.
-            actual.Should().Be(expected);
+            result.Should().Be(expected);
         }
 
         [Fact]
-        public void QueryFirstOrDefault_GetOneRecord()
+        public void QueryFirstOrDefault_OpenDbAndGetOneRecord_ResultEqualsToExpected()
         {
             // Arrange.
+            const int expected = 1;
             IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
             // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault<int>("SELECT 1", out int result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().Be(expected);
         }
     }
 }

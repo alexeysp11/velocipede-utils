@@ -13,7 +13,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 
         public string ConnectionString => container.GetConnectionString();
         public string ContainerId => $"{container.Id}";
-        public DatabaseType DatabaseType => DatabaseType.MSSQL;
+        public DatabaseType DatabaseType => DatabaseType.MySQL;
 
         public DbConnection GetDbConnection()
             => new MySqlConnection(ConnectionString);
