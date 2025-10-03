@@ -5,7 +5,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mys
 {
     public sealed class MysqlDbConnectionQueryTests : BaseDbConnectionQueryTests, IClassFixture<MysqlDatabaseFixture>
     {
-        public MysqlDbConnectionQueryTests(MysqlDatabaseFixture fixture) : base(fixture)
+        private const string CREATE_DATABASE_SQL = @"
+create table if not exists ""TestModels"" (
+    ""Id"" int primary key,
+    ""Name"" varchar(50),
+    ""AdditionalInfo"" varchar(50)
+);";
+
+        public MysqlDbConnectionQueryTests(MysqlDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
         {
         }
     }

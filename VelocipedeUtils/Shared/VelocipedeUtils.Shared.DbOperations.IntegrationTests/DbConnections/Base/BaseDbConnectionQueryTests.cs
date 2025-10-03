@@ -14,13 +14,13 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
         protected IDatabaseFixture _fixture;
         protected readonly string _connectionString;
 
-        private TestDbContext _dbContext;
-
-        protected BaseDbConnectionQueryTests(IDatabaseFixture fixture)
+        protected BaseDbConnectionQueryTests(IDatabaseFixture fixture, string sql)
         {
             _fixture = fixture;
             _connectionString = _fixture.ConnectionString;
-            _dbContext = InitializeTestDatabase();
+
+            CreateTestDatabase(sql);
+            InitializeTestDatabase();
         }
 
         [Fact]
@@ -60,7 +60,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
             result.Should().Be(expected);
         }
 
-        private TestDbContext InitializeTestDatabase()
+        private void CreateTestDatabase(string sql)
+        {
+            using DbConnection connection = _fixture.GetDbConnection();
+            connection.Open();
+            connection.Execute(sql);
+        }
+
+        private void InitializeTestDatabase()
         {
             TestDbContext dbContext = _fixture.GetTestDbContext();
 
@@ -107,10 +114,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
             };
             dbContext.TestUsers.AddRange(users);
 
-            dbContext.Database.Migrate();
             dbContext.SaveChanges();
-
-            return dbContext;
         }
     }
 }
