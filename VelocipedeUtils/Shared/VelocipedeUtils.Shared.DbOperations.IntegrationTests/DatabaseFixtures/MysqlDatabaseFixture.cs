@@ -2,6 +2,8 @@
 using MySql.Data.MySqlClient;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using Testcontainers.MySql;
+using Microsoft.EntityFrameworkCore;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {
@@ -17,6 +19,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 
         public DbConnection GetDbConnection()
             => new MySqlConnection(ConnectionString);
+
+        public TestDbContext GetTestDbContext()
+        {
+            var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
+            optionsBuilder.UseMySql(ConnectionString, ServerVersion.AutoDetect(ConnectionString));
+
+            return new TestDbContext(optionsBuilder.Options);
+        }
 
         public Task InitializeAsync()
             => container.StartAsync();

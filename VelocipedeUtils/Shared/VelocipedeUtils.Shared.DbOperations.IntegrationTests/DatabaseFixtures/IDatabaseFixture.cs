@@ -1,5 +1,6 @@
 ﻿using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Enums;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {
@@ -9,5 +10,6 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
         string ContainerId { get; }
         DatabaseType DatabaseType { get; }
         DbConnection GetDbConnection();
+        TestDbContext GetTestDbContext();
     }
 }
