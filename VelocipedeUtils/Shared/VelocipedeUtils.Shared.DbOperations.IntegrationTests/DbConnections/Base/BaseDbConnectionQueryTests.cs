@@ -60,6 +60,23 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
             result.Should().Be(expected);
         }
 
+        [Fact]
+        public void Query_GetAllTestModels_QuantityEqualsToSpecified()
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Query(@"SELECT ""Id"", ""Name"" from ""TestModels""", out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Should().HaveCount(8);
+        }
+
         private void CreateTestDatabase(string sql)
         {
             using DbConnection connection = _fixture.GetDbConnection();
