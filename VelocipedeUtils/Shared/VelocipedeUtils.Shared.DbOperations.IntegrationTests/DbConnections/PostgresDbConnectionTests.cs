@@ -1,9 +1,8 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
-    public sealed class PostgresDbConnectionQueryTests : BaseDbConnectionQueryTests, IClassFixture<PgDatabaseFixture>
+    public sealed class PostgresDbConnectionTests : BaseDbConnectionTests, IClassFixture<PgDatabaseFixture>
     {
         private const string CREATE_DATABASE_SQL = @"
 create table if not exists ""TestModels"" (
@@ -22,7 +21,7 @@ create table if not exists ""TestUsers"" (
     ""CityId"" int NULL REFERENCES ""TestCities""(""Id""),
     ""AdditionalInfo"" varchar(50) NULL);";
 
-        public PostgresDbConnectionQueryTests(PgDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
+        public PostgresDbConnectionTests(PgDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
         {
         }
     }

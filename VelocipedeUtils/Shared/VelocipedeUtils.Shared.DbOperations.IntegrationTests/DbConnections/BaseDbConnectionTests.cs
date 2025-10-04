@@ -7,14 +7,14 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
-    public abstract class BaseDbConnectionQueryTests
+    public abstract class BaseDbConnectionTests
     {
         protected IDatabaseFixture _fixture;
         protected readonly string _connectionString;
 
-        protected BaseDbConnectionQueryTests(IDatabaseFixture fixture, string sql)
+        protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql)
         {
             _fixture = fixture;
             _connectionString = _fixture.ConnectionString;

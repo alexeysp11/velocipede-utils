@@ -1,9 +1,8 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
-    public sealed class MssqlDbConnectionQueryTests : BaseDbConnectionQueryTests, IClassFixture<MssqlDatabaseFixture>
+    public sealed class MssqlDbConnectionTests : BaseDbConnectionTests, IClassFixture<MssqlDatabaseFixture>
     {
         private const string CREATE_DATABASE_SQL = @"
 IF OBJECT_ID(N'dbo.""TestModels""', N'U') IS NULL
@@ -32,7 +31,7 @@ BEGIN
         FOREIGN KEY (""CityId"") REFERENCES ""TestCities""(""Id""));
 END;";
 
-        public MssqlDbConnectionQueryTests(MssqlDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
+        public MssqlDbConnectionTests(MssqlDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
         {
         }
     }
