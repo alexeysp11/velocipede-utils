@@ -28,9 +28,21 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException($"Connection string should not be null or empty: {ConnectionString}");
+                throw new InvalidOperationException($"Connection string should not be null or empty");
 
-            throw new System.NotImplementedException();
+            if (_connection != null)
+                return true;
+
+            try
+            {
+                OpenDb();
+                CloseDb();
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
 
         public IVelocipedeDbConnection CreateDb()

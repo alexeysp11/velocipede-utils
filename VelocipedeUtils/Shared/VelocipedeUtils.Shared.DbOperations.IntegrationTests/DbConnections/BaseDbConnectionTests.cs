@@ -24,7 +24,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public async Task InitializeDatabaseInContainers_CanRunQuery()
+        public async Task InitializeFixtureDatabase_CanRunQuery()
         {
             // Arrange.
             const int expected = 1;
@@ -77,12 +77,24 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             result.Should().HaveCount(8);
         }
 
+        [Fact]
+        public void DbExists_ConnectionStringFromFixture_ReturnsTrue()
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            bool result = dbConnection.DbExists();
+
+            // Assert.
+            result.Should().BeTrue();
+        }
+
         private void CreateTestDatabase(string sql)
         {
             using DbConnection connection = _fixture.GetDbConnection();
             connection.Open();
             connection.Execute(sql);
-            connection.Close();
         }
 
         private void InitializeTestDatabase()

@@ -34,7 +34,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException($"Connection string should not be null or empty: {ConnectionString}");
+                throw new InvalidOperationException($"Connection string should not be null or empty");
 
             throw new System.NotImplementedException();
         }
