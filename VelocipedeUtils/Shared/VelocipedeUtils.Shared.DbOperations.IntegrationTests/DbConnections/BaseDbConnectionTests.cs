@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
@@ -169,6 +170,25 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
                 .Should()
                 .Throw<InvalidOperationException>()
                 .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void CreateDb_IncorrectConnectionString_ThrowsVelocipedeDbCreateException(string connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CreateDb();
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbCreateException>()
+                .WithMessage(ErrorMessageConstants.UnableToCreateDatabase)
+                .WithInnerException(typeof(ArgumentException));
         }
 
         private void CreateTestDatabase(string sql)

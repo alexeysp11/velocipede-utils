@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using Dapper;
 using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
+using VelocipedeUtils.Shared.DbOperations.Exceptions;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -51,7 +53,19 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (DbExists())
                 throw new InvalidOperationException(ErrorMessageConstants.DatabaseAlreadyExists);
 
-            throw new System.NotImplementedException();
+            try
+            {
+                string dbName = DatabaseName;
+                throw new System.NotImplementedException();
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeDbCreateException(ex);
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbCreateException(ex);
+            }
         }
 
         public IVelocipedeDbConnection OpenDb()

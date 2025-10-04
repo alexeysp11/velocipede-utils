@@ -7,6 +7,7 @@ using Microsoft.Data.Sqlite;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using System.Linq;
 using VelocipedeUtils.Shared.DbOperations.Constants;
+using VelocipedeUtils.Shared.DbOperations.Exceptions;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -50,7 +51,21 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (DbExists())
                 throw new InvalidOperationException(ErrorMessageConstants.DatabaseAlreadyExists);
 
-            File.Create(DatabaseName).Close();
+            try
+            {
+                string dbName = DatabaseName;
+                using FileStream fs = File.Create(dbName);
+                fs.Close();
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeDbCreateException(ex);
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbCreateException(ex);
+            }
+            
             return this;
         }
 
