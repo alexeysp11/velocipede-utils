@@ -28,10 +28,20 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public bool DbExists()
         {
-            if (string.IsNullOrEmpty(DatabaseName))
-                throw new InvalidOperationException($"Database file path is not specified in connection string: {ConnectionString}");
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException($"Connection string should not be null or empty");
 
-            return File.Exists(DatabaseName);
+            if (_connection != null)
+                return true;
+
+            try
+            {
+                return File.Exists(DatabaseName);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public IVelocipedeDbConnection CreateDb()

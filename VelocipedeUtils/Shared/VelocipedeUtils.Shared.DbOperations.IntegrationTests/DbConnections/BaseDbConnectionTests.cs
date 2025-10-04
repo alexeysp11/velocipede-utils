@@ -90,6 +90,52 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             result.Should().BeTrue();
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void DbExists_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.DbExists();
+
+            // Act & Assert.
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void DbExists_GuidInsteadOfConnectionString_ReturnsFalse()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+
+            // Act.
+            bool result = dbConnection.DbExists();
+
+            // Assert.
+            result.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void DbExists_IncorrectConnectionString_ReturnsFalse(string connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+
+            // Act.
+            bool result = dbConnection.DbExists();
+
+            // Assert.
+            result.Should().BeFalse();
+        }
+
         private void CreateTestDatabase(string sql)
         {
             using DbConnection connection = _fixture.GetDbConnection();
