@@ -1,4 +1,10 @@
-﻿using FluentAssertions;
+﻿// The Oracle provider is not implemented yet.
+
+#define EXCLUDE_ORACLE_PROVIDER
+
+#if !EXCLUDE_ORACLE_PROVIDER
+
+using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
@@ -32,3 +38,5 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Oracle
         }
     }
 }
+
+#endif

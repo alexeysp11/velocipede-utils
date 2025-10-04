@@ -1,3 +1,9 @@
+// The Oracle provider is not implemented yet.
+
+#define EXCLUDE_ORACLE_PROVIDER
+
+#if !EXCLUDE_ORACLE_PROVIDER
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -226,3 +232,5 @@ WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
         }
     }
 }
+
+#endif
