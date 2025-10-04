@@ -82,11 +82,12 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             using DbConnection connection = _fixture.GetDbConnection();
             connection.Open();
             connection.Execute(sql);
+            connection.Close();
         }
 
         private void InitializeTestDatabase()
         {
-            TestDbContext dbContext = _fixture.GetTestDbContext();
+            using TestDbContext dbContext = _fixture.GetTestDbContext();
 
             // Test models.
             var testModels = new List<TestModel>

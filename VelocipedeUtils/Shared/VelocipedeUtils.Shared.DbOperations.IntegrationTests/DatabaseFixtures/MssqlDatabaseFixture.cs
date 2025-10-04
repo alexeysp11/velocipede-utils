@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
@@ -13,6 +14,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             new MsSqlBuilder()
                 .Build();
 
+        public string DatabaseName => MssqlDbConnection.GetDatabaseName(ConnectionString);
         public string ConnectionString => container.GetConnectionString();
         public string ContainerId => $"{container.Id}";
         public DatabaseType DatabaseType => DatabaseType.MSSQL;

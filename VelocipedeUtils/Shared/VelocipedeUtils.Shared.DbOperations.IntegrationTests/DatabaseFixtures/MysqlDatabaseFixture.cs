@@ -1,4 +1,10 @@
-﻿using System.Data.Common;
+﻿// This class is corrently excluded due to .NET MySQL errors "The given key was not present in the dictionary".
+
+#define EXCLUDE_MYSQL_PROVIDER
+
+#if !EXCLUDE_MYSQL_PROVIDER
+
+using System.Data.Common;
 using MySql.Data.MySqlClient;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using Testcontainers.MySql;
@@ -13,6 +19,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             new MySqlBuilder()
                 .Build();
 
+        public string DatabaseName => string.Empty;
         public string ConnectionString => container.GetConnectionString();
         public string ContainerId => $"{container.Id}";
         public DatabaseType DatabaseType => DatabaseType.MySQL;
@@ -35,3 +42,5 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             => container.DisposeAsync().AsTask();
     }
 }
+
+#endif

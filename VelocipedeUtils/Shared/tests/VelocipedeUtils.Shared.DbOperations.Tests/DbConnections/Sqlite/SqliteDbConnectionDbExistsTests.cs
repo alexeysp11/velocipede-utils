@@ -56,7 +56,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
         private void CreateDatabaseFolder(string path) => Directory.CreateDirectory(path);
         private bool DatabaseFolderExists(string path) => Directory.Exists(path);
 
-        private void CreateDatabase(string path) => File.Create(path);
+        private void CreateDatabase(string path) => File.Create(path).Close();
         private bool DatabaseExists(string path) => File.Exists(path);
         private void DeleteDatabase(string path) => File.Delete(path);
     }

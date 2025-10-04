@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Testcontainers.PostgreSql;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
@@ -14,6 +15,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
                 .WithEnvironment("POSTGRES_HOST_AUTH_METHOD", "password")
                 .Build();
 
+        public string DatabaseName => PgDbConnection.GetDatabaseName(ConnectionString);
         public string ConnectionString => container.GetConnectionString();
         public string ContainerId => $"{container.Id}";
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;

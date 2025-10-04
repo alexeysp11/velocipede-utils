@@ -39,7 +39,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (DbExists())
                 throw new InvalidOperationException($"Database file already exists");
 
-            File.Create(DatabaseName);
+            File.Create(DatabaseName).Close();
             return this;
         }
 
