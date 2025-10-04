@@ -19,7 +19,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Factories
                 DatabaseType.SQLite => new SqliteDbConnection(connectionString),
                 DatabaseType.PostgreSQL => new PgDbConnection(connectionString),
                 DatabaseType.MSSQL => new MssqlDbConnection(connectionString),
-                DatabaseType.MySQL => new MysqlDbConnection(connectionString),
+                DatabaseType.MySQL => throw new NotImplementedException("This class is corrently excluded due to .NET MySQL errors \"The given key was not present in the dictionary\""),
                 DatabaseType.Oracle => new OracleDbConnection(connectionString),
                 _ => throw new ArgumentException("Specified database type is not valid", nameof(databaseType))
             };

@@ -10,7 +10,7 @@ using System.Linq;
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
-    /// Class for using SQLite database
+    /// Class for using SQLite database.
     /// </summary>
     public sealed class SqliteDbConnection : IVelocipedeDbConnection
     {

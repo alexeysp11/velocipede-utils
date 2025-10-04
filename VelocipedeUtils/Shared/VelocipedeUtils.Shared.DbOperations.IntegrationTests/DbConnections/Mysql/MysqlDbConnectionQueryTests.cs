@@ -1,8 +1,8 @@
 ﻿// This class is corrently excluded due to .NET MySQL errors "The given key was not present in the dictionary".
 
-#define EXCLUDE_ENTIRE_TEST_CLASS
+#define EXCLUDE_MYSQL_PROVIDER
 
-#if !EXCLUDE_ENTIRE_TEST_CLASS
+#if !EXCLUDE_MYSQL_PROVIDER
 
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base;

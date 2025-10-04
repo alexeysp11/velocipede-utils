@@ -1,3 +1,9 @@
+// This class is corrently excluded due to .NET MySQL errors "The given key was not present in the dictionary".
+
+#define EXCLUDE_MYSQL_PROVIDER
+
+#if !EXCLUDE_MYSQL_PROVIDER
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -268,3 +274,5 @@ WHERE
         }
     }
 }
+
+#endif
