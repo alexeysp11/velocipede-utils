@@ -6,22 +6,31 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mss
     public sealed class MssqlDbConnectionQueryTests : BaseDbConnectionQueryTests, IClassFixture<MssqlDatabaseFixture>
     {
         private const string CREATE_DATABASE_SQL = @"
-create table ""TestModels"" (
-    ""Id"" int primary key,
-    ""Name"" varchar(50) NOT NULL,
-    ""AdditionalInfo"" varchar(50) NULL);
+IF OBJECT_ID(N'dbo.""TestModels""', N'U') IS NULL
+BEGIN
+    create table dbo.""TestModels"" (
+        ""Id"" int primary key,
+        ""Name"" varchar(50) NOT NULL,
+        ""AdditionalInfo"" varchar(50) NULL);
+END;
 
-create table ""TestCities"" (
-    ""Id"" int primary key,
-    ""Name"" varchar(50) NOT NULL);
+IF OBJECT_ID(N'dbo.""TestCities""', N'U') IS NULL
+BEGIN
+    create table dbo.""TestCities"" (
+        ""Id"" int primary key,
+        ""Name"" varchar(50) NOT NULL);
+END;
 
-create table ""TestUsers"" (
-    ""Id"" int primary key,
-    ""Name"" varchar(50) NOT NULL,
-    ""Email"" varchar(50) NOT NULL,
-    ""CityId"" int NULL,
-    ""AdditionalInfo"" varchar(50) NULL,
-    FOREIGN KEY (""CityId"") REFERENCES ""TestCities""(""Id""));";
+IF OBJECT_ID(N'dbo.""TestUsers""', N'U') IS NULL
+BEGIN
+    create table dbo.""TestUsers"" (
+        ""Id"" int primary key,
+        ""Name"" varchar(50) NOT NULL,
+        ""Email"" varchar(50) NOT NULL,
+        ""CityId"" int NULL,
+        ""AdditionalInfo"" varchar(50) NULL,
+        FOREIGN KEY (""CityId"") REFERENCES ""TestCities""(""Id""));
+END;";
 
         public MssqlDbConnectionQueryTests(MssqlDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
         {

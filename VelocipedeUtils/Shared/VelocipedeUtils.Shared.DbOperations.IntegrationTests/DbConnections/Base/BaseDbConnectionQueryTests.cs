@@ -100,7 +100,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
                 new TestModel { Id = 7, Name = "Test_7" },
                 new TestModel { Id = 8, Name = "Test_8" },
             };
-            dbContext.TestModels.AddRange(testModels);
+            foreach (TestModel testModel in testModels)
+            {
+                int? existingId = dbContext.TestModels.FirstOrDefault(x => x.Id == testModel.Id)?.Id;
+                if (!existingId.HasValue)
+                {
+                    dbContext.TestModels.Add(testModel);
+                }
+            }
 
             // Cities.
             var cities = new List<TestCity>
@@ -110,9 +117,16 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
                 new TestCity { Id = 3, Name = "City_3" },
                 new TestCity { Id = 4, Name = "City_4" },
             };
+            foreach (TestCity city in cities)
+            {
+                int? existingId = dbContext.TestCities.FirstOrDefault(x => x.Id == city.Id)?.Id;
+                if (!existingId.HasValue)
+                {
+                    dbContext.TestCities.Add(city);
+                }
+            }
             TestCity? firstCity = cities.FirstOrDefault();
             TestCity? lastCity = cities.LastOrDefault();
-            dbContext.TestCities.AddRange(cities);
 
             // Users.
             var users = new List<TestUser>
@@ -129,7 +143,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
                 new TestUser { Id = 10, Name = "User_10", Email = "User_10@example.com", CityId = lastCity?.Id, City = lastCity },
                 new TestUser { Id = 11, Name = "User_11", Email = "User_11@example.com" },
             };
-            dbContext.TestUsers.AddRange(users);
+            foreach (TestUser user in users)
+            {
+                int? existingId = dbContext.TestUsers.FirstOrDefault(x => x.Id == user.Id)?.Id;
+                if (!existingId.HasValue)
+                {
+                    dbContext.TestUsers.Add(user);
+                }
+            }
 
             dbContext.SaveChanges();
         }
