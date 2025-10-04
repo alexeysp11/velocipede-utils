@@ -2,9 +2,9 @@
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
 {
-    public sealed class PostgresDbConnectionCreateDbTests : BaseDbConnectionCreateDbTests
+    public sealed class PgDbConnectionCreateDbTests : BaseDbConnectionCreateDbTests
     {
-        public PostgresDbConnectionCreateDbTests() : base(Enums.DatabaseType.PostgreSQL)
+        public PgDbConnectionCreateDbTests() : base(Enums.DatabaseType.PostgreSQL)
         {
         }
     }

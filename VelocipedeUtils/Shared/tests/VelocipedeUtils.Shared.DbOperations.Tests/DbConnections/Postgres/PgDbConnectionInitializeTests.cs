@@ -7,9 +7,9 @@ using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
 {
-    public sealed class PostgresDbConnectionInitializeTests : BaseDbConnectionInitializeTests
+    public sealed class PgDbConnectionInitializeTests : BaseDbConnectionInitializeTests
     {
-        public PostgresDbConnectionInitializeTests() : base(DatabaseType.PostgreSQL)
+        public PgDbConnectionInitializeTests() : base(DatabaseType.PostgreSQL)
         {
             _connectionString = $"Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mydatabase;";
         }
