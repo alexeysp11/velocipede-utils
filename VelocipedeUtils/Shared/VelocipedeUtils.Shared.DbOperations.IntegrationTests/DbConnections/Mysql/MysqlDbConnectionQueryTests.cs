@@ -1,4 +1,4 @@
-﻿// This class is corrently excluded due to .NET MySql errors "The given key was not present in the dictionary".
+﻿// This class is corrently excluded due to .NET MySQL errors "The given key was not present in the dictionary".
 
 #define EXCLUDE_ENTIRE_TEST_CLASS
 
