@@ -6,6 +6,7 @@ using System.IO;
 using Microsoft.Data.Sqlite;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using System.Linq;
+using VelocipedeUtils.Shared.DbOperations.Constants;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -29,7 +30,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException($"Connection string should not be null or empty");
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             if (_connection != null)
                 return true;
@@ -47,7 +48,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
-                throw new InvalidOperationException($"Database file already exists");
+                throw new InvalidOperationException(ErrorMessageConstants.DatabaseAlreadyExists);
 
             File.Create(DatabaseName).Close();
             return this;

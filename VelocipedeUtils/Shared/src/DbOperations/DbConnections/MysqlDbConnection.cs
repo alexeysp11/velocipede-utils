@@ -34,7 +34,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException($"Connection string should not be null or empty");
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             throw new System.NotImplementedException();
         }
@@ -42,7 +42,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
-                throw new InvalidOperationException($"Database already exists");
+                throw new InvalidOperationException(ErrorMessageConstants.DatabaseAlreadyExists);
 
             throw new System.NotImplementedException();
         }

@@ -2,6 +2,7 @@
 using Dapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
@@ -101,7 +102,10 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             Action act = () => dbConnection.DbExists();
 
             // Act & Assert.
-            act.Should().Throw<InvalidOperationException>();
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
         }
 
         [Fact]
@@ -134,6 +138,37 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CreateDb_ConnectionStringFromFixture_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Action act = () => dbConnection.CreateDb();
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.DatabaseAlreadyExists);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void CreateDb_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CreateDb();
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
         }
 
         private void CreateTestDatabase(string sql)
