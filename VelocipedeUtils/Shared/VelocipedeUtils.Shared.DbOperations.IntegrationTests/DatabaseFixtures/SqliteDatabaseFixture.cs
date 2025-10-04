@@ -47,6 +47,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
         {
             if (File.Exists(DatabaseName))
             {
+                SqliteConnection.ClearAllPools();
                 File.Delete(DatabaseName);
             }
             return Task.CompletedTask;
