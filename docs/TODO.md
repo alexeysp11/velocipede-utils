@@ -9,11 +9,13 @@
 ## Database connections 
 
 - [ ] Explain what is the differnece between `DataSource` and `ConnString` in database classes and to use them properly. 
-- [ ] Create template for using multiple database connections. 
+- [ ] Create template for using multiple database connections.
 - [ ] How to deal with `blob` objects in databases connection classes?
     - [ ] Add the functionality to get byte arrays from the DB connection.
-- [ ] Method `VelocipedeUtils.Shared.DbConnections.BaseDbConnection.GetSqlFromDataTable()` does not correct SQL statement, so you need to explain how to use this method properly. 
-- [ ] How to transfer data from one database to another? 
+- [ ] Method `VelocipedeUtils.Shared.DbConnections.BaseDbConnection.GetSqlFromDataTable()` does not correct SQL statement, so you need to explain how to use this method properly. Maybe, this method should be implemented based on metadata about the tables.
+- [ ] How to transfer data from one database to another?
+- [ ] Execute requests with parameters.
+- [ ] Extend methods for getting connection string.
 
 ## MS Excel converter 
 
