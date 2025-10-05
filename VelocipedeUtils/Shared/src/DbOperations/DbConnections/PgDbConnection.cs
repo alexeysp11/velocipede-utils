@@ -222,6 +222,9 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
 
         public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             NpgsqlConnection localConnection = null;
             dtResult = new DataTable();
@@ -272,6 +275,9 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             NpgsqlConnection localConnection = null;
             try
@@ -316,6 +322,9 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
 
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             NpgsqlConnection localConnection = null;
             try

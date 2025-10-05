@@ -160,6 +160,9 @@ ORDER BY 1";
         /// </summary>
         public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             SqliteConnection localConnection = null;
             dtResult = new DataTable();
@@ -210,6 +213,9 @@ ORDER BY 1";
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             SqliteConnection localConnection = null;
             try
@@ -254,6 +260,9 @@ ORDER BY 1";
 
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             SqliteConnection localConnection = null;
             try

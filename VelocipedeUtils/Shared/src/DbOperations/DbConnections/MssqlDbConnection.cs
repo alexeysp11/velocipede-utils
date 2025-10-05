@@ -143,6 +143,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             dtResult = new DataTable();
             bool newConnectionUsed = true;
             SqlConnection localConnection = null;
@@ -194,6 +197,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             SqlConnection localConnection = null;
             try
@@ -238,6 +244,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             bool newConnectionUsed = true;
             SqlConnection localConnection = null;
             try

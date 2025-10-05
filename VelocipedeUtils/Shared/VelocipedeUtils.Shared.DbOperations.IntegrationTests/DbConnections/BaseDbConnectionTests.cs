@@ -447,6 +447,60 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
         }
 
+        [Fact]
+        public void GetTablesInDb_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetTablesInDb(out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GetTablesInDb_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetTablesInDb(out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void GetTablesInDb_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetTablesInDb(out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
         private void CreateTestDatabase(string sql)
         {
             using DbConnection connection = _fixture.GetDbConnection();
