@@ -381,5 +381,10 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
             connectionStringBuilder.Database = databaseName;
             return connectionStringBuilder.ConnectionString;
         }
+
+        public void Dispose()
+        {
+            CloseDb();
+        }
     }
 }

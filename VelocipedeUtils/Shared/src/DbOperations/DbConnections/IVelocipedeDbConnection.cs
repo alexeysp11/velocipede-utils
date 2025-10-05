@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Enums;
@@ -7,7 +8,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Interface for database connections.
     /// </summary>
-    public interface IVelocipedeDbConnection
+    public interface IVelocipedeDbConnection : IDisposable
     {
         /// <summary>
         /// Connection string.

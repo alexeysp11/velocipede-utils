@@ -286,5 +286,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             connectionStringBuilder.InitialCatalog = databaseName;
             return connectionStringBuilder.ConnectionString;
         }
+
+        public void Dispose()
+        {
+            CloseDb();
+        }
     }
 }

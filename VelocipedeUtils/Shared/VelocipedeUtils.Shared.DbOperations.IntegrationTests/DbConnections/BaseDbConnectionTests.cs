@@ -193,6 +193,22 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
+        public void CreateDb_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CreateDb();
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+        }
+
+        [Fact]
         public void CreateDbIfNotExists_ConnectionStringFromFixture_NotThrowAnyException()
         {
             // Arrange.
@@ -236,6 +252,76 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
                 .Should()
                 .Throw<VelocipedeDbConnectParamsException>()
                 .WithInnerException(typeof(ArgumentException));
+        }
+
+        [Fact]
+        public void CloseDb_ConnectionStringFromFixture_NotThrowAnyException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Action act = () => dbConnection.CloseDb();
+
+            // Act & Assert.
+            act.Should().NotThrow<Exception>();
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CloseDb_ConnectionStringFromFixtureAndConnected_NotThrowAnyException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.OpenDb();
+            Action act = () => dbConnection.CloseDb();
+
+            // Act & Assert.
+            act.Should().NotThrow<Exception>();
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Fact]
+        public void CloseDb_GuidInsteadOfConnectionString_NotThrowAnyException()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CloseDb();
+
+            // Act & Assert.
+            act.Should().NotThrow<Exception>();
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void CloseDb_NullOrEmptyConnectionString_NotThrowAnyException(string? connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CloseDb();
+
+            // Act & Assert.
+            act.Should().NotThrow<Exception>();
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void CloseDb_IncorrectConnectionString_NotThrowAnyException(string connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CloseDb();
+
+            // Act & Assert.
+            act.Should().NotThrow<Exception>();
+            dbConnection.IsConnected.Should().BeFalse();
         }
 
         private void CreateTestDatabase(string sql)

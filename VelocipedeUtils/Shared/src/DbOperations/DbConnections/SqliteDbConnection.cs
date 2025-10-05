@@ -293,5 +293,10 @@ ORDER BY 1";
             connectionStringBuilder.DataSource = path;
             return connectionStringBuilder.ConnectionString;
         }
+
+        public void Dispose()
+        {
+            CloseDb();
+        }
     }
 }
