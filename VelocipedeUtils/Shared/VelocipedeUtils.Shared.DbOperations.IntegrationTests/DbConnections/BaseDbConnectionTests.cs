@@ -390,6 +390,63 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
         }
 
+        [Fact]
+        public void GetTablesInDb_ConnectionStringFromFixtureAndNotConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            var expected = new List<string>
+            {
+                "TestModels",
+                "TestUsers",
+                "TestCities",
+            };
+
+            // Act.
+            dbConnection.GetTablesInDb(out List<string> result);
+            result = result
+                .Select(x => x.Replace("public.", ""))
+                .ToList();
+
+            // Assert.
+            result.Should().HaveCountGreaterThanOrEqualTo(3);
+            foreach (var expectedString in expected)
+            {
+                result.Should().Contain(expectedString);
+            }
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetTablesInDb_ConnectionStringFromFixtureAndConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            var expected = new List<string>
+            {
+                "TestModels",
+                "TestUsers",
+                "TestCities",
+            };
+
+            // Act.
+            dbConnection
+                .OpenDb()
+                .GetTablesInDb(out List<string> result)
+                .CloseDb();
+            result = result
+                .Select(x => x.Replace("public.", ""))
+                .ToList();
+
+            // Assert.
+            result.Should().HaveCountGreaterThanOrEqualTo(3);
+            foreach (var expectedString in expected)
+            {
+                result.Should().Contain(expectedString);
+            }
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
         private void CreateTestDatabase(string sql)
         {
             using DbConnection connection = _fixture.GetDbConnection();

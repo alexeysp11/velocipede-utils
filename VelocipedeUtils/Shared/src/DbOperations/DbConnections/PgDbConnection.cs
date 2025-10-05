@@ -222,27 +222,27 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
 
         public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            // Initialize connection.
             bool newConnectionUsed = true;
             NpgsqlConnection localConnection = null;
-            if (_connection != null)
-            {
-                newConnectionUsed = false;
-                localConnection = _connection;
-            }
-            else
-            {
-                localConnection = new NpgsqlConnection(ConnectionString);
-            }
-            if (localConnection.State != ConnectionState.Open)
-            {
-                localConnection.Open();
-            }
-
-            // Execute SQL command and dispose connection if necessary.
             dtResult = new DataTable();
             try
             {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new NpgsqlConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    localConnection.Open();
+                }
+                
+                // Execute SQL command and dispose connection if necessary.
                 using (var command = new NpgsqlCommand(sqlRequest, localConnection))
                 {
                     var reader = command.ExecuteReader();
@@ -250,9 +250,17 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
                     reader.Close();
                 }
             }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             finally
             {
-                if (newConnectionUsed)
+                if (newConnectionUsed && localConnection != null)
                 {
                     localConnection.Close();
                     localConnection.Dispose();
@@ -264,75 +272,89 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
-            // Initialize connection.
             bool newConnectionUsed = true;
             NpgsqlConnection localConnection = null;
-            if (_connection != null)
-            {
-                newConnectionUsed = false;
-                localConnection = _connection;
-            }
-            else
-            {
-                localConnection = new NpgsqlConnection(ConnectionString);
-            }
-            if (localConnection.State != ConnectionState.Open)
-            {
-                localConnection.Open();
-            }
-
-            // Execute SQL command and dispose connection if necessary.
             try
             {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new NpgsqlConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    localConnection.Open();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
                 result = localConnection.Query<T>(sqlRequest).ToList();
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
-                if (newConnectionUsed)
+                if (newConnectionUsed && localConnection != null)
                 {
                     localConnection.Close();
                     localConnection.Dispose();
                     localConnection = null;
                 }
             }
-
             return this;
         }
 
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
         {
-            // Initialize connection.
             bool newConnectionUsed = true;
             NpgsqlConnection localConnection = null;
-            if (_connection != null)
-            {
-                newConnectionUsed = false;
-                localConnection = _connection;
-            }
-            else
-            {
-                localConnection = new NpgsqlConnection(ConnectionString);
-            }
-            if (localConnection.State != ConnectionState.Open)
-            {
-                localConnection.Open();
-            }
-
-            // Execute SQL command and dispose connection if necessary.
             try
             {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new NpgsqlConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    localConnection.Open();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
                 result = localConnection.QueryFirstOrDefault<T>(sqlRequest);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
-                if (newConnectionUsed)
+                if (newConnectionUsed && localConnection != null)
                 {
                     localConnection.Close();
                     localConnection.Dispose();
                     localConnection = null;
                 }
             }
-
             return this;
         }
 
