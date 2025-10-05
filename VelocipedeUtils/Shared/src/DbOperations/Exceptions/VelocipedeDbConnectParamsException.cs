@@ -3,6 +3,9 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 
 namespace VelocipedeUtils.Shared.DbOperations.Exceptions
 {
+    /// <summary>
+    /// The exception that is thrown when one of the connection string parameters is specified incorrectly.
+    /// </summary>
     [Serializable]
     public class VelocipedeDbConnectParamsException : Exception
     {

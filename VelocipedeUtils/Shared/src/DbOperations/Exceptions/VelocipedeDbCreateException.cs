@@ -3,6 +3,9 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 
 namespace VelocipedeUtils.Shared.DbOperations.Exceptions
 {
+    /// <summary>
+    /// The exception that is thrown when the database creation failed.
+    /// </summary>
     [Serializable]
     public class VelocipedeDbCreateException : Exception
     {
