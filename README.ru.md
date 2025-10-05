@@ -22,6 +22,7 @@
 
 - [CodeExtensions](VelocipedeUtils/Shared/src/CodeExtensions/README.ru.md)
 - [Communication](VelocipedeUtils/Shared/src/Communication/README.ru.md)
+- [DbOperations](VelocipedeUtils/Shared/src/DbOperations/README.ru.md): унифицированные операции с реляционными базами данных, которые упрощают извлечение и вставку данных из разнородных источников.
 - [Models](VelocipedeUtils/Shared/src/Models/README.ru.md)
 - [Models.Business](VelocipedeUtils/Shared/src/Models.Business/README.ru.md): является реализацией общей объектной модели для бизнес-сущностей, используемых в рамках данного монорепозитория.
 - [Office](VelocipedeUtils/Shared/src/Office/README.ru.md): библиотека для работы с офисными форматами документов.

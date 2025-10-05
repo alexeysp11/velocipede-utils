@@ -2,11 +2,37 @@
 
 [English](README.md) | [Русский](README.ru.md)
 
-Библиотека предлагает операции с такими базами данных, как SQLite, PostgreSQL, MySQL, MS SQL, Oracle, что упрощает извлечение и вставку данных из различных источников.
+Библиотека предлагает функционал для унифицированных операций с реляционными базами данных, что упрощает извлечение и вставку данных из разнородных источников. Подобный функционал может быть необходим в таких приложениях как [sqlviewer](https://github.com/alexeysp11/sqlviewer).
 
-Данная часть библиотеки предоставляет функционал для коммуникации с базами данных с использованием ADO.NET:
-- [SQLite](DbConnections/SqliteDbConnection.cs)
-- [PostgreSQL](DbConnections/PgDbConnection.cs)
-- [MySQL](DbConnections/MysqlDbConnection.cs)
-- [MS SQL](DbConnections/MssqlDbConnection.cs)
-- [Oracle](DbConnections/OracleDbConnection.cs)
+Пример выполнения команды `CREATE TABLE IF NOT EXISTS` и заданного SQL-запроса с использованием общего интерфейса `IVelocipedeDbConnection` представлен ниже:
+```C#
+IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .CreateDbIfNotExists(newDatabaseName)
+    .SwitchDb(newDatabaseName)
+    .ExecuteSqlCommand(sqlQuery, out DataTable dtResult)
+    .CloseDb();
+```
+
+Метаданные о базе данных, с которой установлено активное подключение, а также о таблицах в ней можно получить следующим образом:
+```C#
+IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+dbConnection
+    .OpenDb()
+    .GetAllDataFromTable(tableName, out DataTable dtData)
+    .GetColumnsOfTable(tableName, out DataTable dtColumns)
+    .GetForeignKeys(tableName, out DataTable dtForeignKeys)
+    .GetTriggers(tableName, out DataTable dtTriggers)
+    .GetSqlDefinition(tableName, out string sqlDefinition)
+    .CloseDb();
+```
+
+Данная библиотека предоставляет функционал для коммуникации с реляционными базами данных с использованием ADO.NET и Dapper. Информация о типах БД, которые поддерживаются на текущий момент:
+- [x] [SQLite](https://sqlite.org/)
+- [x] [PostgreSQL](https://www.postgresql.org/)
+- [x] [MS SQL](https://www.microsoft.com/en-us/sql-server)
+- [ ] [MySQL](https://www.mysql.com/)
+- [ ] [Oracle](https://www.oracle.com/database/)
+- [ ] [Clickhouse](https://clickhouse.com/)

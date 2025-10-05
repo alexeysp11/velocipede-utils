@@ -22,6 +22,7 @@ List of the shared projects (reusable data models, services, and extensions):
 
 - [CodeExtensions](VelocipedeUtils/Shared/src/CodeExtensions/README.md)
 - [Communication](VelocipedeUtils/Shared/src/Communication/README.md)
+- [DbOperations](VelocipedeUtils/Shared/src/DbOperations/README.md): unified operations with relational databases, simplifying the extraction and insertion of data from disparate sources.
 - [Models](VelocipedeUtils/Shared/src/Models/README.md)
 - [Models.Business](VelocipedeUtils/Shared/src/Models.Business/README.md): is an implementation of a shared object model for business entities used within the mono-repository.
 - [Office](VelocipedeUtils/Shared/src/Office/README.md): library for working with office document formats.
