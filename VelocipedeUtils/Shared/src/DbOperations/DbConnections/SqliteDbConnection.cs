@@ -57,8 +57,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
             try
             {
-                string dbName = DatabaseName;
-                using FileStream fs = File.Create(dbName);
+                using FileStream fs = File.Create(DatabaseName);
                 fs.Close();
             }
             catch (VelocipedeDbConnectParamsException)
@@ -75,10 +74,24 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection OpenDb()
         {
-            CloseDb();
-            _connection = new SqliteConnection(ConnectionString);
-            _connection.Open();
-            return this;
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            try
+            {
+                CloseDb();
+                _connection = new SqliteConnection(ConnectionString);
+                _connection.Open();
+                return this;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public IVelocipedeDbConnection CloseDb()

@@ -73,6 +73,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection OpenDb()
         {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
             try
             {
                 CloseDb();
