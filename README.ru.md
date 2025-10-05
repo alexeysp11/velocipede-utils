@@ -14,9 +14,7 @@
 - Сократить время разработки за счет повторного использования готовых компонентов.
 - Упростить рефакторинг и управление зависимостями.
 
-## Проекты
-
-### Shared
+## Shared
 
 Список общих проектов (переиспользуемые модели данных, сервисы и расширения):
 
@@ -29,6 +27,45 @@
 - [Office.Extensions](VelocipedeUtils/Shared/src/Office.Extensions/README.ru.md): библиотека расширений для работы с офисными форматами документов.
 - [ServiceDiscoveryBpm](VelocipedeUtils/Shared/src/ServiceDiscoveryBpm/README.ru.md)
 - [WpfExtensions](VelocipedeUtils/Shared/src/WpfExtensions/README.ru.md): библиотека визуальных компонентов для WPF-приложений.
+
+### [VelocipedeUtils.Shared.DbOperations](VelocipedeUtils/Shared/src/DbOperations/README.ru.md)
+
+Библиотека предлагает функционал для унифицированных операций с реляционными базами данных, что упрощает извлечение и вставку данных из разнородных источников. Подобный функционал может быть необходим в таких приложениях как [sqlviewer](https://github.com/alexeysp11/sqlviewer).
+
+Пример выполнения команды `CREATE TABLE IF NOT EXISTS` и заданного SQL-запроса с использованием общего интерфейса `IVelocipedeDbConnection` представлен ниже:
+```C#
+IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .CreateDbIfNotExists(newDatabaseName)
+    .SwitchDb(newDatabaseName)
+    .ExecuteSqlCommand(sqlQuery, out DataTable dtResult)
+    .CloseDb();
+```
+
+Метаданные о базе данных, с которой установлено активное подключение, а также о таблицах в ней можно получить следующим образом:
+```C#
+IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+dbConnection
+    .OpenDb()
+    .GetAllDataFromTable(tableName, out DataTable dtData)
+    .GetColumnsOfTable(tableName, out DataTable dtColumns)
+    .GetForeignKeys(tableName, out DataTable dtForeignKeys)
+    .GetTriggers(tableName, out DataTable dtTriggers)
+    .GetSqlDefinition(tableName, out string sqlDefinition)
+    .CloseDb();
+```
+
+Данная библиотека предоставляет функционал для коммуникации с реляционными базами данных с использованием ADO.NET и Dapper. Информация о типах БД, которые поддерживаются на текущий момент:
+- [x] [SQLite](https://sqlite.org/)
+- [x] [PostgreSQL](https://www.postgresql.org/)
+- [x] [MS SQL](https://www.microsoft.com/en-us/sql-server)
+- [ ] [MySQL](https://www.mysql.com/)
+- [ ] [Oracle](https://www.oracle.com/database/)
+- [ ] [Clickhouse](https://clickhouse.com/)
+
+## Проекты
 
 ### [PixelTerminalUI](VelocipedeUtils/PixelTerminalUI/README.ru.md)
 

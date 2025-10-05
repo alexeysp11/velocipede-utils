@@ -14,9 +14,7 @@ As a result, it was decided to create a mono-repository, which included most of 
 - Reduce development time by reusing ready-made components.
 - Simplify refactoring and dependency management.
 
-## Projects
-
-### Shared
+## Shared
 
 List of the shared projects (reusable data models, services, and extensions):
 
@@ -29,6 +27,45 @@ List of the shared projects (reusable data models, services, and extensions):
 - [Office.Extensions](VelocipedeUtils/Shared/src/Office.Extensions/README.md): extension library for working with office document formats.
 - [ServiceDiscoveryBpm](VelocipedeUtils/Shared/src/ServiceDiscoveryBpm/README.md)
 - [WpfExtensions](VelocipedeUtils/Shared/src/WpfExtensions/README.md): is a library of visual elements for WPF applications.
+
+### [VelocipedeUtils.Shared.DbOperations](VelocipedeUtils/Shared/src/DbOperations/README.md)
+
+The library offers functionality for unified operations with relational databases, simplifying the extraction and insertion of data from disparate sources. This functionality may be necessary in applications such as [sqlviewer](https://github.com/alexeysp11/sqlviewer).
+
+An example of executing the `CREATE TABLE IF NOT EXISTS` command and a given SQL query using the common `IVelocipedeDbConnection` interface is shown below:
+```C#
+IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .CreateDbIfNotExists(newDatabaseName)
+    .SwitchDb(newDatabaseName)
+    .ExecuteSqlCommand(sqlQuery, out DataTable dtResult)
+    .CloseDb();
+```
+
+Metadata about the database to which an active connection is established, as well as about the tables in it, can be obtained as follows:
+```C#
+IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+dbConnection
+    .OpenDb()
+    .GetAllDataFromTable(tableName, out DataTable dtData)
+    .GetColumnsOfTable(tableName, out DataTable dtColumns)
+    .GetForeignKeys(tableName, out DataTable dtForeignKeys)
+    .GetTriggers(tableName, out DataTable dtTriggers)
+    .GetSqlDefinition(tableName, out string sqlDefinition)
+    .CloseDb();
+```
+
+This library provides functionality for communicating with relational databases using ADO.NET and Dapper. Information on currently supported database types:
+- [x] [SQLite](https://sqlite.org/)
+- [x] [PostgreSQL](https://www.postgresql.org/)
+- [x] [MS SQL](https://www.microsoft.com/en-us/sql-server)
+- [ ] [MySQL](https://www.mysql.com/)
+- [ ] [Oracle](https://www.oracle.com/database/)
+- [ ] [Clickhouse](https://clickhouse.com/)
+
+## Projects
 
 ### [PixelTerminalUI](VelocipedeUtils/PixelTerminalUI/README.md)
 
