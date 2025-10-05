@@ -57,9 +57,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 using FileStream fs = File.Create(dbName);
                 fs.Close();
             }
-            catch (ArgumentException ex)
+            catch (VelocipedeDbConnectException)
             {
-                throw new VelocipedeDbCreateException(ex);
+                throw;
             }
             catch (Exception ex)
             {
@@ -268,9 +268,16 @@ ORDER BY 1";
         /// </summary>
         public static string GetDatabaseName(string connectionString)
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder();
-            connectionStringBuilder.ConnectionString = connectionString;
-            return connectionStringBuilder.DataSource;
+            try
+            {
+                var connectionStringBuilder = new SqliteConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                return connectionStringBuilder.DataSource;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
         }
 
         /// <summary>

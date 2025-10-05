@@ -57,9 +57,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 string dbName = DatabaseName;
                 throw new System.NotImplementedException();
             }
-            catch (ArgumentException ex)
+            catch (VelocipedeDbConnectException)
             {
-                throw new VelocipedeDbCreateException(ex);
+                throw;
             }
             catch (Exception ex)
             {
@@ -345,9 +345,16 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
         /// </summary>
         public static string GetDatabaseName(string connectionString)
         {
-            var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
-            connectionStringBuilder.ConnectionString = connectionString;
-            return connectionStringBuilder.Database;
+            try
+            {
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                return connectionStringBuilder.Database;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
         }
 
         /// <summary>

@@ -57,9 +57,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 string dbName = DatabaseName;
                 throw new System.NotImplementedException();
             }
-            catch (ArgumentException ex)
+            catch (VelocipedeDbConnectException)
             {
-                throw new VelocipedeDbCreateException(ex);
+                throw;
             }
             catch (Exception ex)
             {
@@ -250,9 +250,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// </summary>
         public static string GetDatabaseName(string connectionString)
         {
-            var connectionStringBuilder = new SqlConnectionStringBuilder();
-            connectionStringBuilder.ConnectionString = connectionString;
-            return connectionStringBuilder.InitialCatalog;
+            try
+            {
+                var connectionStringBuilder = new SqlConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                return connectionStringBuilder.InitialCatalog;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
         }
 
         /// <summary>

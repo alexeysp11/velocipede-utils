@@ -186,8 +186,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Act & Assert.
             act
                 .Should()
-                .Throw<VelocipedeDbCreateException>()
-                .WithMessage(ErrorMessageConstants.UnableToCreateDatabase)
+                .Throw<VelocipedeDbNameException>()
+                .WithMessage(ErrorMessageConstants.IncorrectDatabaseName)
                 .WithInnerException(typeof(ArgumentException));
         }
 
