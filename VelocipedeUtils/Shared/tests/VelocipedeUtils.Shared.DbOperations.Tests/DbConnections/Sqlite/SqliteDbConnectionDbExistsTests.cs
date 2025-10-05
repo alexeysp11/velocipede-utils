@@ -24,7 +24,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
             // Arrange.
             string connectionString = $"Data Source={_folderName}/{nameof(DbExists_FileDoesNotExist_ReturnsFalse)}.db;";
             string path = SqliteDbConnection.GetDatabaseName(connectionString);
-            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.DatabaseType.SQLite, connectionString);
+            using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.DatabaseType.SQLite, connectionString);
             if (DatabaseExists(path))
                 DeleteDatabase(path);
 
@@ -41,7 +41,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
             // Arrange.
             string connectionString = $"Data Source={_folderName}/{nameof(DbExists_FileExists_ReturnsTrue)}.db;";
             string path = SqliteDbConnection.GetDatabaseName(connectionString);
-            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.DatabaseType.SQLite, connectionString);
+            using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.DatabaseType.SQLite, connectionString);
             if (DatabaseExists(path))
                 DeleteDatabase(path);
             CreateDatabase(path);

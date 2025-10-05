@@ -45,7 +45,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             const int expected = 1;
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -66,7 +66,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void Query_GetAllTestModels_QuantityEqualsToSpecified()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -83,7 +83,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void DbExists_ConnectionStringFromFixture_ReturnsTrue()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
             // Act.
             bool result = dbConnection.DbExists();
@@ -98,7 +98,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void DbExists_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.DbExists();
 
@@ -114,7 +114,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.DbExists();
 
@@ -132,7 +132,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void DbExists_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.DbExists();
 
@@ -147,7 +147,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CreateDb_ConnectionStringFromFixture_ThrowsInvalidOperationException()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             Action act = () => dbConnection.CreateDb();
 
             // Act & Assert.
@@ -163,7 +163,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CreateDb_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CreateDb();
 
@@ -181,7 +181,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CreateDb_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CreateDb();
 
@@ -197,7 +197,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CreateDb();
 
@@ -212,7 +212,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CreateDbIfNotExists_ConnectionStringFromFixture_NotThrowAnyException()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             Action act = () => dbConnection.CreateDbIfNotExists();
 
             // Act & Assert.
@@ -225,7 +225,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CreateDbIfNotExists_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CreateDbIfNotExists();
 
@@ -243,7 +243,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CreateDbIfNotExists_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CreateDbIfNotExists();
 
@@ -258,7 +258,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void OpenDb_ConnectionStringFromFixture_NotThrowAnyException()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             Action act = () => dbConnection.OpenDb();
 
             // Act & Assert.
@@ -271,7 +271,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.OpenDb();
 
@@ -289,7 +289,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void OpenDb_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.OpenDb();
 
@@ -308,7 +308,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void OpenDb_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.OpenDb();
 
@@ -324,7 +324,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CloseDb_ConnectionStringFromFixture_NotThrowAnyException()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             Action act = () => dbConnection.CloseDb();
 
             // Act & Assert.
@@ -336,7 +336,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CloseDb_ConnectionStringFromFixtureAndConnected_NotThrowAnyException()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.OpenDb();
             Action act = () => dbConnection.CloseDb();
 
@@ -350,7 +350,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CloseDb();
 
@@ -365,7 +365,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CloseDb_NullOrEmptyConnectionString_NotThrowAnyException(string? connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CloseDb();
 
@@ -381,7 +381,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         public void CloseDb_IncorrectConnectionString_NotThrowAnyException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
             Action act = () => dbConnection.CloseDb();
 

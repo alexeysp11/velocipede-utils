@@ -6,7 +6,9 @@ The library offers functionality for unified operations with relational database
 
 An example of executing the `CREATE TABLE IF NOT EXISTS` command and a given SQL query using the common `IVelocipedeDbConnection` interface is shown below:
 ```C#
-IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
 dbConnection
     .SetConnectionString(connectionString)
     .OpenDb()
@@ -18,7 +20,9 @@ dbConnection
 
 Metadata about the database to which an active connection is established, as well as about the tables in it, can be obtained as follows:
 ```C#
-IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
 dbConnection
     .OpenDb()
     .GetAllDataFromTable(tableName, out DataTable dtData)

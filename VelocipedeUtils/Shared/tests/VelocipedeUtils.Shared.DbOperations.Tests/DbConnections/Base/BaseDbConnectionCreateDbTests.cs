@@ -20,7 +20,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void DbCreate_ConnectionStringIsNullOrEmpty_ThrowsInvalidOperationException(string connectionString)
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType, connectionString);
+            using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType, connectionString);
             Action act = () => dbConnection.CreateDb();
 
             // Act & Assert.

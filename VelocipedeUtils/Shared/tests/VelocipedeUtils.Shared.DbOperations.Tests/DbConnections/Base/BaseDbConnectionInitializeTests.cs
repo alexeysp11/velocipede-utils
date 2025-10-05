@@ -20,7 +20,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void DatabaseType_ShouldBeEqualToSpecified()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
+            using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
 
             // Act & Assert.
             dbConnection.DatabaseType.Should().Be(_databaseType);
@@ -30,7 +30,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void SetConnectionString_SetEmptyWhenCreatingAndChange_ChangedToSpecified()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
+            using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
 
             // Act.
             string initialConnectionString = dbConnection.ConnectionString;
@@ -46,7 +46,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
         public void SetConnectionString_SpecifyWhenCreating_EqualsToSpecified()
         {
             // Arrange.
-            IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType, _connectionString);
+            using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType, _connectionString);
 
             // Act & Assert.
             _connectionString.Should().NotBeNullOrEmpty();
