@@ -34,7 +34,9 @@
 
 Пример выполнения команды `CREATE TABLE IF NOT EXISTS` и заданного SQL-запроса с использованием общего интерфейса `IVelocipedeDbConnection` представлен ниже:
 ```C#
-IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
 dbConnection
     .SetConnectionString(connectionString)
     .OpenDb()
@@ -46,7 +48,9 @@ dbConnection
 
 Метаданные о базе данных, с которой установлено активное подключение, а также о таблицах в ней можно получить следующим образом:
 ```C#
-IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
 dbConnection
     .OpenDb()
     .GetAllDataFromTable(tableName, out DataTable dtData)
