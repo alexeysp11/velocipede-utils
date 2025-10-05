@@ -4,7 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 namespace VelocipedeUtils.Shared.DbOperations.Exceptions
 {
     [Serializable]
-    public class VelocipedeConnectionStringException : VelocipedeDbConnectException
+    public class VelocipedeConnectionStringException : VelocipedeDbConnectParamsException
     {
         public VelocipedeConnectionStringException()
             : base(ErrorMessageConstants.IncorrectConnectionString)

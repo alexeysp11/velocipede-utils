@@ -110,35 +110,37 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void DbExists_GuidInsteadOfConnectionString_ReturnsFalse()
+        public void DbExists_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
             IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.DbExists();
 
-            // Act.
-            bool result = dbConnection.DbExists();
-
-            // Assert.
-            result.Should().BeFalse();
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
         }
 
         [Theory]
         [InlineData("INCORRECT CONNECTION STRING")]
         [InlineData("connect:localhost:0000;")]
         [InlineData("connect:localhost:0000;super-connection-string")]
-        public void DbExists_IncorrectConnectionString_ReturnsFalse(string connectionString)
+        public void DbExists_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
             IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.DbExists();
 
-            // Act.
-            bool result = dbConnection.DbExists();
-
-            // Assert.
-            result.Should().BeFalse();
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
         }
 
         [Fact]
@@ -176,7 +178,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [InlineData("INCORRECT CONNECTION STRING")]
         [InlineData("connect:localhost:0000;")]
         [InlineData("connect:localhost:0000;super-connection-string")]
-        public void CreateDb_IncorrectConnectionString_ThrowsVelocipedeDbCreateException(string connectionString)
+        public void CreateDb_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
             IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -186,8 +188,53 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Act & Assert.
             act
                 .Should()
-                .Throw<VelocipedeDbNameException>()
-                .WithMessage(ErrorMessageConstants.IncorrectDatabaseName)
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+        }
+
+        [Fact]
+        public void CreateDbIfNotExists_ConnectionStringFromFixture_NotThrowAnyException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Action act = () => dbConnection.CreateDbIfNotExists();
+
+            // Act & Assert.
+            act.Should().NotThrow<Exception>();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void CreateDbIfNotExists_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CreateDbIfNotExists();
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void CreateDbIfNotExists_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.CreateDbIfNotExists();
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
                 .WithInnerException(typeof(ArgumentException));
         }
 

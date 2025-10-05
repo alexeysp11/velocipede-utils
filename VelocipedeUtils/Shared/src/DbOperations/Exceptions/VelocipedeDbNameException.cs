@@ -4,7 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 namespace VelocipedeUtils.Shared.DbOperations.Exceptions
 {
     [Serializable]
-    public class VelocipedeDbNameException : VelocipedeDbConnectException
+    public class VelocipedeDbNameException : VelocipedeDbConnectParamsException
     {
         public VelocipedeDbNameException()
             : base(ErrorMessageConstants.IncorrectDatabaseName)

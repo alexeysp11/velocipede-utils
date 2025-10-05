@@ -4,26 +4,26 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 namespace VelocipedeUtils.Shared.DbOperations.Exceptions
 {
     [Serializable]
-    public class VelocipedeDbConnectException : Exception
+    public class VelocipedeDbConnectParamsException : Exception
     {
         public string InnerExceptionMessage => InnerException?.Message ?? "";
 
-        public VelocipedeDbConnectException()
+        public VelocipedeDbConnectParamsException()
             : base(ErrorMessageConstants.UnableToConnectToDatabase)
         {
         }
 
-        public VelocipedeDbConnectException(Exception innerException)
+        public VelocipedeDbConnectParamsException(Exception innerException)
             : base(ErrorMessageConstants.UnableToConnectToDatabase, innerException)
         {
         }
 
-        public VelocipedeDbConnectException(string message)
+        public VelocipedeDbConnectParamsException(string message)
             : base(message)
         {
         }
 
-        public VelocipedeDbConnectException(string message, Exception innerException)
+        public VelocipedeDbConnectParamsException(string message, Exception innerException)
             : base(message, innerException)
         {
         }

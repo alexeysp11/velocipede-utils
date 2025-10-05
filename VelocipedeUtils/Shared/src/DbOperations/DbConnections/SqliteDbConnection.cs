@@ -40,6 +40,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 return File.Exists(DatabaseName);
             }
+            catch (VelocipedeDbConnectParamsException)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 return false;
@@ -57,7 +61,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 using FileStream fs = File.Create(dbName);
                 fs.Close();
             }
-            catch (VelocipedeDbConnectException)
+            catch (VelocipedeDbConnectParamsException)
             {
                 throw;
             }

@@ -40,6 +40,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 OpenDb();
                 CloseDb();
             }
+            catch (VelocipedeDbConnectParamsException)
+            {
+                throw;
+            }
             catch (Exception)
             {
                 return false;
@@ -57,7 +61,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 string dbName = DatabaseName;
                 throw new System.NotImplementedException();
             }
-            catch (VelocipedeDbConnectException)
+            catch (VelocipedeDbConnectParamsException)
             {
                 throw;
             }
@@ -69,10 +73,21 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection OpenDb()
         {
-            CloseDb();
-            _connection = new SqlConnection(ConnectionString);
-            _connection.Open();
-            return this;
+            try
+            {
+                CloseDb();
+                _connection = new SqlConnection(ConnectionString);
+                _connection.Open();
+                return this;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         public IVelocipedeDbConnection CloseDb()
