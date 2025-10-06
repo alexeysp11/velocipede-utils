@@ -73,14 +73,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out List<ColumnInfo> columnInfo)
         {
             string[] tn = tableName.Split('.');
             string sql = string.Format(@"
 SELECT column_name, data_type, data_length
 FROM USER_TAB_COLUMNS
 WHERE UPPER(table_name) = UPPER('{0}')", tn[0], tn[1]);
-            ExecuteSqlCommand(sql, out dtResult);
+            Query(sql, out columnInfo);
             return this;
         }
 

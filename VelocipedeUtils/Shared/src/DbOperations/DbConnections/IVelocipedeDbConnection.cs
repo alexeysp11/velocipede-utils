@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Enums;
+using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -59,7 +60,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get columns of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult);
+        IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo);
 
         /// <summary>
         /// Get foreign keys of the specified table.

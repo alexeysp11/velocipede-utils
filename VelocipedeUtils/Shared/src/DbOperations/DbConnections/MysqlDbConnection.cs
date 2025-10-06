@@ -73,7 +73,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out List<ColumnInfo> columnInfo)
         {
             string sql = string.Format(@"
 SELECT 
@@ -90,7 +90,7 @@ SELECT
 FROM `INFORMATION_SCHEMA`.`COLUMNS`
 WHERE UPPER(`TABLE_SCHEMA`) LIKE UPPER('{0}')
 AND UPPER(`TABLE_NAME`) LIKE UPPER('{1}')", DatabaseName, tableName);
-            ExecuteSqlCommand(sql, out dtResult);
+            Query(sql, out columnInfo);
             return this;
         }
 

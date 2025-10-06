@@ -8,6 +8,7 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using System.Linq;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
+using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -118,10 +119,18 @@ ORDER BY 1";
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
         {
-            string sql = $"PRAGMA table_info({tableName});";
-            ExecuteSqlCommand(sql, out dtResult);
+            string sql = @$"
+SELECT
+    cid as ColumnId,
+    name as ColumnName,
+    type as ColumnType,
+    dflt_value as DefaultValue,
+    pk as IsPrimaryKey,
+    not ""notnull"" as IsNullable
+FROM pragma_table_info({tableName});";
+            Query(sql, out columnInfo);
             return this;
         }
 

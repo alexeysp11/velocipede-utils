@@ -1,13 +1,16 @@
-﻿using System.Data.Common;
+﻿using System.Data;
+using System.Data.Common;
 using Dapper;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
+using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
@@ -499,6 +502,39 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
                 .Throw<VelocipedeDbConnectParamsException>()
                 .WithInnerException(typeof(ArgumentException));
             dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetColumns_ConnectionStringFromFixtureAndNotConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string tableName = "\"TestModels\"";
+
+            // Act.
+            dbConnection.GetColumns(tableName, out List<VelocipedeColumnInfo>? result);
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(3);
+        }
+
+        [Fact]
+        public void GetColumns_ConnectionStringFromFixtureAndConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string tableName = "\"TestModels\"";
+
+            // Act.
+            dbConnection
+                .OpenDb()
+                .GetColumns(tableName, out List<VelocipedeColumnInfo>? result)
+                .CloseDb();
+            
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(3);
         }
 
         private void CreateTestDatabase(string sql)

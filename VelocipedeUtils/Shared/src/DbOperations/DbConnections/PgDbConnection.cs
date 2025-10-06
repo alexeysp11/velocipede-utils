@@ -7,6 +7,7 @@ using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
+using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -111,22 +112,30 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
         {
+            string schemaName = "public";
             string[] tn = tableName.Split('.');
-            string sql = string.Format(@"
+            if (tn.Length >= 2)
+            {
+                schemaName.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
+            string sql = string.Format($@"
 SELECT
-    column_name,
-    ordinal_position,
-    column_default,
-    is_nullable,
-    data_type,
-    is_self_referencing,
-    is_generated,
-    is_updatable
+    column_name as ColumnName,
+    ordinal_position as OrdinalPosition,
+    column_default as DefaultValue,
+    case when is_nullable = 'YES' then true else false end as IsNullable,
+    data_type as ColumnType,
+    case when is_self_referencing = 'YES' then true else false end as IsSelfReferencing,
+    case when is_generated = 'ALWAYS' then true else false end as IsGenerated,
+    case when is_updatable = 'YES' then true else false end as IsUpdatable
 FROM information_schema.columns
-WHERE table_schema LIKE '{0}' AND table_name LIKE '{1}'", tn[0], tn[1]);
-            ExecuteSqlCommand(sql, out dtResult);
+WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
+            Query(sql, out columnInfo);
             return this;
         }
 
@@ -134,13 +143,13 @@ WHERE table_schema LIKE '{0}' AND table_name LIKE '{1}'", tn[0], tn[1]);
         {
             string sql = string.Format(@"
 SELECT
-    tc.table_schema,
-    tc.constraint_name,
-    tc.table_name,
-    kcu.column_name,
-    ccu.table_schema AS foreign_table_schema,
-    ccu.table_name AS foreign_table_name,
-    ccu.column_name AS foreign_column_name
+    tc.table_schema as TableSchema,
+    tc.constraint_name as ConstraintName,
+    tc.table_name as TableName,
+    kcu.column_name as ColumnName,
+    ccu.table_schema AS ForeignTableSchema,
+    ccu.table_name AS ForeignTableName,
+    ccu.column_name AS ForeignColumnName
 FROM 
     information_schema.table_constraints AS tc
 JOIN information_schema.key_column_usage AS kcu

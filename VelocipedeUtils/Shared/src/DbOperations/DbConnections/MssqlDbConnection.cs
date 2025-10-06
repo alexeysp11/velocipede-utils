@@ -7,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
+using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -111,9 +112,19 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
         {
-            throw new System.NotImplementedException();
+            tableName = tableName.Trim('"');
+            string sql = $@"
+SELECT
+    COLUMN_NAME as ColumnName,
+    DATA_TYPE as ColumnType,
+    COLUMN_DEFAULT as DefaultValue,
+    case when IS_NULLABLE = 'YES' then 1 else 0 end as IsNullable
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = '{tableName}';";
+            Query(sql, out columnInfo);
+            return this;
         }
 
         public IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
