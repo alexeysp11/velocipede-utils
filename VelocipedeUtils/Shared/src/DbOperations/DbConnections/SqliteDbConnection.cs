@@ -379,9 +379,34 @@ FROM pragma_table_info({tableName});";
         /// </summary>
         public static string GetConnectionString(string path)
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder();
-            connectionStringBuilder.DataSource = path;
-            return connectionStringBuilder.ConnectionString;
+            try
+            {
+                var connectionStringBuilder = new SqliteConnectionStringBuilder();
+                connectionStringBuilder.DataSource = path;
+                return connectionStringBuilder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get connection string by database file path.
+        /// </summary>
+        public static string GetConnectionString(string connectionString, string path)
+        {
+            try
+            {
+                var connectionStringBuilder = new SqliteConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                connectionStringBuilder.DataSource = path;
+                return connectionStringBuilder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
         }
 
         public void Dispose()

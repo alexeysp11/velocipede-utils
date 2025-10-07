@@ -385,11 +385,19 @@ WHERE TABLE_NAME = '{tableName}';";
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        public static string GetConnectionString(string databaseName)
+        public static string GetConnectionString(string connectionString, string databaseName)
         {
-            var connectionStringBuilder = new SqlConnectionStringBuilder();
-            connectionStringBuilder.InitialCatalog = databaseName;
-            return connectionStringBuilder.ConnectionString;
+            try
+            {
+                var connectionStringBuilder = new SqlConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                connectionStringBuilder.InitialCatalog = databaseName;
+                return connectionStringBuilder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
         }
 
         public void Dispose()

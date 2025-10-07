@@ -461,11 +461,19 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        public static string GetConnectionString(string databaseName)
+        public static string GetConnectionString(string connectionString, string databaseName)
         {
-            var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
-            connectionStringBuilder.Database = databaseName;
-            return connectionStringBuilder.ConnectionString;
+            try
+            {
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                connectionStringBuilder.Database = databaseName;
+                return connectionStringBuilder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
         }
 
         public void Dispose()

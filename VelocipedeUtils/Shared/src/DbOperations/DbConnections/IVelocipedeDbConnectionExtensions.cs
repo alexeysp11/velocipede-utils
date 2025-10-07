@@ -12,6 +12,22 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     public static class IVelocipedeDbConnectionExtensions
     {
         /// <summary>
+        /// Get connection string by database name.
+        /// </summary>
+        public static IVelocipedeDbConnection GetConnectionString(this IVelocipedeDbConnection connection, string databaseName, out string connectionString)
+        {
+            connectionString = connection.DatabaseType switch
+            {
+                DatabaseType.SQLite => SqliteDbConnection.GetConnectionString(databaseName),
+                DatabaseType.PostgreSQL => PgDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
+                DatabaseType.MSSQL => MssqlDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
+                DatabaseType.MySQL or DatabaseType.MariaDB or DatabaseType.HSQLDB or DatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
+                _ => throw new InvalidOperationException(ErrorMessageConstants.IncorrectDatabaseType),
+            };
+            return connection;
+        }
+
+        /// <summary>
         /// Set connection string.
         /// </summary>
         public static IVelocipedeDbConnection SetConnectionString(this IVelocipedeDbConnection connection, string connectionString)
