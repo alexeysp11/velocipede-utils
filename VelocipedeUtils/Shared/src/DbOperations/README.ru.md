@@ -40,3 +40,29 @@ dbConnection
 - [ ] [MySQL](https://www.mysql.com/)
 - [ ] [Oracle](https://www.oracle.com/database/)
 - [ ] [Clickhouse](https://clickhouse.com/)
+
+## Основные операции
+
+### Создать базу данных
+
+Создать базу данных можно, подключившись к существующей БД и переопределив строку подключения с использованием имени новой БД:
+```C#
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .GetConnectionString(dbName, out string newConnectionString)
+    .SetConnectionString(newConnectionString)
+    .CreateDb()
+    .SwitchDb(dbName)
+    .CloseDb();
+```
+
+Для данной операции есть упрощенный API:
+```C#
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .CreateDb(dbName)
+    .SwitchDb(dbName)
+    .CloseDb();
+```

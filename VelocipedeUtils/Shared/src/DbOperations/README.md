@@ -40,3 +40,29 @@ This library provides functionality for communicating with relational databases 
 - [ ] [MySQL](https://www.mysql.com/)
 - [ ] [Oracle](https://www.oracle.com/database/)
 - [ ] [Clickhouse](https://clickhouse.com/)
+
+## Basic Operations
+
+### Create a database
+
+You can create a database by connecting to an existing database and redefining the connection string with the name of the new database:
+```C#
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .GetConnectionString(dbName, out string newConnectionString)
+    .SetConnectionString(newConnectionString)
+    .CreateDb()
+    .SwitchDb(dbName)
+    .CloseDb();
+```
+
+There is a simplified API for this operation:
+```C#
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .CreateDb(dbName)
+    .SwitchDb(dbName)
+    .CloseDb();
+```
