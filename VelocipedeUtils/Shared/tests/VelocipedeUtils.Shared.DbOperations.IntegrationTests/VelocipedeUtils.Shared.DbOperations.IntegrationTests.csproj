@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\DbOperations\VelocipedeUtils.Shared.DbOperations.csproj" />
+    <ProjectReference Include="..\..\src\DbOperations\VelocipedeUtils.Shared.DbOperations.csproj" />
   </ItemGroup>
 
   <ItemGroup>

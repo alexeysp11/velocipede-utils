@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Shared.DbOp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Shared.Tests", "tests\VelocipedeUtils.Shared.Tests\VelocipedeUtils.Shared.Tests.csproj", "{D78DED77-EE43-DF01-A655-2F700BBE7330}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Shared.DbOperations.IntegrationTests", "VelocipedeUtils.Shared.DbOperations.IntegrationTests\VelocipedeUtils.Shared.DbOperations.IntegrationTests.csproj", "{2EF1F19E-CDA9-4AE6-B2B3-21BCD6A64152}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Shared.DbOperations.IntegrationTests", "tests\VelocipedeUtils.Shared.DbOperations.IntegrationTests\VelocipedeUtils.Shared.DbOperations.IntegrationTests.csproj", "{2EF1F19E-CDA9-4AE6-B2B3-21BCD6A64152}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
