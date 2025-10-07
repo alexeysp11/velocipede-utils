@@ -15,7 +15,11 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
                 .Build();
 
         public string DatabaseName => MssqlDbConnection.GetDatabaseName(ConnectionString);
-        public string ConnectionString => container.GetConnectionString();
+        public string ConnectionString => container.GetConnectionString()
+            .Replace("Server=", "Data Source=")
+            .Replace("Database", "Initial Catalog")
+            .Replace("User Id", "User ID")
+            .Replace("TrustServerCertificate", "Trust Server Certificate");
         public string ContainerId => $"{container.Id}";
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
 

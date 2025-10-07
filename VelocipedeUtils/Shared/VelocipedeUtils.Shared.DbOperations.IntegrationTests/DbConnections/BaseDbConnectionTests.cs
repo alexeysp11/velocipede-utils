@@ -599,7 +599,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Arrange.
             string connectionString = string.Empty;
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-            string dbName = SqliteDbConnection.GetDatabaseName(_fixture.ConnectionString);
+            string dbName = dbConnection.GetActiveDatabaseName();
             Action act = () => dbConnection.SwitchDb(dbName, out connectionString);
 
             // Act & Assert.

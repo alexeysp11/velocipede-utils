@@ -1,6 +1,8 @@
 using System;
 using System.Data;
 using System.Text;
+using VelocipedeUtils.Shared.DbOperations.Constants;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -15,6 +17,31 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public static IVelocipedeDbConnection SetConnectionString(this IVelocipedeDbConnection connection, string connectionString)
         {
             connection.ConnectionString = connectionString;
+            return connection;
+        }
+
+        /// <summary>
+        /// Get database name from the active connection string.
+        /// </summary>
+        public static string GetActiveDatabaseName(this IVelocipedeDbConnection connection)
+        {
+            connection.GetActiveDatabaseName(out string dbName);
+            return dbName;
+        }
+
+        /// <summary>
+        /// Get database name from the active connection string.
+        /// </summary>
+        public static IVelocipedeDbConnection GetActiveDatabaseName(this IVelocipedeDbConnection connection, out string dbName)
+        {
+            dbName = connection.DatabaseType switch
+            {
+                DatabaseType.SQLite => SqliteDbConnection.GetDatabaseName(connection.ConnectionString),
+                DatabaseType.PostgreSQL => PgDbConnection.GetDatabaseName(connection.ConnectionString),
+                DatabaseType.MSSQL => MssqlDbConnection.GetDatabaseName(connection.ConnectionString),
+                DatabaseType.MySQL or DatabaseType.MariaDB or DatabaseType.HSQLDB or DatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
+                _ => throw new InvalidOperationException(ErrorMessageConstants.IncorrectDatabaseType),
+            };
             return connection;
         }
 
