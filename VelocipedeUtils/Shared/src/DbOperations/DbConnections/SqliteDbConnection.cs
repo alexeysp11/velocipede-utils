@@ -77,6 +77,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            if (!DbExists())
+                throw new VelocipedeDbConnectParamsException();
 
             try
             {
@@ -84,6 +86,42 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 _connection = new SqliteConnection(ConnectionString);
                 _connection.Open();
                 return this;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Switch to the specified database and get new connection string.
+        /// </summary>
+        public IVelocipedeDbConnection SwitchDb(string dbName, out string connectionString)
+        {
+            if (string.IsNullOrEmpty(dbName))
+                throw new VelocipedeDbNameException();
+
+            try
+            {
+                // Change connection string.
+                var connectionStringBuilder = new SqliteConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = ConnectionString;
+                connectionStringBuilder.DataSource = dbName;
+                connectionString = connectionStringBuilder.ConnectionString;
+                ConnectionString = connectionString;
+
+                // Connect to the new database.
+                OpenDb();
+
+                return this;
+            }
+            catch (VelocipedeDbConnectParamsException)
+            {
+                throw;
             }
             catch (ArgumentException ex)
             {

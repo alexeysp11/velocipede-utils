@@ -31,6 +31,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
+        /// Switch to the specified database.
+        /// </summary>
+        public static IVelocipedeDbConnection SwitchDb(this IVelocipedeDbConnection connection, string dbName)
+        {
+            return connection.SwitchDb(dbName, out _);
+        }
+
+        /// <summary>
         /// Get all data from the table.
         /// </summary>
         /// <param name="tableName">Table name</param>

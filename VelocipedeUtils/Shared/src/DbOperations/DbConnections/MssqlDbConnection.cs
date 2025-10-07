@@ -88,8 +88,51 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
+            catch (SqlException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
             catch (Exception)
             {
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Switch to the specified database and get new connection string.
+        /// </summary>
+        public IVelocipedeDbConnection SwitchDb(string dbName, out string connectionString)
+        {
+            if (string.IsNullOrEmpty(dbName))
+                throw new VelocipedeDbNameException();
+
+            try
+            {
+                // Change connection string.
+                var connectionStringBuilder = new SqlConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = ConnectionString;
+                connectionStringBuilder.InitialCatalog = dbName;
+                connectionString = connectionStringBuilder.ConnectionString;
+                ConnectionString = connectionString;
+
+                // Connect to the new database.
+                OpenDb();
+
+                return this;
+            }
+            catch (VelocipedeDbConnectParamsException)
+            {
+                CloseDb();
+                throw;
+            }
+            catch (ArgumentException ex)
+            {
+                CloseDb();
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                CloseDb();
                 throw;
             }
         }

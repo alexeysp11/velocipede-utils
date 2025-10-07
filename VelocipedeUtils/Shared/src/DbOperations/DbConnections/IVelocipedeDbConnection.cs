@@ -47,6 +47,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection OpenDb();
 
         /// <summary>
+        /// Switch to the specified database and get new connection string.
+        /// </summary>
+        IVelocipedeDbConnection SwitchDb(string dbName, out string connectionString);
+
+        /// <summary>
         /// Disconnect from the specified database.
         /// </summary>
         IVelocipedeDbConnection CloseDb();
