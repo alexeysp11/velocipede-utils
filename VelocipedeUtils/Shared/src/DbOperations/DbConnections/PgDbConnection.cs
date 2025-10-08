@@ -36,6 +36,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (_connection != null && _connection.ConnectionString == ConnectionString)
                 return true;
 
+            string existingConnectionString = _connection?.ConnectionString;
             try
             {
                 OpenDb();
@@ -48,6 +49,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             catch (Exception)
             {
                 return false;
+            }
+            finally
+            {
+                TryReconnect(existingConnectionString);
             }
             return true;
         }
@@ -74,21 +79,26 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection OpenDb()
         {
-            if (string.IsNullOrEmpty(ConnectionString))
+            OpenDb(ConnectionString);
+            return this;
+        }
+
+        /// <summary>
+        /// Open database with the specified connection string.
+        /// </summary>
+        private void OpenDb(string connectionString)
+        {
+            if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             try
             {
                 CloseDb();
-                _connection = new NpgsqlConnection(ConnectionString);
+                connectionString = UsePersistSecurityInfo(connectionString);
+                _connection = new NpgsqlConnection(connectionString);
                 _connection.Open();
-                return this;
             }
             catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (PostgresException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
@@ -96,6 +106,22 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Try to reconnect to the previous established connection.
+        /// </summary>
+        private bool TryReconnect(string connectionString)
+        {
+            try
+            {
+                OpenDb(connectionString);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -124,6 +150,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 CloseDb();
                 throw;
+            }
+            catch (PostgresException ex)
+            {
+                CloseDb();
+                throw new VelocipedeConnectionStringException(ex);
             }
             catch (ArgumentException ex)
             {
@@ -515,6 +546,25 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
                 var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
                 connectionStringBuilder.ConnectionString = connectionString;
                 connectionStringBuilder.Database = databaseName;
+                connectionStringBuilder.PersistSecurityInfo = true;
+                return connectionStringBuilder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get connection string by database name.
+        /// </summary>
+        public static string UsePersistSecurityInfo(string connectionString)
+        {
+            try
+            {
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                connectionStringBuilder.PersistSecurityInfo = true;
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
