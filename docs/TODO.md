@@ -16,6 +16,8 @@
 - [ ] How to transfer data from one database to another?
 - [ ] Execute requests with parameters.
 - [ ] Extend methods for getting connection string.
+- [ ] Remove code duplication for database operations using Dapper.
+- [ ] Fix tests for MS SQL.
 
 ## MS Excel converter 
 
