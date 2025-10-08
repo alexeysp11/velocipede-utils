@@ -98,9 +98,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection ClearTemporaryTable(string tableName);
 
         /// <summary>
-        /// Execute SQL command.
+        /// Execute SQL command and <see cref="DataTable"/> as a result.
         /// </summary>
         IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
+
+        /// <summary>
+        /// Execute SQL command.
+        /// </summary>
+        IVelocipedeDbConnection Execute(string sqlRequest);
 
         /// <summary>
         /// Query using Dapper.

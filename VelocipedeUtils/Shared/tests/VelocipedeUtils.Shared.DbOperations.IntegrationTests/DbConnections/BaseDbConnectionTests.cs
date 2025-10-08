@@ -5,6 +5,7 @@ using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
@@ -94,6 +95,23 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             result.Should().BeTrue();
         }
 
+        [Fact]
+        public void DbExists_ConnectAndSetNotExistingDb_ReturnsFalse()
+        {
+            // Arrange.
+            string dbName = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection
+                .GetConnectionString(dbName, out string newConnectionString)
+                .SetConnectionString(newConnectionString);
+
+            // Act.
+            bool result = dbConnection.DbExists();
+
+            // Assert.
+            result.Should().BeFalse();
+        }
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -157,6 +175,48 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
                 .Should()
                 .Throw<InvalidOperationException>()
                 .WithMessage(ErrorMessageConstants.DatabaseAlreadyExists);
+        }
+
+        [Fact]
+        public void CreateDb_ConnectAndSetNotExistingDbUsingSetters_DbExists()
+        {
+            // Arrange.
+            string dbName = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            if (_fixture.DatabaseType == DatabaseType.SQLite)
+                dbName = $"{dbName}.db";
+
+            // Act.
+            dbConnection
+                .OpenDb()
+                .GetConnectionString(dbName, out string newConnectionString)
+                .SetConnectionString(newConnectionString)
+                .CreateDb()
+                .SwitchDb(dbName)
+                .CloseDb();
+            bool dbExists = dbConnection.DbExists();
+
+            // Assert.
+            dbExists.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CreateDb_CreateNotExistingDbUsingExtensionMethod_DbExists()
+        {
+            // Arrange.
+            string dbName = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection
+                .OpenDb()
+                .CreateDb(dbName)
+                .SwitchDb(dbName)
+                .CloseDb();
+            bool dbExists = dbConnection.DbExists();
+
+            // Assert.
+            dbExists.Should().BeTrue();
         }
 
         [Theory]

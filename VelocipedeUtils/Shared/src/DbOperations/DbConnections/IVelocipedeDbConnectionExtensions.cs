@@ -74,6 +74,28 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
+        /// Create the specified database.
+        /// </summary>
+        public static IVelocipedeDbConnection CreateDb(this IVelocipedeDbConnection connection, string dbName)
+        {
+            return connection
+                .OpenDbIfNotConnected()
+                .GetConnectionString(dbName, out string newConnectionString)
+                .SetConnectionString(newConnectionString)
+                .CreateDb();
+        }
+
+        /// <summary>
+        /// Preserve already existing connection, and open database only if necessary.
+        /// </summary>
+        public static IVelocipedeDbConnection OpenDbIfNotConnected(this IVelocipedeDbConnection connection)
+        {
+            if (!connection.IsConnected)
+                connection.OpenDb();
+            return connection;
+        }
+
+        /// <summary>
         /// Switch to the specified database.
         /// </summary>
         public static IVelocipedeDbConnection SwitchDb(this IVelocipedeDbConnection connection, string dbName)

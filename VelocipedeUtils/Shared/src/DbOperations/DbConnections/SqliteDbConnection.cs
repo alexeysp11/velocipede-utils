@@ -34,7 +34,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
-            if (_connection != null)
+            if (_connection != null && _connection.ConnectionString == ConnectionString)
                 return true;
 
             try
@@ -237,6 +237,53 @@ FROM pragma_table_info({tableName});";
                 {
                     dtResult.Load(reader);
                 }
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (newConnectionUsed && localConnection != null)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+            return this;
+        }
+
+        public IVelocipedeDbConnection Execute(string sqlRequest)
+        {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            bool newConnectionUsed = true;
+            SqliteConnection localConnection = null;
+            try
+            {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new SqliteConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    localConnection.Open();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
+                localConnection.Execute(sqlRequest);
             }
             catch (ArgumentException ex)
             {
