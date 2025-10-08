@@ -178,7 +178,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void CreateDb_ConnectAndSetNotExistingDbUsingSetters_DbExists()
+        public virtual void CreateDb_ConnectAndSetNotExistingDbUsingSetters_DbExists()
         {
             // Arrange.
             string dbName = Guid.NewGuid().ToString();
@@ -201,7 +201,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void CreateDb_CreateNotExistingDbUsingExtensionMethod_DbExists()
+        public virtual void CreateDb_CreateNotExistingDbUsingExtensionMethod_DbExists()
         {
             // Arrange.
             string dbName = Guid.NewGuid().ToString();

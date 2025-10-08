@@ -558,7 +558,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        public static string UsePersistSecurityInfo(string connectionString)
+        private string UsePersistSecurityInfo(string connectionString)
         {
             try
             {

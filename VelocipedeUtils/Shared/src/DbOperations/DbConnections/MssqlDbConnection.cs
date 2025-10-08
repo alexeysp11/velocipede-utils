@@ -36,6 +36,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (_connection != null && _connection.ConnectionString == ConnectionString)
                 return true;
 
+            string existingConnectionString = _connection?.ConnectionString;
             try
             {
                 OpenDb();
@@ -48,6 +49,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             catch (Exception)
             {
                 return false;
+            }
+            finally
+            {
+                TryReconnect(existingConnectionString);
             }
             return true;
         }
@@ -74,13 +79,23 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         public IVelocipedeDbConnection OpenDb()
         {
-            if (string.IsNullOrEmpty(ConnectionString))
+            OpenDb(ConnectionString);
+            return this;
+        }
+
+        /// <summary>
+        /// Open database with the specified connection string.
+        /// </summary>
+        public IVelocipedeDbConnection OpenDb(string connectionString)
+        {
+            if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             try
             {
                 CloseDb();
-                _connection = new SqlConnection(ConnectionString);
+                connectionString = UsePersistSecurityInfo(connectionString);
+                _connection = new SqlConnection(connectionString);
                 _connection.Open();
                 return this;
             }
@@ -88,14 +103,26 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (SqlException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
             catch (Exception)
             {
                 throw;
             }
+        }
+        
+        /// <summary>
+        /// Try to reconnect to the previous established connection.
+        /// </summary>
+        private bool TryReconnect(string connectionString)
+        {
+            try
+            {
+                OpenDb(connectionString);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -124,6 +151,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 CloseDb();
                 throw;
+            }
+            catch (SqlException ex)
+            {
+                CloseDb();
+                throw new VelocipedeConnectionStringException(ex);
             }
             catch (ArgumentException ex)
             {
@@ -439,6 +471,24 @@ WHERE TABLE_NAME = '{tableName}';";
                 var connectionStringBuilder = new SqlConnectionStringBuilder();
                 connectionStringBuilder.ConnectionString = connectionString;
                 connectionStringBuilder.InitialCatalog = databaseName;
+                return connectionStringBuilder.ConnectionString;
+            }
+            catch (Exception ex)
+            {
+                throw new VelocipedeDbNameException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Get connection string by database name.
+        /// </summary>
+        private string UsePersistSecurityInfo(string connectionString)
+        {
+            try
+            {
+                var connectionStringBuilder = new SqlConnectionStringBuilder();
+                connectionStringBuilder.ConnectionString = connectionString;
+                connectionStringBuilder.PersistSecurityInfo = true;
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
