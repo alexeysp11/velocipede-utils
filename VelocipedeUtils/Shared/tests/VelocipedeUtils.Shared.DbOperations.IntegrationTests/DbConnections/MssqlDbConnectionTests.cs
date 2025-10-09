@@ -1,7 +1,4 @@
-﻿using FluentAssertions;
-using VelocipedeUtils.Shared.DbOperations.DbConnections;
-using VelocipedeUtils.Shared.DbOperations.Enums;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
@@ -38,12 +35,12 @@ END;";
         {
         }
 
-        [Fact(Skip = "This test fails for MS SQL due to a login issue")]
+        [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]
         public override void CreateDb_ConnectAndSetNotExistingDbUsingSetters_DbExists()
         {
         }
 
-        [Fact(Skip = "This test fails for MS SQL due to a login issue")]
+        [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]
         public override void CreateDb_CreateNotExistingDbUsingExtensionMethod_DbExists()
         {
         }

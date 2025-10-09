@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using VelocipedeUtils.Shared.DbOperations.Constants;
@@ -86,14 +87,24 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Open database with the specified connection string.
         /// </summary>
-        public IVelocipedeDbConnection OpenDb(string connectionString)
+        private IVelocipedeDbConnection OpenDb(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             try
             {
-                CloseDb();
+                if (IsConnected)
+                {
+                    CloseDb();
+
+                    // TODO:
+                    // During the tests it turned out that MS SQL can throw an error
+                    // when there are a large number of repeated connections for the same user in a short period of time.
+                    // Therefore, from a performance and reliability perspective,
+                    // it's better to consider connecting to another DB within an existing connection if it's active.
+                    Thread.Sleep(5000);
+                }
                 connectionString = UsePersistSecurityInfo(connectionString);
                 _connection = new SqlConnection(connectionString);
                 _connection.Open();

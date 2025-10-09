@@ -17,7 +17,7 @@
 - [ ] Execute requests with parameters.
 - [ ] Extend methods for getting connection string.
 - [ ] Remove code duplication for database operations using Dapper.
-- [ ] Fix tests for MS SQL.
+- [ ] Connect to another DB within an existing connection if it's active.
 
 ## MS Excel converter 
 
