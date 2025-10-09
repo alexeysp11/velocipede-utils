@@ -17,7 +17,12 @@
 - [ ] Execute requests with parameters.
 - [ ] Extend methods for getting connection string.
 - [ ] Remove code duplication for database operations using Dapper.
-- [ ] Connect to another DB within an existing connection if it's active.
+- [ ] Connect to another DB within an existing connection if it's active. This can reduce the number of connection initialization and increase performance of the library.
+- [ ] Execute `SELECT` from another database:
+    - [ ] MS SQL:
+        - To select a table from another database within the same SQL Server instance, you can use a fully qualified name in your `SELECT` statement: `SELECT * FROM [DatabaseName].[SchemaName].[TableName];`.
+    - [ ] PostgreSQL:
+        - Directly selecting a table from another database within a single `SELECT` statement is not a native feature in PostgreSQL. However, you can achieve this functionality using the `postgres_fdw` (Foreign Data Wrapper) extension. This extension allows you to treat a table in a remote PostgreSQL database as if it were a local table.
 
 ## MS Excel converter 
 
