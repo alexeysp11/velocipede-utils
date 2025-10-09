@@ -213,7 +213,7 @@ WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
             return this;
         }
 
-        public IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             string sql = string.Format(@"
 SELECT
@@ -231,7 +231,7 @@ JOIN information_schema.key_column_usage AS kcu
 JOIN information_schema.constraint_column_usage AS ccu
     ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema
 WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name LIKE '{0}';", tableName);
-            ExecuteSqlCommand(sql, out dtResult);
+            Query(sql, out foreignKeyInfo);
             return this;
         }
 

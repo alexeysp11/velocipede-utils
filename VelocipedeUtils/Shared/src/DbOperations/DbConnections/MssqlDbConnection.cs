@@ -213,7 +213,7 @@ WHERE TABLE_NAME = '{tableName}';";
             return this;
         }
 
-        public IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             throw new System.NotImplementedException();
         }

@@ -71,7 +71,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get foreign keys of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult);
+        IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo);
 
         /// <summary>
         /// Get triggers of the specified table.

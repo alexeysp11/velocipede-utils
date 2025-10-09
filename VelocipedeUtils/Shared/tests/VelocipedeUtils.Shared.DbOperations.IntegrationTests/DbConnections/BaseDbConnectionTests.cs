@@ -653,6 +653,98 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 1)]
+        public void GetForeignKeys_ConnectionStringFromFixtureAndNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection.GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo>? result);
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 1)]
+        public void GetForeignKeys_ConnectionStringFromFixtureAndConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection
+                .OpenDb()
+                .GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo>? result)
+                .CloseDb();
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Fact]
+        public void GetForeignKeys_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetForeignKeys(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GetForeignKeys_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetForeignKeys(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void GetForeignKeys_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetForeignKeys(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
         [Fact]
         public void SwitchDb_DbNameFromFixture_ReconnectedWithSameConnectionString()
         {

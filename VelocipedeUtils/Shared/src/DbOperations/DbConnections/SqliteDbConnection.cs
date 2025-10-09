@@ -172,10 +172,27 @@ FROM pragma_table_info({tableName});";
             return this;
         }
 
-        public IVelocipedeDbConnection GetForeignKeys(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
-            string sql = $"PRAGMA foreign_key_list('{tableName}');";
-            ExecuteSqlCommand(sql, out dtResult);
+            // Get list of dynamic objects.
+            string sql = $"PRAGMA foreign_key_list({tableName});";
+            Query(sql, out List<dynamic> foreignKeyInfoDynamic);
+
+            // Wrap the result.
+            foreignKeyInfo = foreignKeyInfoDynamic
+                .Select(keyInfo => new VelocipedeForeignKeyInfo
+                {
+                    ForeignKeyId = keyInfo.id,
+                    SequenceNumber = keyInfo.seq,
+                    TableName = keyInfo.table,
+                    FromColumn = keyInfo.from,
+                    ToColumn = keyInfo.to,
+                    OnUpdate = keyInfo.on_update,
+                    OnDelete = keyInfo.on_delete,
+                    MatchingClause = keyInfo.match,
+                })
+                .ToList();
+
             return this;
         }
 
