@@ -215,7 +215,23 @@ WHERE TABLE_NAME = '{tableName}';";
 
         public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
-            throw new System.NotImplementedException();
+            tableName = tableName.Trim('"');
+            string sql = $@"
+SELECT
+    fk.name AS ConstraintName,
+    OBJECT_NAME(fk.parent_object_id) AS FromTableName,
+    COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS FromColumn,
+    OBJECT_NAME(fk.referenced_object_id) AS ToTableName,
+    COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS ToColumn,
+    fk.delete_referential_action_desc AS OnDelete,
+    fk.update_referential_action_desc AS OnUpdate
+FROM
+    sys.foreign_keys AS fk
+INNER JOIN
+    sys.foreign_key_columns AS fkc ON fk.object_id = fkc.constraint_object_id
+WHERE OBJECT_NAME(fk.parent_object_id) = '{tableName}'";
+            Query(sql, out foreignKeyInfo);
+            return this;
         }
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
