@@ -17,14 +17,34 @@
         public long SequenceNumber { get; set; }
 
         /// <summary>
-        /// The name of the parent table referenced by the foreign key.
+        /// Constraint name.
         /// </summary>
-        public string TableName { get; set; }
+        public string ConstraintName { get; set; }
 
         /// <summary>
-        /// The name of the column in the current table that is part of the foreign key.
+        /// The name of the current table's schema.
+        /// </summary>
+        public string FromTableSchema { get; set; }
+
+        /// <summary>
+        /// The name of the current table.
+        /// </summary>
+        public string FromTableName { get; set; }
+
+        /// <summary>
+        /// The name of the column in the current table.
         /// </summary>
         public string FromColumn { get; set; }
+
+        /// <summary>
+        /// The name of the parent table's schema referenced by the foreign key.
+        /// </summary>
+        public string ToTableSchema { get; set; }
+
+        /// <summary>
+        /// The name of the parent table referenced by the foreign key.
+        /// </summary>
+        public string ToTableName { get; set; }
 
         /// <summary>
         /// The name of the column in the parent table that the foreign key references.

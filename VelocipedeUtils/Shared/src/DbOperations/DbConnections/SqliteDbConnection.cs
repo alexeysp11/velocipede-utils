@@ -184,7 +184,7 @@ FROM pragma_table_info({tableName});";
                 {
                     ForeignKeyId = keyInfo.id,
                     SequenceNumber = keyInfo.seq,
-                    TableName = keyInfo.table,
+                    ToTableName = keyInfo.table,
                     FromColumn = keyInfo.from,
                     ToColumn = keyInfo.to,
                     OnUpdate = keyInfo.on_update,

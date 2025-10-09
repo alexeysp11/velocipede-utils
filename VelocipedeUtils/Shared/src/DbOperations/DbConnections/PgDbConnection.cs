@@ -192,7 +192,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             string[] tn = tableName.Split('.');
             if (tn.Length >= 2)
             {
-                schemaName.First();
+                schemaName = tn.First();
                 tableName = tableName.Replace($"{schemaName}.", "");
             }
             tableName = tableName.Trim('"');
@@ -215,15 +215,24 @@ WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
 
         public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
+            string schemaName = "public";
+            string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
             string sql = string.Format(@"
 SELECT
-    tc.table_schema as TableSchema,
     tc.constraint_name as ConstraintName,
-    tc.table_name as TableName,
-    kcu.column_name as ColumnName,
-    ccu.table_schema AS ForeignTableSchema,
-    ccu.table_name AS ForeignTableName,
-    ccu.column_name AS ForeignColumnName
+    tc.table_schema as FromTableSchema,
+    tc.table_name as FromTableName,
+    kcu.column_name as FromColumn,
+    ccu.table_schema AS ToTableSchema,
+    ccu.table_name AS ToTableName,
+    ccu.column_name AS ToColumn
 FROM 
     information_schema.table_constraints AS tc
 JOIN information_schema.key_column_usage AS kcu
