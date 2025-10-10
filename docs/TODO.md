@@ -8,7 +8,6 @@
 
 ## Database connections 
 
-- [ ] Explain what is the differnece between `DataSource` and `ConnString` in database classes and to use them properly. 
 - [ ] Create template for using multiple database connections.
 - [ ] How to deal with `blob` objects in databases connection classes?
     - [ ] Add the functionality to get byte arrays from the DB connection.
@@ -23,7 +22,15 @@
         - To select a table from another database within the same SQL Server instance, you can use a fully qualified name in your `SELECT` statement: `SELECT * FROM [DatabaseName].[SchemaName].[TableName];`.
     - [ ] PostgreSQL:
         - Directly selecting a table from another database within a single `SELECT` statement is not a native feature in PostgreSQL. However, you can achieve this functionality using the `postgres_fdw` (Foreign Data Wrapper) extension. This extension allows you to treat a table in a remote PostgreSQL database as if it were a local table.
-- [ ] Info about columns, foreign keys in different databases is not unique.
+- [ ] Test info about columns, foreign keys in different databases:
+    - [ ] Check not only quantity but the content of the response as well.
+    - [ ] Adapt tests for all tables.
+    - [ ] Check how the methods for with and without the quotes: `'`, `"`, `` ` `` (in MS SQL it could be `[]` as well).
+- [ ] Test how the library can deal with multithreaded apps.
+    - [ ] Note that SQLite offers three threading modes:
+        - **Single-thread mode**: This mode disables all mutexes and is unsafe for use by multiple threads.
+        - **Multi-thread mode**: In this mode, SQLite can be safely used by multiple threads, provided that each thread uses its own database connection. No single database connection or any object derived from it (like a prepared statement) should be used by two or more threads simultaneously. 
+        - **Serialized mode**: This is the default and safest mode for multithreaded applications. It enables mutexes to protect all shared data structures, including individual database connections. This means that even if you attempt to use a single database connection from multiple threads, SQLite will internally serialize access to ensure thread safety.
 
 ## MS Excel converter 
 
