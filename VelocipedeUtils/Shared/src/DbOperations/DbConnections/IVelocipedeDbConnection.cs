@@ -77,7 +77,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get triggers of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult);
+        IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo);
 
         /// <summary>
         /// Get SQL definition of the specified table.

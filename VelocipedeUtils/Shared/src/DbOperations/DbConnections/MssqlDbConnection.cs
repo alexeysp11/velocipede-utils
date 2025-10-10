@@ -234,9 +234,23 @@ WHERE OBJECT_NAME(fk.parent_object_id) = '{tableName}'";
             return this;
         }
 
-        public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
-            throw new System.NotImplementedException();
+            string sql = @"
+SELECT 
+    name as [TriggerName]
+    ,object_name(parent_obj) as [EventObjectTable]
+    ,object_schema_name(parent_obj) as [EventObjectSchema]
+    --,OBJECTPROPERTY( id, 'ExecIsUpdateTrigger') AS isupdate 
+    --,OBJECTPROPERTY( id, 'ExecIsDeleteTrigger') AS isdelete 
+    --,OBJECTPROPERTY( id, 'ExecIsInsertTrigger') AS isinsert 
+    --,OBJECTPROPERTY( id, 'ExecIsAfterTrigger') AS isafter 
+    --,OBJECTPROPERTY( id, 'ExecIsInsteadOfTrigger') AS isinsteadof 
+    ,not OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') AS [IsActive] 
+FROM sysobjects s
+WHERE s.type = 'TR' ";
+            Query(sql, out triggerInfo);
+            return this;
         }
 
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)

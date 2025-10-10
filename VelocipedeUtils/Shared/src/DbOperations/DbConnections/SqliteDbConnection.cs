@@ -196,10 +196,18 @@ FROM pragma_table_info({tableName});";
             return this;
         }
 
-        public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
+        public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
-            string sql = $"SELECT * FROM sqlite_master WHERE type = 'trigger' AND tbl_name LIKE '{tableName}';";
-            ExecuteSqlCommand(sql, out dtResult);
+            string sql = $@"
+SELECT
+    --type,
+    name AS TriggerName,
+    tbl_name AS EventObjectTable,
+    rootpage AS RootPage,
+    sql AS SqlDefinition
+FROM sqlite_master
+WHERE type = 'trigger' AND tbl_name = '{tableName}';";
+            Query(sql, out triggerInfo);
             return this;
         }
 
