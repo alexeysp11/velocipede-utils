@@ -745,6 +745,98 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 0)]
+        public void GetTriggers_ConnectionStringFromFixtureAndNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection.GetTriggers(tableName, out List<VelocipedeTriggerInfo>? result);
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 0)]
+        public void GetTriggers_ConnectionStringFromFixtureAndConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection
+                .OpenDb()
+                .GetTriggers(tableName, out List<VelocipedeTriggerInfo>? result)
+                .CloseDb();
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Fact]
+        public void GetTriggers_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetTriggers(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GetTriggers_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetTriggers(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void GetTriggers_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetTriggers(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
         [Fact]
         public void SwitchDb_DbNameFromFixture_ReconnectedWithSameConnectionString()
         {

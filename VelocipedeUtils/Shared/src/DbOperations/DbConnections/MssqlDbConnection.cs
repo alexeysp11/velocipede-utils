@@ -238,15 +238,15 @@ WHERE OBJECT_NAME(fk.parent_object_id) = '{tableName}'";
         {
             string sql = @"
 SELECT 
-    name as [TriggerName]
-    ,object_name(parent_obj) as [EventObjectTable]
-    ,object_schema_name(parent_obj) as [EventObjectSchema]
-    --,OBJECTPROPERTY( id, 'ExecIsUpdateTrigger') AS isupdate 
-    --,OBJECTPROPERTY( id, 'ExecIsDeleteTrigger') AS isdelete 
-    --,OBJECTPROPERTY( id, 'ExecIsInsertTrigger') AS isinsert 
-    --,OBJECTPROPERTY( id, 'ExecIsAfterTrigger') AS isafter 
-    --,OBJECTPROPERTY( id, 'ExecIsInsteadOfTrigger') AS isinsteadof 
-    ,not OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') AS [IsActive] 
+    name as [TriggerName],
+    object_name(parent_obj) as [EventObjectTable],
+    object_schema_name(parent_obj) as [EventObjectSchema],
+    --OBJECTPROPERTY(id, 'ExecIsUpdateTrigger') AS isupdate, 
+    --OBJECTPROPERTY(id, 'ExecIsDeleteTrigger') AS isdelete, 
+    --OBJECTPROPERTY(id, 'ExecIsInsertTrigger') AS isinsert, 
+    --OBJECTPROPERTY(id, 'ExecIsAfterTrigger') AS isafter, 
+    --OBJECTPROPERTY(id, 'ExecIsInsteadOfTrigger') AS isinsteadof,
+    case when OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') = 1 then 0 else 1 end AS [IsActive]
 FROM sysobjects s
 WHERE s.type = 'TR' ";
             Query(sql, out triggerInfo);
