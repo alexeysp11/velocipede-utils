@@ -25,7 +25,7 @@
 - [ ] Test info about columns, foreign keys in different databases:
     - [ ] Check not only quantity but the content of the response as well.
     - [ ] Adapt tests for all tables.
-    - [ ] Check how the methods for with and without the quotes: `'`, `"`, `` ` `` (in MS SQL it could be `[]` as well).
+    - [ ] Check how the methods work if the input was passed with and without the quotes: `'`, `"`, `` ` `` (in MS SQL it could be `[]` as well).
 - [ ] Test how the library can deal with multithreaded apps.
     - [ ] Note that SQLite offers three threading modes:
         - **Single-thread mode**: This mode disables all mutexes and is unsafe for use by multiple threads.
