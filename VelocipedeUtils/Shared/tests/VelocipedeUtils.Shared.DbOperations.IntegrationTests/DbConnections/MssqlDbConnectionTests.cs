@@ -5,6 +5,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
     public sealed class MssqlDbConnectionTests : BaseDbConnectionTests, IClassFixture<MssqlDatabaseFixture>
     {
         private const string CREATE_DATABASE_SQL = @"
+DECLARE @triggerSql NVARCHAR(MAX);
+
 IF OBJECT_ID(N'dbo.""TestModels""', N'U') IS NULL
 BEGIN
     create table dbo.""TestModels"" (
@@ -29,7 +31,13 @@ BEGIN
         ""CityId"" int NULL,
         ""AdditionalInfo"" varchar(50) NULL,
         FOREIGN KEY (""CityId"") REFERENCES ""TestCities""(""Id""));
-END;";
+END;
+
+SET @triggerSql = 'create or alter trigger ""trg_AfterUpdate_TestUsers_CityId"" on ""TestUsers"" after update as begin update ""TestUsers"" set ""AdditionalInfo"" = ''No city specified'' from inserted where ""TestUsers"".""Id"" = inserted.""Id"" and inserted.""CityId"" is null; end;';
+EXEC sp_executesql @triggerSql;
+
+SET @triggerSql = 'create or alter trigger ""trg_Insert_TestUsers_CityId"" on ""TestUsers"" after insert as begin update ""TestUsers"" set ""AdditionalInfo"" = ''No city specified'' from inserted where ""TestUsers"".""Id"" = inserted.""Id"" and inserted.""CityId"" is null; end;';
+EXEC sp_executesql @triggerSql;";
 
         public MssqlDbConnectionTests(MssqlDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
         {

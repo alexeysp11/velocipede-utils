@@ -159,6 +159,7 @@ ORDER BY 1";
 
         public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
         {
+            tableName = tableName.Trim('"');
             string sql = @$"
 SELECT
     cid as ColumnId,
@@ -167,15 +168,17 @@ SELECT
     dflt_value as DefaultValue,
     pk as IsPrimaryKey,
     not ""notnull"" as IsNullable
-FROM pragma_table_info({tableName});";
+FROM pragma_table_info('{tableName}');";
             Query(sql, out columnInfo);
             return this;
         }
 
         public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
+            tableName = tableName.Trim('"');
+
             // Get list of dynamic objects.
-            string sql = $"PRAGMA foreign_key_list({tableName});";
+            string sql = $"PRAGMA foreign_key_list('{tableName}');";
             Query(sql, out List<dynamic> foreignKeyInfoDynamic);
 
             // Wrap the result.
@@ -198,6 +201,7 @@ FROM pragma_table_info({tableName});";
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
+            tableName = tableName.Trim('"');
             string sql = $@"
 SELECT
     --type,

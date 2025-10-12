@@ -747,7 +747,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
         [Theory]
         [InlineData("\"TestModels\"", 0)]
-        [InlineData("\"TestUsers\"", 0)]
+        [InlineData("\"TestUsers\"", 2)]
         public void GetTriggers_ConnectionStringFromFixtureAndNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
         {
             // Arrange.
@@ -763,7 +763,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
         [Theory]
         [InlineData("\"TestModels\"", 0)]
-        [InlineData("\"TestUsers\"", 0)]
+        [InlineData("\"TestUsers\"", 2)]
         public void GetTriggers_ConnectionStringFromFixtureAndConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
         {
             // Arrange.

@@ -246,6 +246,15 @@ WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name LIKE '{0}';", tableNa
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
+            string schemaName = "public";
+            string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
             string sql = string.Format(@"
 SELECT
     trigger_catalog AS TriggerCatalog,

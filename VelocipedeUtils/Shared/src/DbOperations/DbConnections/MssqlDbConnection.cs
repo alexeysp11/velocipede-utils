@@ -236,7 +236,8 @@ WHERE OBJECT_NAME(fk.parent_object_id) = '{tableName}'";
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
-            string sql = @"
+            tableName = tableName.Trim('"');
+            string sql = $@"
 SELECT 
     name as [TriggerName],
     object_name(parent_obj) as [EventObjectTable],
@@ -248,7 +249,7 @@ SELECT
     --OBJECTPROPERTY(id, 'ExecIsInsteadOfTrigger') AS isinsteadof,
     case when OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') = 1 then 0 else 1 end AS [IsActive]
 FROM sysobjects s
-WHERE s.type = 'TR' ";
+WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             Query(sql, out triggerInfo);
             return this;
         }
