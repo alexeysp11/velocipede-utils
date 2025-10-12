@@ -19,6 +19,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         protected IDatabaseFixture _fixture;
         protected readonly string _connectionString;
 
+        private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" from ""TestModels""";
+
         protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql)
         {
             _fixture = fixture;
@@ -75,11 +77,79 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
             dbConnection
                 .OpenDb()
-                .Query(@"SELECT ""Id"", ""Name"" from ""TestModels""", out List<TestModel> result)
+                .Query(SELECT_FROM_TESTMODELS, out List<TestModel> result)
                 .CloseDb();
 
             // Assert.
             result.Should().HaveCount(8);
+        }
+
+        [Fact]
+        public void ExecuteSqlCommand_ConnectionStringFromFixtureAndGetAllTestModels_QuantityEqualsToSpecified()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out DataTable result)
+                .CloseDb();
+
+            // Assert.
+            result.Rows.Count.Should().Be(8);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void ExecuteSqlCommand_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+        }
+
+        [Fact]
+        public void ExecuteSqlCommand_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void ExecuteSqlCommand_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
         }
 
         [Fact]
