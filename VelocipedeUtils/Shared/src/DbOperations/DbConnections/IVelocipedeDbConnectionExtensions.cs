@@ -114,14 +114,6 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
-        /// Execute SQL command without return.
-        /// </summary>
-        public static IVelocipedeDbConnection ExecuteSqlCommand(this IVelocipedeDbConnection connection, string sql)
-        {
-            return connection.ExecuteSqlCommand(sql, out _);
-        }
-
-        /// <summary>
         /// Gets SQL definition of the DataTable object.
         /// </summary>
         public static string GetSqlFromDataTable(this IVelocipedeDbConnection connection, DataTable dt, string tableName)

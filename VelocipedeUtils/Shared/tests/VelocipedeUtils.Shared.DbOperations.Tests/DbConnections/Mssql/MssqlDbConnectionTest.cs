@@ -20,9 +20,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
 
             // Act.
             dbConnection
-                .ExecuteSqlCommand(sqlInsert)
+                .Execute(sqlInsert)
                 .ExecuteSqlCommand(sqlSelect, out DataTable dtSelectResult)
-                .ExecuteSqlCommand(sqlDelete);
+                .Execute(sqlDelete);
 
             // Assert.
             Assert.True(dtSelectResult.Rows[dtSelectResult.Rows.Count-1]["name"].ToString() == employeeName);
