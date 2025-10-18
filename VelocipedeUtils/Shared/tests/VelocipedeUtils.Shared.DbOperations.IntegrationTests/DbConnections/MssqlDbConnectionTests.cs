@@ -39,7 +39,8 @@ EXEC sp_executesql @triggerSql;
 SET @triggerSql = 'create or alter trigger ""trg_Insert_TestUsers_CityId"" on ""TestUsers"" after insert as begin update ""TestUsers"" set ""AdditionalInfo"" = ''No city specified'' from inserted where ""TestUsers"".""Id"" = inserted.""Id"" and inserted.""CityId"" is null; end;';
 EXEC sp_executesql @triggerSql;";
 
-        public MssqlDbConnectionTests(MssqlDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
+        public MssqlDbConnectionTests(MssqlDatabaseFixture fixture)
+            : base(fixture, CREATE_DATABASE_SQL, "", "")
         {
         }
 

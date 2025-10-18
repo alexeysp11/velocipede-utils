@@ -17,14 +17,21 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
     public abstract class BaseDbConnectionTests
     {
         protected IDatabaseFixture _fixture;
+
         protected readonly string _connectionString;
+
+        private readonly string _createTestModelsSql;
+        private readonly string _createTestUsersSql;
 
         private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" from ""TestModels""";
 
-        protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql)
+        protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql, string createTestModelsSql, string createTestUsersSql)
         {
             _fixture = fixture;
             _connectionString = _fixture.ConnectionString;
+
+            _createTestModelsSql = createTestModelsSql;
+            _createTestUsersSql = createTestUsersSql;
 
             CreateTestDatabase(sql);
             InitializeTestDatabase();
@@ -975,6 +982,100 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+        public void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
+        {
+            // Arrange.
+            string expected = GetExpectedSqlDefinition(tableName);
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection.GetSqlDefinition(tableName, out string result);
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+        public void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
+        {
+            // Arrange.
+            string expected = GetExpectedSqlDefinition(tableName);
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection
+                .OpenDb()
+                .GetSqlDefinition(tableName, out string result)
+                .CloseDb();
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().Be(expected);
+        }
+
+        [Fact]
+        public void GetSqlDefinition_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetSqlDefinition(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GetSqlDefinition_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetSqlDefinition(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public void GetSqlDefinition_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Action act = () => dbConnection.GetSqlDefinition(tableName, out _);
+
+            // Act & Assert.
+            act
+                .Should()
+                .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
         [Fact]
         public void SwitchDb_DbNameFromFixture_ReconnectedWithSameConnectionString()
         {
@@ -1119,6 +1220,17 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             }
 
             dbContext.SaveChanges();
+        }
+
+        private string GetExpectedSqlDefinition(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            return tableName switch
+            {
+                "TestModels" => _createTestModelsSql,
+                "TestUsers" => _createTestUsersSql,
+                _ => "",
+            };
         }
     }
 }

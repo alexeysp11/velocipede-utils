@@ -38,7 +38,8 @@ execute function ""fn_TestUsers_CityId_Update""();
 create or replace trigger ""trg_Insert_TestUsers_CityId"" after insert on ""TestUsers""
 execute function ""fn_TestUsers_CityId_Update""();";
 
-        public PgDbConnectionTests(PgDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
+        public PgDbConnectionTests(PgDatabaseFixture fixture)
+            : base(fixture, CREATE_DATABASE_SQL, "", "")
         {
         }
     }

@@ -217,6 +217,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
 
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
+            tableName = tableName.Trim('"');
             string sql = string.Format(@"SELECT sql FROM sqlite_master WHERE type='table' AND name LIKE '{0}'", tableName);
             return QueryFirstOrDefault(sql, out sqlDefinition);
         }

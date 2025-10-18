@@ -35,7 +35,20 @@ begin
     where ""Id"" = new.""Id"" and new.""CityId"" is null;
 end;";
 
-        public SqliteDbConnectionTests(SqliteDatabaseFixture fixture) : base(fixture, CREATE_DATABASE_SQL)
+        private const string CREATE_TESTMODELS_SQL = @"CREATE TABLE ""TestModels"" (
+    ""Id"" int primary key NOT NULL,
+    ""Name"" varchar(50) NOT NULL,
+    ""AdditionalInfo"" varchar(50) NULL)";
+
+        private const string CREATE_TESTUSERS_SQL = @"CREATE TABLE ""TestUsers"" (
+    ""Id"" int primary key NOT NULL,
+    ""Name"" varchar(50) NOT NULL,
+    ""Email"" varchar(50) NOT NULL,
+    ""CityId"" int NULL REFERENCES ""TestCities""(""Id""),
+    ""AdditionalInfo"" varchar(50) NULL)";
+
+        public SqliteDbConnectionTests(SqliteDatabaseFixture fixture)
+            : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
         }
     }
