@@ -256,7 +256,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
-            throw new System.NotImplementedException();
+            tableName = tableName.Trim('"');
+            string sql = $"SELECT OBJECT_DEFINITION(OBJECT_ID('{tableName}')) AS ObjectDefinition";
+            QueryFirstOrDefault(sql, out sqlDefinition);
+            return this;
         }
 
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)

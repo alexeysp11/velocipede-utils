@@ -39,8 +39,24 @@ EXEC sp_executesql @triggerSql;
 SET @triggerSql = 'create or alter trigger ""trg_Insert_TestUsers_CityId"" on ""TestUsers"" after insert as begin update ""TestUsers"" set ""AdditionalInfo"" = ''No city specified'' from inserted where ""TestUsers"".""Id"" = inserted.""Id"" and inserted.""CityId"" is null; end;';
 EXEC sp_executesql @triggerSql;";
 
+        private const string CREATE_TESTMODELS_SQL = @"CREATE TABLE dbo.TestModels
+(
+    Id integer, 
+    Name character varying(50), 
+    AdditionalInfo character varying(50)
+);";
+
+        private const string CREATE_TESTUSERS_SQL = @"CREATE TABLE dbo.TestUsers
+(
+    Id integer, 
+    Name character varying(50), 
+    Email character varying(50), 
+    CityId integer, 
+    AdditionalInfo character varying(50)
+);";
+
         public MssqlDbConnectionTests(MssqlDatabaseFixture fixture)
-            : base(fixture, CREATE_DATABASE_SQL, "", "")
+            : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
         }
 
@@ -51,6 +67,20 @@ EXEC sp_executesql @triggerSql;";
 
         [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]
         public override void CreateDb_CreateNotExistingDbUsingExtensionMethod_DbExists()
+        {
+        }
+
+        [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+        public override void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
+        {
+        }
+
+        [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+        public override void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
         {
         }
     }

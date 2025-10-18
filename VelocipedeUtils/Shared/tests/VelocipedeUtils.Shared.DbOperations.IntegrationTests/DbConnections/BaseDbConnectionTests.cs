@@ -985,7 +985,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [Theory]
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
-        public void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
+        public virtual void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
         {
             // Arrange.
             string expected = GetExpectedSqlDefinition(tableName);
@@ -1004,7 +1004,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [Theory]
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
-        public void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
+        public virtual void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
         {
             // Arrange.
             string expected = GetExpectedSqlDefinition(tableName);
