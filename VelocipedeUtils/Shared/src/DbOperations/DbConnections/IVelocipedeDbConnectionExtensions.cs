@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using System.Text;
 using VelocipedeUtils.Shared.DbOperations.Constants;
@@ -14,7 +13,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        public static IVelocipedeDbConnection GetConnectionString(this IVelocipedeDbConnection connection, string databaseName, out string connectionString)
+        public static IVelocipedeDbConnection GetConnectionString(
+            this IVelocipedeDbConnection connection,
+            string databaseName,
+            out string connectionString)
         {
             connectionString = connection.DatabaseType switch
             {
@@ -30,7 +32,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Set connection string.
         /// </summary>
-        public static IVelocipedeDbConnection SetConnectionString(this IVelocipedeDbConnection connection, string connectionString)
+        public static IVelocipedeDbConnection SetConnectionString(this IVelocipedeDbConnection connection, string? connectionString)
         {
             connection.ConnectionString = connectionString;
             return connection;
@@ -39,16 +41,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get database name from the active connection string.
         /// </summary>
-        public static string GetActiveDatabaseName(this IVelocipedeDbConnection connection)
+        public static string? GetActiveDatabaseName(this IVelocipedeDbConnection connection)
         {
-            connection.GetActiveDatabaseName(out string dbName);
+            connection.GetActiveDatabaseName(out string? dbName);
             return dbName;
         }
 
         /// <summary>
         /// Get database name from the active connection string.
         /// </summary>
-        public static IVelocipedeDbConnection GetActiveDatabaseName(this IVelocipedeDbConnection connection, out string dbName)
+        public static IVelocipedeDbConnection GetActiveDatabaseName(this IVelocipedeDbConnection connection, out string? dbName)
         {
             dbName = connection.DatabaseType switch
             {
@@ -116,7 +118,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Gets SQL definition of the DataTable object.
         /// </summary>
-        public static string GetSqlFromDataTable(this IVelocipedeDbConnection connection, DataTable dt, string tableName)
+        public static string GetSqlFromDataTable(this IVelocipedeDbConnection connection, DataTable? dt, string tableName)
         {
             if (dt == null)
                 throw new ArgumentNullException(nameof(dt), "Data table could not be null");

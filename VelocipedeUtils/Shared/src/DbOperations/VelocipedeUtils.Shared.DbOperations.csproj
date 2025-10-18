@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <PackageId>VelocipedeUtils.Shared.DbOperations</PackageId>
     <Version>1.0.0-alpha</Version>
     <Authors>alexeysp11</Authors>

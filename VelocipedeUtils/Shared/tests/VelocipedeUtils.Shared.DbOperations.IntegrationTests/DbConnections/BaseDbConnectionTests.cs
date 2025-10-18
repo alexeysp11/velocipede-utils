@@ -992,8 +992,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
             // Act.
-            dbConnection.GetSqlDefinition(tableName, out string result);
-            result = result.Replace("\r\n", "\n");
+            dbConnection.GetSqlDefinition(tableName, out string? result);
+            result = result?.Replace("\r\n", "\n");
             expected = expected.Replace("\r\n", "\n");
 
             // Assert.
@@ -1013,9 +1013,9 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Act.
             dbConnection
                 .OpenDb()
-                .GetSqlDefinition(tableName, out string result)
+                .GetSqlDefinition(tableName, out string? result)
                 .CloseDb();
-            result = result.Replace("\r\n", "\n");
+            result = result?.Replace("\r\n", "\n");
             expected = expected.Replace("\r\n", "\n");
 
             // Assert.
@@ -1086,7 +1086,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Arrange.
             string connectionString = string.Empty;
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-            string dbName = dbConnection.GetActiveDatabaseName();
+            string? dbName = dbConnection.GetActiveDatabaseName();
             Action act = () => dbConnection.SwitchDb(dbName, out connectionString);
 
             // Act & Assert.

@@ -33,7 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base
             using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(_databaseType);
 
             // Act.
-            string initialConnectionString = dbConnection.ConnectionString;
+            string? initialConnectionString = dbConnection.ConnectionString;
             dbConnection.SetConnectionString(_connectionString);
 
             // Assert.

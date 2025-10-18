@@ -9,7 +9,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {
     public class SqliteDatabaseFixture : IDatabaseFixture
     {
-        public string DatabaseName => SqliteDbConnection.GetDatabaseName(ConnectionString);
+        public string? DatabaseName => SqliteDbConnection.GetDatabaseName(ConnectionString);
 
         public string ConnectionString { get; private set; }
 
@@ -36,6 +36,9 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 
         public Task InitializeAsync()
         {
+            if (string.IsNullOrEmpty(DatabaseName))
+                throw new ArgumentNullException(nameof(DatabaseName));
+
             if (!File.Exists(DatabaseName))
             {
                 File.Create(DatabaseName).Close();

@@ -1,5 +1,4 @@
-﻿using System;
-using VelocipedeUtils.Shared.DbOperations.Constants;
+﻿using VelocipedeUtils.Shared.DbOperations.Constants;
 
 namespace VelocipedeUtils.Shared.DbOperations.Exceptions
 {

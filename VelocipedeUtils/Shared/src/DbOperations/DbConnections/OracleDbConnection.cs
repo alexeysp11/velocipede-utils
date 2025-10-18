@@ -26,7 +26,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         private OracleConnection _connection;
 
-        public OracleDbConnection(string connectionString = null)
+        public OracleDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
         }
@@ -101,7 +101,7 @@ WHERE r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE UP
             return this;
         }
 
-        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             string sql = string.Format(@"
 select dbms_metadata.get_ddl('TABLE', table_name) as sql
@@ -174,7 +174,7 @@ WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;

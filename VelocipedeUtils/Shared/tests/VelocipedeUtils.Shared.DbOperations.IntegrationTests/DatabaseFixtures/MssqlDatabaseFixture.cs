@@ -14,7 +14,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             new MsSqlBuilder()
                 .Build();
 
-        public string DatabaseName => MssqlDbConnection.GetDatabaseName(ConnectionString);
+        public string? DatabaseName => MssqlDbConnection.GetDatabaseName(ConnectionString);
         public string ConnectionString => container.GetConnectionString()
             .Replace("Server=", "Data Source=")
             .Replace("Database", "Initial Catalog")

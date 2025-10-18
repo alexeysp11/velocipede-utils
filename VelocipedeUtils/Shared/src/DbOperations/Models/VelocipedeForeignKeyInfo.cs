@@ -19,53 +19,53 @@
         /// <summary>
         /// Constraint name.
         /// </summary>
-        public string ConstraintName { get; set; }
+        public string? ConstraintName { get; set; }
 
         /// <summary>
         /// The name of the current table's schema.
         /// </summary>
-        public string FromTableSchema { get; set; }
+        public string? FromTableSchema { get; set; }
 
         /// <summary>
         /// The name of the current table.
         /// </summary>
-        public string FromTableName { get; set; }
+        public string? FromTableName { get; set; }
 
         /// <summary>
         /// The name of the column in the current table.
         /// </summary>
-        public string FromColumn { get; set; }
+        public string? FromColumn { get; set; }
 
         /// <summary>
         /// The name of the parent table's schema referenced by the foreign key.
         /// </summary>
-        public string ToTableSchema { get; set; }
+        public string? ToTableSchema { get; set; }
 
         /// <summary>
         /// The name of the parent table referenced by the foreign key.
         /// </summary>
-        public string ToTableName { get; set; }
+        public string? ToTableName { get; set; }
 
         /// <summary>
         /// The name of the column in the parent table that the foreign key references.
         /// </summary>
-        public string ToColumn { get; set; }
+        public string? ToColumn { get; set; }
 
         /// <summary>
         /// The action taken when a referenced key in the parent table is updated
         /// (e.g., NO ACTION, CASCADE, SET NULL, RESTRICT, SET DEFAULT).
         /// </summary>
-        public string OnUpdate { get; set; }
+        public string? OnUpdate { get; set; }
 
         /// <summary>
         /// The action taken when a referenced key in the parent table is deleted
         /// (e.g., NO ACTION, CASCADE, SET NULL, RESTRICT, SET DEFAULT).
         /// </summary>
-        public string OnDelete { get; set; }
+        public string? OnDelete { get; set; }
 
         /// <summary>
         /// The matching clause used for the foreign key (e.g., NONE, SIMPLE, PARTIAL, FULL).
         /// </summary>
-        public string MatchingClause { get; set; }
+        public string? MatchingClause { get; set; }
     }
 }
