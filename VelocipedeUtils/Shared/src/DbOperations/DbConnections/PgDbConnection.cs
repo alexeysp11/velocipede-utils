@@ -279,7 +279,15 @@ WHERE event_object_table LIKE '{0}'", tableName);
 
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
         {
+            string schemaName = "public";
             string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
             string sql = string.Format(@"
 CREATE OR REPLACE FUNCTION fGetSqlFromTable(aSchemaName VARCHAR(255), aTableName VARCHAR(255))
     RETURNS TEXT
@@ -324,7 +332,7 @@ BEGIN
 END
 $func$;
 
-SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", tn[0], tn[1]);
+SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 

@@ -38,8 +38,24 @@ execute function ""fn_TestUsers_CityId_Update""();
 create or replace trigger ""trg_Insert_TestUsers_CityId"" after insert on ""TestUsers""
 execute function ""fn_TestUsers_CityId_Update""();";
 
+        private const string CREATE_TESTMODELS_SQL = @"CREATE TABLE public.TestModels
+(
+    Id integer, 
+    Name character varying(50), 
+    AdditionalInfo character varying(50)
+);";
+
+        private const string CREATE_TESTUSERS_SQL = @"CREATE TABLE public.TestUsers
+(
+    Id integer, 
+    Name character varying(50), 
+    Email character varying(50), 
+    CityId integer, 
+    AdditionalInfo character varying(50)
+);";
+
         public PgDbConnectionTests(PgDatabaseFixture fixture)
-            : base(fixture, CREATE_DATABASE_SQL, "", "")
+            : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
         }
     }

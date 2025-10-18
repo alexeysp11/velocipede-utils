@@ -993,6 +993,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Act.
             dbConnection.GetSqlDefinition(tableName, out string result);
+            result = result.Replace("\r\n", "\n");
+            expected = expected.Replace("\r\n", "\n");
 
             // Assert.
             dbConnection.IsConnected.Should().BeFalse();
@@ -1013,6 +1015,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
                 .OpenDb()
                 .GetSqlDefinition(tableName, out string result)
                 .CloseDb();
+            result = result.Replace("\r\n", "\n");
+            expected = expected.Replace("\r\n", "\n");
 
             // Assert.
             dbConnection.IsConnected.Should().BeFalse();
