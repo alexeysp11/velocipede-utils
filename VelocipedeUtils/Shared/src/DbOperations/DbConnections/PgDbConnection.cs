@@ -396,13 +396,18 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, List<VelocipedeCommandParameter> parameters, out DataTable dtResult)
+        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out DataTable dtResult)
         {
             throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
+            return Execute(sqlRequest, null);
+        }
+
+        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters)
+        {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
@@ -426,7 +431,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                localConnection.Execute(sqlRequest);
+                localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
             }
             catch (ArgumentException ex)
             {
@@ -446,15 +451,15 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 }
             }
             return this;
-        }
-
-        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter> parameters)
-        {
-            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
+            return Query(sqlRequest, null, out result);
+        }
+
+        public IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out List<T> result)
+        {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
@@ -478,7 +483,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                result = localConnection.Query<T>(sqlRequest).ToList();
+                result = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters()).ToList();
             }
             catch (ArgumentException ex)
             {
@@ -500,12 +505,12 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter> parameters, out List<T> result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
-            throw new NotImplementedException();
+            return QueryFirstOrDefault(sqlRequest, null, out result);
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out T? result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -550,11 +555,6 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 }
             }
             return this;
-        }
-
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, List<VelocipedeCommandParameter> parameters, out T? result)
-        {
-            throw new NotImplementedException();
         }
 
         private DataTable GetDataTable(NpgsqlDataReader reader)
