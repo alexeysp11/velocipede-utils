@@ -26,7 +26,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 
         private MySqlConnection _connection;
 
-        public MysqlDbConnection(string connectionString = null)
+        public MysqlDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
         }
@@ -118,7 +118,7 @@ WHERE
             return this;
         }
 
-        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             string sql = string.Format("SHOW CREATE TABLE {0}", tableName);
             return QueryFirstOrDefault(sql, out sqlDefinition);
@@ -194,7 +194,7 @@ WHERE
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
             // Initialize connection.
             bool newConnectionUsed = true;

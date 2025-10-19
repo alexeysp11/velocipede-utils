@@ -54,9 +54,9 @@ using IVelocipedeDbConnection dbConnection
 dbConnection
     .OpenDb()
     .GetAllDataFromTable(tableName, out DataTable dtData)
-    .GetColumnsOfTable(tableName, out DataTable dtColumns)
-    .GetForeignKeys(tableName, out DataTable dtForeignKeys)
-    .GetTriggers(tableName, out DataTable dtTriggers)
+    .GetColumnsOfTable(tableName, out List<VelocipedeColumnInfo> columnInfo)
+    .GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
+    .GetTriggers(tableName, out List<VelocipedeTriggerInfo> triggerInfo)
     .GetSqlDefinition(tableName, out string sqlDefinition)
     .CloseDb();
 ```

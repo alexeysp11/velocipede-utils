@@ -49,7 +49,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
             using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(DatabaseType.SQLite, connectionString);
 
             // Act.
-            string instancePath = dbConnection.DatabaseName;
+            string? instancePath = dbConnection.DatabaseName;
             string staticPath = SqliteDbConnection.GetDatabaseName(connectionString);
 
             // Assert.

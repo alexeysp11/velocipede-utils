@@ -1,5 +1,4 @@
-﻿using System;
-using VelocipedeUtils.Shared.DbOperations.DbConnections;
+﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.Factories
@@ -12,7 +11,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Factories
         /// <summary>
         /// Initialize database connection.
         /// </summary>
-        public static IVelocipedeDbConnection InitializeDbConnection(DatabaseType databaseType, string connectionString = null)
+        public static IVelocipedeDbConnection InitializeDbConnection(DatabaseType databaseType, string? connectionString = null)
         {
             return databaseType switch
             {

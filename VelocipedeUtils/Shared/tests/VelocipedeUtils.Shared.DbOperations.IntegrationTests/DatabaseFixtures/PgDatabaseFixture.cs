@@ -15,7 +15,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
                 .WithEnvironment("POSTGRES_HOST_AUTH_METHOD", "password")
                 .Build();
 
-        public string DatabaseName => PgDbConnection.GetDatabaseName(ConnectionString);
+        public string? DatabaseName => PgDbConnection.GetDatabaseName(ConnectionString);
         public string ConnectionString => container.GetConnectionString();
         public string ContainerId => $"{container.Id}";
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;

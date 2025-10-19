@@ -1,6 +1,4 @@
-﻿using Dapper;
-using FluentAssertions;
-using Npgsql;
+﻿using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
@@ -37,7 +35,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
         public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
         {
             // Arrange & Act.
-            string result = PgDbConnection.GetDatabaseName(connectionString);
+            string? result = PgDbConnection.GetDatabaseName(connectionString);
 
             // Assert.
             result.Should().Be(expected);

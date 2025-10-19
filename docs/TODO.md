@@ -12,9 +12,8 @@
 - [ ] How to deal with `blob` objects in databases connection classes?
     - [ ] Add the functionality to get byte arrays from the DB connection.
 - [ ] Method `VelocipedeUtils.Shared.DbConnections.BaseDbConnection.GetSqlFromDataTable()` does not correct SQL statement, so you need to explain how to use this method properly. Maybe, this method should be implemented based on metadata about the tables.
-- [ ] How to transfer data from one database to another?
-- [ ] Execute requests with parameters.
-- [ ] Extend methods for getting connection string.
+- [ ] Transfer data from one database to another.
+- [ ] Extend methods for getting connection string: set differnet parameters (e.g. `Database`, `PersistSecurityInfo`, `CommandTimeout`, `Encoding`, etc).
 - [ ] Remove code duplication for database operations using Dapper.
 - [ ] Connect to another DB within an existing connection if it's active. This can reduce the number of connection initialization and increase performance of the library.
 - [ ] Execute `SELECT` from another database:

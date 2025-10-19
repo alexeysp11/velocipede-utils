@@ -73,14 +73,18 @@ EXEC sp_executesql @triggerSql;";
         [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public override void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
         }
 
         [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
         public override void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
         }
     }

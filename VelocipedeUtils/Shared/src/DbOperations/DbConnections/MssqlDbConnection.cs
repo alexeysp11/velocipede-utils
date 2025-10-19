@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using VelocipedeUtils.Shared.DbOperations.Constants;
@@ -17,14 +13,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public sealed class MssqlDbConnection : IVelocipedeDbConnection
     {
-        public string ConnectionString { get; set; }
+        public string? ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
         public string DatabaseName => GetDatabaseName(ConnectionString);
         public bool IsConnected => _connection != null;
 
-        private SqlConnection _connection;
+        private SqlConnection? _connection;
 
-        public MssqlDbConnection(string connectionString = null)
+        public MssqlDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
         }
@@ -37,7 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (_connection != null && _connection.ConnectionString == ConnectionString)
                 return true;
 
-            string existingConnectionString = _connection?.ConnectionString;
+            string? existingConnectionString = _connection?.ConnectionString;
             try
             {
                 OpenDb();
@@ -87,7 +83,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Open database with the specified connection string.
         /// </summary>
-        private IVelocipedeDbConnection OpenDb(string connectionString)
+        private IVelocipedeDbConnection OpenDb(string? connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -123,7 +119,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Try to reconnect to the previous established connection.
         /// </summary>
-        private bool TryReconnect(string connectionString)
+        private bool TryReconnect(string? connectionString)
         {
             try
             {
@@ -139,7 +135,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Switch to the specified database and get new connection string.
         /// </summary>
-        public IVelocipedeDbConnection SwitchDb(string dbName, out string connectionString)
+        public IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString)
         {
             if (string.IsNullOrEmpty(dbName))
                 throw new VelocipedeDbNameException();
@@ -254,7 +250,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
-        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
             string sql = $"SELECT OBJECT_DEFINITION(OBJECT_ID('{tableName}')) AS ObjectDefinition";
@@ -279,7 +275,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
             dtResult = new DataTable();
             bool newConnectionUsed = true;
-            SqlConnection localConnection = null;
+            SqlConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -332,7 +328,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            SqlConnection localConnection = null;
+            SqlConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -379,7 +375,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            SqlConnection localConnection = null;
+            SqlConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -420,13 +416,13 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            SqlConnection localConnection = null;
+            SqlConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -492,7 +488,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         /// <summary>
         /// Get database name by connection string.
         /// </summary>
-        public static string GetDatabaseName(string connectionString)
+        public static string GetDatabaseName(string? connectionString)
         {
             try
             {
@@ -509,7 +505,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        public static string GetConnectionString(string connectionString, string databaseName)
+        public static string GetConnectionString(string? connectionString, string databaseName)
         {
             try
             {

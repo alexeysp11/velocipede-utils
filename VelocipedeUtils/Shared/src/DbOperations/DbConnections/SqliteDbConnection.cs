@@ -1,11 +1,7 @@
 using Dapper;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using Microsoft.Data.Sqlite;
 using VelocipedeUtils.Shared.DbOperations.Enums;
-using System.Linq;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Models;
@@ -17,14 +13,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public sealed class SqliteDbConnection : IVelocipedeDbConnection
     {
-        public string ConnectionString { get; set; }
+        public string? ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.SQLite;
         public string DatabaseName => GetDatabaseName(ConnectionString);
         public bool IsConnected => _connection != null;
 
-        private SqliteConnection _connection;
+        private SqliteConnection? _connection;
 
-        public SqliteDbConnection(string connectionString = null)
+        public SqliteDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
         }
@@ -100,7 +96,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Switch to the specified database and get new connection string.
         /// </summary>
-        public IVelocipedeDbConnection SwitchDb(string dbName, out string connectionString)
+        public IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString)
         {
             if (string.IsNullOrEmpty(dbName))
                 throw new VelocipedeDbNameException();
@@ -215,7 +211,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
-        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
             string sql = string.Format(@"SELECT sql FROM sqlite_master WHERE type='table' AND name LIKE '{0}'", tableName);
@@ -241,7 +237,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            SqliteConnection localConnection = null;
+            SqliteConnection? localConnection = null;
             dtResult = new DataTable();
             try
             {
@@ -294,7 +290,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            SqliteConnection localConnection = null;
+            SqliteConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -341,7 +337,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            SqliteConnection localConnection = null;
+            SqliteConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -382,13 +378,13 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            SqliteConnection localConnection = null;
+            SqliteConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -437,7 +433,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         /// <summary>
         /// Get database file path by connection string.
         /// </summary>
-        public static string GetDatabaseName(string connectionString)
+        public static string GetDatabaseName(string? connectionString)
         {
             try
             {

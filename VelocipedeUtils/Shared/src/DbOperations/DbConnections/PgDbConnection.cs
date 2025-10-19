@@ -1,7 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using Dapper;
 using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.Constants;
@@ -16,14 +13,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public sealed class PgDbConnection : IVelocipedeDbConnection
     {
-        private NpgsqlConnection _connection;
+        private NpgsqlConnection? _connection;
 
-        public string ConnectionString { get; set; }
+        public string? ConnectionString { get; set; }
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
-        public string DatabaseName => GetDatabaseName(ConnectionString);
+        public string? DatabaseName => GetDatabaseName(ConnectionString);
         public bool IsConnected => _connection != null;
 
-        public PgDbConnection(string connectionString = null)
+        public PgDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
         }
@@ -36,7 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             if (_connection != null && _connection.ConnectionString == ConnectionString)
                 return true;
 
-            string existingConnectionString = _connection?.ConnectionString;
+            string? existingConnectionString = _connection?.ConnectionString;
             try
             {
                 OpenDb();
@@ -86,7 +83,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Open database with the specified connection string.
         /// </summary>
-        private void OpenDb(string connectionString)
+        private void OpenDb(string? connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -111,7 +108,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Try to reconnect to the previous established connection.
         /// </summary>
-        private bool TryReconnect(string connectionString)
+        private bool TryReconnect(string? connectionString)
         {
             try
             {
@@ -127,7 +124,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Switch to the specified database and get new connection string.
         /// </summary>
-        public IVelocipedeDbConnection SwitchDb(string dbName, out string connectionString)
+        public IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString)
         {
             if (string.IsNullOrEmpty(dbName))
                 throw new VelocipedeDbNameException();
@@ -277,7 +274,7 @@ WHERE event_object_table LIKE '{0}'", tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition)
+        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             string schemaName = "public";
             string[] tn = tableName.Split('.');
@@ -352,7 +349,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            NpgsqlConnection localConnection = null;
+            NpgsqlConnection? localConnection = null;
             dtResult = new DataTable();
             try
             {
@@ -405,7 +402,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            NpgsqlConnection localConnection = null;
+            NpgsqlConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -452,7 +449,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            NpgsqlConnection localConnection = null;
+            NpgsqlConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -493,13 +490,13 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
             bool newConnectionUsed = true;
-            NpgsqlConnection localConnection = null;
+            NpgsqlConnection? localConnection = null;
             try
             {
                 // Initialize connection.
@@ -565,7 +562,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         /// <summary>
         /// Get database name by connection string.
         /// </summary>
-        public static string GetDatabaseName(string connectionString)
+        public static string? GetDatabaseName(string? connectionString)
         {
             try
             {
@@ -582,7 +579,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        public static string GetConnectionString(string connectionString, string databaseName)
+        public static string GetConnectionString(string? connectionString, string databaseName)
         {
             try
             {

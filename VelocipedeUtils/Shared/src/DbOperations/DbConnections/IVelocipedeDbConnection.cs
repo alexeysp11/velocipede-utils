@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Models;
@@ -14,7 +12,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Connection string.
         /// </summary>
-        string ConnectionString { get; set; }
+        string? ConnectionString { get; set; }
 
         /// <summary>
         /// Database type.
@@ -24,7 +22,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Database name.
         /// </summary>
-        string DatabaseName { get; }
+        string? DatabaseName { get; }
 
         /// <summary>
         /// Whether the instance is connected to the specified database.
@@ -49,7 +47,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Switch to the specified database and get new connection string.
         /// </summary>
-        IVelocipedeDbConnection SwitchDb(string dbName, out string connectionString);
+        IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString);
 
         /// <summary>
         /// Disconnect from the specified database.
@@ -83,7 +81,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get SQL definition of the specified table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        IVelocipedeDbConnection GetSqlDefinition(string tableName, out string sqlDefinition);
+        IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition);
 
         /// <summary>
         /// Create temporary table.
@@ -115,6 +113,6 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query first or default using Dapper.
         /// </summary>
-        IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T result);
+        IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result);
     }
 }

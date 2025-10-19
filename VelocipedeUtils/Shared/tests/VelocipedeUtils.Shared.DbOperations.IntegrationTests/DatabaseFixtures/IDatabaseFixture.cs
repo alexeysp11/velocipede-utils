@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {
     public interface IDatabaseFixture : IAsyncLifetime
     {
-        string DatabaseName { get; }
+        string? DatabaseName { get; }
         string ConnectionString { get; }
         string ContainerId { get; }
         DatabaseType DatabaseType { get; }
