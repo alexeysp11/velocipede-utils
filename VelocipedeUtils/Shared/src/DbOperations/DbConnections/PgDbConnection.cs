@@ -396,6 +396,11 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
+        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, List<VelocipedeCommandParameter> parameters, out DataTable dtResult)
+        {
+            throw new NotImplementedException();
+        }
+
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -441,6 +446,11 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 }
             }
             return this;
+        }
+
+        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter> parameters)
+        {
+            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
@@ -490,6 +500,11 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
+        public IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter> parameters, out List<T> result)
+        {
+            throw new NotImplementedException();
+        }
+
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -535,6 +550,11 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 }
             }
             return this;
+        }
+
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, List<VelocipedeCommandParameter> parameters, out T? result)
+        {
+            throw new NotImplementedException();
         }
 
         private DataTable GetDataTable(NpgsqlDataReader reader)

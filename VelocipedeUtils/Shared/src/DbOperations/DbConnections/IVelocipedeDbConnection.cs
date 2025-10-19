@@ -101,9 +101,19 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
 
         /// <summary>
+        /// Execute SQL command and <see cref="DataTable"/> as a result.
+        /// </summary>
+        IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, List<VelocipedeCommandParameter> parameters, out DataTable dtResult);
+
+        /// <summary>
         /// Execute SQL command.
         /// </summary>
         IVelocipedeDbConnection Execute(string sqlRequest);
+
+        /// <summary>
+        /// Execute SQL command.
+        /// </summary>
+        IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter> parameters);
 
         /// <summary>
         /// Query using Dapper.
@@ -111,8 +121,18 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result);
 
         /// <summary>
+        /// Query using Dapper.
+        /// </summary>
+        IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter> parameters, out List<T> result);
+
+        /// <summary>
         /// Query first or default using Dapper.
         /// </summary>
         IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result);
+
+        /// <summary>
+        /// Query first or default using Dapper.
+        /// </summary>
+        IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, List<VelocipedeCommandParameter> parameters, out T? result);
     }
 }
