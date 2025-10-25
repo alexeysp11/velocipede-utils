@@ -5,6 +5,7 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using Newtonsoft.Json;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -228,65 +229,22 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             throw new System.NotImplementedException();
         }
 
-        /// <summary>
-        /// Executes SQL string and returns DataTable.
-        /// </summary>
         public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            dtResult = new DataTable();
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                SqliteCommand selectCmd = localConnection.CreateCommand();
-                selectCmd.CommandText = sqlRequest;
-                using (var reader = selectCmd.ExecuteReader())
-                {
-                    dtResult.Load(reader);
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                    localConnection = null;
-                }
-            }
-            return this;
+            return ExecuteSqlCommand(sqlRequest, null, out dtResult);
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out DataTable dtResult)
+        public IVelocipedeDbConnection ExecuteSqlCommand(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out DataTable dtResult)
         {
-            throw new NotImplementedException();
+            Query(sqlRequest, parameters, out List<dynamic> dynamicList);
+
+            string json = JsonConvert.SerializeObject(dynamicList);
+            dtResult = (DataTable?)JsonConvert.DeserializeObject(json, (typeof(DataTable))) ?? new DataTable();
+
+            return this;
         }
 
         public IVelocipedeDbConnection Execute(string sqlRequest)
