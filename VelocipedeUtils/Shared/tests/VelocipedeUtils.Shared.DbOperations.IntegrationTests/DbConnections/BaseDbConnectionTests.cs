@@ -23,7 +23,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         private readonly string _createTestModelsSql;
         private readonly string _createTestUsersSql;
 
-        private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" from ""TestModels""";
+        private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
 
         protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql, string createTestModelsSql, string createTestUsersSql)
         {
@@ -79,6 +79,17 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            };
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -89,6 +100,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Should().HaveCount(8);
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -96,6 +108,17 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -106,6 +129,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Rows.Count.Should().Be(8);
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
         }
 
         [Theory]
@@ -160,10 +184,21 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModels_QuantityEqualsToSpecified()
+        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            }.ToDataTable();
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -174,6 +209,36 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Rows.Count.Should().Be(8);
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModelsAsList_QuantityEqualsToSpecified()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .GetAllDataFromTable("\"TestModels\"", out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Count.Should().Be(8);
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Theory]
@@ -1235,6 +1300,55 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
                 "TestUsers" => _createTestUsersSql,
                 _ => "",
             };
+        }
+
+        private static bool CompareDataTableSchema(DataTable dt1, DataTable dt2)
+        {
+            if (dt1.Columns.Count != dt2.Columns.Count)
+                return false;
+
+            for (int i = 0; i < dt1.Columns.Count; i++)
+            {
+                if (dt1.Columns[i].ColumnName != dt2.Columns[i].ColumnName ||
+                    dt1.Columns[i].DataType != dt2.Columns[i].DataType)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool CompareDataTableContent(DataTable dt1, DataTable dt2)
+        {
+            if (dt1.Rows.Count != dt2.Rows.Count)
+                return false;
+
+            // Ensure consistent order for comparison if not already sorted
+            // You might need to sort both DataTables by a common key before this step
+            // For example: dt1.DefaultView.Sort = "ColumnName ASC"; dt1 = dt1.DefaultView.ToTable();
+
+            for (int i = 0; i < dt1.Rows.Count; i++)
+            {
+                if (!dt1.Rows[i].ItemArray.SequenceEqual(dt2.Rows[i].ItemArray))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool AreDataTablesEquivalent(DataTable dt1, DataTable dt2)
+        {
+            if (dt1 == null || dt2 == null)
+                return dt1 == dt2; // Both null is equivalent, one null is not
+
+            if (!CompareDataTableSchema(dt1, dt2))
+                return false;
+
+            if (!CompareDataTableContent(dt1, dt2))
+                return false;
+
+            return true;
         }
     }
 }

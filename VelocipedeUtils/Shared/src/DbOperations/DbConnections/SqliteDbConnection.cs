@@ -5,7 +5,6 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Models;
-using Newtonsoft.Json;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -240,10 +239,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             out DataTable dtResult)
         {
             Query(sqlRequest, parameters, out List<dynamic> dynamicList);
-
-            string json = JsonConvert.SerializeObject(dynamicList);
-            dtResult = (DataTable?)JsonConvert.DeserializeObject(json, (typeof(DataTable))) ?? new DataTable();
-
+            dtResult = dynamicList.ToDataTable();
             return this;
         }
 

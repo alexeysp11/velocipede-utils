@@ -1,6 +1,5 @@
 using System.Data;
 using Dapper;
-using Newtonsoft.Json;
 using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
@@ -355,10 +354,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             out DataTable dtResult)
         {
             Query(sqlRequest, parameters, out List<dynamic> dynamicList);
-
-            string json = JsonConvert.SerializeObject(dynamicList);
-            dtResult = (DataTable?)JsonConvert.DeserializeObject(json, (typeof(DataTable))) ?? new DataTable();
-
+            dtResult = dynamicList.ToDataTable();
             return this;
         }
 
