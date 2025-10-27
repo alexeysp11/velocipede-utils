@@ -30,6 +30,7 @@
         - **Single-thread mode**: This mode disables all mutexes and is unsafe for use by multiple threads.
         - **Multi-thread mode**: In this mode, SQLite can be safely used by multiple threads, provided that each thread uses its own database connection. No single database connection or any object derived from it (like a prepared statement) should be used by two or more threads simultaneously. 
         - **Serialized mode**: This is the default and safest mode for multithreaded applications. It enables mutexes to protect all shared data structures, including individual database connections. This means that even if you attempt to use a single database connection from multiple threads, SQLite will internally serialize access to ensure thread safety.
+- [ ] Adapt the algorithm so that it is possible to download data in partitions.
 
 ## MS Excel converter 
 
