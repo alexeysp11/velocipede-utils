@@ -96,14 +96,26 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection ClearTemporaryTable(string tableName);
 
         /// <summary>
-        /// Execute SQL command and <see cref="DataTable"/> as a result.
+        /// Execute SQL command and get <see cref="DataTable"/> object as a result.
         /// </summary>
         IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
 
         /// <summary>
-        /// Execute SQL command and <see cref="DataTable"/> as a result.
+        /// Execute SQL command and get <see cref="DataTable"/> object as a result.
         /// </summary>
-        IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out DataTable dtResult);
+        IVelocipedeDbConnection ExecuteSqlCommand(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out DataTable dtResult);
+
+        /// <summary>
+        /// Execute SQL command and get <see cref="DataTable"/> object as a result.
+        /// </summary>
+        public IVelocipedeDbConnection ExecuteSqlCommand(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate,
+            out DataTable dtResult);
 
         /// <summary>
         /// Execute SQL command.
@@ -116,23 +128,47 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters);
 
         /// <summary>
-        /// Query using Dapper.
+        /// Query to get <see cref="List{T}"/>.
         /// </summary>
         IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result);
 
         /// <summary>
-        /// Query using Dapper.
+        /// Query to get <see cref="List{T}"/>.
         /// </summary>
-        IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out List<T> result);
+        IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out List<T> result);
 
         /// <summary>
-        /// Query first or default using Dapper.
+        /// Query to get <see cref="List{T}"/>.
+        /// </summary>
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out List<T> result);
+
+        /// <summary>
+        /// Query first or default object.
         /// </summary>
         IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result);
 
         /// <summary>
-        /// Query first or default using Dapper.
+        /// Query first or default object.
         /// </summary>
-        IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out T? result);
+        IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out T? result);
+
+        /// <summary>
+        /// Query first or default object.
+        /// </summary>
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out T? result);
     }
 }

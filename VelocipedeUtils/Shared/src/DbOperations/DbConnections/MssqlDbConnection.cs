@@ -270,7 +270,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            return ExecuteSqlCommand(sqlRequest, null, out dtResult);
+            return ExecuteSqlCommand(
+                sqlRequest,
+                parameters: null,
+                dtResult: out dtResult);
         }
 
         public IVelocipedeDbConnection ExecuteSqlCommand(
@@ -278,7 +281,20 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             List<VelocipedeCommandParameter>? parameters,
             out DataTable dtResult)
         {
-            Query(sqlRequest, parameters, out List<dynamic> dynamicList);
+            return ExecuteSqlCommand(
+                sqlRequest,
+                parameters: null,
+                predicate: null,
+                dtResult: out dtResult);
+        }
+
+        public IVelocipedeDbConnection ExecuteSqlCommand(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate,
+            out DataTable dtResult)
+        {
+            Query(sqlRequest, parameters, predicate, out List<dynamic> dynamicList);
             dtResult = dynamicList.ToDataTable();
             return this;
         }
@@ -337,12 +353,28 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
-            return Query(sqlRequest, null, out result);
+            return Query(
+                sqlRequest,
+                parameters: null,
+                result: out result);
         }
 
         public IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
+            out List<T> result)
+        {
+            return Query(
+                sqlRequest,
+                parameters: null,
+                predicate: null,
+                result: out result);
+        }
+
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
             out List<T> result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -368,7 +400,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                result = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters()).ToList();
+                IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters());
+                if (predicate != null)
+                    queryResult = queryResult.Where(predicate);
+                result = queryResult.ToList();
             }
             catch (ArgumentException ex)
             {
@@ -392,10 +427,16 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
-            return QueryFirstOrDefault(sqlRequest, null, out result);
+            return QueryFirstOrDefault(
+                sqlRequest,
+                parameters: null,
+                result: out result);
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out T? result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out T? result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -442,26 +483,19 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
-        private DataTable GetDataTable(SqlDataReader reader)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out T? result)
         {
-            DataTable table = new DataTable();
-            if (reader.FieldCount == 0) return table;
-            for (int i = 0; i < reader.FieldCount; i++)
+            if (predicate != null)
             {
-                DataColumn column;
-                column = new DataColumn();
-                column.ColumnName = reader.GetName(i);
-                column.ReadOnly = true;
-                table.Columns.Add(column);
+                Query(sqlRequest, parameters, out List<T> list);
+                result = list.FirstOrDefault(predicate);
+                return this;
             }
-            while (reader.Read())
-            {
-                DataRow row = table.NewRow();
-                for (int i = 0; i < reader.FieldCount; i++)
-                    row[i] = reader.GetValue(i).ToString();
-                table.Rows.Add(row);
-            }
-            return table;
+            return QueryFirstOrDefault(sqlRequest, parameters, out result);
         }
 
         /// <summary>

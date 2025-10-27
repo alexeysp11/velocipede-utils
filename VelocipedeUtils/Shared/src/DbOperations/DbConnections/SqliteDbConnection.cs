@@ -230,7 +230,10 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
 
         public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
         {
-            return ExecuteSqlCommand(sqlRequest, null, out dtResult);
+            return ExecuteSqlCommand(
+                sqlRequest,
+                parameters: null,
+                dtResult: out dtResult);
         }
 
         public IVelocipedeDbConnection ExecuteSqlCommand(
@@ -238,7 +241,20 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             List<VelocipedeCommandParameter>? parameters,
             out DataTable dtResult)
         {
-            Query(sqlRequest, parameters, out List<dynamic> dynamicList);
+            return ExecuteSqlCommand(
+                sqlRequest,
+                parameters: null,
+                predicate: null,
+                dtResult: out dtResult);
+        }
+
+        public IVelocipedeDbConnection ExecuteSqlCommand(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate,
+            out DataTable dtResult)
+        {
+            Query(sqlRequest, parameters, predicate, out List<dynamic> dynamicList);
             dtResult = dynamicList.ToDataTable();
             return this;
         }
@@ -302,6 +318,19 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out List<T> result)
         {
+            return Query(
+                sqlRequest,
+                parameters,
+                predicate: null,
+                result: out result);
+        }
+
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out List<T> result)
+        {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
@@ -325,9 +354,10 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                result = localConnection
-                    .Query<T>(sqlRequest, parameters?.ToDapperParameters())
-                    .ToList();
+                IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters());
+                if (predicate != null)
+                    queryResult = queryResult.Where(predicate);
+                result = queryResult.ToList();
             }
             catch (ArgumentException ex)
             {
@@ -351,10 +381,16 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
 
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
-            return QueryFirstOrDefault(sqlRequest, null, out result);
+            return QueryFirstOrDefault(
+                sqlRequest,
+                parameters: null,
+                result: out result);
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out T? result)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out T? result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -399,6 +435,21 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 }
             }
             return this;
+        }
+
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out T? result)
+        {
+            if (predicate != null)
+            {
+                Query(sqlRequest, parameters, out List<T> list);
+                result = list.FirstOrDefault(predicate);
+                return this;
+            }
+            return QueryFirstOrDefault(sqlRequest, parameters, out result);
         }
 
         /// <summary>
