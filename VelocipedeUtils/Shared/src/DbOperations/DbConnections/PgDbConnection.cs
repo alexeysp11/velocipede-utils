@@ -358,7 +358,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         {
             return QueryDataTable(
                 sqlRequest,
-                parameters: null,
+                parameters,
                 predicate: null,
                 dtResult: out dtResult);
         }
@@ -441,7 +441,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         {
             return Query(
                 sqlRequest,
-                parameters: null,
+                parameters,
                 predicate: null,
                 result: out result);
         }

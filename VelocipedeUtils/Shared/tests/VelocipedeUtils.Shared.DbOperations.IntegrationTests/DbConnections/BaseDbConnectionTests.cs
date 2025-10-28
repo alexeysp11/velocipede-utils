@@ -24,6 +24,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         private readonly string _createTestUsersSql;
 
         private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
+        private const string SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
 
         protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql, string createTestModelsSql, string createTestUsersSql)
         {
@@ -75,7 +76,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void Query_GetAllTestModels_QuantityEqualsToSpecified()
+        public void Query_WithoutRestrictions_GetAllTestModels()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -100,6 +101,88 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Should().HaveCount(8);
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void Query_WithParams_GetAllTestModelsWithIdBiggerThan5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Query(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void Query_WithParamsAndDelegate_GetAllTestModelsWithIdBiggerThan5AndLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<TestModel, bool> predicate = x => x.Id <= 7;
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Query(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void Query_WithDelegate_GetAllTestModelsWithIdLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<TestModel, bool> predicate = x => x.Id <= 7;
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Query(
+                    SELECT_FROM_TESTMODELS,
+                    parameters: null,
+                    predicate: predicate,
+                    result: out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
             result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 

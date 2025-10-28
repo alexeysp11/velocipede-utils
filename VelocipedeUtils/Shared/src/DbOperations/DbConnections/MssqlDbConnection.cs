@@ -283,7 +283,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         {
             return QueryDataTable(
                 sqlRequest,
-                parameters: null,
+                parameters,
                 predicate: null,
                 dtResult: out dtResult);
         }
@@ -366,7 +366,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         {
             return Query(
                 sqlRequest,
-                parameters: null,
+                parameters,
                 predicate: null,
                 result: out result);
         }

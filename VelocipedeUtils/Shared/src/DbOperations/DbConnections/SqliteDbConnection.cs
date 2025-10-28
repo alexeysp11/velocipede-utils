@@ -243,7 +243,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         {
             return QueryDataTable(
                 sqlRequest,
-                parameters: null,
+                parameters,
                 predicate: null,
                 dtResult: out dtResult);
         }
