@@ -115,7 +115,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out DataTable dtResult)
         {
             string sql = $"SELECT * FROM {tableName}";
-            return connection.ExecuteSqlCommand(sql, out dtResult);
+            return connection.QueryDataTable(sql, out dtResult);
         }
 
         /// <summary>

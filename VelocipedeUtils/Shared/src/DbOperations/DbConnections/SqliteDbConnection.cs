@@ -228,27 +228,27 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             throw new System.NotImplementedException();
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
         {
-            return ExecuteSqlCommand(
+            return QueryDataTable(
                 sqlRequest,
                 parameters: null,
                 dtResult: out dtResult);
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(
+        public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             out DataTable dtResult)
         {
-            return ExecuteSqlCommand(
+            return QueryDataTable(
                 sqlRequest,
                 parameters: null,
                 predicate: null,
                 dtResult: out dtResult);
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(
+        public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             Func<dynamic, bool>? predicate,

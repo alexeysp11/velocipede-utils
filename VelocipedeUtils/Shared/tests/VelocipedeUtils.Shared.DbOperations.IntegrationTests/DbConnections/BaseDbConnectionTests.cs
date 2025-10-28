@@ -104,7 +104,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void ExecuteSqlCommand_ConnectionStringFromFixtureAndGetAllTestModels_QuantityEqualsToSpecified()
+        public void QueryDataTable_ConnectionStringFromFixtureAndGetAllTestModels_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -124,7 +124,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
             dbConnection
                 .OpenDb()
-                .ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out DataTable result)
+                .QueryDataTable(SELECT_FROM_TESTMODELS, out DataTable result)
                 .CloseDb();
 
             // Assert.
@@ -135,12 +135,12 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void ExecuteSqlCommand_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        public void QueryDataTable_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+            Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
 
             // Act & Assert.
             act
@@ -150,13 +150,13 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void ExecuteSqlCommand_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        public void QueryDataTable_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+            Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
 
             // Act & Assert.
             act
@@ -169,12 +169,12 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [InlineData("INCORRECT CONNECTION STRING")]
         [InlineData("connect:localhost:0000;")]
         [InlineData("connect:localhost:0000;super-connection-string")]
-        public void ExecuteSqlCommand_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        public void QueryDataTable_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+            Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
 
             // Act & Assert.
             act

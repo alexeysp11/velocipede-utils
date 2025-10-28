@@ -98,12 +98,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Execute SQL command and get <see cref="DataTable"/> object as a result.
         /// </summary>
-        IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult);
+        IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult);
 
         /// <summary>
         /// Execute SQL command and get <see cref="DataTable"/> object as a result.
         /// </summary>
-        IVelocipedeDbConnection ExecuteSqlCommand(
+        IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             out DataTable dtResult);
@@ -111,7 +111,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Execute SQL command and get <see cref="DataTable"/> object as a result.
         /// </summary>
-        public IVelocipedeDbConnection ExecuteSqlCommand(
+        public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             Func<dynamic, bool>? predicate,
