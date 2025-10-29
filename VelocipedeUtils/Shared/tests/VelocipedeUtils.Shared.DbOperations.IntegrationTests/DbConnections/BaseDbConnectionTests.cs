@@ -187,7 +187,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void QueryDataTable_ConnectionStringFromFixtureAndGetAllTestModels_QuantityEqualsToSpecified()
+        public void QueryDataTable_FixtureWithoutRestrictions_GetAllTestModels()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -212,6 +212,88 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Rows.Count.Should().Be(8);
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void QueryDataTable_FixtureWithParams_GetTestModelsWithIdBiggerThan5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryDataTable(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out DataTable result)
+                .CloseDb();
+
+            // Assert.
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void QueryDataTable_FixtureWithParamsAndDelegate_GetTestModelsWithIdBiggerThan5AndLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<dynamic, bool> predicate = x => x.Id <= 7;
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryDataTable(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out DataTable result)
+                .CloseDb();
+
+            // Assert.
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void QueryDataTable_FixtureWithDelegate_GetTestModelsWithIdLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<dynamic, bool> predicate = x => x.Id <= 7;
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryDataTable(
+                    SELECT_FROM_TESTMODELS,
+                    parameters: null,
+                    predicate: predicate,
+                    dtResult: out DataTable result)
+                .CloseDb();
+
+            // Assert.
             AreDataTablesEquivalent(result, expected).Should().BeTrue();
         }
 
