@@ -536,7 +536,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                result = localConnection.QueryFirstOrDefault<T>(sqlRequest);
+                result = localConnection.QueryFirstOrDefault<T>(sqlRequest, parameters?.ToDapperParameters());
             }
             catch (ArgumentException ex)
             {

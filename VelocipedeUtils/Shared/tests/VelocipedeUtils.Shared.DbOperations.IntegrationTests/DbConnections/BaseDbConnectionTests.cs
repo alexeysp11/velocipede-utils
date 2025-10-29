@@ -76,6 +76,102 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
+        public void QueryFirstOrDefault_FixtureWithoutRestrictions_GetTestModelWithIdEquals1()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            TestModel expected = new TestModel { Id = 1, Name = "Test_1" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(SELECT_FROM_TESTMODELS, out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void QueryFirstOrDefault_FixtureWithParams_GetTestModelWithIdEquals5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            TestModel expected = new TestModel { Id = 5, Name = "Test_5" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void QueryFirstOrDefault_FixtureWithParamsAndDelegate_GetTestModelWithIdEquals7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<TestModel, bool> predicate = x => x.Id >= 7;
+            TestModel expected = new TestModel { Id = 7, Name = "Test_7" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void QueryFirstOrDefault_FixtureWithDelegate_GetTestModelWithIdEquals7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<TestModel, bool> predicate = x => x.Id >= 7;
+            TestModel expected = new TestModel { Id = 7, Name = "Test_7" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(
+                    SELECT_FROM_TESTMODELS,
+                    parameters: null,
+                    predicate: predicate,
+                    result: out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public void Query_WithoutRestrictions_GetAllTestModels()
         {
             // Arrange.
