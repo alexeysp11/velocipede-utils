@@ -90,14 +90,14 @@ WHERE UPPER(table_name) = UPPER('{0}')", tn[0], tn[1]);
 SELECT *
 FROM all_constraints
 WHERE r_constraint_name IN (SELECT constraint_name FROM all_constraints WHERE UPPER(table_name) LIKE UPPER('{0}'))", tableName);
-            ExecuteSqlCommand(sql, out dtResult);
+            QueryDataTable(sql, out dtResult);
             return this;
         }
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
             string sql = string.Format(@"SELECT * FROM all_triggers WHERE UPPER(table_name) LIKE UPPER('{0}')", tableName);
-            ExecuteSqlCommand(sql, out dtResult);
+            QueryDataTable(sql, out dtResult);
             return this;
         }
 
@@ -120,7 +120,7 @@ WHERE UPPER(ut.table_name) LIKE UPPER('{0}')", tableName);
             throw new System.NotImplementedException();
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
         {
             dtResult = new DataTable();
             using (OracleConnection con = new OracleConnection(ConnectionString))

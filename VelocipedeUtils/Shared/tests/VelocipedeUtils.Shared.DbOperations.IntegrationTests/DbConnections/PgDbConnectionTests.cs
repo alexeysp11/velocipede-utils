@@ -57,6 +57,10 @@ execute function ""fn_TestUsers_CityId_Update""();";
         public PgDbConnectionTests(PgDatabaseFixture fixture)
             : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
+            _createTableSqlForExecuteQuery = @"create table if not exists ""TestTableForExecute"" (""Name"" varchar(50) NOT NULL)";
+            _createTableSqlForExecuteWithParamsQuery = @"
+create table if not exists ""TestTableForExecuteWithParams"" (""Name"" varchar(50) NOT NULL);
+insert into ""TestTableForExecuteWithParams"" (""Name"") values (@TestRecordName);";
         }
     }
 }

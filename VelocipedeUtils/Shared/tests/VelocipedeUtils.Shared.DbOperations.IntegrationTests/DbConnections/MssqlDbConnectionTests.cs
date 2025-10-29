@@ -58,6 +58,10 @@ EXEC sp_executesql @triggerSql;";
         public MssqlDbConnectionTests(MssqlDatabaseFixture fixture)
             : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
+            _createTableSqlForExecuteQuery = @"create table ""TestTableForExecute"" (""Name"" varchar(50) NOT NULL)";
+            _createTableSqlForExecuteWithParamsQuery = @"
+create table ""TestTableForExecuteWithParams"" (""Name"" varchar(50) NOT NULL);
+insert into ""TestTableForExecuteWithParams"" (""Name"") values (@TestRecordName);";
         }
 
         [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]

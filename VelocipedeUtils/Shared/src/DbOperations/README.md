@@ -14,7 +14,7 @@ dbConnection
     .OpenDb()
     .CreateDbIfNotExists(newDatabaseName)
     .SwitchDb(newDatabaseName)
-    .ExecuteSqlCommand(sqlQuery, out DataTable dtResult)
+    .QueryDataTable(sqlQuery, out DataTable dtResult)
     .CloseDb();
 ```
 

@@ -23,7 +23,11 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         private readonly string _createTestModelsSql;
         private readonly string _createTestUsersSql;
 
-        private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" from ""TestModels""";
+        private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
+        private const string SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
+
+        protected string _createTableSqlForExecuteQuery;
+        protected string _createTableSqlForExecuteWithParamsQuery;
 
         protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql, string createTestModelsSql, string createTestUsersSql)
         {
@@ -32,6 +36,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             _createTestModelsSql = createTestModelsSql;
             _createTestUsersSql = createTestUsersSql;
+            _createTableSqlForExecuteQuery = string.Empty;
+            _createTableSqlForExecuteWithParamsQuery = string.Empty;
 
             CreateTestDatabase(sql);
             InitializeTestDatabase();
@@ -50,6 +56,66 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Should().Be(expected);
+        }
+
+        [Fact]
+        public void Execute_CreateTestTableForExecute_TableExists()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string expected = dbConnection.DatabaseType switch
+            {
+                DatabaseType.PostgreSQL => "public.TestTableForExecute",
+                _ => "TestTableForExecute",
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Execute(_createTableSqlForExecuteQuery);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.GetTablesInDb(out List<string> tables);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            tables.Should().Contain(expected);
+        }
+
+        [Fact]
+        public void Execute_CreateTestTableForExecuteWithParams_TableExists()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string expectedTable = dbConnection.DatabaseType switch
+            {
+                DatabaseType.PostgreSQL => "public.TestTableForExecuteWithParams",
+                _ => "TestTableForExecuteWithParams",
+            };
+            const string expectedName = "Name_1";
+            const string selectQuery = @"SELECT ""Name"" FROM ""TestTableForExecuteWithParams""";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TestRecordName", Value = expectedName }];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Execute(_createTableSqlForExecuteWithParamsQuery, parameters);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.GetTablesInDb(out List<string> tables);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.Query(selectQuery, out List<string> names);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            tables.Should().Contain(expectedTable);
+            names.Should().Contain(expectedName);
         }
 
         [Fact]
@@ -75,10 +141,117 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void Query_GetAllTestModels_QuantityEqualsToSpecified()
+        public void QueryFirstOrDefault_FixtureWithoutRestrictions_GetTestModelWithIdEquals1()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            TestModel expected = new TestModel { Id = 1, Name = "Test_1" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(SELECT_FROM_TESTMODELS, out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void QueryFirstOrDefault_FixtureWithParams_GetTestModelWithIdEquals5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            TestModel expected = new TestModel { Id = 5, Name = "Test_5" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void QueryFirstOrDefault_FixtureWithParamsAndDelegate_GetTestModelWithIdEquals7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<TestModel, bool> predicate = x => x.Id >= 7;
+            TestModel expected = new TestModel { Id = 7, Name = "Test_7" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void QueryFirstOrDefault_FixtureWithDelegate_GetTestModelWithIdEquals7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<TestModel, bool> predicate = x => x.Id >= 7;
+            TestModel expected = new TestModel { Id = 7, Name = "Test_7" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryFirstOrDefault(
+                    SELECT_FROM_TESTMODELS,
+                    parameters: null,
+                    predicate: predicate,
+                    result: out TestModel? result);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void Query_WithoutRestrictions_GetAllTestModels()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            };
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -89,34 +262,211 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Should().HaveCount(8);
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Fact]
-        public void ExecuteSqlCommand_ConnectionStringFromFixtureAndGetAllTestModels_QuantityEqualsToSpecified()
+        public void Query_WithParams_GetAllTestModelsWithIdBiggerThan5()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            };
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
             dbConnection
                 .OpenDb()
-                .ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out DataTable result)
+                .Query(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void Query_WithParamsAndDelegate_GetAllTestModelsWithIdBiggerThan5AndLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<TestModel, bool> predicate = x => x.Id <= 7;
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Query(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void Query_WithDelegate_GetAllTestModelsWithIdLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<TestModel, bool> predicate = x => x.Id <= 7;
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Query(
+                    SELECT_FROM_TESTMODELS,
+                    parameters: null,
+                    predicate: predicate,
+                    result: out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public void QueryDataTable_FixtureWithoutRestrictions_GetAllTestModels()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryDataTable(SELECT_FROM_TESTMODELS, out DataTable result)
                 .CloseDb();
 
             // Assert.
             result.Rows.Count.Should().Be(8);
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void QueryDataTable_FixtureWithParams_GetTestModelsWithIdBiggerThan5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryDataTable(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out DataTable result)
+                .CloseDb();
+
+            // Assert.
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void QueryDataTable_FixtureWithParamsAndDelegate_GetTestModelsWithIdBiggerThan5AndLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<dynamic, bool> predicate = x => x.Id <= 7;
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryDataTable(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out DataTable result)
+                .CloseDb();
+
+            // Assert.
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void QueryDataTable_FixtureWithDelegate_GetTestModelsWithIdLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<dynamic, bool> predicate = x => x.Id <= 7;
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .QueryDataTable(
+                    SELECT_FROM_TESTMODELS,
+                    parameters: null,
+                    predicate: predicate,
+                    dtResult: out DataTable result)
+                .CloseDb();
+
+            // Assert.
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
         }
 
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void ExecuteSqlCommand_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        public void QueryDataTable_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+            Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
 
             // Act & Assert.
             act
@@ -126,13 +476,13 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void ExecuteSqlCommand_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        public void QueryDataTable_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+            Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
 
             // Act & Assert.
             act
@@ -145,12 +495,12 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [InlineData("INCORRECT CONNECTION STRING")]
         [InlineData("connect:localhost:0000;")]
         [InlineData("connect:localhost:0000;super-connection-string")]
-        public void ExecuteSqlCommand_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        public void QueryDataTable_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.ExecuteSqlCommand(SELECT_FROM_TESTMODELS, out _);
+            Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
 
             // Act & Assert.
             act
@@ -160,10 +510,21 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModels_QuantityEqualsToSpecified()
+        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            DataTable expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            }.ToDataTable();
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -174,6 +535,36 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Rows.Count.Should().Be(8);
+            AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModelsAsList_QuantityEqualsToSpecified()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<TestModel> expected = new List<TestModel>
+            {
+                new TestModel { Id = 1, Name = "Test_1" },
+                new TestModel { Id = 2, Name = "Test_2" },
+                new TestModel { Id = 3, Name = "Test_3" },
+                new TestModel { Id = 4, Name = "Test_4" },
+                new TestModel { Id = 5, Name = "Test_5" },
+                new TestModel { Id = 6, Name = "Test_6" },
+                new TestModel { Id = 7, Name = "Test_7" },
+                new TestModel { Id = 8, Name = "Test_8" },
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .GetAllDataFromTable("\"TestModels\"", out List<TestModel> result)
+                .CloseDb();
+
+            // Assert.
+            result.Count.Should().Be(8);
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
         }
 
         [Theory]
@@ -1235,6 +1626,55 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
                 "TestUsers" => _createTestUsersSql,
                 _ => "",
             };
+        }
+
+        private static bool CompareDataTableSchema(DataTable dt1, DataTable dt2)
+        {
+            if (dt1.Columns.Count != dt2.Columns.Count)
+                return false;
+
+            for (int i = 0; i < dt1.Columns.Count; i++)
+            {
+                if (dt1.Columns[i].ColumnName != dt2.Columns[i].ColumnName ||
+                    dt1.Columns[i].DataType != dt2.Columns[i].DataType)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool CompareDataTableContent(DataTable dt1, DataTable dt2)
+        {
+            if (dt1.Rows.Count != dt2.Rows.Count)
+                return false;
+
+            // Ensure consistent order for comparison if not already sorted
+            // You might need to sort both DataTables by a common key before this step
+            // For example: dt1.DefaultView.Sort = "ColumnName ASC"; dt1 = dt1.DefaultView.ToTable();
+
+            for (int i = 0; i < dt1.Rows.Count; i++)
+            {
+                if (!dt1.Rows[i].ItemArray.SequenceEqual(dt2.Rows[i].ItemArray))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool AreDataTablesEquivalent(DataTable dt1, DataTable dt2)
+        {
+            if (dt1 == null || dt2 == null)
+                return dt1 == dt2; // Both null is equivalent, one null is not
+
+            if (!CompareDataTableSchema(dt1, dt2))
+                return false;
+
+            if (!CompareDataTableContent(dt1, dt2))
+                return false;
+
+            return true;
         }
     }
 }

@@ -107,14 +107,14 @@ FROM
 WHERE
     UPPER(REFERENCED_TABLE_SCHEMA) LIKE UPPER('{0}')
     AND UPPER(REFERENCED_TABLE_NAME) LIKE UPPER('{1}');", DatabaseName, tableName);
-            ExecuteSqlCommand(sql, out dtResult);
+            QueryDataTable(sql, out dtResult);
             return this;
         }
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out DataTable dtResult)
         {
             string sql = string.Format("SHOW TRIGGERS LIKE '{0}'", tableName);
-            ExecuteSqlCommand(sql, out dtResult);
+            QueryDataTable(sql, out dtResult);
             return this;
         }
 
@@ -134,7 +134,7 @@ WHERE
             throw new System.NotImplementedException();
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
         {
             dtResult = new DataTable();
             MySqlConnection connection = null;

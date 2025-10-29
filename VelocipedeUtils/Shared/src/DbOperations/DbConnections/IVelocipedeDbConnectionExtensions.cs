@@ -109,10 +109,26 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Get all data from the table.
         /// </summary>
         /// <param name="tableName">Table name</param>
-        public static IVelocipedeDbConnection GetAllDataFromTable(this IVelocipedeDbConnection connection, string tableName, out DataTable dtResult)
+        public static IVelocipedeDbConnection GetAllDataFromTable(
+            this IVelocipedeDbConnection connection,
+            string tableName,
+            out DataTable dtResult)
         {
             string sql = $"SELECT * FROM {tableName}";
-            return connection.ExecuteSqlCommand(sql, out dtResult);
+            return connection.QueryDataTable(sql, out dtResult);
+        }
+
+        /// <summary>
+        /// Get all data from the table.
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        public static IVelocipedeDbConnection GetAllDataFromTable<T>(
+            this IVelocipedeDbConnection connection,
+            string tableName,
+            out List<T> result)
+        {
+            string sql = $"SELECT * FROM {tableName}";
+            return connection.Query(sql, out result);
         }
 
         /// <summary>

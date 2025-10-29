@@ -268,62 +268,44 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             throw new System.NotImplementedException();
         }
 
-        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            return QueryDataTable(
+                sqlRequest,
+                parameters: null,
+                dtResult: out dtResult);
+        }
 
-            dtResult = new DataTable();
-            bool newConnectionUsed = true;
-            SqlConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqlConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
+        public IVelocipedeDbConnection QueryDataTable(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out DataTable dtResult)
+        {
+            return QueryDataTable(
+                sqlRequest,
+                parameters,
+                predicate: null,
+                dtResult: out dtResult);
+        }
 
-                // Execute SQL command and dispose connection if necessary.
-                using (SqlCommand command = new SqlCommand(sqlRequest, localConnection))
-                {
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        dtResult = GetDataTable(reader);
-                    }
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                    localConnection = null;
-                }
-            }
+        public IVelocipedeDbConnection QueryDataTable(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate,
+            out DataTable dtResult)
+        {
+            Query(sqlRequest, parameters, predicate, out List<dynamic> dynamicList);
+            dtResult = dynamicList.ToDataTable();
             return this;
         }
 
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
+            return Execute(sqlRequest, null);
+        }
+
+        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters)
+        {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
@@ -347,7 +329,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                localConnection.Execute(sqlRequest);
+                localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
             }
             catch (ArgumentException ex)
             {
@@ -371,6 +353,30 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
+            return Query(
+                sqlRequest,
+                parameters: null,
+                result: out result);
+        }
+
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out List<T> result)
+        {
+            return Query(
+                sqlRequest,
+                parameters,
+                predicate: null,
+                result: out result);
+        }
+
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out List<T> result)
+        {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
@@ -394,7 +400,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                result = localConnection.Query<T>(sqlRequest).ToList();
+                IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters());
+                if (predicate != null)
+                    queryResult = queryResult.Where(predicate);
+                result = queryResult.ToList();
             }
             catch (ArgumentException ex)
             {
@@ -418,6 +427,17 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
         {
+            return QueryFirstOrDefault(
+                sqlRequest,
+                parameters: null,
+                result: out result);
+        }
+
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out T? result)
+        {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
@@ -441,7 +461,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                result = localConnection.QueryFirstOrDefault<T>(sqlRequest);
+                result = localConnection.QueryFirstOrDefault<T>(sqlRequest, parameters?.ToDapperParameters());
             }
             catch (ArgumentException ex)
             {
@@ -463,26 +483,19 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
-        private DataTable GetDataTable(SqlDataReader reader)
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out T? result)
         {
-            DataTable table = new DataTable();
-            if (reader.FieldCount == 0) return table;
-            for (int i = 0; i < reader.FieldCount; i++)
+            if (predicate != null)
             {
-                DataColumn column;
-                column = new DataColumn();
-                column.ColumnName = reader.GetName(i);
-                column.ReadOnly = true;
-                table.Columns.Add(column);
+                Query(sqlRequest, parameters, out List<T> list);
+                result = list.FirstOrDefault(predicate);
+                return this;
             }
-            while (reader.Read())
-            {
-                DataRow row = table.NewRow();
-                for (int i = 0; i < reader.FieldCount; i++)
-                    row[i] = reader.GetValue(i).ToString();
-                table.Rows.Add(row);
-            }
-            return table;
+            return QueryFirstOrDefault(sqlRequest, parameters, out result);
         }
 
         /// <summary>

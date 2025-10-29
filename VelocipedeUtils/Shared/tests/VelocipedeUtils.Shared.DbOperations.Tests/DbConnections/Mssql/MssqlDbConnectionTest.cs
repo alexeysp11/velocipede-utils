@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
         private string ConnectionString = "Data Source=LAPTOP\\SQLEXPRESS;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         [Fact(Skip = "This test is currently failing due to dependencies on the real database")]
-        public void ExecuteSqlCommand_CorrectConnectionString_DataRetrieved()
+        public void QueryDataTable_CorrectConnectionString_DataRetrieved()
         {
             // Arrange.
             string employeeName = "test_employee";
@@ -21,7 +21,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
             // Act.
             dbConnection
                 .Execute(sqlInsert)
-                .ExecuteSqlCommand(sqlSelect, out DataTable dtSelectResult)
+                .QueryDataTable(sqlSelect, out DataTable dtSelectResult)
                 .Execute(sqlDelete);
 
             // Assert.

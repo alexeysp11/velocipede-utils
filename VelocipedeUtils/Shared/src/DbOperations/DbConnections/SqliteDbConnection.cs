@@ -228,64 +228,44 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             throw new System.NotImplementedException();
         }
 
-        /// <summary>
-        /// Executes SQL string and returns DataTable.
-        /// </summary>
-        public IVelocipedeDbConnection ExecuteSqlCommand(string sqlRequest, out DataTable dtResult)
+        public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            return QueryDataTable(
+                sqlRequest,
+                parameters: null,
+                dtResult: out dtResult);
+        }
 
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            dtResult = new DataTable();
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
+        public IVelocipedeDbConnection QueryDataTable(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out DataTable dtResult)
+        {
+            return QueryDataTable(
+                sqlRequest,
+                parameters,
+                predicate: null,
+                dtResult: out dtResult);
+        }
 
-                // Execute SQL command and dispose connection if necessary.
-                var selectCmd = localConnection.CreateCommand();
-                selectCmd.CommandText = sqlRequest;
-                using (var reader = selectCmd.ExecuteReader())
-                {
-                    dtResult.Load(reader);
-                }
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                    localConnection = null;
-                }
-            }
+        public IVelocipedeDbConnection QueryDataTable(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate,
+            out DataTable dtResult)
+        {
+            Query(sqlRequest, parameters, predicate, out List<dynamic> dynamicList);
+            dtResult = dynamicList.ToDataTable();
             return this;
         }
 
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
+            return Execute(sqlRequest, null);
+        }
+
+        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters)
+        {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
 
@@ -309,7 +289,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                localConnection.Execute(sqlRequest);
+                localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
             }
             catch (ArgumentException ex)
             {
@@ -333,52 +313,23 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
 
         public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                result = localConnection.Query<T>(sqlRequest).ToList();
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                    localConnection = null;
-                }
-            }
-            return this;
+            return Query(sqlRequest, null, out result);
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
+        public IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out List<T> result)
+        {
+            return Query(
+                sqlRequest,
+                parameters,
+                predicate: null,
+                result: out result);
+        }
+
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out List<T> result)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -403,7 +354,10 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 }
 
                 // Execute SQL command and dispose connection if necessary.
-                result = localConnection.QueryFirstOrDefault<T>(sqlRequest);
+                IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters());
+                if (predicate != null)
+                    queryResult = queryResult.Where(predicate);
+                result = queryResult.ToList();
             }
             catch (ArgumentException ex)
             {
@@ -423,6 +377,79 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 }
             }
             return this;
+        }
+
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
+        {
+            return QueryFirstOrDefault(
+                sqlRequest,
+                parameters: null,
+                result: out result);
+        }
+
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out T? result)
+        {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            bool newConnectionUsed = true;
+            SqliteConnection? localConnection = null;
+            try
+            {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new SqliteConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    localConnection.Open();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
+                result = localConnection.QueryFirstOrDefault<T>(sqlRequest, parameters?.ToDapperParameters());
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (newConnectionUsed && localConnection != null)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                    localConnection = null;
+                }
+            }
+            return this;
+        }
+
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate,
+            out T? result)
+        {
+            if (predicate != null)
+            {
+                Query(sqlRequest, parameters, out List<T> list);
+                result = list.FirstOrDefault(predicate);
+                return this;
+            }
+            return QueryFirstOrDefault(sqlRequest, parameters, out result);
         }
 
         /// <summary>
