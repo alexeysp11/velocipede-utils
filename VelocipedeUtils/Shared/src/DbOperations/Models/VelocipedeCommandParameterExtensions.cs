@@ -18,13 +18,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Models
             foreach (var parameter in parameters)
             {
                 result.Add(
-                    parameter.Name,
-                    parameter.Value,
-                    parameter.DbType,
-                    parameter.Direction,
-                    parameter.Size,
-                    parameter.Precision,
-                    parameter.Scale);
+                    name: parameter.Name,
+                    value: parameter.Value,
+                    dbType: parameter.DbType,
+                    direction: parameter.Direction,
+                    size: parameter.Size,
+                    precision: parameter.Precision,
+                    scale: parameter.Scale);
             }
             return result;
         }
