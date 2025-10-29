@@ -26,6 +26,9 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         private const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
         private const string SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
 
+        protected string _createTableSqlForExecuteQuery;
+        protected string _createTableSqlForExecuteWithParamsQuery;
+
         protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql, string createTestModelsSql, string createTestUsersSql)
         {
             _fixture = fixture;
@@ -33,6 +36,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             _createTestModelsSql = createTestModelsSql;
             _createTestUsersSql = createTestUsersSql;
+            _createTableSqlForExecuteQuery = string.Empty;
+            _createTableSqlForExecuteWithParamsQuery = string.Empty;
 
             CreateTestDatabase(sql);
             InitializeTestDatabase();
@@ -51,6 +56,66 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
             // Assert.
             result.Should().Be(expected);
+        }
+
+        [Fact]
+        public void Execute_CreateTestTableForExecute_TableExists()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string expected = dbConnection.DatabaseType switch
+            {
+                DatabaseType.PostgreSQL => "public.TestTableForExecute",
+                _ => "TestTableForExecute",
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Execute(_createTableSqlForExecuteQuery);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.GetTablesInDb(out List<string> tables);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            tables.Should().Contain(expected);
+        }
+
+        [Fact]
+        public void Execute_CreateTestTableForExecuteWithParams_TableExists()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string expectedTable = dbConnection.DatabaseType switch
+            {
+                DatabaseType.PostgreSQL => "public.TestTableForExecuteWithParams",
+                _ => "TestTableForExecuteWithParams",
+            };
+            const string expectedName = "Name_1";
+            const string selectQuery = @"SELECT ""Name"" FROM ""TestTableForExecuteWithParams""";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TestRecordName", Value = expectedName }];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            dbConnection
+                .OpenDb()
+                .Execute(_createTableSqlForExecuteWithParamsQuery, parameters);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.GetTablesInDb(out List<string> tables);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.Query(selectQuery, out List<string> names);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            tables.Should().Contain(expectedTable);
+            names.Should().Contain(expectedName);
         }
 
         [Fact]
