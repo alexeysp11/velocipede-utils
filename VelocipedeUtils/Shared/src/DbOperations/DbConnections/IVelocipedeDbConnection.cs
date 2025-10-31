@@ -1,5 +1,6 @@
 using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Enums;
+using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
@@ -165,10 +166,15 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query first or default object.
         /// </summary>
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+        IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             Func<T, bool>? predicate,
             out T? result);
+
+        /// <summary>
+        /// Begin foreach operation for the specified tables.
+        /// </summary>
+        IVelocipedeForeachTableIterator ForeachTable(List<string> tables);
     }
 }

@@ -29,5 +29,20 @@
                 Result.Add(tableName, info);
             }
         }
+
+        /// <summary>
+        /// Remove info about the table from the collection.
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        public void Remove(string tableName)
+        {
+            if (Result == null)
+                Result = new Dictionary<string, VelocipedeForeachTableInfo>();
+            
+            if (Result.ContainsKey(tableName))
+            {
+                Result.Remove(tableName);
+            }
+        }
     }
 }

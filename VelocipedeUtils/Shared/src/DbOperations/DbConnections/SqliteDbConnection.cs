@@ -5,6 +5,7 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Iterators;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
@@ -512,6 +513,11 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         public void Dispose()
         {
             CloseDb();
+        }
+
+        public IVelocipedeForeachTableIterator ForeachTable(List<string> tables)
+        {
+            throw new NotImplementedException();
         }
     }
 }
