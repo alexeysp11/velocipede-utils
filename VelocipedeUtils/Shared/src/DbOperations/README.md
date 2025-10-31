@@ -33,26 +33,6 @@ dbConnection
     .CloseDb();
 ```
 
-It is also possible to perform cyclic operations within the database within an active connection:
-```C#
-using IVelocipedeDbConnection dbConnection
-    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
-
-dbConnection
-    .SetConnectionString(connectionString)
-    .OpenDb()
-    .GetTablesInDb(out List<string> tables)
-    .ForeachTable(tables)
-        .GetAllDataFromTable()
-        .GetColumns()
-        .GetForeignKeys()
-        .GetTriggers()
-        .GetSqlDefinition()
-    .EndForeach()
-    .GetForeachResult(out VelocipedeForeachResult foreachResult)
-    .CloseDb();
-```
-
 This library provides functionality for communicating with relational databases using ADO.NET and Dapper. Information on currently supported database types:
 - [x] [SQLite](https://sqlite.org/)
 - [x] [PostgreSQL](https://www.postgresql.org/)
@@ -84,5 +64,27 @@ dbConnection
     .OpenDb()
     .CreateDb(dbName)
     .SwitchDb(dbName)
+    .CloseDb();
+```
+
+### Cyclic operations
+
+It is also possible to perform cyclic operations within the database within an active connection:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .GetTablesInDb(out List<string> tables)
+    .ForeachTable(tables)
+        .GetAllDataFromTable()
+        .GetColumns()
+        .GetForeignKeys()
+        .GetTriggers()
+        .GetSqlDefinition()
+    .EndForeach()
+    .GetForeachResult(out VelocipedeForeachResult foreachResult)
     .CloseDb();
 ```
