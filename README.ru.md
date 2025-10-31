@@ -61,6 +61,26 @@ dbConnection
     .CloseDb();
 ```
 
+Также возможно выполнять циклические операции внутри БД в рамках активного подключения:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .GetTablesInDb(out List<string> tables)
+    .ForeachTable(tables)
+        .GetAllDataFromTable()
+        .GetColumns()
+        .GetForeignKeys()
+        .GetTriggers()
+        .GetSqlDefinition()
+    .EndForeach()
+    .GetForeachResult(out VelocipedeForeachResult foreachResult)
+    .CloseDb();
+```
+
 Данная библиотека предоставляет функционал для коммуникации с реляционными базами данных с использованием ADO.NET и Dapper. Информация о типах БД, которые поддерживаются на текущий момент:
 - [x] [SQLite](https://sqlite.org/)
 - [x] [PostgreSQL](https://www.postgresql.org/)
