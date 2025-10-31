@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Linq;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Models;
