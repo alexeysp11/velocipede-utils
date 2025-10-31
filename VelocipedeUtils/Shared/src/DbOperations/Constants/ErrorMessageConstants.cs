@@ -11,6 +11,8 @@
         public const string DatabaseTypeIsNotSupported = "Specified database type is not supported";
         public const string IncorrectDatabaseType = "Incorrect database type";
         public const string UnableToGetResultForOpenForeachOperation = "Unable to get result for open foreach operation";
-        public const string UnableToAddActionForOpenForeachOperation = "Unable to add action for open foreach operation";
+        public const string UnableToAddActionForClosedForeachOperation = "Unable to add action for closed foreach operation";
+        public const string ForeachRequiresNotEmptyTableNames = "Foreach operation requires not empty list of table names";
+        public const string DatabaseShouldBeConnected = "Database should be connected";
     }
 }
