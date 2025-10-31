@@ -517,7 +517,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
 
         public IVelocipedeForeachTableIterator ForeachTable(List<string> tables)
         {
-            throw new NotImplementedException();
+            return new VelocipedeForeachTableIterator(this, tables);
         }
     }
 }

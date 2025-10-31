@@ -10,5 +10,7 @@
         public const string IncorrectConnectionString = "Incorrect connection string";
         public const string DatabaseTypeIsNotSupported = "Specified database type is not supported";
         public const string IncorrectDatabaseType = "Incorrect database type";
+        public const string UnableToGetResultForOpenForeachOperation = "Unable to get result for open foreach operation";
+        public const string UnableToAddActionForOpenForeachOperation = "Unable to add action for open foreach operation";
     }
 }

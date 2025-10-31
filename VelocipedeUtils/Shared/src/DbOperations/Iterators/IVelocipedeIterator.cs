@@ -16,6 +16,6 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
         /// <summary>
         /// Get the result of the foreach operation.
         /// </summary>
-        IVelocipedeDbConnection GetForeachResult(out VelocipedeForeachResult foreachResult);
+        IVelocipedeDbConnection GetForeachResult(out VelocipedeForeachResult? foreachResult);
     }
 }

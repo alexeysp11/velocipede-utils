@@ -635,7 +635,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
 
         public IVelocipedeForeachTableIterator ForeachTable(List<string> tables)
         {
-            throw new NotImplementedException();
+            return new VelocipedeForeachTableIterator(this, tables);
         }
     }
 }

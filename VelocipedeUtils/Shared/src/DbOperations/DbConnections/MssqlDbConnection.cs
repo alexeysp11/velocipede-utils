@@ -559,7 +559,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeForeachTableIterator ForeachTable(List<string> tables)
         {
-            throw new NotImplementedException();
+            return new VelocipedeForeachTableIterator(this, tables);
         }
     }
 }
