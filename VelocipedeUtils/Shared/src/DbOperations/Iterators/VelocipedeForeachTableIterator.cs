@@ -63,12 +63,14 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             _operationTypes = new Dictionary<ForeachTableOperationType, bool>();
         }
 
+        /// <inheritdoc/>
         public IVelocipedeIterator EndForeach()
         {
             _allowAddOperationTypes = false;
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetForeachResult(out VelocipedeForeachResult? foreachResult)
         {
             if (_allowAddOperationTypes)
@@ -121,36 +123,46 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             return _connection;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeForeachTableIterator GetAllDataFromTable()
         {
             TryAddOperationType(ForeachTableOperationType.GetAllDataFromTable);
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeForeachTableIterator GetColumns()
         {
             TryAddOperationType(ForeachTableOperationType.GetColumns);
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeForeachTableIterator GetForeignKeys()
         {
             TryAddOperationType(ForeachTableOperationType.GetForeignKeys);
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeForeachTableIterator GetSqlDefinition()
         {
             TryAddOperationType(ForeachTableOperationType.GetSqlDefinition);
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeForeachTableIterator GetTriggers()
         {
             TryAddOperationType(ForeachTableOperationType.GetTriggers);
             return this;
         }
 
+        /// <summary>
+        /// Try to add <see cref="ForeachTableOperationType"/>.
+        /// </summary>
+        /// <param name="operationType">Operation type</param>
+        /// <exception cref="InvalidOperationException">Thrown when <see cref="EndForeach"/> was already called</exception>
         private void TryAddOperationType(ForeachTableOperationType operationType)
         {
             if (!_allowAddOperationTypes)

@@ -1,10 +1,15 @@
-﻿using FluentAssertions;
+﻿using System.Data;
+using FluentAssertions;
 using Moq;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
+using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 {
+    /// <summary>
+    /// Class for unit testing <see cref="VelocipedeForeachTableIterator"/>.
+    /// </summary>
     public sealed class VelocipedeForeachTableIteratorTests
     {
         private const string TABLE_NAME_1 = "TableName1";
@@ -129,12 +134,30 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         public void Constructor_EmptyTableNames_ThrowsArgumentException()
         {
             // Arrange.
-            IVelocipedeDbConnection? connection = GetConnectedVelocipedeConnection();
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
             List<string> tableNames = GetEmptyTableNames();
             Func<VelocipedeForeachTableIterator> act = () => new VelocipedeForeachTableIterator(connection, tableNames);
 
             // Act & Assert.
             act.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public void GetValidResultInfo()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .ForeachTable(tableNames)
+                    .GetAllDataFromTable()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
         }
 
         /// <summary>
@@ -166,9 +189,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         private IVelocipedeDbConnection GetVelocipedeConnection(bool isConnected = false)
         {
             // Tables.
-            List<Table1>? tableList1 = _tableList1;
-            List<Table2>? tableList2 = _tableList2;
-            List<Table3>? tableList3 = _tableList3;
+            List<string> tableNames = GetTableNames();
+            DataTable tableList1 = _tableList1.ToDataTable();
+            DataTable tableList2 = _tableList2.ToDataTable();
+            DataTable tableList3 = _tableList3.ToDataTable();
 
             // Mock.
             var mockConnection = new Mock<IVelocipedeDbConnection>();
@@ -180,14 +204,19 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // GetAllDataFromTable.
             mockConnection
-                .Setup(x => x.Query($"SELECT * FROM {TABLE_NAME_1}", out tableList2))
+                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_1}", out tableList1))
                 .Returns(mockConnection.Object);
             mockConnection
-                .Setup(x => x.Query($"SELECT * FROM {TABLE_NAME_2}", out tableList2))
+                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_2}", out tableList2))
                 .Returns(mockConnection.Object);
             mockConnection
-                .Setup(x => x.Query($"SELECT * FROM {TABLE_NAME_3}", out tableList2))
+                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out tableList2))
                 .Returns(mockConnection.Object);
+
+            // ForeachTable.
+            mockConnection
+                .Setup(x => x.ForeachTable(tableNames))
+                .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
 
             return mockConnection.Object;
         }
