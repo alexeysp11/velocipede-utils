@@ -190,9 +190,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         {
             // Tables.
             List<string> tableNames = GetTableNames();
-            DataTable tableList1 = _tableList1.ToDataTable();
-            DataTable tableList2 = _tableList2.ToDataTable();
-            DataTable tableList3 = _tableList3.ToDataTable();
+            DataTable table1 = _tableList1.ToDataTable();
+            DataTable table2 = _tableList2.ToDataTable();
+            DataTable table3 = _tableList3.ToDataTable();
 
             // Mock.
             var mockConnection = new Mock<IVelocipedeDbConnection>();
@@ -204,13 +204,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // GetAllDataFromTable.
             mockConnection
-                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_1}", out tableList1))
+                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_1}", out table1))
                 .Returns(mockConnection.Object);
             mockConnection
-                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_2}", out tableList2))
+                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_2}", out table2))
                 .Returns(mockConnection.Object);
             mockConnection
-                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out tableList2))
+                .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out table3))
                 .Returns(mockConnection.Object);
 
             // ForeachTable.
