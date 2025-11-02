@@ -197,6 +197,49 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         }
 
         [Fact]
+        public void AddOperationAfterEndForeach_NoOperationsAddedBefore_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.ForeachTable(tableNames);
+            iterator.EndForeach();
+            var act = () => iterator.GetColumns();
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void AddOperationAfterEndForeach_OperationAddedBefore_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.ForeachTable(tableNames);
+            iterator.GetTriggers();
+            iterator.EndForeach();
+            var act = () => iterator.GetColumns();
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void GetForeachResult_EndForeachWasNotCalledBefore_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.ForeachTable(tableNames);
+            iterator.GetTriggers();
+            var act = () => iterator.GetForeachResult(out _);
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
         public void GetValidResultInfo()
         {
             // Arrange.
