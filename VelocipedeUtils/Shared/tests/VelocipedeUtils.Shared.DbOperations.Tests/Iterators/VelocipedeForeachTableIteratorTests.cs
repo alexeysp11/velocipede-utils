@@ -213,10 +213,14 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out table3))
                 .Returns(mockConnection.Object);
 
-            // ForeachTable.
-            mockConnection
-                .Setup(x => x.ForeachTable(tableNames))
-                .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
+            // Fluent interfaces for connected object.
+            if (isConnected)
+            {
+                // ForeachTable.
+                mockConnection
+                    .Setup(x => x.ForeachTable(tableNames))
+                    .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
+            }
 
             return mockConnection.Object;
         }

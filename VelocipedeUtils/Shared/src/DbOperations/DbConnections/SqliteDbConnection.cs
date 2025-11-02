@@ -306,7 +306,6 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -374,7 +373,6 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -432,7 +430,6 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;

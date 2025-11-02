@@ -213,11 +213,10 @@ WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
 
         public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
-            string schemaName = "public";
             string[] tn = tableName.Split('.');
             if (tn.Length >= 2)
             {
-                schemaName = tn.First();
+                string schemaName = tn.First();
                 tableName = tableName.Replace($"{schemaName}.", "");
             }
             tableName = tableName.Trim('"');
@@ -244,11 +243,10 @@ WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name LIKE '{0}';", tableNa
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
-            string schemaName = "public";
             string[] tn = tableName.Split('.');
             if (tn.Length >= 2)
             {
-                schemaName = tn.First();
+                string schemaName = tn.First();
                 tableName = tableName.Replace($"{schemaName}.", "");
             }
             tableName = tableName.Trim('"');
@@ -421,7 +419,6 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -495,7 +492,6 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -553,7 +549,6 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;

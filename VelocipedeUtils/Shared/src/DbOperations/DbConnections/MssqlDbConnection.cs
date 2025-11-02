@@ -346,7 +346,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -420,7 +419,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -478,7 +476,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
