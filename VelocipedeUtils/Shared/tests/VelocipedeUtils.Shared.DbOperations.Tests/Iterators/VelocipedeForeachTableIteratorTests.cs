@@ -16,6 +16,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         private const string TABLE_NAME_2 = "TableName2";
         private const string TABLE_NAME_3 = "TableName3";
 
+        private const string TABLE_SQL_DEFINITION_1 = "CREATE TABLE TableName1 ...";
+        private const string TABLE_SQL_DEFINITION_2 = "CREATE TABLE TableName2 ...";
+        private const string TABLE_SQL_DEFINITION_3 = "CREATE TABLE TableName3 ...";
+
         /// <summary>
         /// List that contains records for table 1.
         /// </summary>
@@ -206,6 +210,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                     .GetColumns()
                     .GetForeignKeys()
                     .GetTriggers()
+                    .GetSqlDefinition()
                 .EndForeach()
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 
@@ -287,6 +292,20 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             List<VelocipedeTriggerInfo> triggers1 = _tableTriggers1;
             mockConnection
                 .Setup(x => x.GetTriggers(TABLE_NAME_1, out triggers1))
+                .Returns(mockConnection.Object);
+
+            // SQL definition.
+            string? sqlDefinition1 = TABLE_SQL_DEFINITION_1;
+            string? sqlDefinition2 = TABLE_SQL_DEFINITION_2;
+            string? sqlDefinition3 = TABLE_SQL_DEFINITION_3;
+            mockConnection
+                .Setup(x => x.GetSqlDefinition(TABLE_NAME_1, out sqlDefinition1))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetSqlDefinition(TABLE_NAME_2, out sqlDefinition2))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetSqlDefinition(TABLE_NAME_3, out sqlDefinition3))
                 .Returns(mockConnection.Object);
 
             // Fluent interfaces for connected object.
