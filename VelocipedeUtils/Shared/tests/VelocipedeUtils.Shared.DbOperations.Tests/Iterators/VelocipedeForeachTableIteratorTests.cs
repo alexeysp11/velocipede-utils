@@ -240,7 +240,24 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         }
 
         [Fact]
-        public void GetValidResultInfo()
+        public void GetForeachResult_NoOperationsSpecified()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .ForeachTable(tableNames)
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void GetForeachResult_AllOperationsSpecified()
         {
             // Arrange.
             IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
