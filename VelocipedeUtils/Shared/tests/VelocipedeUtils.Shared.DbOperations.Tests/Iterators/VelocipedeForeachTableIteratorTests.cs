@@ -197,6 +197,19 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         }
 
         [Fact]
+        public void AddOperationBeforeBeginForeach_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            var act = () => iterator.GetColumns();
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
         public void AddOperationAfterEndForeach_NoOperationsAddedBefore_ThrowsInvalidOperationException()
         {
             // Arrange.
@@ -204,7 +217,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             List<string> tableNames = GetTableNames();
 
             // Act & Assert.
-            IVelocipedeForeachTableIterator iterator = connection.ForeachTable(tableNames);
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            iterator.BeginForeach();
             iterator.EndForeach();
             var act = () => iterator.GetColumns();
             act.Should().Throw<InvalidOperationException>();
@@ -218,7 +232,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             List<string> tableNames = GetTableNames();
 
             // Act & Assert.
-            IVelocipedeForeachTableIterator iterator = connection.ForeachTable(tableNames);
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            iterator.BeginForeach();
             iterator.GetTriggers();
             iterator.EndForeach();
             var act = () => iterator.GetColumns();
@@ -233,7 +248,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             List<string> tableNames = GetTableNames();
 
             // Act & Assert.
-            IVelocipedeForeachTableIterator iterator = connection.ForeachTable(tableNames);
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            iterator.BeginForeach();
             iterator.GetTriggers();
             var act = () => iterator.GetForeachResult(out _);
             act.Should().Throw<InvalidOperationException>();
@@ -248,7 +264,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Act.
             connection
-                .ForeachTable(tableNames)
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
                 .EndForeach()
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 
@@ -265,7 +282,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Act.
             connection
-                .ForeachTable(tableNames)
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
                     .GetAllDataFromTable()
                     .GetColumns()
                     .GetForeignKeys()
@@ -371,10 +389,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             // Fluent interfaces for connected object.
             if (isConnected)
             {
-                // ForeachTable.
+                // WithForeachTableIterator.
                 List<string> tableNames = GetTableNames();
                 mockConnection
-                    .Setup(x => x.ForeachTable(tableNames))
+                    .Setup(x => x.WithForeachTableIterator(tableNames))
                     .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
             }
 

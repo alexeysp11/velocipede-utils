@@ -41,10 +41,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             GetSqlDefinition,
         }
 
-        private IVelocipedeDbConnection _connection;
-        private List<string> _tableNames;
+        private readonly IVelocipedeDbConnection _connection;
+        private readonly List<string> _tableNames;
+        private readonly Dictionary<ForeachTableOperationType, bool> _operationTypes;
         private bool _allowAddOperationTypes;
-        private Dictionary<ForeachTableOperationType, bool> _operationTypes;
 
         public VelocipedeForeachTableIterator(IVelocipedeDbConnection connection, List<string> tableNames)
         {
@@ -58,12 +58,19 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
 
             _connection = connection;
             _tableNames = tableNames;
-            _allowAddOperationTypes = true;
-            _operationTypes = new Dictionary<ForeachTableOperationType, bool>();
+            _allowAddOperationTypes = false;
+            _operationTypes = [];
         }
 
         /// <inheritdoc/>
-        public IVelocipedeIterator EndForeach()
+        public IVelocipedeForeachTableIterator BeginForeach()
+        {
+            _allowAddOperationTypes = true;
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator EndForeach()
         {
             _allowAddOperationTypes = false;
             return this;

@@ -173,8 +173,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out T? result);
 
         /// <summary>
-        /// Begin foreach operation for the specified tables.
+        /// Initialize <c>foreach</c> operation for the specified tables.
         /// </summary>
-        IVelocipedeForeachTableIterator ForeachTable(List<string> tables);
+        IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables);
     }
 }

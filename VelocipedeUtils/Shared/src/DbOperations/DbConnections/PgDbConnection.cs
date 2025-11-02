@@ -628,7 +628,8 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             CloseDb();
         }
 
-        public IVelocipedeForeachTableIterator ForeachTable(List<string> tables)
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
         {
             return new VelocipedeForeachTableIterator(this, tables);
         }

@@ -554,7 +554,8 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             CloseDb();
         }
 
-        public IVelocipedeForeachTableIterator ForeachTable(List<string> tables)
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
         {
             return new VelocipedeForeachTableIterator(this, tables);
         }
