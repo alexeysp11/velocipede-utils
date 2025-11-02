@@ -47,6 +47,11 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         private readonly List<VelocipedeColumnInfo> _tableColumns3;
 
         /// <summary>
+        /// Foreign keys that the table 3 contains.
+        /// </summary>
+        private readonly List<VelocipedeForeignKeyInfo> _tableForeignKeys3;
+
+        /// <summary>
         /// Definition of table 1.
         /// </summary>
         private sealed class Table1
@@ -120,6 +125,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 new() { ColumnName = "Name", ColumnType = "varchar(50)" },
                 new() { ColumnName = "Value", ColumnType = "varchar(50)" },
             ];
+
+            // Foreign keys.
+            _tableForeignKeys3 = [new() { ForeignKeyId = 1, ConstraintName = "Fake foreign key", FromColumn = "Column 1", ToColumn = "ToColumn" }];
         }
 
         [Fact]
@@ -188,6 +196,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .ForeachTable(tableNames)
                     .GetAllDataFromTable()
                     .GetColumns()
+                    .GetForeignKeys()
                 .EndForeach()
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 
@@ -234,6 +243,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             List<VelocipedeColumnInfo> columns2 = _tableColumns2;
             List<VelocipedeColumnInfo> columns3 = _tableColumns3;
 
+            // Foreign keys.
+            List<VelocipedeForeignKeyInfo> foreignKeys3 = _tableForeignKeys3;
+
             // Mock.
             var mockConnection = new Mock<IVelocipedeDbConnection>();
 
@@ -262,6 +274,11 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Returns(mockConnection.Object);
             mockConnection
                 .Setup(x => x.GetColumns(TABLE_NAME_3, out columns3))
+                .Returns(mockConnection.Object);
+
+            // GetForeignKeys.
+            mockConnection
+                .Setup(x => x.GetForeignKeys(TABLE_NAME_3, out foreignKeys3))
                 .Returns(mockConnection.Object);
 
             // Fluent interfaces for connected object.
