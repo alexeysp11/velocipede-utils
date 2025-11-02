@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.ProcPipes;
 
 /// <summary>
@@ -38,18 +36,18 @@ public class ProcPipeBuilder
         return CreatePipe(0);
     }
 
-    private System.Action<IPipeDelegateParams> CreatePipe(int index)
+    private System.Action<IPipeDelegateParams>? CreatePipe(int index)
     {
         if (index < m_pipeTypes.Count - 1)
         {
             var childPipeHandle = CreatePipe(index + 1);
-            var pipe = (AbstractProcPipe) System.Activator.CreateInstance(m_pipeTypes[index], childPipeHandle);
-            return pipe.Handle;
+            var pipe = (AbstractProcPipe?) System.Activator.CreateInstance(m_pipeTypes[index], childPipeHandle);
+            return pipe?.Handle;
         }
         else
         {
-            var finalPipe = (AbstractProcPipe) System.Activator.CreateInstance(m_pipeTypes[index], m_mainFunction);
-            return finalPipe.Handle;
+            var finalPipe = (AbstractProcPipe?) System.Activator.CreateInstance(m_pipeTypes[index], m_mainFunction);
+            return finalPipe?.Handle;
         }
     }
 }

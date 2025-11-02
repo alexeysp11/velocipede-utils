@@ -5,6 +5,7 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
     /// </summary>
     public enum AvailabilityStatus
     {
+        None = 0,
         Online = 1,
         Away = 2,
         Busy = 3,

@@ -1,5 +1,3 @@
-using System;
-
 namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations
 {
     /// <summary>

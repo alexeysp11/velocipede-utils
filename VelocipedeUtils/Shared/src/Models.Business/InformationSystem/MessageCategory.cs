@@ -5,6 +5,8 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
     /// </summary>
     public enum MessageCategory
     {
+        None = 0,
+
         Accounting = 1,
 
         Schedule = 2,

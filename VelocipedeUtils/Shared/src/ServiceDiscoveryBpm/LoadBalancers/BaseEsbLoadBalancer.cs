@@ -57,7 +57,7 @@ public abstract class BaseEsbLoadBalancer
     {
         CheckNullReferences();
 
-        var endpointToRemove = m_endpointPool.EndpointParameters.FirstOrDefault(p => p.Value.Endpoint.Name == endpoint);
+        var endpointToRemove = m_endpointPool.EndpointParameters.FirstOrDefault(p => p.Value?.Endpoint?.Name == endpoint);
         if (endpointToRemove.Value != null)
         {
             m_endpointPool.RemoveEndpointFromPool(endpointToRemove.Key);

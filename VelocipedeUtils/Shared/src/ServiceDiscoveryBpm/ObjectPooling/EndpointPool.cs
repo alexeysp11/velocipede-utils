@@ -72,11 +72,11 @@ public sealed class EndpointPool
     /// </summary>
     /// <param name="endpointId">Endpoint ID.</param>
     /// <returns>Endpoint from the pool or null if not found.</returns>
-    public EndpointCollectionParameter GetEndpointFromPool(long endpointId)
+    public EndpointCollectionParameter? GetEndpointFromPool(long endpointId)
     {
         if (m_endpointParameters.ContainsKey(endpointId))
         {
-            m_endpointParameters.TryGetValue(endpointId, out EndpointCollectionParameter endpointParameter);
+            m_endpointParameters.TryGetValue(endpointId, out EndpointCollectionParameter? endpointParameter);
             return endpointParameter;
         }
         return null;

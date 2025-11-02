@@ -5,3 +5,42 @@ dotnet_diagnostic.IDE0005.severity = error
 
 # IDE0059: Unnecessary assignment of a value.
 dotnet_diagnostic.IDE0059.severity = error
+
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = error
+
+# CA1008: Enums should have zero value
+dotnet_diagnostic.CA1008.severity = error
+
+# CA1508: Avoid dead conditional code
+dotnet_diagnostic.CA1508.severity = error
+
+# CA1068: CancellationToken parameters must come last
+dotnet_diagnostic.CA1068.severity = error
+
+# CA1069: Enums should not have duplicate values
+dotnet_diagnostic.CA1069.severity = error
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = error
+
+# CA1823: Avoid unused private fields
+dotnet_diagnostic.CA1823.severity = error
+
+# CA1829: Use Length/Count property instead of Enumerable.Count method
+dotnet_diagnostic.CA1829.severity = error
+
+# CA2200: Rethrow to preserve stack details
+dotnet_diagnostic.CA2200.severity = error
+
+# CS8600: Converting null literal or possible null value to non-nullable type.
+dotnet_diagnostic.CS8600.severity = error
+
+# CS8602: Possible null reference return.
+dotnet_diagnostic.CS8602.severity = error
+
+# CS8603: Possible null reference return.
+dotnet_diagnostic.CS8603.severity = error
+
+# CS8618: Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
+dotnet_diagnostic.CS8618.severity = error

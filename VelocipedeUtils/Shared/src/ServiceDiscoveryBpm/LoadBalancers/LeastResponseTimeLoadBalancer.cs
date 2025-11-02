@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
@@ -20,7 +19,7 @@ public class LeastResponseTimeLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalanc
     /// <summary>
     /// Get the endpoint with the least response time.
     /// </summary>
-    public string GetNextEndpoint()
+    public string? GetNextEndpoint()
     {
         CheckNullReferences();
 

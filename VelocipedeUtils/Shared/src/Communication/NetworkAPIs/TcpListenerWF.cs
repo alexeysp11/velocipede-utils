@@ -127,7 +127,7 @@ namespace VelocipedeUtils.NetworkAPIs
         /// </summary>
         private void ProcessReceivedBytes(int msgLength)
         {
-            // 
+            throw new NotImplementedException();
         }
     }
 }
