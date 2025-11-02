@@ -534,7 +534,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        private string UsePersistSecurityInfo(string connectionString)
+        private static string UsePersistSecurityInfo(string connectionString)
         {
             try
             {

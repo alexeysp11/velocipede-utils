@@ -164,7 +164,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         /// Get null object instead of <see cref="IVelocipedeDbConnection"/>.
         /// </summary>
         /// <returns><c>null</c></returns>
-        private IVelocipedeDbConnection? GetNullVelocipedeConnection()
+        private static IVelocipedeDbConnection? GetNullVelocipedeConnection()
             => null;
 
         /// <summary>

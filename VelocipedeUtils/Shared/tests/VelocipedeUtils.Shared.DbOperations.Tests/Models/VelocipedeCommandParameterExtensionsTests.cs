@@ -61,7 +61,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Models
             List<VelocipedeCommandParameter>? parameters = null;
 
             // Act.
+#pragma warning disable CA1508 // Avoid dead conditional code
             DynamicParameters? dynamicParameters = parameters?.ToDapperParameters();
+#pragma warning restore CA1508 // Avoid dead conditional code
 
             // Assert.
             dynamicParameters.Should().BeNull();

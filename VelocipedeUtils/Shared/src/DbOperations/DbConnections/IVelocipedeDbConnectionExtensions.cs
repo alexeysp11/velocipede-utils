@@ -134,7 +134,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Gets SQL definition of the DataTable object.
         /// </summary>
-        public static string GetSqlFromDataTable(this IVelocipedeDbConnection connection, DataTable? dt, string tableName)
+        public static string GetSqlFromDataTable(
+#pragma warning disable IDE0060 // Remove unused parameter
+            this IVelocipedeDbConnection connection,
+#pragma warning restore IDE0060 // Remove unused parameter
+            DataTable? dt,
+            string tableName)
         {
             if (dt == null)
                 throw new ArgumentNullException(nameof(dt), "Data table could not be null");
