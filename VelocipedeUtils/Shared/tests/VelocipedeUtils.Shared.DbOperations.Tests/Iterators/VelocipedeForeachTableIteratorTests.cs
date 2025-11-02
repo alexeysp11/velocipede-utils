@@ -253,7 +253,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 
             // Assert.
-            foreachResult.Should().NotBeNull();
+            foreachResult.Should().BeNull();
         }
 
         [Fact]

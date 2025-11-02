@@ -43,7 +43,6 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
 
         private IVelocipedeDbConnection _connection;
         private List<string> _tableNames;
-        private VelocipedeForeachResult? _foreachResult;
         private bool _allowAddOperationTypes;
         private Dictionary<ForeachTableOperationType, bool> _operationTypes;
 
@@ -76,10 +75,20 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             if (_allowAddOperationTypes)
                 throw new InvalidOperationException(ErrorMessageConstants.UnableToGetResultForOpenForeachOperation);
 
-            _foreachResult = new VelocipedeForeachResult();
+            // Get active operations.
             IEnumerable<ForeachTableOperationType> operations = _operationTypes
                 .Where(x => x.Value == true)
                 .Select(x => x.Key);
+
+            // If there is no active operations, then return null.
+            if (!operations.Any())
+            {
+                foreachResult = null;
+                return _connection;
+            }
+
+            // Get foreach result in the loop.
+            foreachResult = new VelocipedeForeachResult();
             foreach (string tableName in _tableNames)
             {
                 VelocipedeForeachTableInfo tableInfo = new() { TableName = tableName };
@@ -116,10 +125,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
                             break;
                     }
                 }
-                _foreachResult.Add(tableName, tableInfo);
+                foreachResult.Add(tableName, tableInfo);
             }
 
-            foreachResult = _foreachResult;
             return _connection;
         }
 
