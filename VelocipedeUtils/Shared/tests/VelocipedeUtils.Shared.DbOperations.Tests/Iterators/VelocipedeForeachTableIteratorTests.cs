@@ -52,6 +52,11 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         private readonly List<VelocipedeForeignKeyInfo> _tableForeignKeys3;
 
         /// <summary>
+        /// Triggers that the table 1 contains.
+        /// </summary>
+        private readonly List<VelocipedeTriggerInfo> _tableTriggers1;
+
+        /// <summary>
         /// Definition of table 1.
         /// </summary>
         private sealed class Table1
@@ -127,7 +132,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             ];
 
             // Foreign keys.
-            _tableForeignKeys3 = [new() { ForeignKeyId = 1, ConstraintName = "Fake foreign key", FromColumn = "Column 1", ToColumn = "ToColumn" }];
+            _tableForeignKeys3 = [new() { ForeignKeyId = 1, ConstraintName = "FakeForeignKey", FromColumn = "FromColumn", ToColumn = "ToColumn" }];
+
+            // Triggers.
+            _tableTriggers1 = [new() { TriggerName = "Fake trigger", TriggerSchema = "FakeTriggerSchema", TriggerCatalog = "FakeTriggerCatalog", SqlDefinition = "FAKE TRIGGER SQL", DateCreated = DateTime.UtcNow }];
         }
 
         [Fact]
@@ -197,6 +205,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                     .GetAllDataFromTable()
                     .GetColumns()
                     .GetForeignKeys()
+                    .GetTriggers()
                 .EndForeach()
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 
@@ -232,20 +241,6 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         /// <returns>Mock object of <see cref="IVelocipedeDbConnection"/></returns>
         private IVelocipedeDbConnection GetVelocipedeConnection(bool isConnected = false)
         {
-            // Tables.
-            List<string> tableNames = GetTableNames();
-            DataTable table1 = _tableList1.ToDataTable();
-            DataTable table2 = _tableList2.ToDataTable();
-            DataTable table3 = _tableList3.ToDataTable();
-
-            // Columns.
-            List<VelocipedeColumnInfo> columns1 = _tableColumns1;
-            List<VelocipedeColumnInfo> columns2 = _tableColumns2;
-            List<VelocipedeColumnInfo> columns3 = _tableColumns3;
-
-            // Foreign keys.
-            List<VelocipedeForeignKeyInfo> foreignKeys3 = _tableForeignKeys3;
-
             // Mock.
             var mockConnection = new Mock<IVelocipedeDbConnection>();
 
@@ -254,7 +249,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Setup(x => x.IsConnected)
                 .Returns(isConnected);
 
-            // GetAllDataFromTable.
+            // Data.
+            DataTable table1 = _tableList1.ToDataTable();
+            DataTable table2 = _tableList2.ToDataTable();
+            DataTable table3 = _tableList3.ToDataTable();
             mockConnection
                 .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_1}", out table1))
                 .Returns(mockConnection.Object);
@@ -265,7 +263,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out table3))
                 .Returns(mockConnection.Object);
 
-            // GetColumns.
+            // Columns.
+            List<VelocipedeColumnInfo> columns1 = _tableColumns1;
+            List<VelocipedeColumnInfo> columns2 = _tableColumns2;
+            List<VelocipedeColumnInfo> columns3 = _tableColumns3;
             mockConnection
                 .Setup(x => x.GetColumns(TABLE_NAME_1, out columns1))
                 .Returns(mockConnection.Object);
@@ -276,15 +277,23 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Setup(x => x.GetColumns(TABLE_NAME_3, out columns3))
                 .Returns(mockConnection.Object);
 
-            // GetForeignKeys.
+            // Foreign keys.
+            List<VelocipedeForeignKeyInfo> foreignKeys3 = _tableForeignKeys3;
             mockConnection
                 .Setup(x => x.GetForeignKeys(TABLE_NAME_3, out foreignKeys3))
+                .Returns(mockConnection.Object);
+
+            // Triggers.
+            List<VelocipedeTriggerInfo> triggers1 = _tableTriggers1;
+            mockConnection
+                .Setup(x => x.GetTriggers(TABLE_NAME_1, out triggers1))
                 .Returns(mockConnection.Object);
 
             // Fluent interfaces for connected object.
             if (isConnected)
             {
                 // ForeachTable.
+                List<string> tableNames = GetTableNames();
                 mockConnection
                     .Setup(x => x.ForeachTable(tableNames))
                     .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
