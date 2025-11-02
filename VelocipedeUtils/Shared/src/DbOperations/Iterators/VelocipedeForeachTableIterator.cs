@@ -170,11 +170,11 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             
             if (_operationTypes.ContainsKey(operationType))
             {
-                _operationTypes[ForeachTableOperationType.GetAllDataFromTable] = true;
+                _operationTypes[operationType] = true;
             }
             else
             {
-                _operationTypes.Add(ForeachTableOperationType.GetAllDataFromTable, true);
+                _operationTypes.Add(operationType, true);
             }
         }
     }

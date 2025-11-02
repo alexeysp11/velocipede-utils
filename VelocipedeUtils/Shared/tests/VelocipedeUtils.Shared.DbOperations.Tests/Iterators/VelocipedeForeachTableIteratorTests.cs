@@ -32,6 +32,21 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         private readonly List<Table3> _tableList3;
 
         /// <summary>
+        /// Columns that the table 1 contains.
+        /// </summary>
+        private readonly List<VelocipedeColumnInfo> _tableColumns1;
+
+        /// <summary>
+        /// Columns that the table 2 contains.
+        /// </summary>
+        private readonly List<VelocipedeColumnInfo> _tableColumns2;
+
+        /// <summary>
+        /// Columns that the table 3 contains.
+        /// </summary>
+        private readonly List<VelocipedeColumnInfo> _tableColumns3;
+
+        /// <summary>
         /// Definition of table 1.
         /// </summary>
         private sealed class Table1
@@ -64,6 +79,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         /// </summary>
         public VelocipedeForeachTableIteratorTests()
         {
+            // Table lists.
             _tableList1 =
             [
                 new() { Id = 1, Name = "Name1" },
@@ -85,6 +101,24 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 new() { Id = 3, Name = "Name3", Value = null },
                 new() { Id = 4, Name = "Name4", Value = "Value4" },
                 new() { Id = 5, Name = "Name5", Value = "Value5" },
+            ];
+
+            // Table columns.
+            _tableColumns1 =
+            [
+                new() { ColumnName = "Id", ColumnType = "int" },
+                new() { ColumnName = "Name", ColumnType = "varchar(50)" },
+            ];
+            _tableColumns2 =
+            [
+                new() { ColumnName = "Name", ColumnType = "varchar(50)" },
+                new() { ColumnName = "Value", ColumnType = "varchar(50)" },
+            ];
+            _tableColumns3 =
+            [
+                new() { ColumnName = "Id", ColumnType = "int" },
+                new() { ColumnName = "Name", ColumnType = "varchar(50)" },
+                new() { ColumnName = "Value", ColumnType = "varchar(50)" },
             ];
         }
 
@@ -153,6 +187,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             connection
                 .ForeachTable(tableNames)
                     .GetAllDataFromTable()
+                    .GetColumns()
                 .EndForeach()
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 
@@ -194,6 +229,11 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             DataTable table2 = _tableList2.ToDataTable();
             DataTable table3 = _tableList3.ToDataTable();
 
+            // Columns.
+            List<VelocipedeColumnInfo> columns1 = _tableColumns1;
+            List<VelocipedeColumnInfo> columns2 = _tableColumns2;
+            List<VelocipedeColumnInfo> columns3 = _tableColumns3;
+
             // Mock.
             var mockConnection = new Mock<IVelocipedeDbConnection>();
 
@@ -211,6 +251,17 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Returns(mockConnection.Object);
             mockConnection
                 .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out table3))
+                .Returns(mockConnection.Object);
+
+            // GetColumns.
+            mockConnection
+                .Setup(x => x.GetColumns(TABLE_NAME_1, out columns1))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetColumns(TABLE_NAME_2, out columns2))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetColumns(TABLE_NAME_3, out columns3))
                 .Returns(mockConnection.Object);
 
             // Fluent interfaces for connected object.
