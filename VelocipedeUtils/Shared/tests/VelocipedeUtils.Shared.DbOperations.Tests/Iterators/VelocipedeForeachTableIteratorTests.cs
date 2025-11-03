@@ -339,6 +339,22 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeEquivalentTo(_tableColumns1);
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeEquivalentTo(_tableColumns2);
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeEquivalentTo(_tableColumns3);
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeEquivalentTo(_tableTriggers1);
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_1);
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_2);
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_3);
         }
 
         [Fact]
@@ -358,6 +374,22 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_1].Data, _tableList1.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_2].Data, _tableList2.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_3].Data, _tableList3.ToDataTable());
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -377,6 +409,22 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeEquivalentTo(_tableColumns1);
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeEquivalentTo(_tableColumns2);
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeEquivalentTo(_tableColumns3);
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -396,6 +444,22 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeEquivalentTo(_tableForeignKeys3);
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -415,6 +479,22 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeEquivalentTo(_tableTriggers1);
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
         }
 
         [Fact]
@@ -434,6 +514,22 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_1);
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_2);
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_3);
         }
 
         /// <summary>
