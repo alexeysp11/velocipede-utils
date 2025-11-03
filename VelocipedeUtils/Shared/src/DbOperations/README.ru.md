@@ -25,7 +25,8 @@ using IVelocipedeDbConnection dbConnection
 
 dbConnection
     .OpenDb()
-    .GetAllDataFromTable(tableName, out DataTable dtData)
+    .GetAllDataFromTable(tableName, out DataTable dtData)       // You can get result as DataTable,
+    .GetAllDataFromTable(tableName, out List<Table1> listData)  // or as List<T>.
     .GetColumnsOfTable(tableName, out List<VelocipedeColumnInfo> columnInfo)
     .GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
     .GetTriggers(tableName, out List<VelocipedeTriggerInfo> triggerInfo)
@@ -40,6 +41,7 @@ dbConnection
 - [ ] [MySQL](https://www.mysql.com/)
 - [ ] [Oracle](https://www.oracle.com/database/)
 - [ ] [Clickhouse](https://clickhouse.com/)
+- [ ] [Firebird](https://github.com/FirebirdSQL/firebird)
 
 ## Основные операции
 
@@ -89,3 +91,31 @@ dbConnection
     .GetForeachResult(out VelocipedeForeachResult foreachResult)
     .CloseDb();
 ```
+
+Этот паттерн для итерации по всем таблицам и сбора их данных/метаданных может быть адаптирован для задач, связанных с интроспекцией БД, аудитом, бэкапом или синхронизацией данных.
+
+### Фильтрация данных
+
+Библиотека поддерживает параметризированные запросы и фильтрацию с помощью лямбда-выражений:
+```C#
+string sql = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
+List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+Func<TestModel, bool> predicate = x => x.Id >= 7;
+
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
+// Get a record whose ID is greater than or equal to 7.
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .QueryFirstOrDefault(sql, parameters, predicate, out TestModel? result)
+    .CloseDb();
+```
+
+Данный функционал подходит для ситуаций, когда:
+- Вы получаете большой набор данных из БД (например, для кэширования), а затем хотите многократно фильтровать его в памяти с различными условиями.
+- Часть фильтрации должна быть выполнена на сервере БД (для производительности), а другая часть — на клиенте (для сложной логики).
+- Вам нужна "пост-обработка" результатов SQL-запроса, которая включает фильтрацию.
+
+**Важно**: `predicate` не транслируется в SQL, а выполняется строго после того, как данные уже получены из базы данных. Если `sql` возвращает очень много записей, а `predicate` отфильтровывает подавляющее большинство из них, то вы перетаскиваете по сети и загружаете в память гораздо больше данных, чем необходимо, что может быть очень неэффективно.
