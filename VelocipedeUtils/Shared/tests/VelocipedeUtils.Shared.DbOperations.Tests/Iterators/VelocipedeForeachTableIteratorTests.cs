@@ -4,6 +4,7 @@ using Moq;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.Tests.Core.Compare;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 {
@@ -15,6 +16,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         private const string TABLE_NAME_1 = "TableName1";
         private const string TABLE_NAME_2 = "TableName2";
         private const string TABLE_NAME_3 = "TableName3";
+
+        private const string TABLE_SQL_DEFINITION_1 = "CREATE TABLE TableName1 ...";
+        private const string TABLE_SQL_DEFINITION_2 = "CREATE TABLE TableName2 ...";
+        private const string TABLE_SQL_DEFINITION_3 = "CREATE TABLE TableName3 ...";
 
         /// <summary>
         /// List that contains records for table 1.
@@ -30,6 +35,31 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         /// List that contains records for table 3.
         /// </summary>
         private readonly List<Table3> _tableList3;
+
+        /// <summary>
+        /// Columns that the table 1 contains.
+        /// </summary>
+        private readonly List<VelocipedeColumnInfo> _tableColumns1;
+
+        /// <summary>
+        /// Columns that the table 2 contains.
+        /// </summary>
+        private readonly List<VelocipedeColumnInfo> _tableColumns2;
+
+        /// <summary>
+        /// Columns that the table 3 contains.
+        /// </summary>
+        private readonly List<VelocipedeColumnInfo> _tableColumns3;
+
+        /// <summary>
+        /// Foreign keys that the table 3 contains.
+        /// </summary>
+        private readonly List<VelocipedeForeignKeyInfo> _tableForeignKeys3;
+
+        /// <summary>
+        /// Triggers that the table 1 contains.
+        /// </summary>
+        private readonly List<VelocipedeTriggerInfo> _tableTriggers1;
 
         /// <summary>
         /// Definition of table 1.
@@ -64,6 +94,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         /// </summary>
         public VelocipedeForeachTableIteratorTests()
         {
+            // Table lists.
             _tableList1 =
             [
                 new() { Id = 1, Name = "Name1" },
@@ -86,6 +117,30 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 new() { Id = 4, Name = "Name4", Value = "Value4" },
                 new() { Id = 5, Name = "Name5", Value = "Value5" },
             ];
+
+            // Table columns.
+            _tableColumns1 =
+            [
+                new() { ColumnName = "Id", ColumnType = "int" },
+                new() { ColumnName = "Name", ColumnType = "varchar(50)" },
+            ];
+            _tableColumns2 =
+            [
+                new() { ColumnName = "Name", ColumnType = "varchar(50)" },
+                new() { ColumnName = "Value", ColumnType = "varchar(50)" },
+            ];
+            _tableColumns3 =
+            [
+                new() { ColumnName = "Id", ColumnType = "int" },
+                new() { ColumnName = "Name", ColumnType = "varchar(50)" },
+                new() { ColumnName = "Value", ColumnType = "varchar(50)" },
+            ];
+
+            // Foreign keys.
+            _tableForeignKeys3 = [new() { ForeignKeyId = 1, ConstraintName = "FakeForeignKey.Table3", FromColumn = "FromColumn", ToColumn = "ToColumn" }];
+
+            // Triggers.
+            _tableTriggers1 = [new() { TriggerName = "Fake trigger.Table1", TriggerSchema = "FakeTriggerSchema", TriggerCatalog = "FakeTriggerCatalog", SqlDefinition = "FAKE TRIGGER SQL", DateCreated = DateTime.UtcNow }];
         }
 
         [Fact]
@@ -143,7 +198,66 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         }
 
         [Fact]
-        public void GetValidResultInfo()
+        public void AddOperationBeforeBeginForeach_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            var act = () => iterator.GetColumns();
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void AddOperationAfterEndForeach_NoOperationsAddedBefore_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            iterator.BeginForeach();
+            iterator.EndForeach();
+            var act = () => iterator.GetColumns();
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void AddOperationAfterEndForeach_OperationAddedBefore_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            iterator.BeginForeach();
+            iterator.GetTriggers();
+            iterator.EndForeach();
+            var act = () => iterator.GetColumns();
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void GetForeachResult_EndForeachWasNotCalledBefore_ThrowsInvalidOperationException()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act & Assert.
+            IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
+            iterator.BeginForeach();
+            iterator.GetTriggers();
+            var act = () => iterator.GetForeachResult(out _);
+            act.Should().Throw<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void GetForeachResult_NoOperationsSpecified()
         {
             // Arrange.
             IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
@@ -151,13 +265,271 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Act.
             connection
-                .ForeachTable(tableNames)
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().BeNull();
+        }
+
+        [Fact]
+        public void GetForeachResult_AllOperationsSpecified()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetAllDataFromTable()
+                    .GetColumns()
+                    .GetForeignKeys()
+                    .GetTriggers()
+                    .GetSqlDefinition()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_1].Data, _tableList1.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_2].Data, _tableList2.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_3].Data, _tableList3.ToDataTable());
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeEquivalentTo(_tableColumns1);
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeEquivalentTo(_tableColumns2);
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeEquivalentTo(_tableColumns3);
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeEquivalentTo(_tableForeignKeys3);
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeEquivalentTo(_tableTriggers1);
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_1);
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_2);
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_3);
+        }
+
+        [Fact]
+        public void GetForeachResult_ReopenForeachLoop()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetAllDataFromTable()
+                    .GetColumns()
+                    .GetForeignKeys()
+                    .GetTriggers()
+                    .GetSqlDefinition()
+                .EndForeach()
+                .BeginForeach()
+                    .GetColumns()
+                    .GetTriggers()
+                    .GetSqlDefinition()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeEquivalentTo(_tableColumns1);
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeEquivalentTo(_tableColumns2);
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeEquivalentTo(_tableColumns3);
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeEquivalentTo(_tableTriggers1);
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_1);
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_2);
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_3);
+        }
+
+        [Fact]
+        public void GetForeachResult_GetAllDataFromTable()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
                     .GetAllDataFromTable()
                 .EndForeach()
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_1].Data, _tableList1.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_2].Data, _tableList2.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_3].Data, _tableList3.ToDataTable());
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetColumns()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetColumns()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeEquivalentTo(_tableColumns1);
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeEquivalentTo(_tableColumns2);
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeEquivalentTo(_tableColumns3);
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetForeignKeys()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetForeignKeys()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeEquivalentTo(_tableForeignKeys3);
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetTriggers()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetTriggers()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeEquivalentTo(_tableTriggers1);
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().BeNullOrEmpty();
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().BeNullOrEmpty();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetSqlDefinition()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetSqlDefinition()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            foreachResult.Result[TABLE_NAME_1].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].Data.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_1);
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_2);
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_3);
         }
 
         /// <summary>
@@ -188,21 +560,17 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
         /// <returns>Mock object of <see cref="IVelocipedeDbConnection"/></returns>
         private IVelocipedeDbConnection GetVelocipedeConnection(bool isConnected = false)
         {
-            // Tables.
-            List<string> tableNames = GetTableNames();
-            DataTable table1 = _tableList1.ToDataTable();
-            DataTable table2 = _tableList2.ToDataTable();
-            DataTable table3 = _tableList3.ToDataTable();
-
             // Mock.
             var mockConnection = new Mock<IVelocipedeDbConnection>();
 
             // Properties.
-            mockConnection
-                .Setup(x => x.IsConnected)
-                .Returns(isConnected);
+            mockConnection.Setup(x => x.IsConnected).Returns(isConnected);
+            mockConnection.Setup(x => x.DatabaseType).Returns(Enums.DatabaseType.InMemory);
 
-            // GetAllDataFromTable.
+            // Data.
+            DataTable table1 = _tableList1.ToDataTable();
+            DataTable table2 = _tableList2.ToDataTable();
+            DataTable table3 = _tableList3.ToDataTable();
             mockConnection
                 .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_1}", out table1))
                 .Returns(mockConnection.Object);
@@ -213,12 +581,67 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out table3))
                 .Returns(mockConnection.Object);
 
+            // Columns.
+            List<VelocipedeColumnInfo> columns1 = _tableColumns1;
+            List<VelocipedeColumnInfo> columns2 = _tableColumns2;
+            List<VelocipedeColumnInfo> columns3 = _tableColumns3;
+            mockConnection
+                .Setup(x => x.GetColumns(TABLE_NAME_1, out columns1))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetColumns(TABLE_NAME_2, out columns2))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetColumns(TABLE_NAME_3, out columns3))
+                .Returns(mockConnection.Object);
+
+            // Foreign keys.
+            List<VelocipedeForeignKeyInfo>? nullForeignKeys = null;
+            List<VelocipedeForeignKeyInfo> foreignKeys3 = _tableForeignKeys3;
+            mockConnection
+                .Setup(x => x.GetForeignKeys(TABLE_NAME_1, out nullForeignKeys))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetForeignKeys(TABLE_NAME_2, out nullForeignKeys))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetForeignKeys(TABLE_NAME_3, out foreignKeys3))
+                .Returns(mockConnection.Object);
+
+            // Triggers.
+            List<VelocipedeTriggerInfo> triggers1 = _tableTriggers1;
+            List<VelocipedeTriggerInfo>? nullTriggers = null;
+            mockConnection
+                .Setup(x => x.GetTriggers(TABLE_NAME_1, out triggers1))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetTriggers(TABLE_NAME_2, out nullTriggers))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetTriggers(TABLE_NAME_3, out nullTriggers))
+                .Returns(mockConnection.Object);
+
+            // SQL definition.
+            string? sqlDefinition1 = TABLE_SQL_DEFINITION_1;
+            string? sqlDefinition2 = TABLE_SQL_DEFINITION_2;
+            string? sqlDefinition3 = TABLE_SQL_DEFINITION_3;
+            mockConnection
+                .Setup(x => x.GetSqlDefinition(TABLE_NAME_1, out sqlDefinition1))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetSqlDefinition(TABLE_NAME_2, out sqlDefinition2))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetSqlDefinition(TABLE_NAME_3, out sqlDefinition3))
+                .Returns(mockConnection.Object);
+
             // Fluent interfaces for connected object.
             if (isConnected)
             {
-                // ForeachTable.
+                // WithForeachTableIterator.
+                List<string> tableNames = GetTableNames();
                 mockConnection
-                    .Setup(x => x.ForeachTable(tableNames))
+                    .Setup(x => x.WithForeachTableIterator(tableNames))
                     .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
             }
 

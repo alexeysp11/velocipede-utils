@@ -3,6 +3,9 @@
 # IDE0005: Using directive is unnecessary.
 dotnet_diagnostic.IDE0005.severity = error
 
+# IDE0044: Add readonly modifier
+dotnet_diagnostic.IDE0044.severity = warning
+
 # IDE0059: Unnecessary assignment of a value.
 dotnet_diagnostic.IDE0059.severity = error
 

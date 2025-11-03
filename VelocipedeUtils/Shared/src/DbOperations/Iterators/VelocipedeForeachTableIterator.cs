@@ -41,11 +41,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             GetSqlDefinition,
         }
 
-        private IVelocipedeDbConnection _connection;
-        private List<string> _tableNames;
-        private VelocipedeForeachResult? _foreachResult;
+        private readonly IVelocipedeDbConnection _connection;
+        private readonly List<string> _tableNames;
+        private readonly Dictionary<ForeachTableOperationType, bool> _operationTypes;
         private bool _allowAddOperationTypes;
-        private Dictionary<ForeachTableOperationType, bool> _operationTypes;
 
         public VelocipedeForeachTableIterator(IVelocipedeDbConnection connection, List<string> tableNames)
         {
@@ -59,12 +58,20 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
 
             _connection = connection;
             _tableNames = tableNames;
-            _allowAddOperationTypes = true;
-            _operationTypes = new Dictionary<ForeachTableOperationType, bool>();
+            _allowAddOperationTypes = false;
+            _operationTypes = [];
         }
 
         /// <inheritdoc/>
-        public IVelocipedeIterator EndForeach()
+        public IVelocipedeForeachTableIterator BeginForeach()
+        {
+            _operationTypes.Clear();
+            _allowAddOperationTypes = true;
+            return this;
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator EndForeach()
         {
             _allowAddOperationTypes = false;
             return this;
@@ -76,10 +83,20 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             if (_allowAddOperationTypes)
                 throw new InvalidOperationException(ErrorMessageConstants.UnableToGetResultForOpenForeachOperation);
 
-            _foreachResult = new VelocipedeForeachResult();
+            // Get active operations.
             IEnumerable<ForeachTableOperationType> operations = _operationTypes
                 .Where(x => x.Value == true)
                 .Select(x => x.Key);
+
+            // If there is no active operations, then return null.
+            if (!operations.Any())
+            {
+                foreachResult = null;
+                return _connection;
+            }
+
+            // Get foreach result in the loop.
+            foreachResult = new VelocipedeForeachResult();
             foreach (string tableName in _tableNames)
             {
                 VelocipedeForeachTableInfo tableInfo = new() { TableName = tableName };
@@ -116,10 +133,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
                             break;
                     }
                 }
-                _foreachResult.Add(tableName, tableInfo);
+                foreachResult.Add(tableName, tableInfo);
             }
 
-            foreachResult = _foreachResult;
             return _connection;
         }
 
@@ -170,11 +186,11 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
             
             if (_operationTypes.ContainsKey(operationType))
             {
-                _operationTypes[ForeachTableOperationType.GetAllDataFromTable] = true;
+                _operationTypes[operationType] = true;
             }
             else
             {
-                _operationTypes.Add(ForeachTableOperationType.GetAllDataFromTable, true);
+                _operationTypes.Add(operationType, true);
             }
         }
     }
