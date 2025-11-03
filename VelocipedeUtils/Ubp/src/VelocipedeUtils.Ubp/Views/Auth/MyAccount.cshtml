@@ -1,0 +1,158 @@
+@using System.Globalization
+@using VelocipedeUtils.Ubp.Core.Dal
+@using VelocipedeUtils.Ubp.Core.DbContexts
+@using VelocipedeUtils.Ubp.Core.Extensions
+@using VelocipedeUtils.Ubp.ViewModels
+@using VelocipedeUtils.Shared.Models.Business.InformationSystem
+
+@model UserAccountViewModel
+
+@inject UbpDbContext _context
+
+@{
+    ViewData["Title"] = "My Account";
+}
+
+@try
+{
+    if (TempData["ErrorMessage"] != null)
+    {
+        throw new System.Exception(TempData["ErrorMessage"].ToString());
+    }
+
+    var userId = Model?.UserAccountId;
+    var userAccount = Model?.EmployeeUserAccount?.UserAccount;
+    if (userAccount == null)
+    {
+        throw new System.Exception("Model does not contain related user account");
+    }
+    var employee = Model?.EmployeeUserAccount?.Employee;
+    if (employee == null)
+    {
+        throw new System.Exception("Model does not contain related employee");
+    }
+    var organizationItems = employee.OrganizationItems;
+    if (organizationItems == null || !organizationItems.Any())
+    {
+        throw new System.Exception("Model does not contain organization items for the related employee");
+    }
+    if (Model?.UserAccountGroups == null)
+    {
+        throw new System.Exception("Model does not contain user account groups for the related user");
+    }
+    var userGroups = Model?.UserAccountGroups
+        .Where(x => x.UserAccount != null && x.UserAccount.Id == userId)
+        .Where(x => x.UserGroup != null)
+        .Select(x => x.UserGroup)
+        .ToList();
+    
+    string formName = "Auth/MyAccount";
+    string applicationUid = "d7b0eb60-190e-439d-89e1-c78594ac7f0c";
+
+    var languageName = string.Empty;
+    if (!Context.Request.Cookies.TryGetValue("employeesmvc-lang", out languageName))
+    {
+        languageName = "English";
+    }
+    
+    Dictionary<string, string> translations = LanguageDal.GetLanguageKvpByFormName(
+        _context,
+        UbpEnumExtensions.GetLanguageTypeEnum(languageName),
+        formName,
+        applicationUid);
+    
+    CultureInfo datesCultureInfo;
+    switch (languageName)
+    {
+        case "Russian":
+            datesCultureInfo = new CultureInfo("ru-RU");
+            break;
+        case "German":
+            datesCultureInfo = new CultureInfo("de-DE");
+            break;
+        case "Spanish":
+            datesCultureInfo = new CultureInfo("es-ES");
+            break;
+        default:
+            datesCultureInfo = new CultureInfo("en-US");
+            break;
+    }
+
+    ViewData["Title"] = translations["MyAccount"];
+    
+    <div class="text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@translations["Parameter"]</th>
+                    <th>@translations["Value"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@translations["FirstName"]</td>
+                    <td>@employee.FirstName</td>
+                </tr>
+                <tr>
+                    <td>@translations["MiddleName"]</td>
+                    <td>@employee.MiddleName</td>
+                </tr>
+                <tr>
+                    <td>@translations["LastName"]</td>
+                    <td>@employee.LastName</td>
+                </tr>
+                <tr>
+                    <td>@translations["FullName"]</td>
+                    <td>@employee.FullName</td>
+                </tr>
+                <tr>
+                    <td>@translations["BirthDate"]</td>
+                    <td>@employee.BirthDate?.ToString(datesCultureInfo.DateTimeFormat.ShortDatePattern)</td>
+                </tr>
+                <tr>
+                    <td>@translations["Gender"]</td>
+                    <td>@employee.Gender</td>
+                </tr>
+                <tr>
+                    <td>@translations["UserAccount.Username"]</td>
+                    <td>@userAccount.Login</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>@userAccount.Email</td>
+                </tr>
+                <tr>
+                    <td>@translations["MobilePhone"]</td>
+                    <td>@employee.MobilePhone</td>
+                </tr>
+                <tr>
+                    <td>@translations["WorkPhone"]</td>
+                    <td>@employee.WorkPhone</td>
+                </tr>
+                <tr>
+                    <td>@translations["OrganizationItem"]</td>
+                    <td>
+                        @Html.Raw(string.Join(", ", organizationItems.Select(x => $"<a href=\"/OrganizationalStructure/OrganizationItemDetails/{x.Id}\">{x.Name}</a>").ToArray()))
+                    </td>
+                </tr>
+                <tr>
+                    <td>@translations["UserGroup"]</td>
+                    <td>
+                        @Html.Raw(string.Join(", ", userGroups.Select(x => x.Name).ToArray()))
+                    </td>
+                </tr>
+                <tr>
+                    <td>@translations["EmployDate"]</td>
+                    <td>@employee.EmployDate?.ToString(datesCultureInfo.DateTimeFormat.ShortDatePattern)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+catch (System.Exception ex)
+{
+    <div class="text-center">
+        <p class="text-danger">Error: @ex.Message. Please, contact your system administrator</p>
+    </div>
+}

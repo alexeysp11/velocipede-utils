@@ -1,0 +1,40 @@
+﻿@using VelocipedeUtils.Ubp.Core.Dal
+@using VelocipedeUtils.Ubp.Core.DbContexts
+@using VelocipedeUtils.Ubp.Core.Extensions
+
+@inject UbpDbContext _context
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+@try
+{
+    string formName = "Home/Index";
+    string applicationUid = "d7b0eb60-190e-439d-89e1-c78594ac7f0c";
+
+    var languageName = string.Empty;
+    if (!Context.Request.Cookies.TryGetValue("employeesmvc-lang", out languageName))
+    {
+        languageName = "English";
+    }
+    
+    Dictionary<string, string> translations = LanguageDal.GetLanguageKvpByFormName(
+        _context,
+        UbpEnumExtensions.GetLanguageTypeEnum(languageName),
+        formName,
+        applicationUid);
+
+    ViewData["Title"] = translations["Page.Home"];
+
+    <div class="text-center">
+        <h1 class="display-4">@translations["UnifiedBusinessPlatform"]</h1>
+        <p>@translations["UnifiedBusinessPlatform.Description"]</p>
+    </div>
+}
+catch (System.Exception ex)
+{
+    <div class="text-center">
+        <p class="text-danger">Error: @ex.Message</p>
+    </div>
+}

@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Ubp.Core", "src\VelocipedeUtils.Ubp.Core\VelocipedeUtils.Ubp.Core.csproj", "{BE7DED0A-9DAD-4294-88AE-E0CD8BBD9238}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Ubp", "src\VelocipedeUtils.Ubp\VelocipedeUtils.Ubp.csproj", "{253B28F7-CB28-4231-B8C2-5BE07BC26453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Shared.Models.Business", "..\Shared\src\Models.Business\VelocipedeUtils.Shared.Models.Business.csproj", "{4E8D0C56-C7E3-3156-C722-62964140B831}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Shared.Models", "..\Shared\src\Models\VelocipedeUtils.Shared.Models.csproj", "{B7944427-7381-D209-DA3E-0FBEA11BD434}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Shared.CodeExtensions", "..\Shared\src\CodeExtensions\VelocipedeUtils.Shared.CodeExtensions.csproj", "{3A4ED49D-0720-6A96-1D9D-F327394D687B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VelocipedeUtils.Ubp.DbInit", "src\VelocipedeUtils.Ubp.DbInit\VelocipedeUtils.Ubp.DbInit.csproj", "{73C1750E-11C2-C4C2-5CED-52558607220F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BE7DED0A-9DAD-4294-88AE-E0CD8BBD9238}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7DED0A-9DAD-4294-88AE-E0CD8BBD9238}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7DED0A-9DAD-4294-88AE-E0CD8BBD9238}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7DED0A-9DAD-4294-88AE-E0CD8BBD9238}.Release|Any CPU.Build.0 = Release|Any CPU
+		{253B28F7-CB28-4231-B8C2-5BE07BC26453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{253B28F7-CB28-4231-B8C2-5BE07BC26453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{253B28F7-CB28-4231-B8C2-5BE07BC26453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{253B28F7-CB28-4231-B8C2-5BE07BC26453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E8D0C56-C7E3-3156-C722-62964140B831}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E8D0C56-C7E3-3156-C722-62964140B831}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E8D0C56-C7E3-3156-C722-62964140B831}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E8D0C56-C7E3-3156-C722-62964140B831}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7944427-7381-D209-DA3E-0FBEA11BD434}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7944427-7381-D209-DA3E-0FBEA11BD434}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7944427-7381-D209-DA3E-0FBEA11BD434}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7944427-7381-D209-DA3E-0FBEA11BD434}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A4ED49D-0720-6A96-1D9D-F327394D687B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A4ED49D-0720-6A96-1D9D-F327394D687B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A4ED49D-0720-6A96-1D9D-F327394D687B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A4ED49D-0720-6A96-1D9D-F327394D687B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73C1750E-11C2-C4C2-5CED-52558607220F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73C1750E-11C2-C4C2-5CED-52558607220F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73C1750E-11C2-C4C2-5CED-52558607220F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73C1750E-11C2-C4C2-5CED-52558607220F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7B3BD98C-64A6-45D6-A115-FB9BF8C4EC5F}
+	EndGlobalSection
+EndGlobal
