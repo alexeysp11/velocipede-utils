@@ -1,5 +1,3 @@
-using VelocipedeUtils.Shared.Models.Business;
-
 namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
 {
     /// <summary>
@@ -15,7 +13,7 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// 
         /// </summary>
-        public Friendship Friendship { get; set; }
+        public required Friendship Friendship { get; set; }
 
         /// <summary>
         /// Friendship status.

@@ -108,19 +108,19 @@ PRESS ENTER TO CONTINUE             |
 ------------------------------------
 ```
 
-### [UnifiedBusinessPlatform](VelocipedeUtils/UnifiedBusinessPlatform/README.md)
+### [Ubp (aka UnifiedBusinessPlatform)](VelocipedeUtils/Ubp/README.md)
 
 This project is a web application on ASP.NET MVC, designed for company management (organizational structure, employee information, and automation of key HR processes).
 
-![Ubp.HomePage](VelocipedeUtils/UnifiedBusinessPlatform/docs/img/Ubp.HomePage.png)
+![Ubp.HomePage](VelocipedeUtils/Ubp/docs/img/Ubp.HomePage.png)
 
 Visualization of the hierarchical structure of the company: organizations, departments, teams, positions:
 
-![Ubp.Organizations](VelocipedeUtils/UnifiedBusinessPlatform/docs/img/Ubp.Organizations.png)
+![Ubp.Organizations](VelocipedeUtils/Ubp/docs/img/Ubp.Organizations.png)
 
 Employee information management:
 
-![Ubp.Employees](VelocipedeUtils/UnifiedBusinessPlatform/docs/img/Ubp.Employees.png)
+![Ubp.Employees](VelocipedeUtils/Ubp/docs/img/Ubp.Employees.png)
 
 Planned improvements:
 - **Absence management**: A system for recording vacations, sick leaves, and other types of employee absences.

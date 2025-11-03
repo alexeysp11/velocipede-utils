@@ -19,10 +19,12 @@ namespace VelocipedeUtils.Dynamical
         /// <summary>
         /// Method for compiling a string containing C# code and run it
         /// </summary>
-        public string CompileAndRunCSharpString(string code, string assemblyName, string instanceName)
+        public static string CompileAndRunCSharpString(string code, string assemblyName, string instanceName)
         {
-            if (string.IsNullOrEmpty(code)) throw new System.Exception("Code could not be null or empty");
-            if (string.IsNullOrEmpty(assemblyName)) throw new System.Exception("Assembly name could not be null or empty");
+            if (string.IsNullOrEmpty(code))
+                throw new Exception("Code could not be null or empty");
+            if (string.IsNullOrEmpty(assemblyName))
+                throw new Exception("Assembly name could not be null or empty");
 
             (byte[] a, byte[] b) = CreateAssembly(code, assemblyName, instanceName);
             var assembly = Assembly.Load(a, b);

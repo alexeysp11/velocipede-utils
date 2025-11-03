@@ -20,17 +20,17 @@ namespace VelocipedeUtils.Shared.Models.Business.Products
         /// <summary>
         /// Beneficiaries (comanies).
         /// </summary>
-        public ICollection<Company> CompanyBeneficiaries { get; set; }
+        public required ICollection<Company> CompanyBeneficiaries { get; set; }
 
         /// <summary>
         /// Beneficiaries (customers).
         /// </summary>
-        public ICollection<Customer> CustomerBeneficiaries { get; set; }
+        public required ICollection<Customer> CustomerBeneficiaries { get; set; }
 
         /// <summary>
         /// Products.
         /// </summary>
-        public ICollection<Product> Products { get; set; }
+        public required ICollection<Product> Products { get; set; }
 
         /// <summary>
         /// Actual price.

@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Data;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets;
 using VelocipedeUtils.Shared.Models.Documents;
@@ -12,7 +10,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
 {
     public class MSExcelConverterTest
     {
-        private string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(MSExcelConverterTest).ToString().Split('.').Last());
+        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(MSExcelConverterTest).ToString().Split('.').Last());
 
         [Fact]
         public void SpreadsheetElementsToDocument_CorrectParams_FileExists()
@@ -106,7 +104,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
         }
 
         #region Private methods
-        private void CreateFolderIfNotExists(string foldername)
+        private static void CreateFolderIfNotExists(string foldername)
         {
             if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
         }

@@ -10,8 +10,8 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.Routing;
 /// </summary>
 public class EsbControlPlane
 {
-    private EsbRoutingConfigs m_esbRoutingConfigs;
-    private IEsbServiceRegistry m_esbServiceRegistry;
+    private readonly EsbRoutingConfigs m_esbRoutingConfigs;
+    private readonly IEsbServiceRegistry m_esbServiceRegistry;
 
     /// <summary>
     /// Default constructor.
@@ -101,10 +101,10 @@ public class EsbControlPlane
 
         // Get endpoint call ID.
         if (!transition2Delegate.ContainsKey(transitionId))
-            throw new System.Exception($"Specified transition ID does not exist in the dictionary (transition ID = {transitionId})");
+            throw new Exception($"Specified transition ID does not exist in the dictionary (transition ID = {transitionId})");
         var function = transition2Delegate[transitionId];
         if (function == null)
-            throw new System.Exception("ESB delegate could not be null");
+            throw new Exception("ESB delegate could not be null");
         
         function(parameters);
     }

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
@@ -16,23 +16,23 @@ public class RandomLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalancer
     public RandomLoadBalancer(
         EndpointPool endpointPool)
     {
-        m_random = new System.Random();
+        m_random = new Random();
         m_endpointPool = endpointPool;
     }
 
     /// <summary>
     /// Gets the next available endpoint randomly from the collection.
     /// </summary>
-    public string GetNextEndpoint()
+    public string? GetNextEndpoint()
     {
         CheckNullReferences();
 
-        var endpointParameters = m_endpointPool.ActiveEndpointParameters;
+        IReadOnlyList<EndpointCollectionParameter>? endpointParameters = m_endpointPool?.ActiveEndpointParameters;
         if (endpointParameters == null || endpointParameters.Count == 0)
-            throw new System.Exception("Collection of endpoint parameters is null or empty");
+            throw new Exception("Collection of endpoint parameters is null or empty");
         
         int index = m_random.Next(endpointParameters.Count);
         var value = endpointParameters[index];
-        return value == null || value.Endpoint == null ? string.Empty : value.Endpoint.Name;
+        return value?.Endpoint?.Name;
     }
 }

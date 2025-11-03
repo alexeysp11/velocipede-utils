@@ -58,12 +58,12 @@ namespace VelocipedeUtils.Shared.Models.Business.Projects
         /// <summary>
         /// Risks of the project.
         /// </summary>
-        public ICollection<Risk> Risks { get; set; }
+        public required ICollection<Risk> Risks { get; set; }
         
         /// <summary>
         /// Project phases.
         /// </summary>
-        public ICollection<ProjectPhase> ProjectPhases { get; set; }
+        public required ICollection<ProjectPhase> ProjectPhases { get; set; }
         
         /// <summary>
         /// Complete percent.

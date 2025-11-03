@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 using VelocipedeUtils.Shared.Models.Business.SocialCommunication;
 
@@ -14,7 +12,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Gets or sets the business process associated with this workflow instance.
         /// </summary>
-        public BusinessProcess BusinessProcess { get; set; }
+        public required BusinessProcess BusinessProcess { get; set; }
         
         /// <summary>
         /// Workflow instance context.
@@ -55,7 +53,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Collection of workflow instance members.
         /// </summary>
-        public ICollection<WorkflowInstanceMember> Members { get; set; }
+        public required ICollection<WorkflowInstanceMember> Members { get; set; }
 
         /// <summary>
         /// Gets or sets the parent workflow instance if applicable.
@@ -65,6 +63,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Comments.
         /// </summary>
-        public ICollection<Comment> Comments { get; set; }
+        public required ICollection<Comment> Comments { get; set; }
     }
 }

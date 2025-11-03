@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 using VelocipedeUtils.Shared.Models.Documents;
 
@@ -33,7 +31,7 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Instance of a channel.
         /// </summary>
-        public Channel Channel { get; set; }
+        public required Channel Channel { get; set; }
 
         /// <summary>
         /// Chatroom ID.
@@ -43,7 +41,7 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Instance of a chatroom.
         /// </summary>
-        public Chatroom Chatroom { get; set; }
+        public required Chatroom Chatroom { get; set; }
 
         /// <summary>
         /// Date the business entity was sent.
@@ -58,7 +56,7 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Instance of a user, that has sent the message.
         /// </summary>
-        public virtual UserAccount Sender { get; set; }
+        public virtual required UserAccount Sender { get; set; }
 
         /// <summary>
         /// Date the business entity was received.
@@ -68,12 +66,12 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Collection of recipient IDs.
         /// </summary>
-        public ICollection<long> RecipientIDs { get; set; }
+        public required ICollection<long> RecipientIDs { get; set; }
 
         /// <summary>
         /// Collection of instances of a user, that has sent the message.
         /// </summary>
-        public virtual ICollection<UserAccount> UserRecipients { get; set; }
+        public virtual required ICollection<UserAccount> UserRecipients { get; set; }
 
         /// <summary>
         /// Boolean variable to indicate if the message is received.
@@ -98,7 +96,7 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Collection of attachments of the message.
         /// </summary>
-        public ICollection<Attachment> Attachments { get; set; }
+        public required ICollection<Attachment> Attachments { get; set; }
 
         /// <summary>
         /// Boolean variable to indicate if the message is deleted.

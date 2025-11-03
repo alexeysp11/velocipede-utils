@@ -28,12 +28,12 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// Collection of child organization items.
         /// </summary>
-        public ICollection<OrganizationItem> SubItems { get; set; }
+        public required ICollection<OrganizationItem> SubItems { get; set; }
         
         /// <summary>
         /// Collection of employees that are related to the organization item.
         /// </summary>
-        public ICollection<Employee> Employees { get; set; }
+        public required ICollection<Employee> Employees { get; set; }
 
         /// <summary>
         /// Address of the organization item.

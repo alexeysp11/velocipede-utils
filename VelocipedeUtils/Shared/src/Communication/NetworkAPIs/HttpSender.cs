@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 #if NET6_0_OR_GREATER
 using System.Net.Http.Json;
 #endif
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using VelocipedeUtils.Shared.Models.Network;
 
@@ -20,7 +18,7 @@ namespace VelocipedeUtils.NetworkAPIs
         /// <summary>
         /// Synchronous method for sending an object via HTTP
         /// </summary>
-        public string Send(string url, object parameter)
+        public static string Send(string url, object parameter)
         {
             var client = new HttpClient();
             var webRequest = new HttpRequestMessage(HttpMethod.Post, url)
@@ -36,7 +34,7 @@ namespace VelocipedeUtils.NetworkAPIs
         /// <summary>
         /// Method for sending an object via HTTP asynchronously
         /// </summary>
-        public async Task<ApiOperation> SendAsync(string url, object parameter, string methodName = "")
+        public static async Task<ApiOperation> SendAsync(string url, object parameter, string methodName = "")
         {
             if (string.IsNullOrEmpty(url))
                 throw new System.Exception("URL could not be null or empty");
@@ -46,15 +44,24 @@ namespace VelocipedeUtils.NetworkAPIs
             var httpClient = new HttpClient();
             var requestStr = JsonSerializer.Serialize(parameter);
             var dt1 = System.DateTime.Now;
-            System.Net.Http.HttpResponseMessage response;
+            HttpResponseMessage response;
 #if NET6_0_OR_GREATER
             response = await httpClient.PostAsJsonAsync(url, parameter);
 #else
             response = await httpClient.PostAsync(url, new StringContent(requestStr));
 #endif
             var dt2 = System.DateTime.Now;
-            return new ApiOperation 
+            return new ApiOperation
             {
+                ClientAppUid = string.Empty,
+                MethodDescription = string.Empty,
+                MicroserviceCommunicationConfiguration = new() { EndpointFrom = new(), EndpointTo = new(), NetworkInteractionDetails = new() },
+                ServerAppUid = string.Empty,
+                RedirectToAppUid = string.Empty,
+                RequestObject = new(),
+                ResponseObject = new(),
+                Status = string.Empty,
+                StatusDescription = string.Empty,
                 MethodName = methodName,
                 Request = requestStr,
                 Response = await response.Content.ReadAsStringAsync(),
@@ -66,7 +73,7 @@ namespace VelocipedeUtils.NetworkAPIs
         /// <summary>
         /// Method for sending multiple objects via HTTP asynchronously
         /// </summary>
-        public async Task<List<ApiOperation>> SendMultipleAsync(string url, List<object> parameters, string methodName = "")
+        public static async Task<List<ApiOperation>> SendMultipleAsync(string url, List<object> parameters, string methodName = "")
         {
             if (string.IsNullOrEmpty(url))
                 throw new System.Exception("URL could not be null or empty");
@@ -74,7 +81,7 @@ namespace VelocipedeUtils.NetworkAPIs
                 throw new System.Exception("The list of parameters could not be null or empty");
             // 
             var httpClient = new HttpClient();
-            var tasks = new Task<System.Net.Http.HttpResponseMessage>[parameters.Count];
+            Task<HttpResponseMessage>[] tasks = new Task<HttpResponseMessage>[parameters.Count];
             var requestStrings = new string[parameters.Count];
             for (int i = 0; i < parameters.Count; i++)
             {
@@ -93,8 +100,17 @@ namespace VelocipedeUtils.NetworkAPIs
             var result = new List<ApiOperation>();
             for (int i = 0; i < parameters.Count; i++)
             {
-                result.Add(new ApiOperation 
+                result.Add(new ApiOperation
                 {
+                    ClientAppUid = string.Empty,
+                    MethodDescription = string.Empty,
+                    MicroserviceCommunicationConfiguration = new() { EndpointFrom = new(), EndpointTo = new(), NetworkInteractionDetails = new() },
+                    ServerAppUid = string.Empty,
+                    RedirectToAppUid = string.Empty,
+                    RequestObject = new(),
+                    ResponseObject = new(),
+                    Status = string.Empty,
+                    StatusDescription = string.Empty,
                     MethodName = methodName,
                     Request = requestStrings[i],
                     Response = await tasks[i].Result.Content.ReadAsStringAsync(),

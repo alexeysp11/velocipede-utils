@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// Login of the user.
         /// </summary>
-        public string Login { get; set; }
+        public required string Login { get; set; }
 
         /// <summary>
         /// Email of the user.
@@ -23,7 +23,7 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// Password of the user.
         /// </summary>
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         /// <summary>
         /// Photo of the user.

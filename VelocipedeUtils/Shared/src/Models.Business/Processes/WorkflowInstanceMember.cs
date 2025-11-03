@@ -1,4 +1,3 @@
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 
 namespace VelocipedeUtils.Shared.Models.Business.Processes

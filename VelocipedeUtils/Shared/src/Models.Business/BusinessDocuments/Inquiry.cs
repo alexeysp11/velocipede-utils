@@ -11,7 +11,7 @@ namespace VelocipedeUtils.Shared.Models.Business.BusinessDocuments
         /// <summary>
         /// Timestamp when the inquiry was closed.
         /// </summary>
-        public DateTime? DateClosed { get; private set; }
+        public DateTime? DateClosed { get; set; }
 
         /// <summary>
         /// Date the business entity was received.
@@ -21,27 +21,27 @@ namespace VelocipedeUtils.Shared.Models.Business.BusinessDocuments
         /// <summary>
         /// 
         /// </summary>
-        public string? ReceivedById { get; private set; }
+        public string? ReceivedById { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public Employee? ReceivedBy { get; private set; }
+        public Employee? ReceivedBy { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string? CustomerId { get; private set; }
+        public string? CustomerId { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public Company? CustomerCompany { get; private set; }
+        public Company? CustomerCompany { get; set; }
 
         /// <summary>
         /// List of offers.
         /// </summary>
-        public List<Offer> Offers { get; private set; }
+        public required List<Offer> Offers { get; set; }
 
         //public List<Attachment> Attachments { get; private set; }
 

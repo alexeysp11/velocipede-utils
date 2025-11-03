@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
@@ -10,9 +8,9 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 /// </summary>
 public sealed class EndpointPool
 {
-    private ConcurrentDictionary<long, EndpointCollectionParameter> m_endpointParameters;
-    private IReadOnlyDictionary<long, EndpointCollectionParameter> m_cachedEndpointParameters;
-    private IReadOnlyList<EndpointCollectionParameter> m_cachedActiveEndpointParameters;
+    private readonly ConcurrentDictionary<long, EndpointCollectionParameter> m_endpointParameters;
+    private IReadOnlyDictionary<long, EndpointCollectionParameter>? m_cachedEndpointParameters;
+    private IReadOnlyList<EndpointCollectionParameter>? m_cachedActiveEndpointParameters;
 
     /// <summary>
     /// Collection of endpoint parameters.
@@ -72,11 +70,11 @@ public sealed class EndpointPool
     /// </summary>
     /// <param name="endpointId">Endpoint ID.</param>
     /// <returns>Endpoint from the pool or null if not found.</returns>
-    public EndpointCollectionParameter GetEndpointFromPool(long endpointId)
+    public EndpointCollectionParameter? GetEndpointFromPool(long endpointId)
     {
         if (m_endpointParameters.ContainsKey(endpointId))
         {
-            m_endpointParameters.TryGetValue(endpointId, out EndpointCollectionParameter endpointParameter);
+            m_endpointParameters.TryGetValue(endpointId, out EndpointCollectionParameter? endpointParameter);
             return endpointParameter;
         }
         return null;

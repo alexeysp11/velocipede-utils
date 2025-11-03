@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,7 +11,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.TextBased
 {
     public class TxtConverterTest
     {
-        private string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(TxtConverterTest).ToString().Split('.').Last());
+        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(TxtConverterTest).ToString().Split('.').Last());
 
         [Fact]
         public void TextDocElementsToDocument_CorrectParams_FileExists()
@@ -100,7 +98,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.TextBased
 
             // Act
             converter.TextDocElementsToDocument(FolderName, filename, elements);
-            var tmpElements = converter.ConvertFileToTde(FolderName, filename);
+            var tmpElements = TxtConverter.ConvertFileToTde(FolderName, filename);
             converter.TextDocElementsToDocument(FolderName, copyFilename, tmpElements);
 
             // Assert
@@ -110,7 +108,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.TextBased
         }
 
         #region Private methods
-        private void CreateFolderIfNotExists(string foldername)
+        private static void CreateFolderIfNotExists(string foldername)
         {
             if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
         }

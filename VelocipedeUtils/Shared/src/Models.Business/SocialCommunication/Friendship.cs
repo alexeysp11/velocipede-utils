@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using VelocipedeUtils.Shared.Models.Business;
-
 namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
 {
     /// <summary>
@@ -31,6 +28,6 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Status changes.
         /// </summary>
-        public ICollection<FriendshipChange> StatusChanges { get; set; }
+        public required ICollection<FriendshipChange> StatusChanges { get; set; }
     }
 }

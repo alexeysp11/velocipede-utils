@@ -10,7 +10,7 @@ namespace VelocipedeUtils.Shared.Models.Documents
         /// <summary>
         /// Content of an element of text document.
         /// </summary>
-        public string Content { get; set; }
+        public required string Content { get; set; }
         
         /// <summary>
         /// Font size of an element of text document.

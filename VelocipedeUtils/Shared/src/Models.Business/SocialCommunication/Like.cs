@@ -1,4 +1,3 @@
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 
 namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
@@ -11,7 +10,7 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Liker.
         /// </summary>
-        public UserAccount Liker { get; set; }
+        public required UserAccount Liker { get; set; }
         
         /// <summary>
         /// Likee.

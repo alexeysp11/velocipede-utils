@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Data;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats;
 using VelocipedeUtils.Shared.Models.Documents;
@@ -12,7 +10,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
 {
     public class BinaryConverterTest
     {
-        private string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(BinaryConverterTest).ToString().Split('.').Last());
+        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(BinaryConverterTest).ToString().Split('.').Last());
 
         [Fact]
         public void SaveAsBinaryFile_CorrectParams_FileExists()
@@ -52,15 +50,14 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
             };
 
             PdfConverter pdfConverter = new PdfConverter();
-            BinaryConverter binConverter = new BinaryConverter();
             CreateFolderIfNotExists(FolderName);
 
             // Act
             pdfConverter.TextDocElementsToDocument(FolderName, filename, elements);
-            byte[] bytes = binConverter.GetBinaryFile(filepath);
-            binConverter.SaveAsBinaryFile(binFile, bytes);
-            binConverter.SaveAsBinaryFile(copyFile1, bytes);
-            binConverter.SaveAsBinaryFile(copyFile2, binConverter.GetBinaryFile(binFile));
+            byte[] bytes = BinaryConverter.GetBinaryFile(filepath);
+            BinaryConverter.SaveAsBinaryFile(binFile, bytes);
+            BinaryConverter.SaveAsBinaryFile(copyFile1, bytes);
+            BinaryConverter.SaveAsBinaryFile(copyFile2, BinaryConverter.GetBinaryFile(binFile));
 
             // Assert
             Assert.True(File.Exists(filepath));
@@ -69,9 +66,10 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
             Assert.True(File.Exists(copyFile2));
         }
 
-        private void CreateFolderIfNotExists(string foldername)
+        private static void CreateFolderIfNotExists(string foldername)
         {
-            if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
+            if (!Directory.Exists(foldername))
+                Directory.CreateDirectory(foldername);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Languages
         /// <summary>
         /// Key used for translation.
         /// </summary>
-        public string Key { get; set; }
+        public required string Key { get; set; }
         
         /// <summary>
         /// Name of the form or view.

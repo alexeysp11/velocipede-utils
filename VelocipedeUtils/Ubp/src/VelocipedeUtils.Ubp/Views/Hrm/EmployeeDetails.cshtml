@@ -1,0 +1,82 @@
+@using VelocipedeUtils.Shared.Models.Business.InformationSystem
+@using VelocipedeUtils.Ubp.Core.Dal
+@using VelocipedeUtils.Ubp.Core.DbContexts
+@using VelocipedeUtils.Ubp.Core.Extensions
+
+@model Employee
+
+@inject UbpDbContext _context
+
+@{
+    ViewData["Title"] = "Employee details";
+}
+
+@try
+{
+    string formName = "Hrm/EmployeeDetails";
+    string applicationUid = "d7b0eb60-190e-439d-89e1-c78594ac7f0c";
+
+    var languageName = string.Empty;
+    if (!Context.Request.Cookies.TryGetValue("employeesmvc-lang", out languageName))
+    {
+        languageName = "English";
+    }
+    
+    Dictionary<string, string> translations = LanguageDal.GetLanguageKvpByFormName(
+        _context,
+        UbpEnumExtensions.GetLanguageTypeEnum(languageName),
+        formName,
+        applicationUid);
+
+    ViewData["Title"] = translations["EmployeeDetails"];
+    
+    <div class="text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
+
+        <form>
+            <fieldset disabled>
+                <div class="form-group">
+                    <label for="disabledTextInput">@translations["FullName"]</label>
+                    <input type="text" id="disabledTextInput" class="form-control" placeholder="@Model?.FullName">
+                </div>
+                <div class="form-group">
+                    <label for="disabledTextInput">@translations["Gender"]</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1">@translations[$"Gender.{Model?.Gender}"]</textarea>
+                </div>
+                <div class="form-group">
+                    @{
+                        string organizationItemName = "N/A";
+                        var organizationItem = Model?.OrganizationItems?.FirstOrDefault();
+                        if (organizationItem != null)
+                        {
+                            organizationItemName = organizationItem.Name;
+                        }
+                        <label for="disabledTextInput">@translations["OrganizationItem"]</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3">@organizationItemName</textarea>
+                    }
+                </div>
+                <div class="form-group">
+                    @{
+                        var age = System.DateTime.Now.Year - Model?.BirthDate?.Year;
+                        if (Model?.BirthDate?.Month > System.DateTime.Now.Month && Model?.BirthDate?.Day > System.DateTime.Now.Day)
+                        {
+                            age -= 1;
+                        }
+                        <label for="disabledTextInput">@translations["Age"]</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1">@age</textarea>
+                    }
+                </div>
+                <div class="form-group">
+                    <label for="disabledTextInput">@translations["BirthDate"]</label>
+                    <textarea class="form-control" id="exampleFormControlTextarea1">@Model?.BirthDate?.ToString("dd.MM.yyyy")</textarea>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+}
+catch (System.Exception ex)
+{
+    <div class="text-center">
+        <p class="text-danger">Error: @ex.Message</p>
+    </div>
+}

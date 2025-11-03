@@ -2,7 +2,6 @@ using VelocipedeUtils.Shared.ServiceDiscoveryBpm.DAL;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ProcPipes;
-using VelocipedeUtils.Shared.Models.Business.BusinessDocuments;
 using VelocipedeUtils.Shared.Models.Business.Processes;
 using VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
 
@@ -13,11 +12,11 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.ServiceRegistry;
 /// </summary>
 public class EsbServiceRegistry : IEsbServiceRegistry
 {
-    private IEndpointDAL m_endpointDAL;
-    private IBusinessProcessDAL m_businessProcessDAL;
-    private EndpointSelectionParameter m_endpointSelectionParameter;
-    private IEsbLoadBalancer m_loadBalancer;
-    private TransitionPool m_transitionPool;
+    private readonly IEndpointDAL m_endpointDAL;
+    private readonly IBusinessProcessDAL m_businessProcessDAL;
+    private readonly EndpointSelectionParameter m_endpointSelectionParameter;
+    private readonly IEsbLoadBalancer m_loadBalancer;
+    private readonly TransitionPool m_transitionPool;
 
     /// <summary>
     /// Constructor by default.
@@ -41,20 +40,17 @@ public class EsbServiceRegistry : IEsbServiceRegistry
     /// </summary>
     public Endpoint GetNextEndpoint(
         EndpointCallType endpointCallType,
-        BusinessProcessState currentState,
-        BusinessProcessStateTransition stateTransition)
+        BusinessProcessState? currentState,
+        BusinessProcessStateTransition? stateTransition)
     {
         if (currentState == null)
-            throw new System.Exception("Current state could not be null");
-        // if (currentState.EndpointCall == null)
-        //     throw new System.Exception("Current state should reference to existing endpoint call");
+            throw new Exception("Current state could not be null");
         if (stateTransition == null)
-            throw new System.Exception("State transition could not be null");
+            throw new Exception("State transition could not be null");
         if (stateTransition.EndpointCall == null)
-            throw new System.Exception("State transition should reference to existing endpoint call");
+            throw new Exception("State transition should reference to existing endpoint call");
         
         return m_endpointDAL.GetEndpoint(x => x.EndpointCallType == endpointCallType
-            // && x.Id == currentState.EndpointCall.Id
             && x.Id == stateTransition.EndpointCall.Id);
     }
 
@@ -62,15 +58,17 @@ public class EsbServiceRegistry : IEsbServiceRegistry
     /// Method for selecting an endpoint within an explicit call to an element of a microservice architecture (by endpoint types).
     /// </summary>
     public Endpoint GetEndpointExplicit(
-        EndpointType endpointTypeFrom,
-        EndpointType endpointTypeTo)
+        EndpointType? endpointTypeFrom,
+        EndpointType? endpointTypeTo)
     {
         if (endpointTypeFrom == null) 
-            throw new System.Exception("Source endpoint type could not be null");
+            throw new Exception("Source endpoint type could not be null");
         if (endpointTypeTo == null)
-            throw new System.Exception("Destination endpoint type could not be null");
+            throw new Exception("Destination endpoint type could not be null");
 
-        return m_endpointDAL.GetEndpoint(x => x.EndpointTypeFrom.Id == endpointTypeFrom.Id
+        return m_endpointDAL.GetEndpoint(x => x.EndpointTypeFrom != null
+            && x.EndpointTypeFrom.Id == endpointTypeFrom.Id
+            && x.EndpointTypeTo != null
             && x.EndpointTypeTo.Id == endpointTypeTo.Id);
     }
 
@@ -81,11 +79,11 @@ public class EsbServiceRegistry : IEsbServiceRegistry
         long workflowInstanceId)
     {
         if (workflowInstanceId <= 0)
-            throw new System.ArgumentOutOfRangeException(nameof(workflowInstanceId), $"Workflow instance ID should be positive, but '{workflowInstanceId}' was passed");
+            throw new ArgumentOutOfRangeException(nameof(workflowInstanceId), $"Workflow instance ID should be positive, but '{workflowInstanceId}' was passed");
         
         var workflowInstance = m_businessProcessDAL.GetWorkflowInstanceById(workflowInstanceId);
         if (workflowInstance == null)
-            throw new System.Exception($"Workflow instance with the specified ID does not exist (workflowInstanceId: {workflowInstanceId})");
+            throw new Exception($"Workflow instance with the specified ID does not exist (workflowInstanceId: {workflowInstanceId})");
         return workflowInstance;
     }
 
@@ -97,17 +95,17 @@ public class EsbServiceRegistry : IEsbServiceRegistry
         string taskName)
     {
         if (string.IsNullOrEmpty(processName))
-            throw new System.ArgumentNullException(nameof(processName));
+            throw new ArgumentNullException(nameof(processName));
         
         // Get business process.
         var process = m_businessProcessDAL.GetBusinessProcessByName(processName);
         if (process == null)
-            throw new System.Exception($"Business process could not be found by name: {processName}");
+            throw new Exception($"Business process could not be found by name: {processName}");
 
         // Create workflow instance.
         var workflowInstance = m_businessProcessDAL.CreateWorkflowInstance(process);
         if (workflowInstance == null)
-            throw new System.Exception($"Workflow instance is not created (processName: {processName})");
+            throw new Exception($"Workflow instance is not created (processName: {processName})");
         
         CreateBusinessTaskByWI(workflowInstance, taskName);
         
@@ -118,35 +116,35 @@ public class EsbServiceRegistry : IEsbServiceRegistry
     /// Create a task for a workflow instance.
     /// </summary>
     public BusinessTask CreateBusinessTaskByWI(
-        WorkflowInstance workflowInstance,
+        WorkflowInstance? workflowInstance,
         string taskName,
         long? transitionId = null,
         bool isNextTask = true)
     {
         if (workflowInstance == null)
-            throw new System.ArgumentNullException(nameof(workflowInstance));
+            throw new ArgumentNullException(nameof(workflowInstance));
         if (string.IsNullOrEmpty(taskName))
-            throw new System.ArgumentNullException(nameof(taskName));
+            throw new ArgumentNullException(nameof(taskName));
         
         // Get business state by transition ID.
-        BusinessProcessState processState = null;
+        BusinessProcessState? processState = null;
         if (transitionId != null)
         {
             processState = m_businessProcessDAL.GetBPStateByTransition(transitionId.Value, isNextTask);
             if (processState == null)
-                throw new System.Exception($"Process state could not be found with for the specified transition ID (transitionId: {transitionId.Value}, isNextTask: {isNextTask})");
+                throw new Exception($"Process state could not be found with for the specified transition ID (transitionId: {transitionId.Value}, isNextTask: {isNextTask})");
         }
         
         // Create business task.
         string taskSubject = $"{workflowInstance.Id}. {taskName} ({workflowInstance.Name})";
-        var businessTask = m_businessProcessDAL.CreateBusinessTask(taskName, taskSubject, processState);
+        BusinessTask businessTask = m_businessProcessDAL.CreateBusinessTask(taskName, taskSubject, processState);
         if (businessTask == null)
-            throw new System.Exception($"Business task is not created (workflowInstance.Id: {workflowInstance.Id}, taskName: {taskName})");
+            throw new Exception($"Business task is not created (workflowInstance.Id: {workflowInstance.Id}, taskName: {taskName})");
 
         // Create workflow tracking item.
         var workflowTrackingItem = m_businessProcessDAL.CreateWorkflowTrackingItem(workflowInstance, businessTask);
         if (workflowTrackingItem == null)
-            throw new System.Exception($"Workflow tracking item is not created (workflowInstance.Id: {workflowInstance.Id}, taskName: {taskName})");
+            throw new Exception($"Workflow tracking item is not created (workflowInstance.Id: {workflowInstance.Id}, taskName: {taskName})");
 
         return businessTask;
     }
@@ -160,7 +158,7 @@ public class EsbServiceRegistry : IEsbServiceRegistry
     {
         var businessTask = m_businessProcessDAL.GetNextBusinessTask(workflowInstanceId, transitionId);
         if (businessTask == null)
-            throw new System.Exception($"Business task could not be found by the state transition ID (workflowInstanceId: {workflowInstanceId}, transitionId: {transitionId})");
+            throw new Exception($"Business task could not be found by the state transition ID (workflowInstanceId: {workflowInstanceId}, transitionId: {transitionId})");
         return businessTask;
     }
 
@@ -172,7 +170,7 @@ public class EsbServiceRegistry : IEsbServiceRegistry
     {
         var nextTransition = m_transitionPool.GetNextTransitionById(transitionId);
         if (nextTransition == null)
-            throw new System.Exception($"Unable to find next transition for the specified transition ID: {transitionId}");
+            throw new Exception($"Unable to find next transition for the specified transition ID: {transitionId}");
         return nextTransition.Id;
     }
 
@@ -189,9 +187,8 @@ public class EsbServiceRegistry : IEsbServiceRegistry
     /// Method for preserving the state of the service.
     /// </summary>
     public void PreserveServiceState(
-        IPipeDelegateParams parameters)
+        IPipeDelegateParams? parameters)
     {
-        // 
     }
 
     /// <summary>

@@ -8,27 +8,27 @@ namespace VelocipedeUtils.Shared.Models.AppSettings
         /// <summary>
         /// Network address of the server application.
         /// </summary>
-        public string ServerAddress { get; set; }
+        public required string ServerAddress { get; set; }
 
         /// <summary>
         /// Network address of the client application.
         /// </summary>
-        public string ClientAddress { get; set; }
+        public required string ClientAddress { get; set; }
         
         /// <summary>
         /// String representation of the environment (e.g. test, production).
         /// </summary>
-        public string Environment { get; set; }
+        public required string Environment { get; set; }
         
         /// <summary>
         /// HTTP paths.
         /// </summary>
-        public string[] HttpPaths { get; set; }
+        public required string[] HttpPaths { get; set; }
         
         /// <summary>
         /// HTTP paths used for testing and debugging the server.
         /// </summary>
-        public string[] HttpPathsDbg { get; set; }
+        public required string[] HttpPathsDbg { get; set; }
 
         /// <summary>
         /// Allows to print web paths which API server uses to listen to requests.

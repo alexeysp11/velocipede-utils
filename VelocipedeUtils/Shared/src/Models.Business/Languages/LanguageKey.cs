@@ -13,7 +13,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Languages
         /// <summary>
         /// Key of the language (e.g. name in English).
         /// </summary>
-        public string Key { get; set; }
+        public required string Key { get; set; }
         
         /// <summary>
         /// Endonym of the language (a name used by the people who speak a language to refer to themselves, or their language).

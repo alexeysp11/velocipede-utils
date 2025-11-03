@@ -16,6 +16,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Responsibilities
         /// <summary>
         /// Skills required for the project/responsibility.
         /// </summary>
-        public ICollection<Skill> Skills { get; set; }
+        public required ICollection<Skill> Skills { get; set; }
     }
 }

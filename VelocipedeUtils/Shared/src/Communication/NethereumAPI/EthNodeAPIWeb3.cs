@@ -1,5 +1,3 @@
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Nethereum.Web3;
 

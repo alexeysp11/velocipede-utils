@@ -10,7 +10,7 @@ public interface IEsbLoadBalancer
     /// <summary>
     /// Gets the next available endpoint based on the load balancing strategy.
     /// </summary>
-    string GetNextEndpoint();
+    string? GetNextEndpoint();
 
     /// <summary>
     /// Update a specific endpoint in the list of endpoints.

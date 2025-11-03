@@ -40,12 +40,12 @@ namespace VelocipedeUtils.Shared.Models.Business.Customers
         /// <summary>
         /// Collection of recipient IDs.
         /// </summary>
-        public ICollection<string> RecipientIDs { get; set; }
+        public required ICollection<string> RecipientIDs { get; set; }
 
         /// <summary>
         /// Collection of recipients.
         /// </summary>
-        public virtual ICollection<Customer> Recipients { get; set; }
+        public virtual required ICollection<Customer> Recipients { get; set; }
 
         /// <summary>
         /// Is the message received.
@@ -65,6 +65,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Customers
         /// <summary>
         /// User account of the sender.
         /// </summary>
-        public virtual UserAccount Sender { get; set; }
+        public virtual required UserAccount Sender { get; set; }
     }
 }

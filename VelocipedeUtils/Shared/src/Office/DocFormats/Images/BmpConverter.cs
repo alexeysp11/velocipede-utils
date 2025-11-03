@@ -1,6 +1,5 @@
 using System.IO;
 using System.Drawing;
-using System.Linq;
 
 namespace VelocipedeUtils.Shared.Office.DocFormats.Images
 {
@@ -24,9 +23,9 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Images
 #endif
                 throw new System.NotSupportedException("The method is available only on Windows OS");
             
-            base.CheckText(text);
-            base.CheckFolderName(foldername);
-            base.CheckFileName(filename, "bmp");
+            CheckText(text);
+            CheckFolderName(foldername);
+            CheckFileName(filename, "bmp");
 
             // 
             MemoryStream ms = new MemoryStream();            
@@ -67,10 +66,8 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Images
         /// </summary>
         public void BinaryToImg(byte[] bytes, string foldername, string filename)
         {
-            base.CheckFolderName(foldername);
-            base.CheckFileName(filename, "bmp");
-
-            // 
+            CheckFolderName(foldername);
+            CheckFileName(filename, "bmp");
         }
 
         /// <summary>
@@ -78,9 +75,8 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Images
         /// </summary>
         public byte[] ImgToBinary(string foldername, string filename)
         {
-            // 
-            base.CheckFolderName(foldername);
-            base.CheckFileName(filename, "bin");
+            CheckFolderName(foldername);
+            CheckFileName(filename, "bin");
 
             return new byte[1];
         }

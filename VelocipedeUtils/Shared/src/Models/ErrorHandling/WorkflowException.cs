@@ -8,16 +8,16 @@ namespace VelocipedeUtils.Shared.Models.ErrorHandling
         /// <summary>
         /// Message of the exception.
         /// </summary>
-        public string Message { get; set; }
+        public required string Message { get; set; }
 
         /// <summary>
         /// Stack trace of the exception.
         /// </summary>
-        public string StackTrace { get; set; }
+        public required string StackTrace { get; set; }
         
         /// <summary>
         /// Full message of the exception.
         /// </summary>
-        public string FullMessage { get; set; }
+        public required string FullMessage { get; set; }
     }
 }

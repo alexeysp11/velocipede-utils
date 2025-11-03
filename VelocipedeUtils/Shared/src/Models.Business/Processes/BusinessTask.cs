@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 using VelocipedeUtils.Shared.Models.Business.SocialCommunication;
 using VelocipedeUtils.Shared.Models.Business.RiskManagement;
@@ -24,7 +22,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Child tasks.
         /// </summary>
-        public ICollection<BusinessTask> ChildTasks { get; set; }
+        public required ICollection<BusinessTask> ChildTasks { get; set; }
         
         /// <summary>
         /// Actual start date.
@@ -75,13 +73,13 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// Collection of risks related to the business task.
         /// </summary>
         [Obsolete("It's better to use BusinessTaskRisk object")]
-        public ICollection<Risk> Risks { get; set; }
+        public required ICollection<Risk> Risks { get; set; }
 
         /// <summary>
         /// Collection of comments associated with the task.
         /// </summary>
         [Obsolete("It's better to use BusinessTaskComment object")]
-        public ICollection<Comment> Comments { get; set; }
+        public required ICollection<Comment> Comments { get; set; }
 
         /// <summary>
         /// Shows if it is necessary to send notifications if the task is expired and not completed.

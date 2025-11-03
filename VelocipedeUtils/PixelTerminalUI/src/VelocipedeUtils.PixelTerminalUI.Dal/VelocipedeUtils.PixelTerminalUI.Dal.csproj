@@ -9,10 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Npgsql" Version="6.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Shared\src\Models.Business\VelocipedeUtils.Shared.Models.Business.csproj" />
+    <PackageReference Include="VelocipedeUtils.Shared.Models.Business" Version="1.0.0-alpha" />
   </ItemGroup>
 
 </Project>

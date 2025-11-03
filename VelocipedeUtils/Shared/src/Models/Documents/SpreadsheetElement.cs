@@ -1,5 +1,3 @@
-using VelocipedeUtils.Shared.Models.Documents.Enums;
-
 namespace VelocipedeUtils.Shared.Models.Documents
 {
     /// <summary>
@@ -10,11 +8,11 @@ namespace VelocipedeUtils.Shared.Models.Documents
         /// <summary>
         /// Cell name.
         /// </summary>
-        public string CellName { get; set; }
+        public required string CellName { get; set; }
 
         /// <summary>
         /// Element of a text document.
         /// </summary>
-        public TextDocElement TextDocElement { get; set; }
+        public required TextDocElement TextDocElement { get; set; }
     }
 }

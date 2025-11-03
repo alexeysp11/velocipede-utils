@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Reporting
     public class WfReportData
     {
         public Guid Guid { get; set; }
-        public Dictionary<string, object> Parameters { get; set; }
-        public DataTable DataTable { get; set; }
+        public required Dictionary<string, object> Parameters { get; set; }
+        public required DataTable DataTable { get; set; }
     }
 }

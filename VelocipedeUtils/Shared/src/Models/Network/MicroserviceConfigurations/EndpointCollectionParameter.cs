@@ -1,5 +1,3 @@
-using System;
-
 namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations
 {
     /// <summary>
@@ -76,7 +74,7 @@ namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations
             }
             
             var other = (EndpointCollectionParameter)obj;
-            return Id == other.Id && Endpoint.Equals(other.Endpoint);
+            return Id == other.Id && Endpoint?.Equals(other.Endpoint) == true;
         }
     }
 }

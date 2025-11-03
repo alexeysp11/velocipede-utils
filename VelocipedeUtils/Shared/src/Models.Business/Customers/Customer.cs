@@ -52,6 +52,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Customers
         /// Contracts.
         /// </summary>
         [Obsolete("It's better to use CustomerContract object")]
-        public ICollection<Contract> Contracts { get; private set; }
+        public required ICollection<Contract> Contracts { get; set; }
     }
 }

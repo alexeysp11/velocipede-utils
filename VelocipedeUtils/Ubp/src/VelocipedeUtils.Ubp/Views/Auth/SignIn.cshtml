@@ -1,0 +1,69 @@
+@using VelocipedeUtils.Ubp.Core.Dal
+@using VelocipedeUtils.Ubp.Core.DbContexts
+@using VelocipedeUtils.Ubp.Core.Extensions
+@using VelocipedeUtils.Ubp.ViewModels
+
+@model SignInViewModel;
+
+@inject UbpDbContext _context
+
+@{
+    ViewData["Title"] = "Sign In";
+}
+
+@try
+{
+    string formName = "Auth/SignIn";
+    string applicationUid = "d7b0eb60-190e-439d-89e1-c78594ac7f0c";
+
+    var languageName = string.Empty;
+    if (!Context.Request.Cookies.TryGetValue("employeesmvc-lang", out languageName))
+    {
+        languageName = "English";
+    }
+    
+    Dictionary<string, string> translations = LanguageDal.GetLanguageKvpByFormName(
+        _context,
+        UbpEnumExtensions.GetLanguageTypeEnum(languageName),
+        formName,
+        applicationUid);
+    
+    ViewData["Title"] = translations["SignIn"];
+    var usernameLabelText = translations["UserAccount.Username"];
+    var passwordLabelText = translations["UserAccount.Password"];
+
+    <h1>@ViewData["Title"]</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="SignIn" asp-controller="Auth">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Username" class="control-label">@usernameLabelText</label>
+                    <input asp-for="Username" class="form-control" placeholder="@usernameLabelText" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label">@passwordLabelText</label>
+                    <input type="password" asp-for="Password" class="form-control" placeholder="@passwordLabelText" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="@ViewData["Title"]" class="btn btn-primary" />
+                </div>
+            </form>
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="text-center">
+                    <p class="text-danger">@TempData["ErrorMessage"]</p>
+                </div>
+            }
+        </div>
+    </div>
+}
+catch (System.Exception ex)
+{
+    <div class="text-center">
+        <p class="text-danger">Error: @ex.Message</p>
+    </div>
+}

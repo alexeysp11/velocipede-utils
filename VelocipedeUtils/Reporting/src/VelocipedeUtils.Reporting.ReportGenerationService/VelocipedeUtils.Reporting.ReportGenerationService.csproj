@@ -9,10 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="../../../Shared/src/Models.Business/VelocipedeUtils.Shared.Models.Business.csproj" />
+    <PackageReference Include="VelocipedeUtils.Shared.Models.Business" Version="1.0.0-alpha" />
   </ItemGroup>
 
 </Project>

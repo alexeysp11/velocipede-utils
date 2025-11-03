@@ -1,4 +1,3 @@
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 
 namespace VelocipedeUtils.Shared.Models.Business.Monetary
@@ -11,32 +10,32 @@ namespace VelocipedeUtils.Shared.Models.Business.Monetary
         /// <summary>
         /// Date.
         /// </summary>
-        public DateTime Date { get; private set; }
+        public DateTime Date { get; set; }
 
         /// <summary>
         /// Working hours.
         /// </summary>
-        public WorkingHours WorkingHours { get; private set; }
+        public required WorkingHours WorkingHours { get; set; }
 
         /// <summary>
         /// Days off.
         /// </summary>
-        public DaysOff? DaysOff { get; private set; }
+        public DaysOff? DaysOff { get; set; }
 
         /// <summary>
         /// Sub total payments.
         /// </summary>
-        public SubTotalPayments SubTotalPayments { get; private set; }
+        public required SubTotalPayments SubTotalPayments { get; set; }
 
         /// <summary>
         /// Total amount.
         /// </summary>
-        public decimal? Total { get; private set; }
+        public decimal? Total { get; set; }
 
         /// <summary>
         /// Employee.
         /// </summary>
-        public virtual Employee Employee { get; private set; }
+        public virtual required Employee Employee { get; set; }
         
         /// <summary>
         /// Actual start date.

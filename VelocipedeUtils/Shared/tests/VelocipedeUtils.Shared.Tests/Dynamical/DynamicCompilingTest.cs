@@ -9,7 +9,6 @@ namespace Cims.Tests.VelocipedeUtils.Dynamical
         public void CompileAndRunCSharpString_CorrectParameters_InstanceCreated()
         {
             // Arrange 
-            DynamicCompiling compiler = new DynamicCompiling();
             var code = @"
 using System;
 using System.Collections.Generic;
@@ -29,7 +28,7 @@ namespace Debuggable
             string instanceName = "Debuggable.HelloWorld";
 
             // Act 
-            string result = compiler.CompileAndRunCSharpString(code, assemblyName, instanceName);
+            string result = DynamicCompiling.CompileAndRunCSharpString(code, assemblyName, instanceName);
 
             // Assert 
             Assert.True(result == "Hello world");

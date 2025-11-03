@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace VelocipedeUtils.Shared.Models.Business.Processes
 {
     /// <summary>

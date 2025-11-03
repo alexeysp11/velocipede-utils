@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ProcPipes;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.Routing;
@@ -11,5 +10,5 @@ public class EsbRoutingConfigs
     /// <summary>
     /// A dictionary where the key is the transition ID, and the value is the delegate to handle the call.
     /// </summary>
-    public Dictionary<long, System.Action<IPipeDelegateParams>> Transition2Delegate { get; set; }
+    public Dictionary<long, System.Action<IPipeDelegateParams>>? Transition2Delegate { get; set; }
 }

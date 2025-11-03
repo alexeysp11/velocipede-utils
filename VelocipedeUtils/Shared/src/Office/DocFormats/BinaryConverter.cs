@@ -10,7 +10,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats
         /// <summary>
         /// Saves array of bytes as a binary file.
         /// </summary>
-        public void SaveAsBinaryFile(string filename, byte[] bytes)
+        public static void SaveAsBinaryFile(string filename, byte[] bytes)
         {
             File.WriteAllBytes(filename, bytes);
         }
@@ -18,7 +18,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats
         /// <summary>
         /// Reads all bytes from a specified file.
         /// </summary>
-        public byte[] GetBinaryFile(string filename)
+        public static byte[] GetBinaryFile(string filename)
         {
             byte[] bytes;
             using (FileStream file = new FileStream(filename, FileMode.Open, FileAccess.Read))

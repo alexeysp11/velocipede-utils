@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
@@ -20,13 +20,13 @@ public class LeastLoadedLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalancer
     /// <summary>
     /// Get the least loaded endpoint based on the current load.
     /// </summary>
-    public string GetNextEndpoint()
+    public string? GetNextEndpoint()
     {
         CheckNullReferences();
 
-        var selectedEndpoint = m_endpointPool.ActiveEndpointParameters
+        EndpointCollectionParameter? selectedEndpoint = m_endpointPool?.ActiveEndpointParameters
             .OrderBy(p => p.SystemLoad)
             .FirstOrDefault();
-        return selectedEndpoint.Endpoint.Name;
+        return selectedEndpoint?.Endpoint?.Name;
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using VelocipedeUtils.Shared.Models.Documents.Enums;
 
 namespace VelocipedeUtils.Shared.Models.Documents
@@ -11,22 +10,22 @@ namespace VelocipedeUtils.Shared.Models.Documents
         /// <summary>
         /// File name.
         /// </summary>
-        public string FileName { get; private set; }
+        public required string FileName { get; set; }
         
         /// <summary>
         /// Extention.
         /// </summary>
-        public string Extention { get; private set; }
+        public required string Extention { get; set; }
 
         /// <summary>
         /// Upload date.
         /// </summary>
-        public DateTime UploadDate { get; private set; }
+        public DateTime UploadDate { get; set; }
 
         /// <summary>
         /// File.
         /// </summary>
-        public byte[] File { get; private set; }
+        public required byte[] File { get; set; }
 
         /// <summary>
         /// Size.
@@ -36,6 +35,6 @@ namespace VelocipedeUtils.Shared.Models.Documents
         /// <summary>
         /// File type.
         /// </summary>
-        public AttachmentFileType FileType { get; private set; }
+        public AttachmentFileType FileType { get; set; }
     }
 }

@@ -12,7 +12,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Reporting
         public WfExportFormatType? ExportFormat { get; set; }
         public WfReportStatus? ReportStatus { get; set; }
         public string? ParametersJson { get; set; }
-        public DateTime? DateCreated { get; set; }
         public DateTime? DateLastModified { get; set; }
 
         public Dictionary<string, object>? GetParameters()

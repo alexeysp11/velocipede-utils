@@ -71,7 +71,7 @@ namespace VelocipedeUtils.Shared.Models.Business.BusinessDocuments
         /// Payments made within the order.
         /// </summary>
         [Obsolete("It's better to use OrderPayment object")]
-        public ICollection<Payment> Payments { get; set; }
+        public required ICollection<Payment> Payments { get; set; }
         
         /// <summary>
         /// Shows if the order could be cancelled.

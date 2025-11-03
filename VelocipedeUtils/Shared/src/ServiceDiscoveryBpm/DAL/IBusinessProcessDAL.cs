@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using VelocipedeUtils.Shared.Models.Business.BusinessDocuments;
 using VelocipedeUtils.Shared.Models.Business.Processes;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.DAL;
@@ -26,7 +24,7 @@ public interface IBusinessProcessDAL
     /// </summary>
     WorkflowInstance CreateWorkflowInstance(
         BusinessProcess process,
-        WorkflowInstance parentInstance = null,
+        WorkflowInstance? parentInstance = null,
         bool isEmulation = false);
 
     /// <summary>
@@ -36,7 +34,7 @@ public interface IBusinessProcessDAL
         string taskName,
         string taskSubject,
         BusinessProcessState? processState = null,
-        BusinessTask parentTask = null,
+        BusinessTask? parentTask = null,
         TaskPriority priority = TaskPriority.Low,
         bool isEmulation = false);
 

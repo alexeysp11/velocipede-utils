@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using VelocipedeUtils.Shared.Models.Business;
-
 namespace VelocipedeUtils.Shared.Models.Business.Processes
 {
     /// <summary>
@@ -21,7 +18,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Collection of the sub-processes.
         /// </summary>
-        public ICollection<BusinessProcess> SubProcesses { get; set; }
+        public required ICollection<BusinessProcess> SubProcesses { get; set; }
 
         /// <summary>
         /// Version number of the business process.

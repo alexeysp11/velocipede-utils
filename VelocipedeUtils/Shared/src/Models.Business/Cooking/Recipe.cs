@@ -16,7 +16,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Cooking
         /// Ingredients.
         /// </summary>
         [Obsolete("It's better to use IngredientRecipe object")]
-        public ICollection<Ingredient> Ingredients { get; set; }
+        public required ICollection<Ingredient> Ingredients { get; set; }
 
         /// <summary>
         /// Instruction how to cook.

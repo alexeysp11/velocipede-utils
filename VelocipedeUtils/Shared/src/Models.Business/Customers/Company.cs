@@ -47,18 +47,18 @@ namespace VelocipedeUtils.Shared.Models.Business.Customers
         /// <summary>
         /// Collection of the employees of the company.
         /// </summary>
-        public ICollection<Employee> Employees { get; set; }
+        public required ICollection<Employee> Employees { get; set; }
 
         /// <summary>
         /// Collection of the projects related to the company.
         /// </summary>
         [Obsolete("It's better to use CompanyProject object")]
-        public ICollection<Project> Projects { get; set; }
+        public required ICollection<Project> Projects { get; set; }
 
         /// <summary>
         /// Contracts.
         /// </summary>
         [Obsolete("It's better to use CompanyContract object")]
-        public ICollection<Contract> Contracts { get; set; }
+        public required ICollection<Contract> Contracts { get; set; }
     }
 }

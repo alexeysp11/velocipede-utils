@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
 /// </summary>
 public abstract class BaseEsbLoadBalancer
 {
-    private protected EndpointPool m_endpointPool;
+    private protected EndpointPool? m_endpointPool;
 
     /// <summary>
     /// Update a specific endpoint in the list of endpoints.
@@ -16,13 +16,13 @@ public abstract class BaseEsbLoadBalancer
     public void UpdateEndpoints(EndpointCollectionParameter endpointParameter)
     {
         if (endpointParameter == null)
-            throw new System.ArgumentNullException(nameof(endpointParameter));
+            throw new ArgumentNullException(nameof(endpointParameter));
         if (endpointParameter.Endpoint == null)
-            throw new System.ArgumentNullException(nameof(endpointParameter.Endpoint));
+            throw new ArgumentNullException(nameof(endpointParameter.Endpoint));
         
         CheckNullReferences();
 
-        m_endpointPool.AddEndpointToPool(endpointParameter);
+        m_endpointPool?.AddEndpointToPool(endpointParameter);
     }
 
     /// <summary>
@@ -31,11 +31,12 @@ public abstract class BaseEsbLoadBalancer
     public EndpointCollectionParameter GetEndpointFromPool(string endpoint)
     {
         if (string.IsNullOrEmpty(endpoint))
-            throw new System.ArgumentNullException(nameof(endpoint));
+            throw new ArgumentNullException(nameof(endpoint));
         
         CheckNullReferences();
 
-        var existingEndpoint = m_endpointPool.EndpointParameters.FirstOrDefault(p => p.Value.Endpoint.Name == endpoint).Value;
+        EndpointCollectionParameter? existingEndpoint = m_endpointPool?.EndpointParameters
+            .FirstOrDefault(p => p.Value?.Endpoint?.Name == endpoint).Value;
         if (existingEndpoint == null)
         {
             // Return a new endpoint.
@@ -57,10 +58,11 @@ public abstract class BaseEsbLoadBalancer
     {
         CheckNullReferences();
 
-        var endpointToRemove = m_endpointPool.EndpointParameters.FirstOrDefault(p => p.Value.Endpoint.Name == endpoint);
-        if (endpointToRemove.Value != null)
+        KeyValuePair<long, EndpointCollectionParameter>? endpointToRemove = m_endpointPool?.EndpointParameters
+            .FirstOrDefault(p => p.Value?.Endpoint?.Name == endpoint);
+        if (endpointToRemove?.Value != null)
         {
-            m_endpointPool.RemoveEndpointFromPool(endpointToRemove.Key);
+            m_endpointPool?.RemoveEndpointFromPool(endpointToRemove.Value.Key);
         }
     }
 
@@ -70,7 +72,7 @@ public abstract class BaseEsbLoadBalancer
     private protected void CheckNullReferences()
     {
         if (m_endpointPool == null)
-            throw new System.ArgumentNullException(nameof(m_endpointPool));
+            throw new ArgumentNullException(nameof(m_endpointPool));
         
         var endpointParameters = m_endpointPool.EndpointParameters;
         if (endpointParameters == null || endpointParameters.Count == 0)

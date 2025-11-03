@@ -1,0 +1,270 @@
+@using VelocipedeUtils.Ubp.Core.Dal
+@using VelocipedeUtils.Ubp.Core.DbContexts
+@using VelocipedeUtils.Ubp.Core.Enums
+@using VelocipedeUtils.Ubp.Core.Extensions
+@using VelocipedeUtils.Extensions
+@using VelocipedeUtils.Shared.Models.Business.InformationSystem
+
+@inject UbpDbContext _context
+
+@model IEnumerable<Absense>
+
+@{
+    ViewData["Title"] = "Absenses";
+}
+
+@try
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.min.css" />
+
+    var jobTitles = new List<string>();
+    var departments = new List<string>();
+    
+    string formName = "Hrm/Absenses";
+    string applicationUid = "d7b0eb60-190e-439d-89e1-c78594ac7f0c";
+
+    var languageName = string.Empty;
+    if (!Context.Request.Cookies.TryGetValue("employeesmvc-lang", out languageName))
+    {
+        languageName = "English";
+    }
+    
+    Dictionary<string, string> translations = LanguageDal.GetLanguageKvpByFormName(
+        _context,
+        UbpEnumExtensions.GetLanguageTypeEnum(languageName),
+        formName,
+        applicationUid);
+
+    ViewData["Title"] = translations["Absenses"];
+
+    <div class="text-center">
+        <h1 class="display-4">@ViewData["Title"]</h1>
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <p class="text-danger">Error message: @TempData["ErrorMessage"]</p>
+        }
+    </div>
+
+    <div>
+        <button class="btn btn-dark dropdown" data-bs-toggle="collapse" data-bs-target="#divVacationFilters">@translations["AbsenseFilters"]</button>
+        <a class="btn btn-primary" role="button" asp-controller="Hrm" asp-action="NewVacation">@translations["NewVacation"]</a>
+
+        <div class="indent collapse @(TempData[CacheUidType.VacationsUid.ToString()] == null ? "" : "show")" id="divVacationFilters">
+            <div class="text-center">
+                <form method="post" asp-controller="Hrm" asp-action="FilterVacations" role="post">
+                    <div class="form-group col-md-4">
+                        @{
+                            var cacheFullname = TempData[CacheUidType.EmployeeFullname.ToString()];
+                            <label for="fullName">@translations["FullName"]</label>
+                            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="@translations["FullName.Enter"]"
+                                value="@cacheFullname">
+                        }
+                    </div>
+                    <div class="form-group col-md-4">
+                        @{
+                            var cacheAgeMin = TempData[CacheUidType.EmployeeMinAge.ToString()];
+                            <label for="ageMin">@translations["MinimumAge"]</label>
+                            <input type="number" class="form-control" id="ageMin" name="ageMin" placeholder="@translations["MinimumAge.Enter"]"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                                value="@cacheAgeMin">
+                        }
+                    </div>
+                    <div class="form-group col-md-4">
+                        @{
+                            var cacheAgeMax = TempData[CacheUidType.EmployeeMaxAge.ToString()];
+                            <label for="ageMax">@translations["MaximumAge"]</label>
+                            <input type="number" class="form-control" id="ageMax" name="ageMax" placeholder="@translations["MaximumAge.Enter"]"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"
+                                value="@cacheAgeMax">
+                        }
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="gender">@translations["Gender"]</label>
+                        <select class="form-control" id="gender" name="gender">
+                            @{
+                                var cacheGender = TempData[CacheUidType.EmployeeGender.ToString()];
+                                <option></option>
+                                var genders = new GenderType[]
+                                {
+                                    GenderType.Male,
+                                    GenderType.Female
+                                };
+                                @foreach (var gen in genders)
+                                {
+                                    if (cacheGender != null && gen.ToString() == cacheGender.ToString())
+                                    {
+                                        <option value="@gen" selected='selected'>@translations[$"Gender.{gen}"]</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@gen">@translations[$"Gender.{gen}"]</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="jobTitle">@translations["JobTitle"]</label>
+                        <select class="form-control" id="jobTitle" name="jobTitle">
+                            @{
+                                var cacheJobTitle = TempData[CacheUidType.EmployeeJobTitle.ToString()];
+                                <option></option>
+                                @foreach (var title in jobTitles)
+                                {
+                                    if (cacheJobTitle != null && title.ToString() == cacheJobTitle.ToString())
+                                    {
+                                        <option value="@title" selected='selected'>@translations[$"JobTitle.{title}"]</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@title">@translations[$"JobTitle.{title}"]</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label for="department">@translations["Department"]</label>
+                        <select class="form-control" id="department" name="department">
+                            @{
+                                var cacheDepartment = TempData[CacheUidType.EmployeeDepartment.ToString()];
+                                <option></option>
+                                @foreach (var dept in departments)
+                                {
+                                    if (cacheDepartment != null && dept.ToString() == cacheDepartment.ToString())
+                                    {
+                                        <option value="@dept" selected='selected'>@translations[$"Department.{dept}"]</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@dept">@translations[$"Department.{dept}"]</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        @{
+                            var cacheCurrentFullname = TempData[CacheUidType.CurrentEmployeeFullname.ToString()];
+                            <label for="currentFullName">@translations["FullName.CurrentEmployee"]</label>
+                            <input type="text" class="form-control" id="currentFullName" name="currentFullName" placeholder="@translations["FullName.Enter"]"
+                                value="@cacheCurrentFullname">
+                        }
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label for="filterOptions">@translations["FilterOptions"]</label>
+                        <select class="form-control" id="filterOptions" name="filterOptions">
+                            @{
+                                var cacheFilterOption = (FilterOptionType) TempData[CacheUidType.FilterOptionsVacations.ToString()];
+                                var filterOptions = new Dictionary<FilterOptionType, string>();
+                                filterOptions.Add(FilterOptionType.ShowAllFilteredVacations, "FilterOptions.ShowAllFilteredVacations");
+                                filterOptions.Add(FilterOptionType.ShowIntersectionsVacations, "FilterOptions.ShowIntersections");
+                                filterOptions.Add(FilterOptionType.ExcludeIntersectionsVacations, "FilterOptions.ExcludeIntersections");
+                                foreach (var option in filterOptions)
+                                {
+                                    if (option.Key == cacheFilterOption)
+                                    {
+                                        <option value="@option.Key" selected='selected'>@translations[option.Value]</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@option.Key">@translations[option.Value]</option>
+                                    }
+                                }
+                            }
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <br>
+                        <input type="submit" value="@translations["Find"]" class="btn btn-primary col-md-12" />
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @if (Model == null)
+    {
+        <p class="text-danger">@translations["Error.DataNotGeneratedYet"]</p>
+    }
+    else
+    {
+        <br>
+        <table name="tblVacations" id="tblVacations" class="table table-bordered table-striped" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>@translations["FullName"]</th>
+                    <th>@translations["Gender"]</th>
+                    <th>@translations["OrganizationItem"]</th>
+                    <th>@translations["Age"]</th>
+                    <th>@translations["AbsenseReason"]</th>
+                    <th>@translations["BeginDate"]</th>
+                    <th>@translations["EndDate"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    var employee = obj.Employee;
+                    var age = System.DateTime.Now.Year - employee?.BirthDate?.Year;
+                    if (employee?.BirthDate?.Month > System.DateTime.Now.Month && employee?.BirthDate?.Day > System.DateTime.Now.Day)
+                    {
+                        age -= 1;
+                    }
+                    <tr>
+                        <td>
+                            <a class="link-dark link-offset-2 link-underline link-underline-opacity-0" asp-area="" asp-controller="Hrm" asp-action="EmployeeDetails" asp-route-id="@employee?.Id">
+                                @employee?.FullName
+                            </a>
+                        </td>
+                        <td>@translations[$"Gender.{employee?.Gender}"]</td>
+                        <td>
+                            @{
+                                var organizationItem = employee?.OrganizationItems?.FirstOrDefault();
+                                if (organizationItem != null)
+                                {
+                                    <a class="link-dark link-offset-2 link-underline link-underline-opacity-0" asp-area="" asp-controller="OrganizationalStructure" asp-action="OrganizationItemDetails" asp-route-id="@organizationItem.Id">
+                                        @organizationItem.Name
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p>N/A</p>
+                                }
+                            }
+                        </td>
+                        <td>@age</td>
+                        <td>@obj.Reason.GetDisplayName()</td>
+                        <td>@obj.DateStartActual?.ToString("dd.MM.yyyy")</td>
+                        <td>@obj.DateEndActual?.ToString("dd.MM.yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//cdn.datatables.net/1.11.0/js/jquery.dataTables.min.js"></script>
+    <script language="JavaScript" type="text/javascript">
+        $.noConflict();
+        jQuery( document ).ready(function( $ ) {
+            $(document).ready(function() {
+                var table = $('#tblVacations').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/en-GB.json',
+                    }
+                });
+            });
+        });
+    </script>
+}
+catch (System.Exception ex)
+{
+    <div class="text-center">
+        <p class="text-danger">Error: @ex.Message</p>
+    </div>
+}
