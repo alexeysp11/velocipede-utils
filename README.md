@@ -53,7 +53,8 @@ using IVelocipedeDbConnection dbConnection
 
 dbConnection
     .OpenDb()
-    .GetAllDataFromTable(tableName, out DataTable dtData)
+    .GetAllDataFromTable(tableName, out DataTable dtData)       // You can get result as DataTable,
+    .GetAllDataFromTable(tableName, out List<Table1> listData)  // or as List<T>.
     .GetColumnsOfTable(tableName, out List<VelocipedeColumnInfo> columnInfo)
     .GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
     .GetTriggers(tableName, out List<VelocipedeTriggerInfo> triggerInfo)
@@ -68,6 +69,7 @@ This library provides functionality for communicating with relational databases 
 - [ ] [MySQL](https://www.mysql.com/)
 - [ ] [Oracle](https://www.oracle.com/database/)
 - [ ] [Clickhouse](https://clickhouse.com/)
+- [ ] [Firebird](https://github.com/FirebirdSQL/firebird)
 
 ## Projects
 
