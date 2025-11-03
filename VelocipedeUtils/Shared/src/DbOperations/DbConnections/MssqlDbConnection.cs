@@ -4,6 +4,7 @@ using Microsoft.Data.SqlClient;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
+using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
@@ -345,7 +346,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -419,7 +419,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -477,7 +476,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -536,7 +534,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        private string UsePersistSecurityInfo(string connectionString)
+        private static string UsePersistSecurityInfo(string connectionString)
         {
             try
             {
@@ -554,6 +552,12 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         public void Dispose()
         {
             CloseDb();
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
+        {
+            return new VelocipedeForeachTableIterator(this, tables);
         }
     }
 }

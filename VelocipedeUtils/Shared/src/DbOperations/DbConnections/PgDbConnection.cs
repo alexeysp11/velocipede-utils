@@ -4,6 +4,7 @@ using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
+using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
@@ -212,11 +213,10 @@ WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
 
         public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
-            string schemaName = "public";
             string[] tn = tableName.Split('.');
             if (tn.Length >= 2)
             {
-                schemaName = tn.First();
+                string schemaName = tn.First();
                 tableName = tableName.Replace($"{schemaName}.", "");
             }
             tableName = tableName.Trim('"');
@@ -243,11 +243,10 @@ WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name LIKE '{0}';", tableNa
 
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
-            string schemaName = "public";
             string[] tn = tableName.Split('.');
             if (tn.Length >= 2)
             {
-                schemaName = tn.First();
+                string schemaName = tn.First();
                 tableName = tableName.Replace($"{schemaName}.", "");
             }
             tableName = tableName.Trim('"');
@@ -420,7 +419,6 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -494,7 +492,6 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -552,7 +549,6 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 {
                     localConnection.Close();
                     localConnection.Dispose();
-                    localConnection = null;
                 }
             }
             return this;
@@ -612,7 +608,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
-        private string UsePersistSecurityInfo(string connectionString)
+        private static string UsePersistSecurityInfo(string connectionString)
         {
             try
             {
@@ -630,6 +626,12 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         public void Dispose()
         {
             CloseDb();
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
+        {
+            return new VelocipedeForeachTableIterator(this, tables);
         }
     }
 }

@@ -66,3 +66,26 @@ dbConnection
     .SwitchDb(dbName)
     .CloseDb();
 ```
+
+### Циклические операции
+
+Также возможно выполнять циклические операции внутри БД в рамках активного подключения:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .GetTablesInDb(out List<string> tables)
+    .WithForeachTableIterator(tables)
+    .BeginForeach()
+        .GetAllDataFromTable()
+        .GetColumns()
+        .GetForeignKeys()
+        .GetTriggers()
+        .GetSqlDefinition()
+    .EndForeach()
+    .GetForeachResult(out VelocipedeForeachResult foreachResult)
+    .CloseDb();
+```
