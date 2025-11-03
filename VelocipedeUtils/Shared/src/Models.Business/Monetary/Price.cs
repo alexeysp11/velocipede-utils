@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace VelocipedeUtils.Shared.Models.Business.Monetary
 {
     /// <summary>
@@ -10,7 +8,9 @@ namespace VelocipedeUtils.Shared.Models.Business.Monetary
         /// <summary>
         /// 
         /// </summary>
-        public Price() {}
+        public Price() : this(0)
+        {
+        }
 
         /// <summary>
         /// 
@@ -18,6 +18,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Monetary
         public Price(decimal netPrice)
         {
             NetPrice = netPrice;
+            Taxes = [];
         }
 
         /// <summary>

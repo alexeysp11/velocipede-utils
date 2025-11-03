@@ -15,6 +15,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Projects
         /// <summary>
         /// Items.
         /// </summary>
-        public ICollection<ProjectPlanItem> Items { get; set; }
+        public required ICollection<ProjectPlanItem> Items { get; set; }
     }
 }

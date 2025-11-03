@@ -1,3 +1,4 @@
+using VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
@@ -19,13 +20,13 @@ public class LeastConnectionsLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalance
     /// <summary>
     /// Get the endpoint with the least number of active connections.
     /// </summary>
-    public string GetNextEndpoint()
+    public string? GetNextEndpoint()
     {
         CheckNullReferences();
 
-        var selectedEndpoint = m_endpointPool.ActiveEndpointParameters
+        EndpointCollectionParameter? selectedEndpoint = m_endpointPool?.ActiveEndpointParameters
             .OrderBy(p => p.ActiveConnectionCount)
             .FirstOrDefault();
-        return selectedEndpoint.Endpoint.Name;
+        return selectedEndpoint?.Endpoint?.Name;
     }
 }

@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
 /// </summary>
 public abstract class BaseEsbLoadBalancer
 {
-    private protected EndpointPool m_endpointPool;
+    private protected EndpointPool? m_endpointPool;
 
     /// <summary>
     /// Update a specific endpoint in the list of endpoints.
@@ -22,7 +22,7 @@ public abstract class BaseEsbLoadBalancer
         
         CheckNullReferences();
 
-        m_endpointPool.AddEndpointToPool(endpointParameter);
+        m_endpointPool?.AddEndpointToPool(endpointParameter);
     }
 
     /// <summary>
@@ -35,7 +35,8 @@ public abstract class BaseEsbLoadBalancer
         
         CheckNullReferences();
 
-        var existingEndpoint = m_endpointPool.EndpointParameters.FirstOrDefault(p => p.Value.Endpoint.Name == endpoint).Value;
+        EndpointCollectionParameter? existingEndpoint = m_endpointPool?.EndpointParameters
+            .FirstOrDefault(p => p.Value?.Endpoint?.Name == endpoint).Value;
         if (existingEndpoint == null)
         {
             // Return a new endpoint.
@@ -57,10 +58,11 @@ public abstract class BaseEsbLoadBalancer
     {
         CheckNullReferences();
 
-        var endpointToRemove = m_endpointPool.EndpointParameters.FirstOrDefault(p => p.Value?.Endpoint?.Name == endpoint);
-        if (endpointToRemove.Value != null)
+        KeyValuePair<long, EndpointCollectionParameter>? endpointToRemove = m_endpointPool?.EndpointParameters
+            .FirstOrDefault(p => p.Value?.Endpoint?.Name == endpoint);
+        if (endpointToRemove?.Value != null)
         {
-            m_endpointPool.RemoveEndpointFromPool(endpointToRemove.Key);
+            m_endpointPool?.RemoveEndpointFromPool(endpointToRemove.Value.Key);
         }
     }
 

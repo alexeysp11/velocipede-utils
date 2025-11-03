@@ -44,19 +44,19 @@ namespace VelocipedeUtils.Shared.Models.Business.BusinessDocuments
         /// Employee responsibilities.
         /// </summary>
         [Obsolete("It's better to use EmploymentContractResponsibility object")]
-        public ICollection<EmployeeResponsibility> EmployeeResponsibilities { get; set; }
+        public required ICollection<EmployeeResponsibility> EmployeeResponsibilities { get; set; }
 
         /// <summary>
         /// Employer responsibilities.
         /// </summary>
         [Obsolete("It's better to use EmploymentContractResponsibility object")]
-        public ICollection<EmployerResponsibility> EmployerResponsibilities { get; set; }
+        public required ICollection<EmployerResponsibility> EmployerResponsibilities { get; set; }
         
         /// <summary>
         /// Employee benifits.
         /// </summary>
         [Obsolete("It's better to use EmploymentContractBenefit object")]
-        public ICollection<EmployeeBenefit> EmployeeBenifits { get; set; }
+        public required ICollection<EmployeeBenefit> EmployeeBenifits { get; set; }
         
         /// <summary>
         /// Schedule.

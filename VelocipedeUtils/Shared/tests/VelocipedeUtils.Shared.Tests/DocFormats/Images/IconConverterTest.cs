@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Data;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats.Images;
 
@@ -10,8 +9,8 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
 {
     public class IconConverterTest
     {
-        private string Text = "Hello,_world! 123;532.52,642'2332\"w342\\432/243^w\n(test&something#1@ok)+$32.5~tt`qwerty\ttabulated\n\nTest text was written!";
-        private string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(IconConverterTest).ToString().Split('.').Last());
+        private readonly string Text = "Hello,_world! 123;532.52,642'2332\"w342\\432/243^w\n(test&something#1@ok)+$32.5~tt`qwerty\ttabulated\n\nTest text was written!";
+        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(IconConverterTest).ToString().Split('.').Last());
 
         #region TextToImg
         [Theory]
@@ -90,7 +89,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
         #endregion  // TextToImg
 
         #region Private methods
-        private void CreateFolderIfNotExists(string foldername)
+        private static void CreateFolderIfNotExists(string foldername)
         {
             if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
         }

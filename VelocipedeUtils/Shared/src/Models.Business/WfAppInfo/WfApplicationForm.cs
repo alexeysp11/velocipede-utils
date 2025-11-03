@@ -8,6 +8,6 @@ namespace VelocipedeUtils.Shared.Models.Business.WfAppInfo
         /// <summary>
         /// Information about the application.
         /// </summary>
-        public WfApplication WfApplication { get; set; }
+        public required WfApplication WfApplication { get; set; }
     }
 }

@@ -74,7 +74,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
             }
             // Save and close the document.
             workbookpart.Workbook.Save();
-            spreadsheetDocument.Close();
+            spreadsheetDocument.Dispose();
         }
 
         /// <summary>
@@ -138,11 +138,13 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
         /// <summary>
         /// 
         /// </summary>
-        private void InsertValue(
+        private static void InsertValue(
             string resultString,
             string resultCell,
             uint worksheetId,
+#pragma warning disable IDE0060 // Remove unused parameter
             SpreadsheetDocument document,
+#pragma warning restore IDE0060 // Remove unused parameter
             WorksheetPart worksheetPart)
         {
             Cell result = InsertCellInWorksheet(GetColumnName(resultCell), GetRowIndex(resultCell), (int)worksheetId, worksheetPart);
@@ -154,7 +156,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
         /// <summary>
         /// Given a cell name, parses the specified cell to get the row index.
         /// </summary>
-        private uint GetRowIndex(string cellName)
+        private static uint GetRowIndex(string cellName)
         {
             // Create a regular expression to match the row index portion the cell name.
             return uint.Parse(new Regex(@"\d+").Match(cellName).Value);
@@ -163,7 +165,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
         /// <summary>
         /// Given a cell name, parses the specified cell to get the column name.
         /// </summary>
-        private string GetColumnName(string cellName)
+        private static string GetColumnName(string cellName)
         {
             // Create a regular expression to match the column name portion of the cell name.
             return new Regex("[A-Za-z]+").Match(cellName).Value;
@@ -172,7 +174,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
         /// <summary>
         /// Given two columns, compares the columns.
         /// </summary>
-        private int CompareColumn(string column1, string column2)
+        private static int CompareColumn(string column1, string column2)
         {
             if (column1.Length > column2.Length)
                 return 1;
@@ -186,7 +188,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
         /// Given a column name, a row index, and a WorksheetPart, inserts a cell into the worksheet. 
         /// If the cell already exists, returns it. 
         /// </summary>
-        private Cell InsertCellInWorksheet(string columnName, uint rowIndex, int worksheetId, WorksheetPart worksheetPart)
+        private static Cell InsertCellInWorksheet(string columnName, uint rowIndex, int worksheetId, WorksheetPart worksheetPart)
         {
             Worksheet worksheet = worksheetPart.Worksheet;
             SheetData sheetData = worksheet.GetFirstChild<SheetData>();

@@ -66,12 +66,12 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// Companies related to the employee.
         /// </summary>
-        public ICollection<Company> Companies { get; set; }
+        public required ICollection<Company> Companies { get; set; }
 
         /// <summary>
         /// Collection of organization items.
         /// </summary>
-        public ICollection<OrganizationItem> OrganizationItems { get; set; }
+        public required ICollection<OrganizationItem> OrganizationItems { get; set; }
 
         /// <summary>
         /// Replacement mode.
@@ -92,12 +92,12 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// Skills of the employee.
         /// </summary>
         [Obsolete("It's better to use EmployeeSkill object")]
-        public ICollection<Skill> Skills { get; set; }
+        public required ICollection<Skill> Skills { get; set; }
 
         /// <summary>
         /// Contracts.
         /// </summary>
         [Obsolete("It's better to use EmployeeContract object")]
-        public ICollection<Contract> Contracts { get; private set; }
+        public required ICollection<Contract> Contracts { get; set; }
     }
 }

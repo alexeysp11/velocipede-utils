@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using VelocipedeUtils.Shared.Models.Business;
 
 namespace VelocipedeUtils.Shared.Models.Business.Processes
 {
@@ -13,12 +11,12 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// 
         /// </summary>
         [NotMapped]
-        public ICollection<BDEConnector> InputConnectors { get; set; }
+        public required ICollection<BDEConnector> InputConnectors { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         [NotMapped]
-        public ICollection<BDEConnector> OutputConnectors { get; set; }
+        public required ICollection<BDEConnector> OutputConnectors { get; set; }
     }
 }

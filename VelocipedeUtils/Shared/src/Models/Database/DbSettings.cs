@@ -8,13 +8,13 @@ namespace VelocipedeUtils.Shared.Models.Database
         /// <summary>
         /// Name of the database provider (e.g. SQLite, PostgreSQL, MySQL, MS SQL, Oracle)
         /// </summary>
-        public string Provider { get; set; }
+        public required string Provider { get; set; }
 
         /// <summary>
         /// String that contains information aobut a data source (usually a database engine), 
         /// as well as the information necessary to connect to it 
         /// </summary>
-        public string ConnectionString { get; set; }
+        public required string ConnectionString { get; set; }
 
         /// <summary>
         /// Indicates if ORM is necessary to interact with database 
@@ -24,6 +24,6 @@ namespace VelocipedeUtils.Shared.Models.Database
         /// <summary>
         /// Name of the ORM (e.g. EF Core, Dapper)
         /// </summary>
-        public string Orm { get; set; }
+        public required string Orm { get; set; }
     }
 }

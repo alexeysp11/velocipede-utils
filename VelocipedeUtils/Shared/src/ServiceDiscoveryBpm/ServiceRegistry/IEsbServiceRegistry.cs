@@ -1,5 +1,4 @@
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ProcPipes;
-using VelocipedeUtils.Shared.Models.Business.BusinessDocuments;
 using VelocipedeUtils.Shared.Models.Business.Processes;
 using VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
 

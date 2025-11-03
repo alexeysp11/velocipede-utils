@@ -21,6 +21,6 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// Contracts.
         /// </summary>
-        public ICollection<Contract> Contracts { get; private set; }
+        public required ICollection<Contract> Contracts { get; set; }
     }
 }

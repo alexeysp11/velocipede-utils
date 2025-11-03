@@ -10,11 +10,11 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Gets or sets the associated business process state transition.
         /// </summary>
-        public BusinessProcessState BusinessProcessState { get; set; }
+        public required BusinessProcessState BusinessProcessState { get; set; }
 
         /// <summary>
         /// Gets or sets the associated endpoint call.
         /// </summary>
-        public EndpointCall EndpointCall { get; set; }
+        public required EndpointCall EndpointCall { get; set; }
     }
 }

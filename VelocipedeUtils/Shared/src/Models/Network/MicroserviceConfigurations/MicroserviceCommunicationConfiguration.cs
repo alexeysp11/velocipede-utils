@@ -13,17 +13,17 @@ namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations
         /// <summary>
         /// Endpoint which is going to start the communication.
         /// </summary>
-        public Endpoint EndpointFrom { get; set; }
+        public required Endpoint EndpointFrom { get; set; }
 
         /// <summary>
         /// Endpoint that is going to be called.
         /// </summary>
-        public Endpoint EndpointTo { get; set; }
+        public required Endpoint EndpointTo { get; set; }
 
         /// <summary>
         /// Record that stores information about the network interaction.
         /// </summary>
-        public NetworkInteractionDetails NetworkInteractionDetails { get; set; }
+        public required NetworkInteractionDetails NetworkInteractionDetails { get; set; }
         
         /// <summary>
         /// Timout limit.

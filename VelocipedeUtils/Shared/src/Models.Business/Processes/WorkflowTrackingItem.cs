@@ -1,4 +1,3 @@
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.SocialCommunication;
 
 namespace VelocipedeUtils.Shared.Models.Business.Processes
@@ -11,12 +10,12 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Gets or sets the workflow instance associated with this tracking item.
         /// </summary>
-        public WorkflowInstance WorkflowInstance { get; set; }
+        public required WorkflowInstance WorkflowInstance { get; set; }
 
         /// <summary>
         /// Gets or sets the active task within the workflow instance.
         /// </summary>
-        public BusinessTask ActiveTask { get; set; }
+        public required BusinessTask ActiveTask { get; set; }
 
         /// <summary>
         /// Connector for the workflow tracking item.

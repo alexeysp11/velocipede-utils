@@ -1,5 +1,3 @@
-using VelocipedeUtils.Shared.Models.Business;
-
 namespace VelocipedeUtils.Shared.Models.Business.Monetary
 {
     /// <summary>

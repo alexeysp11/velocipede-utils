@@ -102,7 +102,7 @@ INSERT INTO Employees (EmployeeID,FirstName,LastName,HireDate) VALUES ('103','Pe
             resultSql.Should().Be(expectedSql);
         }
 
-        private DataTable InitializeEmployeesDataTable(bool addRows = true)
+        private static DataTable InitializeEmployeesDataTable(bool addRows = true)
         {
             // 1. Create a DataTable instance
             DataTable dtEmployees = new DataTable("Employees");

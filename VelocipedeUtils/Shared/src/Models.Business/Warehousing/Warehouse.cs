@@ -10,12 +10,12 @@ namespace VelocipedeUtils.Shared.Models.Business.Warehousing
         /// <summary>
         /// Organization item related to the warehouse.
         /// </summary>
-        public OrganizationItem OrganizationItem { get; set; }
+        public required OrganizationItem OrganizationItem { get; set; }
 
         /// <summary>
         /// Warehouse items that are stored or related to the warehouse.
         /// </summary>
-        public ICollection<WarehouseItem> WarehouseItems { get; set; }
+        public required ICollection<WarehouseItem> WarehouseItems { get; set; }
 
         /// <summary>
         /// Address of the warehouse.

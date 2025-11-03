@@ -13,18 +13,18 @@ namespace VelocipedeUtils.Shared.Models.Business.Cooking
         /// Initial orders.
         /// </summary>
         [Obsolete("It's better to use InitialOrderCooking object")]
-        public ICollection<InitialOrder> InitialOrders { get; set; }
+        public required ICollection<InitialOrder> InitialOrders { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         [Obsolete("It's better to use InitialOrderProductCooking object")]
-        public ICollection<InitialOrderProduct> InitialOrderProducts { get; set; }
+        public required ICollection<InitialOrderProduct> InitialOrderProducts { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
         [Obsolete("It's better to use InitialOrderIngredientCooking object")]
-        public ICollection<InitialOrderIngredient> InitialOrderIngredients { get; set; }
+        public required ICollection<InitialOrderIngredient> InitialOrderIngredients { get; set; }
     }
 }

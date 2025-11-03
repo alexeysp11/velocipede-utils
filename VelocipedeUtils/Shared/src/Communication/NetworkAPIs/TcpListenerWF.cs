@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 
@@ -76,20 +75,8 @@ namespace VelocipedeUtils.NetworkAPIs
                 this.Listener.Start();
                 while(true)
                 {
-                    // if (IsNeedToPrintStatus)
-                    // {
-                    //     System.Console.Write("[OK] ");
-                    // }
-                    // else
-                    // {
-                    //     IsNeedToPrintStatus = true;
-                    // }
                     GetMessage();
                 }
-            }
-            catch (System.Exception e)
-            {
-                throw e;
             }
             finally
             {
@@ -104,20 +91,15 @@ namespace VelocipedeUtils.NetworkAPIs
         private void GetMessage()
         {
             ReceivedBytes = new byte[256];
-            try
-            {
-                this.Client = this.Listener.AcceptTcpClient();
-                NetworkStream stream = this.Client.GetStream();
+
+            this.Client = this.Listener.AcceptTcpClient();
+            NetworkStream stream = this.Client.GetStream();
                 
-                int msgLength = stream.Read(ReceivedBytes, 0, ReceivedBytes.Length);
+            int msgLength = stream.Read(ReceivedBytes, 0, ReceivedBytes.Length);
                 
-                this.ProcessReceivedBytes(msgLength);
-                stream.Write(ResponseBytes, 0, ResponseBytes.Length);
-            }
-            catch (System.Exception e)
-            {
-                throw e;
-            }
+            this.ProcessReceivedBytes(msgLength);
+            stream.Write(ResponseBytes, 0, ResponseBytes.Length);
+
             ReceivedBytes = new byte[1];
             ResponseBytes = new byte[1];
         }

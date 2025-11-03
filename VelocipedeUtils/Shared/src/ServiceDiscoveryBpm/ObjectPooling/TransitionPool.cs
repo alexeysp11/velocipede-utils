@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using VelocipedeUtils.Shared.Models.Business.Processes;
 
 namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
@@ -10,8 +8,8 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 /// </summary>
 public sealed class TransitionPool
 {
-    private ConcurrentDictionary<long, BusinessProcessStateTransition> m_prev2NextTransitions;
-    private IReadOnlyDictionary<long, BusinessProcessStateTransition> m_cachedPrev2NextTransitions;
+    private ConcurrentDictionary<long, BusinessProcessStateTransition>? m_prev2NextTransitions;
+    private IReadOnlyDictionary<long, BusinessProcessStateTransition>? m_cachedPrev2NextTransitions;
 
     /// <summary>
     /// Cached copy of collection of business process transitions.
@@ -22,7 +20,9 @@ public sealed class TransitionPool
         {
             if (m_cachedPrev2NextTransitions == null)
             {
-                m_cachedPrev2NextTransitions = new Dictionary<long, BusinessProcessStateTransition>(m_prev2NextTransitions);
+                m_cachedPrev2NextTransitions = m_prev2NextTransitions == null
+                    ? new Dictionary<long, BusinessProcessStateTransition>()
+                    : new Dictionary<long, BusinessProcessStateTransition>(m_prev2NextTransitions);
             }
             return m_cachedPrev2NextTransitions;
         }
@@ -44,6 +44,10 @@ public sealed class TransitionPool
     public void AddTransitionToPool(BusinessProcessStateTransition transition)
     {
         var previousId = (transition.Previous == null ? 0 : transition.Previous.Id);
+        
+        if (m_prev2NextTransitions == null)
+            m_prev2NextTransitions = [];
+
         if (!m_prev2NextTransitions.ContainsKey(previousId))
         {
             m_prev2NextTransitions.TryAdd(previousId, transition);
@@ -54,10 +58,13 @@ public sealed class TransitionPool
     /// <summary>
     /// Get next transition from the pool.
     /// </summary>
-    public BusinessProcessStateTransition GetNextTransitionById(long transitionId)
+    public BusinessProcessStateTransition? GetNextTransitionById(long transitionId)
     {
+        m_prev2NextTransitions ??= [];
+
         if (!m_prev2NextTransitions.ContainsKey(transitionId))
             return null;
+
         return m_prev2NextTransitions[transitionId];
     }
 

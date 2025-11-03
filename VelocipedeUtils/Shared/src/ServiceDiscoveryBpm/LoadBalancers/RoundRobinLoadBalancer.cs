@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using VelocipedeUtils.Shared.ServiceDiscoveryBpm.ObjectPooling;
 using VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
 
@@ -25,13 +24,13 @@ public class RoundRobinLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalancer
     /// <summary>
     /// Get the next endpoint in a round-robin manner.
     /// </summary>
-    public string GetNextEndpoint()
+    public string? GetNextEndpoint()
     {
         CheckNullReferences();
 
-        var endpointParameters = m_endpointPool.ActiveEndpointParameters;
+        IReadOnlyList<EndpointCollectionParameter>? endpointParameters = m_endpointPool?.ActiveEndpointParameters;
         if (endpointParameters == null || endpointParameters.Count == 0)
-            throw new System.Exception("Collection of endpoint parameters is null or empty");
+            throw new Exception("Collection of endpoint parameters is null or empty");
 
         EndpointCollectionParameter endpointParameter;
         lock (m_lock)
@@ -44,6 +43,6 @@ public class RoundRobinLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalancer
             endpointParameter = endpointParameters[m_currentIndex];
             m_currentIndex = (m_currentIndex + 1) % endpointParameters.Count;
         }
-        return endpointParameter == null || endpointParameter.Endpoint == null ? string.Empty : endpointParameter.Endpoint.Name;
+        return endpointParameter?.Endpoint?.Name;
     }
 }

@@ -55,7 +55,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats
         /// <summary>
         /// Convert to list of TextDocElement 
         /// </summary>
-        public List<TextDocElement> ConvertFileToTde(string foldername, string filename)
+        public static List<TextDocElement> ConvertFileToTde(string foldername, string filename)
         {
             if (!Directory.Exists(foldername))
                 throw new Exception("Folder does not exist");
@@ -68,7 +68,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats
         /// <summary>
         /// Convert to list of TextDocElement 
         /// </summary>
-        public List<TextDocElement> ConvertFileToTde(string filepath)
+        public static List<TextDocElement> ConvertFileToTde(string filepath)
         {
             if (string.IsNullOrEmpty(filepath))
                 throw new Exception("File name could not be null or empty");
@@ -81,7 +81,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats
         /// <summary>
         /// Convert to list of TextDocElement 
         /// </summary>
-        public List<TextDocElement> ConvertFileToTde(FileInfo file)
+        public static List<TextDocElement> ConvertFileToTde(FileInfo file)
         {
             string content = System.IO.File.ReadAllText(file.FullName);
             if (string.IsNullOrEmpty(content))
@@ -93,7 +93,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats
         /// <summary>
         /// Convert to list of TextDocElement 
         /// </summary>
-        public List<TextDocElement> ConvertStringToTde(string xmlContent)
+        public static List<TextDocElement> ConvertStringToTde(string xmlContent)
         {
             if (string.IsNullOrEmpty(xmlContent))
                 throw new Exception("XML content could not be empty");

@@ -7,7 +7,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Reporting
     {
         public string? Layout { get; set; }
         public byte[]? TemplateContent { get; set; }
-        public DateTime? DateCreated { get; set; }
         public int? Width { get; set; }
         public int? Height { get; set; }
         public int? MarginTop { get; set; }

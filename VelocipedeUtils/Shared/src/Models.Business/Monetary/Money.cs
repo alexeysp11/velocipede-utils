@@ -97,7 +97,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Monetary
         }
 
         /// <summary>
-        /// 
+        /// Get currency.
         /// </summary>
         public string GetCurrency()
         {
@@ -105,11 +105,12 @@ namespace VelocipedeUtils.Shared.Models.Business.Monetary
         }
 
         /// <summary>
-        /// 
+        /// Get fraction format.
         /// </summary>
-        private void CheckFractionFormat(int fraction)
+        private static void CheckFractionFormat(int fraction)
         {
-            if (fraction < 0 || fraction > 99) throw new System.Exception("Fraction could not be less than 0 and begger than 99");
+            if (fraction < 0 || fraction > 99)
+                throw new System.Exception("Fraction could not be less than 0 and begger than 99");
         }
     }
 }

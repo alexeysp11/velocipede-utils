@@ -1,4 +1,3 @@
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 
 namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
@@ -16,6 +15,6 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Creation author.
         /// </summary>
-        public UserAccount AuthorCreated { get; set; }
+        public required UserAccount AuthorCreated { get; set; }
     }
 }

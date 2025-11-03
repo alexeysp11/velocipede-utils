@@ -38,12 +38,12 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// 
         /// </summary>
-        public ICollection<string> RecipientIDs { get; set; }
+        public required ICollection<string> RecipientIDs { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public virtual ICollection<UserAccount> Recipients { get; set; }
+        public virtual required ICollection<UserAccount> Recipients { get; set; }
 
         /// <summary>
         /// Date the business entity was sent.
@@ -58,6 +58,6 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// 
         /// </summary>
-        public virtual UserAccount Sender { get; set; }
+        public virtual required UserAccount Sender { get; set; }
     }
 }

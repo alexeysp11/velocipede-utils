@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using VelocipedeUtils.Shared.Models.Business;
 using VelocipedeUtils.Shared.Models.Business.InformationSystem;
 
 namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
@@ -37,6 +35,6 @@ namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
         /// <summary>
         /// Comments.
         /// </summary>
-        public ICollection<Comment> Comments { get; set; }
+        public required ICollection<Comment> Comments { get; set; }
     }
 }

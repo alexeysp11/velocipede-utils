@@ -8,12 +8,12 @@ namespace VelocipedeUtils.Shared.Models.Network
         /// <summary>
         /// From.
         /// </summary>
-        public string From { get; set; }
+        public required string From { get; set; }
         
         /// <summary>
         /// SMTP server.
         /// </summary>
-        public string SmtpServer { get; set; }
+        public required string SmtpServer { get; set; }
         
         /// <summary>
         /// Port.
@@ -23,11 +23,11 @@ namespace VelocipedeUtils.Shared.Models.Network
         /// <summary>
         /// User name.
         /// </summary>
-        public string UserName { get; set; }
+        public required string UserName { get; set; }
         
         /// <summary>
         /// Password.
         /// </summary>
-        public string Password { get; set; }
+        public required string Password { get; set; }
     }
 }

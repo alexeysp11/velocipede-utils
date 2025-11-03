@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
         /// <summary>
         /// Managers who rated employee performance.
         /// </summary>
-        public ICollection<Employee> Managers { get; set; }
+        public required ICollection<Employee> Managers { get; set; }
 
         /// <summary>
         /// Employee.

@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using VelocipedeUtils.Shared.Models.Business;
-
 namespace VelocipedeUtils.Shared.Models.Business.Processes
 {
     /// <summary>
@@ -11,6 +8,6 @@ namespace VelocipedeUtils.Shared.Models.Business.Processes
         /// <summary>
         /// Collection of business diagram elements.
         /// </summary>
-        public ICollection<BusinessDiagramElement> Elements { get; set; }
+        public required ICollection<BusinessDiagramElement> Elements { get; set; }
     }
 }

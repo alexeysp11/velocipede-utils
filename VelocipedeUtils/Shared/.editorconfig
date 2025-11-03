@@ -1,16 +1,31 @@
 ﻿[*.cs]
 
+# IDE0001: Simplify Names
+dotnet_diagnostic.IDE0001.severity = warning
+
+# IDE0003: Remove qualification
+dotnet_diagnostic.IDE0003.severity = warning
+
 # IDE0005: Using directive is unnecessary.
 dotnet_diagnostic.IDE0005.severity = error
 
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = warning
+
 # IDE0044: Add readonly modifier
-dotnet_diagnostic.IDE0044.severity = warning
+dotnet_diagnostic.IDE0044.severity = error
+
+# IDE0051: Remove unused private members
+dotnet_diagnostic.IDE0051.severity = error
 
 # IDE0059: Unnecessary assignment of a value.
 dotnet_diagnostic.IDE0059.severity = error
 
 # IDE0060: Remove unused parameter
 dotnet_diagnostic.IDE0060.severity = error
+
+# IDE0074: Use compound assignment
+dotnet_diagnostic.IDE0074.severity = warning
 
 # CA1008: Enums should have zero value
 dotnet_diagnostic.CA1008.severity = error
@@ -35,6 +50,9 @@ dotnet_diagnostic.CA1829.severity = error
 
 # CA2200: Rethrow to preserve stack details
 dotnet_diagnostic.CA2200.severity = error
+
+# CS0108: Member hides inherited member; missing new keyword
+dotnet_diagnostic.CS0108.severity = error
 
 # CS8600: Converting null literal or possible null value to non-nullable type.
 dotnet_diagnostic.CS8600.severity = error

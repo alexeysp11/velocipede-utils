@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.Models.Business.Products
         /// <summary>
         /// Products.
         /// </summary>
-        public ICollection<Product> Products { get; set; }
+        public required ICollection<Product> Products { get; set; }
         
         /// <summary>
         /// Picture URL.
