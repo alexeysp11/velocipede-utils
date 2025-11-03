@@ -4,6 +4,7 @@ using Moq;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.Tests.Core.Compare;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 {
@@ -136,10 +137,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             ];
 
             // Foreign keys.
-            _tableForeignKeys3 = [new() { ForeignKeyId = 1, ConstraintName = "FakeForeignKey", FromColumn = "FromColumn", ToColumn = "ToColumn" }];
+            _tableForeignKeys3 = [new() { ForeignKeyId = 1, ConstraintName = "FakeForeignKey.Table3", FromColumn = "FromColumn", ToColumn = "ToColumn" }];
 
             // Triggers.
-            _tableTriggers1 = [new() { TriggerName = "Fake trigger", TriggerSchema = "FakeTriggerSchema", TriggerCatalog = "FakeTriggerCatalog", SqlDefinition = "FAKE TRIGGER SQL", DateCreated = DateTime.UtcNow }];
+            _tableTriggers1 = [new() { TriggerName = "Fake trigger.Table1", TriggerSchema = "FakeTriggerSchema", TriggerCatalog = "FakeTriggerCatalog", SqlDefinition = "FAKE TRIGGER SQL", DateCreated = DateTime.UtcNow }];
         }
 
         [Fact]
@@ -294,6 +295,22 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
 
             // Assert.
             foreachResult.Should().NotBeNull();
+            foreachResult.Result.Should().NotBeNull();
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_1].Data, _tableList1.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_2].Data, _tableList2.ToDataTable());
+            DataTableCompareHelper.AreDataTablesEquivalent(foreachResult.Result[TABLE_NAME_3].Data, _tableList3.ToDataTable());
+            foreachResult.Result[TABLE_NAME_1].ColumnInfo.Should().BeEquivalentTo(_tableColumns1);
+            foreachResult.Result[TABLE_NAME_2].ColumnInfo.Should().BeEquivalentTo(_tableColumns2);
+            foreachResult.Result[TABLE_NAME_3].ColumnInfo.Should().BeEquivalentTo(_tableColumns3);
+            foreachResult.Result[TABLE_NAME_1].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_2].ForeignKeyInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].ForeignKeyInfo.Should().BeEquivalentTo(_tableForeignKeys3);
+            foreachResult.Result[TABLE_NAME_1].TriggerInfo.Should().BeEquivalentTo(_tableTriggers1);
+            foreachResult.Result[TABLE_NAME_2].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_3].TriggerInfo.Should().BeNull();
+            foreachResult.Result[TABLE_NAME_1].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_1);
+            foreachResult.Result[TABLE_NAME_2].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_2);
+            foreachResult.Result[TABLE_NAME_3].SqlDefinition.Should().Be(TABLE_SQL_DEFINITION_3);
         }
 
         [Fact]
@@ -484,15 +501,29 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
                 .Returns(mockConnection.Object);
 
             // Foreign keys.
+            List<VelocipedeForeignKeyInfo>? nullForeignKeys = null;
             List<VelocipedeForeignKeyInfo> foreignKeys3 = _tableForeignKeys3;
+            mockConnection
+                .Setup(x => x.GetForeignKeys(TABLE_NAME_1, out nullForeignKeys))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetForeignKeys(TABLE_NAME_2, out nullForeignKeys))
+                .Returns(mockConnection.Object);
             mockConnection
                 .Setup(x => x.GetForeignKeys(TABLE_NAME_3, out foreignKeys3))
                 .Returns(mockConnection.Object);
 
             // Triggers.
             List<VelocipedeTriggerInfo> triggers1 = _tableTriggers1;
+            List<VelocipedeTriggerInfo>? nullTriggers = null;
             mockConnection
                 .Setup(x => x.GetTriggers(TABLE_NAME_1, out triggers1))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetTriggers(TABLE_NAME_2, out nullTriggers))
+                .Returns(mockConnection.Object);
+            mockConnection
+                .Setup(x => x.GetTriggers(TABLE_NAME_3, out nullTriggers))
                 .Returns(mockConnection.Object);
 
             // SQL definition.
