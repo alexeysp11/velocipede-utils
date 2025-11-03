@@ -1,14 +1,19 @@
 ﻿namespace VelocipedeUtils.Shared.DbOperations.Enums
 {
+    /// <summary>
+    /// Database type.
+    /// </summary>
     public enum DatabaseType
     {
         None = 0,
-        SQLite = 1,
-        PostgreSQL = 2,
-        MSSQL = 3,
-        MySQL = 4,
-        MariaDB = 5,
-        HSQLDB = 6,
-        Oracle = 7
+        InMemory = 1,
+        SQLite = 2,
+        PostgreSQL = 3,
+        MSSQL = 4,
+        MySQL = 5,
+        MariaDB = 6,
+        HSQLDB = 7,
+        Oracle = 8,
+        Clickhouse = 9,
     }
 }

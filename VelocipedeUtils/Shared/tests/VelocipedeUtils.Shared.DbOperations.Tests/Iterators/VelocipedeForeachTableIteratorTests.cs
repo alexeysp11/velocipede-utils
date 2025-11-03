@@ -564,9 +564,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             var mockConnection = new Mock<IVelocipedeDbConnection>();
 
             // Properties.
-            mockConnection
-                .Setup(x => x.IsConnected)
-                .Returns(isConnected);
+            mockConnection.Setup(x => x.IsConnected).Returns(isConnected);
+            mockConnection.Setup(x => x.DatabaseType).Returns(Enums.DatabaseType.InMemory);
 
             // Data.
             DataTable table1 = _tableList1.ToDataTable();
