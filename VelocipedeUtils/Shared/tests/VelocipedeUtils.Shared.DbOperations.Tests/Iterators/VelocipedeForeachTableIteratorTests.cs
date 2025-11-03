@@ -296,6 +296,129 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             foreachResult.Should().NotBeNull();
         }
 
+        [Fact]
+        public void GetForeachResult_ReopenForeachLoop()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetAllDataFromTable()
+                    .GetColumns()
+                    .GetForeignKeys()
+                    .GetTriggers()
+                    .GetSqlDefinition()
+                .EndForeach()
+                .BeginForeach()
+                    .GetColumns()
+                    .GetTriggers()
+                    .GetSqlDefinition()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetAllDataFromTable()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetAllDataFromTable()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetColumns()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetColumns()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetForeignKeys()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetForeignKeys()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetTriggers()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetTriggers()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void GetForeachResult_GetSqlDefinition()
+        {
+            // Arrange.
+            IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
+            List<string> tableNames = GetTableNames();
+
+            // Act.
+            connection
+                .WithForeachTableIterator(tableNames)
+                .BeginForeach()
+                    .GetSqlDefinition()
+                .EndForeach()
+                .GetForeachResult(out VelocipedeForeachResult? foreachResult);
+
+            // Assert.
+            foreachResult.Should().NotBeNull();
+        }
+
         /// <summary>
         /// Get null object instead of <see cref="IVelocipedeDbConnection"/>.
         /// </summary>

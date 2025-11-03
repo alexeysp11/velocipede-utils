@@ -65,6 +65,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
         /// <inheritdoc/>
         public IVelocipedeForeachTableIterator BeginForeach()
         {
+            _operationTypes.Clear();
             _allowAddOperationTypes = true;
             return this;
         }
