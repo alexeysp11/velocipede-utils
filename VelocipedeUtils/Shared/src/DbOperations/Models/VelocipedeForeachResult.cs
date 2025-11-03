@@ -18,7 +18,7 @@
         public void Add(string tableName, VelocipedeForeachTableInfo info)
         {
             if (Result == null)
-                Result = new Dictionary<string, VelocipedeForeachTableInfo>();
+                Result = [];
 
             if (Result.ContainsKey(tableName))
             {
@@ -37,7 +37,7 @@
         public void Remove(string tableName)
         {
             if (Result == null)
-                Result = new Dictionary<string, VelocipedeForeachTableInfo>();
+                Result = [];
             
             if (Result.ContainsKey(tableName))
             {

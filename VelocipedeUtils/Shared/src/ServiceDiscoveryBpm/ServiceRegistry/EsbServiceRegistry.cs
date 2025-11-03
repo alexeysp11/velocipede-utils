@@ -95,7 +95,7 @@ public class EsbServiceRegistry : IEsbServiceRegistry
         string taskName)
     {
         if (string.IsNullOrEmpty(processName))
-            throw new System.ArgumentNullException(nameof(processName));
+            throw new ArgumentNullException(nameof(processName));
         
         // Get business process.
         var process = m_businessProcessDAL.GetBusinessProcessByName(processName);
@@ -122,9 +122,9 @@ public class EsbServiceRegistry : IEsbServiceRegistry
         bool isNextTask = true)
     {
         if (workflowInstance == null)
-            throw new System.ArgumentNullException(nameof(workflowInstance));
+            throw new ArgumentNullException(nameof(workflowInstance));
         if (string.IsNullOrEmpty(taskName))
-            throw new System.ArgumentNullException(nameof(taskName));
+            throw new ArgumentNullException(nameof(taskName));
         
         // Get business state by transition ID.
         BusinessProcessState? processState = null;

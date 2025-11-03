@@ -100,7 +100,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats
 
             // 
 
-            return new List<TextDocElement>();
+            return [];
         }
         #endregion  // Convert to list of TextDocElement 
     }

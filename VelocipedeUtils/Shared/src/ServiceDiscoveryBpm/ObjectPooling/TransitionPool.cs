@@ -21,7 +21,7 @@ public sealed class TransitionPool
             if (m_cachedPrev2NextTransitions == null)
             {
                 m_cachedPrev2NextTransitions = m_prev2NextTransitions == null
-                    ? new Dictionary<long, BusinessProcessStateTransition>()
+                    ? []
                     : new Dictionary<long, BusinessProcessStateTransition>(m_prev2NextTransitions);
             }
             return m_cachedPrev2NextTransitions;

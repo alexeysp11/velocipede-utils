@@ -16,9 +16,9 @@ public abstract class BaseEsbLoadBalancer
     public void UpdateEndpoints(EndpointCollectionParameter endpointParameter)
     {
         if (endpointParameter == null)
-            throw new System.ArgumentNullException(nameof(endpointParameter));
+            throw new ArgumentNullException(nameof(endpointParameter));
         if (endpointParameter.Endpoint == null)
-            throw new System.ArgumentNullException(nameof(endpointParameter.Endpoint));
+            throw new ArgumentNullException(nameof(endpointParameter.Endpoint));
         
         CheckNullReferences();
 
@@ -31,7 +31,7 @@ public abstract class BaseEsbLoadBalancer
     public EndpointCollectionParameter GetEndpointFromPool(string endpoint)
     {
         if (string.IsNullOrEmpty(endpoint))
-            throw new System.ArgumentNullException(nameof(endpoint));
+            throw new ArgumentNullException(nameof(endpoint));
         
         CheckNullReferences();
 
@@ -72,7 +72,7 @@ public abstract class BaseEsbLoadBalancer
     private protected void CheckNullReferences()
     {
         if (m_endpointPool == null)
-            throw new System.ArgumentNullException(nameof(m_endpointPool));
+            throw new ArgumentNullException(nameof(m_endpointPool));
         
         var endpointParameters = m_endpointPool.EndpointParameters;
         if (endpointParameters == null || endpointParameters.Count == 0)
