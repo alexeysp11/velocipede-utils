@@ -112,7 +112,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Execute SQL command and get <see cref="DataTable"/> object as a result.
         /// </summary>
-        public IVelocipedeDbConnection QueryDataTable(
+        IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             Func<dynamic, bool>? predicate,
@@ -144,7 +144,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query to get <see cref="List{T}"/>.
         /// </summary>
-        public IVelocipedeDbConnection Query<T>(
+        IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             Func<T, bool>? predicate,
