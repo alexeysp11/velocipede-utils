@@ -1,5 +1,8 @@
 ﻿namespace VelocipedeUtils.Shared.DbOperations.Constants
 {
+    /// <summary>
+    /// Error message constants.
+    /// </summary>
     public static class ErrorMessageConstants
     {
         public const string ConnectionStringShouldNotBeNullOrEmpty = "Connection string should not be null or empty";

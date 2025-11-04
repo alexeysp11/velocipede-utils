@@ -13,6 +13,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="databaseName">Database name.</param>
+        /// <param name="connectionString">Resulting connection string.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
         public static IVelocipedeDbConnection GetConnectionString(
             this IVelocipedeDbConnection connection,
             string databaseName,
@@ -32,7 +36,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Set connection string.
         /// </summary>
-        public static IVelocipedeDbConnection SetConnectionString(this IVelocipedeDbConnection connection, string? connectionString)
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="connectionString">Connection string to be set.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection SetConnectionString(
+            this IVelocipedeDbConnection connection,
+            string? connectionString)
         {
             connection.ConnectionString = connectionString;
             return connection;
@@ -41,7 +50,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get database name from the active connection string.
         /// </summary>
-        public static string? GetActiveDatabaseName(this IVelocipedeDbConnection connection)
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static string? GetActiveDatabaseName(
+            this IVelocipedeDbConnection connection)
         {
             connection.GetActiveDatabaseName(out string? dbName);
             return dbName;
@@ -50,7 +62,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get database name from the active connection string.
         /// </summary>
-        public static IVelocipedeDbConnection GetActiveDatabaseName(this IVelocipedeDbConnection connection, out string? dbName)
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="dbName">Resulting database name.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection GetActiveDatabaseName(
+            this IVelocipedeDbConnection connection,
+            out string? dbName)
         {
             dbName = connection.DatabaseType switch
             {
@@ -66,7 +83,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Create database if not exists.
         /// </summary>
-        public static IVelocipedeDbConnection CreateDbIfNotExists(this IVelocipedeDbConnection connection)
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection CreateDbIfNotExists(
+            this IVelocipedeDbConnection connection)
         {
             if (!connection.DbExists())
             {
@@ -78,7 +98,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Create the specified database.
         /// </summary>
-        public static IVelocipedeDbConnection CreateDb(this IVelocipedeDbConnection connection, string dbName)
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="dbName">Database name.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection CreateDb(
+            this IVelocipedeDbConnection connection,
+            string dbName)
         {
             return connection
                 .OpenDbIfNotConnected()
@@ -90,7 +115,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Preserve already existing connection, and open database only if necessary.
         /// </summary>
-        public static IVelocipedeDbConnection OpenDbIfNotConnected(this IVelocipedeDbConnection connection)
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection OpenDbIfNotConnected(
+            this IVelocipedeDbConnection connection)
         {
             if (!connection.IsConnected)
                 connection.OpenDb();
@@ -100,7 +128,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Switch to the specified database.
         /// </summary>
-        public static IVelocipedeDbConnection SwitchDb(this IVelocipedeDbConnection connection, string dbName)
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="dbName">Database name.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection SwitchDb(
+            this IVelocipedeDbConnection connection,
+            string dbName)
         {
             return connection.SwitchDb(dbName, out _);
         }
@@ -108,8 +141,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get all data from the table.
         /// </summary>
-        /// <param name="tableName">Table name</param>
-        public static IVelocipedeDbConnection GetAllDataFromTable(
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="tableName">Table name.</param>
+        /// <param name="dtResult">Resulting object of <see cref="DataTable"/>.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection GetAllData(
             this IVelocipedeDbConnection connection,
             string tableName,
             out DataTable dtResult)
@@ -121,8 +157,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Get all data from the table.
         /// </summary>
-        /// <param name="tableName">Table name</param>
-        public static IVelocipedeDbConnection GetAllDataFromTable<T>(
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="tableName">Table name.</param>
+        /// <param name="result">Resulting <see cref="List{T}"/>.</param>
+        /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+        public static IVelocipedeDbConnection GetAllData<T>(
             this IVelocipedeDbConnection connection,
             string tableName,
             out List<T> result)
@@ -132,8 +171,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
-        /// Gets SQL definition of the DataTable object.
+        /// Gets SQL definition of the specified <see cref="DataTable"/> object.
         /// </summary>
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="dt"><see cref="DataTable"/> object which is used to construct SQL query.</param>
+        /// <param name="tableName">Expected name of a created table.</param>
+        /// <returns>SQL for creating a database table that has the same structure as the specified <see cref="DataTable"/> object.</returns>
         public static string GetSqlFromDataTable(
 #pragma warning disable IDE0060 // Remove unused parameter
             this IVelocipedeDbConnection connection,

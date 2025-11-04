@@ -531,7 +531,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
             dbConnection
                 .OpenDb()
-                .GetAllDataFromTable("\"TestModels\"", out DataTable result)
+                .GetAllData("\"TestModels\"", out DataTable result)
                 .CloseDb();
 
             // Assert.
@@ -560,7 +560,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
             dbConnection
                 .OpenDb()
-                .GetAllDataFromTable("\"TestModels\"", out List<TestModel> result)
+                .GetAllData("\"TestModels\"", out List<TestModel> result)
                 .CloseDb();
 
             // Assert.
@@ -576,7 +576,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.GetAllDataFromTable("\"TestModels\"", out _);
+            Action act = () => dbConnection.GetAllData("\"TestModels\"", out _);
 
             // Act & Assert.
             act
@@ -592,7 +592,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             string connectionString = Guid.NewGuid().ToString();
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.GetAllDataFromTable("\"TestModels\"", out _);
+            Action act = () => dbConnection.GetAllData("\"TestModels\"", out _);
 
             // Act & Assert.
             act
@@ -610,7 +610,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             dbConnection.SetConnectionString(connectionString);
-            Action act = () => dbConnection.GetAllDataFromTable("\"TestModels\"", out _);
+            Action act = () => dbConnection.GetAllData("\"TestModels\"", out _);
 
             // Act & Assert.
             act

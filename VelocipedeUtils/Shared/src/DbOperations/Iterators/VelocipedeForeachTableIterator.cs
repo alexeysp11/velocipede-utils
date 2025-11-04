@@ -6,19 +6,19 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 namespace VelocipedeUtils.Shared.DbOperations.Iterators
 {
     /// <summary>
-    /// Iterator for the foreach operation.
+    /// Iterator for the <c>foreach</c> operation.
     /// </summary>
     public sealed class VelocipedeForeachTableIterator : IVelocipedeForeachTableIterator
     {
         /// <summary>
-        /// Type of the foreach operation for the table.
+        /// Type of the <c>foreach</c> operation for the table.
         /// </summary>
         private enum ForeachTableOperationType
         {
             /// <summary>
             /// Get all data from table.
             /// </summary>
-            GetAllDataFromTable,
+            GetAllData,
 
             /// <summary>
             /// Get columns from table.
@@ -46,6 +46,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
         private readonly Dictionary<ForeachTableOperationType, bool> _operationTypes;
         private bool _allowAddOperationTypes;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VelocipedeForeachTableIterator"/> class with specified parameters.
+        /// </summary>
+        /// <param name="connection">Instance of <see cref="IVelocipedeDbConnection"/> that is connected to database.</param>
+        /// <param name="tableNames"><see cref="List{T}"/> of <see cref="string"/> that contains valid table names.</param>
+        /// <exception cref="ArgumentNullException">When <c>connection</c>, or <c>tableNames</c> is null.</exception>
+        /// <exception cref="ArgumentException">When <c>connection.IsConnected</c> equals to <c>false</c>, or <c>tableNames.Count == 0</c>.</exception>
         public VelocipedeForeachTableIterator(IVelocipedeDbConnection connection, List<string> tableNames)
         {
             ArgumentNullException.ThrowIfNull(connection, nameof(connection));
@@ -104,8 +111,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
                 {
                     switch (operation)
                     {
-                        case ForeachTableOperationType.GetAllDataFromTable:
-                            _connection.GetAllDataFromTable(tableName, out DataTable? dataTable);
+                        case ForeachTableOperationType.GetAllData:
+                            _connection.GetAllData(tableName, out DataTable? dataTable);
                             tableInfo.Data = dataTable;
                             break;
 
@@ -140,9 +147,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator GetAllDataFromTable()
+        public IVelocipedeForeachTableIterator GetAllData()
         {
-            TryAddOperationType(ForeachTableOperationType.GetAllDataFromTable);
+            TryAddOperationType(ForeachTableOperationType.GetAllData);
             return this;
         }
 

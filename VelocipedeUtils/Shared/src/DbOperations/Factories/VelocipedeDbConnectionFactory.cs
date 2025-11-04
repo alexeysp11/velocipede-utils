@@ -4,13 +4,16 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 namespace VelocipedeUtils.Shared.DbOperations.Factories
 {
     /// <summary>
-    /// Class for creating database connections.
+    /// Factory for creating database connections.
     /// </summary>
     public static class VelocipedeDbConnectionFactory
     {
         /// <summary>
         /// Initialize database connection.
         /// </summary>
+        /// <param name="databaseType">Database type (currently, accepts only <see cref="DatabaseType.SQLite"/>, <see cref="DatabaseType.PostgreSQL"/> and <see cref="DatabaseType.MSSQL"/>).</param>
+        /// <param name="connectionString">Specified connection string.</param>
+        /// <returns>A new instance of <see cref="IVelocipedeDbConnection"/>.</returns>
         public static IVelocipedeDbConnection InitializeDbConnection(DatabaseType databaseType, string? connectionString = null)
         {
             return databaseType switch

@@ -285,7 +285,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             connection
                 .WithForeachTableIterator(tableNames)
                 .BeginForeach()
-                    .GetAllDataFromTable()
+                    .GetAllData()
                     .GetColumns()
                     .GetForeignKeys()
                     .GetTriggers()
@@ -324,7 +324,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             connection
                 .WithForeachTableIterator(tableNames)
                 .BeginForeach()
-                    .GetAllDataFromTable()
+                    .GetAllData()
                     .GetColumns()
                     .GetForeignKeys()
                     .GetTriggers()
@@ -368,7 +368,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators
             connection
                 .WithForeachTableIterator(tableNames)
                 .BeginForeach()
-                    .GetAllDataFromTable()
+                    .GetAllData()
                 .EndForeach()
                 .GetForeachResult(out VelocipedeForeachResult? foreachResult);
 

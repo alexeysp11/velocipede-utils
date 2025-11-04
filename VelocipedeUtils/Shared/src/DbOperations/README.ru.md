@@ -25,8 +25,8 @@ using IVelocipedeDbConnection dbConnection
 
 dbConnection
     .OpenDb()
-    .GetAllDataFromTable(tableName, out DataTable dtData)       // You can get result as DataTable,
-    .GetAllDataFromTable(tableName, out List<Table1> listData)  // or as List<T>.
+    .GetAllData(tableName, out DataTable dtData)       // You can get result as DataTable,
+    .GetAllData(tableName, out List<Table1> listData)  // or as List<T>.
     .GetColumnsOfTable(tableName, out List<VelocipedeColumnInfo> columnInfo)
     .GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
     .GetTriggers(tableName, out List<VelocipedeTriggerInfo> triggerInfo)
@@ -34,7 +34,7 @@ dbConnection
     .CloseDb();
 ```
 
-Данная библиотека предоставляет функционал для коммуникации с реляционными базами данных с использованием ADO.NET и Dapper. Информация о типах БД, которые поддерживаются на текущий момент:
+Данная библиотека предоставляет функционал для коммуникации с реляционными базами данных с использованием ADO.NET и Dapper под капотом. Информация о типах БД, которые поддерживаются на текущий момент:
 - [x] [SQLite](https://sqlite.org/)
 - [x] [PostgreSQL](https://www.postgresql.org/)
 - [x] [MS SQL](https://www.microsoft.com/en-us/sql-server)
@@ -82,7 +82,7 @@ dbConnection
     .GetTablesInDb(out List<string> tables)
     .WithForeachTableIterator(tables)
     .BeginForeach()
-        .GetAllDataFromTable()
+        .GetAllData()
         .GetColumns()
         .GetForeignKeys()
         .GetTriggers()

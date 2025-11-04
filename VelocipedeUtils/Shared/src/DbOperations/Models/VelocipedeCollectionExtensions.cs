@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace VelocipedeUtils.Shared.DbOperations.Models
 {
+    /// <summary>
+    /// Extensions for working with collections.
+    /// </summary>
     public static class VelocipedeCollectionExtensions
     {
         /// <summary>

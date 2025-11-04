@@ -35,7 +35,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
             Action act = () => converter.TextToImg(text, foldername, filename);
 
             // Assert 
-            System.Exception exception = Assert.Throws<System.Exception>(act);
+            Exception exception = Assert.Throws<Exception>(act);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
             Action act = () => converter.TextToImg(Text, foldername, filename);
 
             // Assert 
-            System.Exception exception = Assert.Throws<System.Exception>(act);
+            Exception exception = Assert.Throws<Exception>(act);
         }
 
         [Fact]
@@ -67,7 +67,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
             Action act = () => converter.TextToImg(Text, FolderName, filename);
 
             // Assert 
-            System.Exception exception = Assert.Throws<System.Exception>(act);
+            Exception exception = Assert.Throws<Exception>(act);
         }
 
         [Fact]

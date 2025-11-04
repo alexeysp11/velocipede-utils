@@ -1,9 +1,10 @@
 ﻿using System.Data;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 
 namespace VelocipedeUtils.Shared.DbOperations.Models
 {
     /// <summary>
-    /// The result of executing the foreach operation for a specific database table.
+    /// The result of executing the <c>foreach</c> operation for a specific database table.
     /// </summary>
     public class VelocipedeForeachTableInfo
     {
@@ -13,7 +14,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Models
         public required string TableName { get; set; }
 
         /// <summary>
-        /// All data in the table.
+        /// Data obtained as a result of executing the query 
+        /// <see cref="IVelocipedeDbConnectionExtensions.GetAllData(IVelocipedeDbConnection, string, out DataTable)"/>.
         /// </summary>
         public DataTable? Data { get; set; }
 
