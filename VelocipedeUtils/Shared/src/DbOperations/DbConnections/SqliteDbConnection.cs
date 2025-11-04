@@ -14,9 +14,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public sealed class SqliteDbConnection : IVelocipedeDbConnection
     {
+        /// <inheritdoc/>
         public string? ConnectionString { get; set; }
+
+        /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.SQLite;
+
+        /// <inheritdoc/>
         public string DatabaseName => GetDatabaseName(ConnectionString);
+
+        /// <inheritdoc/>
         public bool IsConnected => _connection != null;
 
         private SqliteConnection? _connection;
@@ -26,6 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             ConnectionString = connectionString;
         }
 
+        /// <inheritdoc/>
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -48,6 +56,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
@@ -70,6 +79,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection OpenDb()
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -94,10 +104,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
-        /// <summary>
-        /// Switch to the specified database and get new connection string.
-        /// </summary>
-        public IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection SwitchDb(
+            string? dbName,
+            out string connectionString)
         {
             if (string.IsNullOrEmpty(dbName))
                 throw new VelocipedeDbNameException();
@@ -105,9 +115,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             try
             {
                 // Change connection string.
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = ConnectionString;
-                connectionStringBuilder.DataSource = dbName;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    ConnectionString = ConnectionString ?? "",
+                    DataSource = dbName
+                };
                 connectionString = connectionStringBuilder.ConnectionString;
                 ConnectionString = connectionString;
 
@@ -130,6 +142,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CloseDb()
         {
             if (_connection != null)
@@ -141,6 +154,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
             string sql = @"
@@ -154,7 +168,10 @@ ORDER BY 1";
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetColumns(
+            string tableName,
+            out List<VelocipedeColumnInfo> columnInfo)
         {
             tableName = tableName.Trim('"');
             string sql = @$"
@@ -170,7 +187,10 @@ FROM pragma_table_info('{tableName}');";
             return this;
         }
 
-        public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetForeignKeys(
+            string tableName,
+            out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             tableName = tableName.Trim('"');
 
@@ -196,6 +216,7 @@ FROM pragma_table_info('{tableName}');";
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
             tableName = tableName.Trim('"');
@@ -212,6 +233,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
@@ -219,16 +241,19 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
         {
             return QueryDataTable(
@@ -237,6 +262,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -249,6 +275,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -260,12 +287,16 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
             return Execute(sqlRequest, null);
         }
 
-        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Execute(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -311,12 +342,19 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
-        public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            out List<T> result)
         {
             return Query(sqlRequest, null, out result);
         }
 
-        public IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out List<T> result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out List<T> result)
         {
             return Query(
                 sqlRequest,
@@ -325,6 +363,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -378,7 +417,10 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            out T? result)
         {
             return QueryFirstOrDefault(
                 sqlRequest,
@@ -386,6 +428,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -435,6 +478,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -453,17 +497,23 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         /// <summary>
         /// Check if the specified database file path is valid.
         /// </summary>
+        /// <param name="path">Database file path.</param>
+        /// <returns><c>true</c> if database file exists; otherwise, <c>false</c>.</returns>
         public static bool IsDatabaseFilePathValid(string path) => File.Exists(path);
 
         /// <summary>
         /// Get database file path by connection string.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns>Database file path.</returns>
         public static string GetDatabaseName(string? connectionString)
         {
             try
             {
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    ConnectionString = connectionString
+                };
                 return connectionStringBuilder.DataSource;
             }
             catch (Exception ex)
@@ -475,12 +525,16 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         /// <summary>
         /// Get connection string by database file path.
         /// </summary>
+        /// <param name="path">Database file path.</param>
+        /// <returns>New connection string.</returns>
         public static string GetConnectionString(string path)
         {
             try
             {
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.DataSource = path;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    DataSource = path
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -492,13 +546,18 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         /// <summary>
         /// Get connection string by database file path.
         /// </summary>
+        /// <param name="connectionString">Old connection string.</param>
+        /// <param name="path">Database file path.</param>
+        /// <returns>New connection string.</returns>
         public static string GetConnectionString(string connectionString, string path)
         {
             try
             {
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
-                connectionStringBuilder.DataSource = path;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    ConnectionString = connectionString,
+                    DataSource = path
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -507,6 +566,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             CloseDb();

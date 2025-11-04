@@ -189,6 +189,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query to get <see cref="List{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
         /// <param name="sqlRequest">SQL query.</param>
         /// <param name="result"><see cref="List{T}"/> that contains the result of the executed query.</param>
         /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
@@ -199,6 +200,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query to get <see cref="List{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
         /// <param name="sqlRequest">SQL query.</param>
         /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
         /// <param name="result"><see cref="List{T}"/> that contains the result of the executed query.</param>
@@ -211,6 +213,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query to get <see cref="List{T}"/>.
         /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
         /// <param name="sqlRequest">SQL query.</param>
         /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
         /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
@@ -225,6 +228,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query first or default object.
         /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
         /// <param name="sqlRequest">SQL query.</param>
         /// <param name="result">Result of the query.</param>
         /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
@@ -235,6 +239,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query first or default object.
         /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
         /// <param name="sqlRequest">SQL query.</param>
         /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
         /// <param name="result">Result of the query.</param>
@@ -247,6 +252,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Query first or default object.
         /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
         /// <param name="sqlRequest">SQL query.</param>
         /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
         /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>

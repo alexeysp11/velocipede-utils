@@ -16,9 +16,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     {
         private NpgsqlConnection? _connection;
 
+        /// <inheritdoc/>
         public string? ConnectionString { get; set; }
+
+        /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+
+        /// <inheritdoc/>
         public string? DatabaseName => GetDatabaseName(ConnectionString);
+
+        /// <inheritdoc/>
         public bool IsConnected => _connection != null;
 
         public PgDbConnection(string? connectionString = null)
@@ -26,6 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             ConnectionString = connectionString;
         }
 
+        /// <inheritdoc/>
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -55,6 +63,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return true;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
@@ -75,6 +84,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection OpenDb()
         {
             OpenDb(ConnectionString);
@@ -84,6 +94,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Open database with the specified connection string.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
         private void OpenDb(string? connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
@@ -109,6 +120,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Try to reconnect to the previous established connection.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns><c>true</c> if connected successfully; otherwise, <c>false</c>.</returns>
         private bool TryReconnect(string? connectionString)
         {
             try
@@ -122,10 +135,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return true;
         }
 
-        /// <summary>
-        /// Switch to the specified database and get new connection string.
-        /// </summary>
-        public IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection SwitchDb(
+            string? dbName,
+            out string connectionString)
         {
             if (string.IsNullOrEmpty(dbName))
                 throw new VelocipedeDbNameException();
@@ -133,9 +146,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             try
             {
                 // Change connection string.
-                var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = ConnectionString;
-                connectionStringBuilder.Database = dbName;
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder
+                {
+                    ConnectionString = ConnectionString ?? "",
+                    Database = dbName
+                };
                 connectionString = connectionStringBuilder.ConnectionString;
                 ConnectionString = connectionString;
 
@@ -166,6 +181,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CloseDb()
         {
             if (_connection != null)
@@ -177,6 +193,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
             string sql = "SELECT t.schemaname || '.' || t.relname AS name FROM (SELECT schemaname, relname FROM pg_stat_user_tables) t";
@@ -184,7 +201,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetColumns(
+            string tableName,
+            out List<VelocipedeColumnInfo> columnInfo)
         {
             string schemaName = "public";
             string[] tn = tableName.Split('.');
@@ -211,7 +231,10 @@ WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
             return this;
         }
 
-        public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetForeignKeys(
+            string tableName,
+            out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             string[] tn = tableName.Split('.');
             if (tn.Length >= 2)
@@ -241,7 +264,10 @@ WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name LIKE '{0}';", tableNa
             return this;
         }
 
-        public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetTriggers(
+            string tableName,
+            out List<VelocipedeTriggerInfo> triggerInfo)
         {
             string[] tn = tableName.Split('.');
             if (tn.Length >= 2)
@@ -273,7 +299,10 @@ WHERE event_object_table LIKE '{0}'", tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetSqlDefinition(
+            string tableName,
+            out string? sqlDefinition)
         {
             string schemaName = "public";
             string[] tn = tableName.Split('.');
@@ -332,17 +361,22 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return QueryFirstOrDefault(sql, out sqlDefinition);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
-        public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection QueryDataTable(
+            string sqlRequest,
+            out DataTable dtResult)
         {
             return QueryDataTable(
                 sqlRequest,
@@ -350,6 +384,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -362,6 +397,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -373,12 +409,16 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
             return Execute(sqlRequest, null);
         }
 
-        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Execute(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -424,7 +464,10 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            out List<T> result)
         {
             return Query(
                 sqlRequest,
@@ -432,6 +475,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -444,6 +488,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -497,7 +542,10 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            out T? result)
         {
             return QueryFirstOrDefault(
                 sqlRequest,
@@ -505,6 +553,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -554,6 +603,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -576,8 +626,10 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         {
             try
             {
-                var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder
+                {
+                    ConnectionString = connectionString
+                };
                 return connectionStringBuilder.Database;
             }
             catch (Exception ex)
@@ -593,10 +645,12 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         {
             try
             {
-                var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
-                connectionStringBuilder.Database = databaseName;
-                connectionStringBuilder.PersistSecurityInfo = true;
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder
+                {
+                    ConnectionString = connectionString ?? "",
+                    Database = databaseName,
+                    PersistSecurityInfo = true
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -606,15 +660,18 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         }
 
         /// <summary>
-        /// Get connection string by database name.
+        /// Get connection string adding <see cref="NpgsqlConnectionStringBuilder.PersistSecurityInfo"/>.
         /// </summary>
+        /// <param name="connectionString">Old connection string.</param>
         private static string UsePersistSecurityInfo(string connectionString)
         {
             try
             {
-                var connectionStringBuilder = new NpgsqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
-                connectionStringBuilder.PersistSecurityInfo = true;
+                var connectionStringBuilder = new NpgsqlConnectionStringBuilder
+                {
+                    ConnectionString = connectionString,
+                    PersistSecurityInfo = true
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -623,6 +680,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             CloseDb();
