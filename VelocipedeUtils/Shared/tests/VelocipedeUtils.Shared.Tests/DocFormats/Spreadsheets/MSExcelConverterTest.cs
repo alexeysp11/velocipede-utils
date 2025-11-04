@@ -1,28 +1,27 @@
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets;
 using VelocipedeUtils.Shared.Models.Documents;
 using VelocipedeUtils.Shared.Models.Documents.Enums;
 
-namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
+namespace VelocipedeUtils.Shared.Tests.Office.DocFormats.Spreadsheets
 {
-    public class MSExcelConverterTest
+    public sealed class MSExcelConverterTest
     {
-        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(MSExcelConverterTest).ToString().Split('.').Last());
+        private static string FolderName
+            => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly()?.Location) ?? "", typeof(MSExcelConverterTest).ToString().Split('.').Last());
 
         [Fact]
         public void SpreadsheetElementsToDocument_CorrectParams_FileExists()
         {
             // Arrange
-            string filename = System.Reflection.MethodBase.GetCurrentMethod().Name + ".xlsx";
+            string filename = MethodBase.GetCurrentMethod()?.Name + ".xlsx";
             string filepath = Path.Combine(FolderName, filename);
             uint worksheetId = 1;
             string worksheetName = "TestSheet";
-            var elements = new System.Collections.Generic.List<SpreadsheetElement>()
-            {
-                new SpreadsheetElement() 
+            List<SpreadsheetElement> elements =
+            [
+                new() 
                 {
                     CellName = "A1",
                     TextDocElement = new TextDocElement 
@@ -32,7 +31,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
                         TextAlignment = TextAlignment.CENTER
                     }
                 }, 
-                new SpreadsheetElement() 
+                new() 
                 {
                     CellName = "A2",
                     TextDocElement = new TextDocElement 
@@ -42,9 +41,9 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
                         TextAlignment = TextAlignment.CENTER
                     }
                 }
-            };
+            ];
 
-            IWorkflowSpreadsheets converter = new MSExcelConverter();
+            MSExcelConverter converter = new();
             CreateFolderIfNotExists(FolderName);
 
             // Act
@@ -63,14 +62,14 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
             string content2)
         {
             // Arrange
-            string filename = System.Reflection.MethodBase.GetCurrentMethod().Name + ".xlsx";
+            string filename = MethodBase.GetCurrentMethod()?.Name + ".xlsx";
             string filepath = Path.Combine(FolderName, filename);
             string firstCellName = "A1";
             string lastCellName = "A2";
             string resultCell = "A3";
-            var elements = new System.Collections.Generic.List<SpreadsheetElement>()
-            {
-                new SpreadsheetElement() 
+            List<SpreadsheetElement> elements =
+            [
+                new() 
                 {
                     CellName = firstCellName,
                     TextDocElement = new TextDocElement 
@@ -80,7 +79,7 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
                         TextAlignment = TextAlignment.CENTER
                     }
                 }, 
-                new SpreadsheetElement() 
+                new() 
                 {
                     CellName = lastCellName,
                     TextDocElement = new TextDocElement 
@@ -90,9 +89,9 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
                         TextAlignment = TextAlignment.CENTER
                     }
                 }
-            };
+            ];
 
-            IWorkflowSpreadsheets converter = new MSExcelConverter();
+            MSExcelConverter converter = new();
             CreateFolderIfNotExists(FolderName);
 
             // Act
@@ -103,11 +102,10 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets
             Assert.True(File.Exists(filepath));
         }
 
-        #region Private methods
         private static void CreateFolderIfNotExists(string foldername)
         {
-            if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
+            if (!Directory.Exists(foldername))
+                Directory.CreateDirectory(foldername);
         }
-        #endregion  // Private methods
     }
 }

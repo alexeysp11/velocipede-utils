@@ -1,28 +1,27 @@
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats;
 using VelocipedeUtils.Shared.Models.Documents;
 using VelocipedeUtils.Shared.Models.Documents.Enums;
 
-namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
+namespace VelocipedeUtils.Shared.Tests.Office.DocFormats
 {
-    public class BinaryConverterTest
+    public sealed class BinaryConverterTest
     {
-        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(BinaryConverterTest).ToString().Split('.').Last());
+        private static string FolderName
+            => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly()?.Location) ?? "", typeof(BinaryConverterTest).ToString().Split('.').Last());
 
         [Fact]
         public void SaveAsBinaryFile_CorrectParams_FileExists()
         {
             // Arrange
-            string filename = System.Reflection.MethodBase.GetCurrentMethod().Name + ".pdf";
+            string filename = MethodBase.GetCurrentMethod()?.Name + ".pdf";
             string filepath = Path.Combine(FolderName, filename);
             string binFile = filepath.Replace(".pdf", ".bin");
             string copyFile1 = filepath.Replace(".pdf", "_copy_1.pdf");
             string copyFile2 = filepath.Replace(".pdf", "_copy_2.pdf");
-            var elements = new System.Collections.Generic.List<TextDocElement>()
-            {
+            List<TextDocElement> elements =
+            [
                 new TextDocElement() 
                 {
                     Content = "Header 1", 
@@ -47,9 +46,9 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
                     FontSize = 14, 
                     TextAlignment = TextAlignment.JUSTIFIED
                 }
-            };
+            ];
 
-            PdfConverter pdfConverter = new PdfConverter();
+            PdfConverter pdfConverter = new();
             CreateFolderIfNotExists(FolderName);
 
             // Act

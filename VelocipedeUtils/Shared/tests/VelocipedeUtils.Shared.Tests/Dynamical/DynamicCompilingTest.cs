@@ -1,9 +1,9 @@
 using Xunit;
 using VelocipedeUtils.Dynamical;
 
-namespace Cims.Tests.VelocipedeUtils.Dynamical
+namespace VelocipedeUtils.Shared.Tests.Dynamical
 {
-    public class DynamicCompilingTest
+    public sealed class DynamicCompilingTest
     {
         [Fact]
         public void CompileAndRunCSharpString_CorrectParameters_InstanceCreated()
@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 namespace Debuggable
 {
-    public class HelloWorld
+    public sealed class HelloWorld
     {
         public string DoWork()
         {

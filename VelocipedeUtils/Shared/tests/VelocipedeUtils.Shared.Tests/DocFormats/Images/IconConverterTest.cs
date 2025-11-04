@@ -1,16 +1,14 @@
-using System;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats.Images;
 
-namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
+namespace VelocipedeUtils.Shared.Tests.Office.DocFormats.Images
 {
-    public class IconConverterTest
+    public sealed class IconConverterTest
     {
         private readonly string Text = "Hello,_world! 123;532.52,642'2332\"w342\\432/243^w\n(test&something#1@ok)+$32.5~tt`qwerty\ttabulated\n\nTest text was written!";
-        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(IconConverterTest).ToString().Split('.').Last());
+        private static string FolderName
+            => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly()?.Location) ?? "", typeof(IconConverterTest).ToString().Split('.').Last());
 
         #region TextToImg
         [Theory]
@@ -21,21 +19,24 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
         [InlineData(false, true, true)]
         [InlineData(false, true, false)]
         [InlineData(false, false, true)]
-        public void TextToImg_OneOrMoreStringParamsEmpty_ReturnsException(bool isTextEmpty, bool isFoldernameEmpty, bool isFilenameEmpty)
+        public void TextToImg_OneOrMoreStringParamsEmpty_ReturnsException(
+            bool isTextEmpty,
+            bool isFoldernameEmpty,
+            bool isFilenameEmpty)
         {
             // Arrange 
             string text = isTextEmpty ? string.Empty : Text;
             string foldername = isFoldernameEmpty ? string.Empty : FolderName;
-            string filename = isFilenameEmpty ? string.Empty : System.Reflection.MethodBase.GetCurrentMethod().Name + ".ico";
+            string filename = isFilenameEmpty ? string.Empty : MethodBase.GetCurrentMethod()?.Name + ".ico";
 
-            IImageConverter converter = new IconConverter();
+            IconConverter converter = new();
             if (!string.IsNullOrEmpty(foldername)) CreateFolderIfNotExists(FolderName);
 
             // Act 
             Action act = () => converter.TextToImg(text, foldername, filename);
 
             // Assert 
-            System.Exception exception = Assert.Throws<System.Exception>(act);
+            Exception exception = Assert.Throws<Exception>(act);
         }
 
         [Fact]
@@ -43,40 +44,40 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
         {
             // Arrange 
             string foldername = "incorrect path";
-            string filename = System.Reflection.MethodBase.GetCurrentMethod().Name + ".ico";
+            string filename = MethodBase.GetCurrentMethod()?.Name + ".ico";
 
-            IImageConverter converter = new IconConverter();
+            IconConverter converter = new();
 
             // Act 
             Action act = () => converter.TextToImg(Text, foldername, filename);
 
             // Assert 
-            System.Exception exception = Assert.Throws<System.Exception>(act);
+            Exception exception = Assert.Throws<Exception>(act);
         }
 
         [Fact]
         public void TextToImg_IncorrectFileExtenstion_ReturnsException()
         {
             // Arrange 
-            string filename = System.Reflection.MethodBase.GetCurrentMethod().Name + ".jpg";
+            string filename = MethodBase.GetCurrentMethod()?.Name + ".jpg";
 
-            IImageConverter converter = new IconConverter();
+            IconConverter converter = new();
             CreateFolderIfNotExists(FolderName);
 
             // Act 
             Action act = () => converter.TextToImg(Text, FolderName, filename);
 
             // Assert 
-            System.Exception exception = Assert.Throws<System.Exception>(act);
+            Exception exception = Assert.Throws<Exception>(act);
         }
 
         [Fact]
         public void TextToImg_CorrectParameters_FileExists()
         {
             // Arrange
-            string filename = System.Reflection.MethodBase.GetCurrentMethod().Name + ".ico";
+            string filename = MethodBase.GetCurrentMethod()?.Name + ".ico";
 
-            IImageConverter converter = new IconConverter();
+            IconConverter converter = new();
             CreateFolderIfNotExists(FolderName);
 
             // Act
@@ -88,11 +89,10 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats.Images
         }
         #endregion  // TextToImg
 
-        #region Private methods
         private static void CreateFolderIfNotExists(string foldername)
         {
-            if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
+            if (!Directory.Exists(foldername))
+                Directory.CreateDirectory(foldername);
         }
-        #endregion  // Private methods
     }
 }
