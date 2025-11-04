@@ -15,14 +15,23 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
                 .WithEnvironment("POSTGRES_HOST_AUTH_METHOD", "password")
                 .Build();
 
+        /// <inheritdoc/>
         public string? DatabaseName => PgDbConnection.GetDatabaseName(ConnectionString);
+
+        /// <inheritdoc/>
         public string ConnectionString => container.GetConnectionString();
+
+        /// <inheritdoc/>
         public string ContainerId => $"{container.Id}";
+
+        /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
 
+        /// <inheritdoc/>
         public DbConnection GetDbConnection()
             => new NpgsqlConnection(ConnectionString);
 
+        /// <inheritdoc/>
         public TestDbContext GetTestDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();

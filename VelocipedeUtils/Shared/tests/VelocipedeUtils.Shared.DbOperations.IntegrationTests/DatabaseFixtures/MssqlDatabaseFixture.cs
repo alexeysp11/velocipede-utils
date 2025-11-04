@@ -14,18 +14,27 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             new MsSqlBuilder()
                 .Build();
 
+        /// <inheritdoc/>
         public string? DatabaseName => MssqlDbConnection.GetDatabaseName(ConnectionString);
+
+        /// <inheritdoc/>
         public string ConnectionString => container.GetConnectionString()
             .Replace("Server=", "Data Source=")
             .Replace("Database", "Initial Catalog")
             .Replace("User Id", "User ID")
             .Replace("TrustServerCertificate", "Trust Server Certificate");
+
+        /// <inheritdoc/>
         public string ContainerId => $"{container.Id}";
+
+        /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
 
+        /// <inheritdoc/>
         public DbConnection GetDbConnection()
             => new SqlConnection(ConnectionString);
 
+        /// <inheritdoc/>
         public TestDbContext GetTestDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
