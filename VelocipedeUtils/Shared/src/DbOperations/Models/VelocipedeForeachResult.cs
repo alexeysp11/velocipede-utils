@@ -1,48 +1,45 @@
 ﻿namespace VelocipedeUtils.Shared.DbOperations.Models
 {
     /// <summary>
-    /// The result of executing the foreach operation for the specified database entities.
+    /// The result of executing the <c>foreach</c> operation for the specified database entities.
     /// </summary>
     public class VelocipedeForeachResult
     {
         /// <summary>
-        /// A dictionary representing the result of the foreach operation.
+        /// A dictionary representing the result of the <c>foreach</c> operation.
         /// </summary>
+        /// <remarks>
+        /// By default, the property equals to <c>null</c> unless it is initialized explicitly, or by calling
+        /// <see cref="Add(string, VelocipedeForeachTableInfo)"/> and <see cref="Remove(string)"/> methods.
+        /// </remarks>
         public Dictionary<string, VelocipedeForeachTableInfo>? Result { get; set; }
 
         /// <summary>
         /// Add result into the collection.
         /// </summary>
-        /// <param name="tableName">Table name</param>
+        /// <param name="tableName">Table name.</param>
         /// <param name="info">Table info</param>
         public void Add(string tableName, VelocipedeForeachTableInfo info)
         {
-            if (Result == null)
-                Result = [];
-
-            if (Result.ContainsKey(tableName))
+            Result ??= [];
+            if (!Result.TryAdd(tableName, info))
             {
                 Result[tableName] = info;
-            }
-            else
-            {
-                Result.Add(tableName, info);
             }
         }
 
         /// <summary>
         /// Remove info about the table from the collection.
         /// </summary>
-        /// <param name="tableName">Table name</param>
-        public void Remove(string tableName)
+        /// <param name="tableName">Table name.</param>
+        /// <returns>
+        /// <c>true</c> if the element is successfully found and removed; otherwise, <c>false</c>.
+        /// This method returns <c>false</c> if key is not found in the <see cref="Result"/> property.
+        /// </returns>
+        public bool Remove(string tableName)
         {
-            if (Result == null)
-                Result = [];
-            
-            if (Result.ContainsKey(tableName))
-            {
-                Result.Remove(tableName);
-            }
+            Result ??= [];
+            return Result.Remove(tableName);
         }
     }
 }

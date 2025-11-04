@@ -9,12 +9,16 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
 {
     public class SqliteDatabaseFixture : IDatabaseFixture
     {
+        /// <inheritdoc/>
         public string? DatabaseName => SqliteDbConnection.GetDatabaseName(ConnectionString);
 
+        /// <inheritdoc/>
         public string ConnectionString { get; private set; }
 
+        /// <inheritdoc/>
         public string ContainerId { get; private set; }
 
+        /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.SQLite;
 
         public SqliteDatabaseFixture()
@@ -23,9 +27,11 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             ConnectionString = SqliteDbConnection.GetConnectionString($"{ContainerId}.db");
         }
 
+        /// <inheritdoc/>
         public DbConnection GetDbConnection()
             => new SqliteConnection(ConnectionString);
 
+        /// <inheritdoc/>
         public TestDbContext GetTestDbContext()
         {
             var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();

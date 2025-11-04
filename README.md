@@ -53,7 +53,8 @@ using IVelocipedeDbConnection dbConnection
 
 dbConnection
     .OpenDb()
-    .GetAllDataFromTable(tableName, out DataTable dtData)
+    .GetAllData(tableName, out DataTable dtData)       // You can get result as DataTable,
+    .GetAllData(tableName, out List<Table1> listData)  // or as List<T>.
     .GetColumnsOfTable(tableName, out List<VelocipedeColumnInfo> columnInfo)
     .GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
     .GetTriggers(tableName, out List<VelocipedeTriggerInfo> triggerInfo)
@@ -61,13 +62,14 @@ dbConnection
     .CloseDb();
 ```
 
-This library provides functionality for communicating with relational databases using ADO.NET and Dapper. Information on currently supported database types:
+This library provides functionality for communicating with relational databases using ADO.NET and Dapper under the hood. Information on currently supported database types:
 - [x] [SQLite](https://sqlite.org/)
 - [x] [PostgreSQL](https://www.postgresql.org/)
 - [x] [MS SQL](https://www.microsoft.com/en-us/sql-server)
 - [ ] [MySQL](https://www.mysql.com/)
 - [ ] [Oracle](https://www.oracle.com/database/)
 - [ ] [Clickhouse](https://clickhouse.com/)
+- [ ] [Firebird](https://github.com/FirebirdSQL/firebird)
 
 ## Projects
 

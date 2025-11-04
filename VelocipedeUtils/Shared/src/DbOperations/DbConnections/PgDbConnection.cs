@@ -334,12 +334,12 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
 
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)

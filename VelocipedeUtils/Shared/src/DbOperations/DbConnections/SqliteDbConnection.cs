@@ -221,12 +221,12 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
 
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)

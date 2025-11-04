@@ -84,7 +84,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Open database with the specified connection string.
         /// </summary>
-        private IVelocipedeDbConnection OpenDb(string? connectionString)
+        private MssqlDbConnection OpenDb(string? connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -261,12 +261,12 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
 
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)

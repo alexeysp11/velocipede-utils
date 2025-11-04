@@ -48,6 +48,9 @@ dotnet_diagnostic.CA1823.severity = error
 # CA1829: Use Length/Count property instead of Enumerable.Count method
 dotnet_diagnostic.CA1829.severity = error
 
+# CA1859: Use concrete types when possible for improved performance
+dotnet_diagnostic.CA1859.severity = warning
+
 # CA2200: Rethrow to preserve stack details
 dotnet_diagnostic.CA2200.severity = error
 
