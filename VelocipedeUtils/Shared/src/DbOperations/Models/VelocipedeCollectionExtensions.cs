@@ -11,13 +11,13 @@ namespace VelocipedeUtils.Shared.DbOperations.Models
         /// <summary>
         /// Convert <see cref="IEnumerable{T}"/> collection to <see cref="DataTable"/>.
         /// </summary>
-        /// <typeparam name="T">Type of the elements of the origin collection</typeparam>
-        /// <param name="list">List of elements to be converted</param>
-        /// <returns>Object of <see cref="DataTable"/></returns>
+        /// <typeparam name="T">Type of the elements of the origin collection.</typeparam>
+        /// <param name="list">List of elements to be converted.</param>
+        /// <returns>Object of <see cref="DataTable"/>.</returns>
         public static DataTable ToDataTable<T>(this IEnumerable<T> list)
         {
             string json = JsonConvert.SerializeObject(list);
-            return (DataTable?)JsonConvert.DeserializeObject(json, (typeof(DataTable))) ?? new DataTable();
+            return (DataTable?)JsonConvert.DeserializeObject(json, typeof(DataTable)) ?? new DataTable();
         }
     }
 }
