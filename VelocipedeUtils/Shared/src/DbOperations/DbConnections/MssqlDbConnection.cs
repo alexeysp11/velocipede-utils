@@ -14,9 +14,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public sealed class MssqlDbConnection : IVelocipedeDbConnection
     {
+        /// <inheritdoc/>
         public string? ConnectionString { get; set; }
+
+        /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
+
+        /// <inheritdoc/>
         public string DatabaseName => GetDatabaseName(ConnectionString);
+
+        /// <inheritdoc/>
         public bool IsConnected => _connection != null;
 
         private SqlConnection? _connection;
@@ -26,6 +33,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             ConnectionString = connectionString;
         }
 
+        /// <inheritdoc/>
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -55,6 +63,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return true;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
@@ -75,6 +84,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection OpenDb()
         {
             OpenDb(ConnectionString);
@@ -133,9 +143,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return true;
         }
 
-        /// <summary>
-        /// Switch to the specified database and get new connection string.
-        /// </summary>
+        /// <inheritdoc/>
         public IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString)
         {
             if (string.IsNullOrEmpty(dbName))
@@ -144,9 +152,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             try
             {
                 // Change connection string.
-                var connectionStringBuilder = new SqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = ConnectionString;
-                connectionStringBuilder.InitialCatalog = dbName;
+                var connectionStringBuilder = new SqlConnectionStringBuilder
+                {
+                    ConnectionString = ConnectionString ?? "",
+                    InitialCatalog = dbName
+                };
                 connectionString = connectionStringBuilder.ConnectionString;
                 ConnectionString = connectionString;
 
@@ -177,6 +187,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CloseDb()
         {
             if (_connection != null)
@@ -188,6 +199,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
             string sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
@@ -195,7 +207,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetColumns(
+            string tableName,
+            out List<VelocipedeColumnInfo> columnInfo)
         {
             tableName = tableName.Trim('"');
             string sql = $@"
@@ -210,7 +225,10 @@ WHERE TABLE_NAME = '{tableName}';";
             return this;
         }
 
-        public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetForeignKeys(
+            string tableName,
+            out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             tableName = tableName.Trim('"');
             string sql = $@"
@@ -231,7 +249,10 @@ WHERE OBJECT_NAME(fk.parent_object_id) = '{tableName}'";
             return this;
         }
 
-        public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetTriggers(
+            string tableName,
+            out List<VelocipedeTriggerInfo> triggerInfo)
         {
             tableName = tableName.Trim('"');
             string sql = $@"
@@ -251,7 +272,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
-        public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetSqlDefinition(
+            string tableName,
+            out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
             string sql = $"SELECT OBJECT_DEFINITION(OBJECT_ID('{tableName}')) AS ObjectDefinition";
@@ -259,17 +283,22 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
-        public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection QueryDataTable(
+            string sqlRequest,
+            out DataTable dtResult)
         {
             return QueryDataTable(
                 sqlRequest,
@@ -277,6 +306,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -289,6 +319,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -300,12 +331,16 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
             return Execute(sqlRequest, null);
         }
 
-        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Execute(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
         {
             if (string.IsNullOrEmpty(ConnectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -351,7 +386,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
-        public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            out List<T> result)
         {
             return Query(
                 sqlRequest,
@@ -359,6 +397,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -371,6 +410,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -424,7 +464,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            out T? result)
         {
             return QueryFirstOrDefault(
                 sqlRequest,
@@ -432,6 +475,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -481,6 +525,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -503,8 +548,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         {
             try
             {
-                var connectionStringBuilder = new SqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
+                var connectionStringBuilder = new SqlConnectionStringBuilder
+                {
+                    ConnectionString = connectionString
+                };
                 return connectionStringBuilder.InitialCatalog;
             }
             catch (Exception ex)
@@ -520,9 +567,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         {
             try
             {
-                var connectionStringBuilder = new SqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
-                connectionStringBuilder.InitialCatalog = databaseName;
+                var connectionStringBuilder = new SqlConnectionStringBuilder
+                {
+                    ConnectionString = connectionString ?? "",
+                    InitialCatalog = databaseName
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -538,9 +587,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         {
             try
             {
-                var connectionStringBuilder = new SqlConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
-                connectionStringBuilder.PersistSecurityInfo = true;
+                var connectionStringBuilder = new SqlConnectionStringBuilder
+                {
+                    ConnectionString = connectionString,
+                    PersistSecurityInfo = true
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -549,15 +600,16 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             }
         }
 
-        public void Dispose()
-        {
-            CloseDb();
-        }
-
         /// <inheritdoc/>
         public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
         {
             return new VelocipedeForeachTableIterator(this, tables);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            CloseDb();
         }
     }
 }
