@@ -94,6 +94,8 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Open database with the specified connection string.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns>Instance of <see cref="MssqlDbConnection"/>.</returns>
         private MssqlDbConnection OpenDb(string? connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
@@ -126,10 +128,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 throw;
             }
         }
-        
+
         /// <summary>
         /// Try to reconnect to the previous established connection.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns><c>true</c> if connected successfully; otherwise, <c>false</c>.</returns>
         private bool TryReconnect(string? connectionString)
         {
             try
@@ -213,15 +217,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out List<VelocipedeColumnInfo> columnInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = $@"
+            string sql = @"
 SELECT
     COLUMN_NAME as ColumnName,
     DATA_TYPE as ColumnType,
     COLUMN_DEFAULT as DefaultValue,
     case when IS_NULLABLE = 'YES' then 1 else 0 end as IsNullable
 FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = '{tableName}';";
-            Query(sql, out columnInfo);
+WHERE TABLE_NAME = @TableName";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            Query(sql, parameters, out columnInfo);
             return this;
         }
 
@@ -231,7 +236,7 @@ WHERE TABLE_NAME = '{tableName}';";
             out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = $@"
+            string sql = @"
 SELECT
     fk.name AS ConstraintName,
     OBJECT_NAME(fk.parent_object_id) AS FromTableName,
@@ -244,8 +249,9 @@ FROM
     sys.foreign_keys AS fk
 INNER JOIN
     sys.foreign_key_columns AS fkc ON fk.object_id = fkc.constraint_object_id
-WHERE OBJECT_NAME(fk.parent_object_id) = '{tableName}'";
-            Query(sql, out foreignKeyInfo);
+WHERE OBJECT_NAME(fk.parent_object_id) = @TableName";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            Query(sql, parameters, out foreignKeyInfo);
             return this;
         }
 
@@ -255,7 +261,7 @@ WHERE OBJECT_NAME(fk.parent_object_id) = '{tableName}'";
             out List<VelocipedeTriggerInfo> triggerInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = $@"
+            string sql = @"
 SELECT 
     name as [TriggerName],
     object_name(parent_obj) as [EventObjectTable],
@@ -267,8 +273,9 @@ SELECT
     --OBJECTPROPERTY(id, 'ExecIsInsteadOfTrigger') AS isinsteadof,
     case when OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') = 1 then 0 else 1 end AS [IsActive]
 FROM sysobjects s
-WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
-            Query(sql, out triggerInfo);
+WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            Query(sql, parameters, out triggerInfo);
             return this;
         }
 
@@ -278,8 +285,9 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
             out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
-            string sql = $"SELECT OBJECT_DEFINITION(OBJECT_ID('{tableName}')) AS ObjectDefinition";
-            QueryFirstOrDefault(sql, out sqlDefinition);
+            string sql = $"SELECT OBJECT_DEFINITION(OBJECT_ID(@TableName)) AS ObjectDefinition";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            QueryFirstOrDefault(sql, parameters, out sqlDefinition);
             return this;
         }
 
@@ -544,6 +552,8 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         /// <summary>
         /// Get database name by connection string.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns>Database name.</returns>
         public static string GetDatabaseName(string? connectionString)
         {
             try
@@ -563,6 +573,9 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
+        /// <param name="connectionString">Old connection string.</param>
+        /// <param name="databaseName">Database name.</param>
+        /// <returns>New connection string.</returns>
         public static string GetConnectionString(string? connectionString, string databaseName)
         {
             try
@@ -581,8 +594,10 @@ WHERE s.type = 'TR' and object_name(parent_obj) = '{tableName}'";
         }
 
         /// <summary>
-        /// Get connection string by database name.
+        /// Get connection string adding <see cref="SqlConnectionStringBuilder.PersistSecurityInfo"/>.
         /// </summary>
+        /// <param name="connectionString">Old connection string.</param>
+        /// <returns>New connection string.</returns>
         private static string UsePersistSecurityInfo(string connectionString)
         {
             try

@@ -174,7 +174,7 @@ ORDER BY 1";
             out List<VelocipedeColumnInfo> columnInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = @$"
+            string sql = @"
 SELECT
     cid as ColumnId,
     name as ColumnName,
@@ -182,8 +182,9 @@ SELECT
     dflt_value as DefaultValue,
     pk as IsPrimaryKey,
     not ""notnull"" as IsNullable
-FROM pragma_table_info('{tableName}');";
-            Query(sql, out columnInfo);
+FROM pragma_table_info(@TableName)";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            Query(sql, parameters, out columnInfo);
             return this;
         }
 
@@ -195,6 +196,7 @@ FROM pragma_table_info('{tableName}');";
             tableName = tableName.Trim('"');
 
             // Get list of dynamic objects.
+            // In some versions of SQLite, PRAGMA statements could not support paramters.
             string sql = $"PRAGMA foreign_key_list('{tableName}');";
             Query(sql, out List<dynamic> foreignKeyInfoDynamic);
 
@@ -220,7 +222,7 @@ FROM pragma_table_info('{tableName}');";
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = $@"
+            string sql = @"
 SELECT
     --type,
     name AS TriggerName,
@@ -228,8 +230,9 @@ SELECT
     rootpage AS RootPage,
     sql AS SqlDefinition
 FROM sqlite_master
-WHERE type = 'trigger' AND tbl_name = '{tableName}';";
-            Query(sql, out triggerInfo);
+WHERE type = 'trigger' AND tbl_name = @TableName";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            Query(sql, parameters, out triggerInfo);
             return this;
         }
 
@@ -237,8 +240,9 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
-            string sql = string.Format(@"SELECT sql FROM sqlite_master WHERE type='table' AND name LIKE '{0}'", tableName);
-            return QueryFirstOrDefault(sql, out sqlDefinition);
+            string sql = @"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = @TableName";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryFirstOrDefault(sql, parameters, out sqlDefinition);
         }
 
         /// <inheritdoc/>
@@ -567,15 +571,15 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-            CloseDb();
-        }
-
-        /// <inheritdoc/>
         public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
         {
             return new VelocipedeForeachTableIterator(this, tables);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            CloseDb();
         }
     }
 }

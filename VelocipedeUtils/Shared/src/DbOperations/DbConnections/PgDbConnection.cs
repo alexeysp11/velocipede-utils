@@ -215,7 +215,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
             tableName = tableName.Trim('"');
 
-            string sql = string.Format($@"
+            string sql = @"
 SELECT
     column_name as ColumnName,
     ordinal_position as OrdinalPosition,
@@ -226,8 +226,13 @@ SELECT
     case when is_generated = 'ALWAYS' then true else false end as IsGenerated,
     case when is_updatable = 'YES' then true else false end as IsUpdatable
 FROM information_schema.columns
-WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
-            Query(sql, out columnInfo);
+WHERE table_schema = @SchemaName AND table_name = @TableName";
+            List<VelocipedeCommandParameter> parameters =
+            [
+                new() { Name = "TableName", Value = tableName },
+                new() { Name = "SchemaName", Value = schemaName }
+            ];
+            Query(sql, parameters, out columnInfo);
             return this;
         }
 
@@ -244,7 +249,7 @@ WHERE table_schema = '{schemaName}' AND table_name = '{tableName}'");
             }
             tableName = tableName.Trim('"');
 
-            string sql = string.Format(@"
+            string sql = @"
 SELECT
     tc.constraint_name as ConstraintName,
     tc.table_schema as FromTableSchema,
@@ -259,8 +264,9 @@ JOIN information_schema.key_column_usage AS kcu
     ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
 JOIN information_schema.constraint_column_usage AS ccu
     ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema
-WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name LIKE '{0}';", tableName);
-            Query(sql, out foreignKeyInfo);
+WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name = @TableName";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            Query(sql, parameters, out foreignKeyInfo);
             return this;
         }
 
@@ -277,7 +283,7 @@ WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name LIKE '{0}';", tableNa
             }
             tableName = tableName.Trim('"');
 
-            string sql = string.Format(@"
+            string sql = @"
 SELECT
     trigger_catalog AS TriggerCatalog,
     trigger_schema AS TriggerSchema,
@@ -294,8 +300,9 @@ SELECT
     action_reference_old_table AS ActionReferenceOldTable,
     action_reference_new_table AS ActionReferenceNewTable
 FROM information_schema.triggers
-WHERE event_object_table LIKE '{0}'", tableName);
-            Query(sql, out triggerInfo);
+WHERE event_object_table = @TableName";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            Query(sql, parameters, out triggerInfo);
             return this;
         }
 
@@ -313,7 +320,7 @@ WHERE event_object_table LIKE '{0}'", tableName);
             }
             tableName = tableName.Trim('"');
 
-            string sql = string.Format(@"
+            string sql = @"
 CREATE OR REPLACE FUNCTION fGetSqlFromTable(aSchemaName VARCHAR(255), aTableName VARCHAR(255))
     RETURNS TEXT
     LANGUAGE plpgsql AS
@@ -357,8 +364,13 @@ BEGIN
 END
 $func$;
 
-SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
-            return QueryFirstOrDefault(sql, out sqlDefinition);
+SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
+            List<VelocipedeCommandParameter> parameters =
+            [
+                new() { Name = "TableName", Value = tableName },
+                new() { Name = "SchemaName", Value = schemaName }
+            ];
+            return QueryFirstOrDefault(sql, parameters, out sqlDefinition);
         }
 
         /// <inheritdoc/>
@@ -622,6 +634,8 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         /// <summary>
         /// Get database name by connection string.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns>Database name.</returns>
         public static string? GetDatabaseName(string? connectionString)
         {
             try
@@ -641,6 +655,9 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         /// <summary>
         /// Get connection string by database name.
         /// </summary>
+        /// <param name="connectionString">Old connection string.</param>
+        /// <param name="databaseName">Database name.</param>
+        /// <returns>New connection string.</returns>
         public static string GetConnectionString(string? connectionString, string databaseName)
         {
             try
@@ -663,6 +680,7 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         /// Get connection string adding <see cref="NpgsqlConnectionStringBuilder.PersistSecurityInfo"/>.
         /// </summary>
         /// <param name="connectionString">Old connection string.</param>
+        /// <returns>New connection string.</returns>
         private static string UsePersistSecurityInfo(string connectionString)
         {
             try
@@ -681,15 +699,15 @@ SELECT fGetSqlFromTable('{0}', '{1}') AS sql;", schemaName, tableName);
         }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-            CloseDb();
-        }
-
-        /// <inheritdoc/>
         public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
         {
             return new VelocipedeForeachTableIterator(this, tables);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            CloseDb();
         }
     }
 }
