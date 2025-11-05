@@ -656,5 +656,88 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        public Task<DataTable> QueryDataTableAsync(string sqlRequest)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ExecuteAsync(string sqlRequest)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task ExecuteAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(string sqlRequest)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<T?> QueryFirstOrDefaultAsync<T>(string sqlRequest)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

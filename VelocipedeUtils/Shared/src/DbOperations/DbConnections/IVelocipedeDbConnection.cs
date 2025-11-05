@@ -196,6 +196,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out DataTable dtResult);
 
         /// <summary>
+        /// Asynchronously execute SQL command and get <see cref="DataTable"/> object as a result.
+        /// </summary>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is an object of <see cref="DataTable"/>.
+        /// </returns>
+        Task<DataTable> QueryDataTableAsync(
+            string sqlRequest);
+
+        /// <summary>
         /// Execute SQL command and get <see cref="DataTable"/> object as a result.
         /// </summary>
         /// <param name="sqlRequest">SQL query.</param>
@@ -206,6 +217,19 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             out DataTable dtResult);
+
+        /// <summary>
+        /// Asynchronously execute SQL command and get <see cref="DataTable"/> object as a result.
+        /// </summary>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is an object of <see cref="DataTable"/>.
+        /// </returns>
+        Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters);
 
         /// <summary>
         /// Execute SQL command and get <see cref="DataTable"/> object as a result.
@@ -222,11 +246,34 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out DataTable dtResult);
 
         /// <summary>
+        /// Asynchronously execute SQL command and get <see cref="DataTable"/> object as a result.
+        /// </summary>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is an object of <see cref="DataTable"/>.
+        /// </returns>
+        Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate);
+
+        /// <summary>
         /// Execute SQL command.
         /// </summary>
         /// <param name="sqlRequest">SQL query.</param>
         /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
         IVelocipedeDbConnection Execute(
+            string sqlRequest);
+
+        /// <summary>
+        /// Asynchronously execute SQL command.
+        /// </summary>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        Task ExecuteAsync(
             string sqlRequest);
 
         /// <summary>
@@ -236,6 +283,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
         /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
         IVelocipedeDbConnection Execute(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters);
+
+        /// <summary>
+        /// Asynchronously execute SQL command.
+        /// </summary>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous operation.</returns>
+        Task ExecuteAsync(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters);
 
@@ -251,6 +308,18 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out List<T> result);
 
         /// <summary>
+        /// Asynchronously query to get <see cref="List{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> that contains the result of the executed query.
+        /// </returns>
+        Task<List<T>> QueryAsync<T>(
+            string sqlRequest);
+
+        /// <summary>
         /// Query to get <see cref="List{T}"/>.
         /// </summary>
         /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
@@ -262,6 +331,20 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             out List<T> result);
+
+        /// <summary>
+        /// Asynchronously query to get <see cref="List{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> that contains the result of the executed query.
+        /// </returns>
+        Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters);
 
         /// <summary>
         /// Query to get <see cref="List{T}"/>.
@@ -279,6 +362,22 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out List<T> result);
 
         /// <summary>
+        /// Asynchronously query to get <see cref="List{T}"/>.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> that contains the result of the executed query.
+        /// </returns>
+        Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate);
+
+        /// <summary>
         /// Query first or default object.
         /// </summary>
         /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
@@ -288,6 +387,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             out T? result);
+
+        /// <summary>
+        /// Asynchronously query first or default object.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation that contains the result of the executed query.
+        /// </returns>
+        Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest);
 
         /// <summary>
         /// Query first or default object.
@@ -301,6 +411,19 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             out T? result);
+
+        /// <summary>
+        /// Asynchronously query first or default object.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation that contains the result of the executed query.
+        /// </returns>
+        Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters);
 
         /// <summary>
         /// Query first or default object.
@@ -316,6 +439,21 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             List<VelocipedeCommandParameter>? parameters,
             Func<T, bool>? predicate,
             out T? result);
+
+        /// <summary>
+        /// Asynchronously query first or default object.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation that contains the result of the executed query.
+        /// </returns>
+        Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate);
 
         /// <summary>
         /// Initialize <c>foreach</c> operation for the specified tables.
