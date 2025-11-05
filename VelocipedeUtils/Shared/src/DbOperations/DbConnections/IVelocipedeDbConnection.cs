@@ -77,6 +77,15 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out List<string> tables);
 
         /// <summary>
+        /// Asynchronously get tables in the current database.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> of <see cref="string"/> that contains table names.
+        /// </returns>
+        Task<List<string>> GetTablesInDbAsync();
+
+        /// <summary>
         /// Get columns of the specified table.
         /// </summary>
         /// <param name="tableName">Table name.</param>
@@ -85,6 +94,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection GetColumns(
             string tableName,
             out List<VelocipedeColumnInfo> columnInfo);
+
+        /// <summary>
+        /// Asynchronously get columns of the specified table.
+        /// </summary>
+        /// <param name="tableName">Table name.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> of <see cref="VelocipedeColumnInfo"/> that contains info about table columns.
+        /// </returns>
+        Task<List<VelocipedeColumnInfo>> GetColumnsAsync(
+            string tableName);
 
         /// <summary>
         /// Get foreign keys of the specified table.
@@ -97,6 +117,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out List<VelocipedeForeignKeyInfo> foreignKeyInfo);
 
         /// <summary>
+        /// Asynchronously get foreign keys of the specified table.
+        /// </summary>
+        /// <param name="tableName">Table name.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> of <see cref="VelocipedeForeignKeyInfo"/> that contains info about table foreign keys.
+        /// </returns>
+        Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(
+            string tableName);
+
+        /// <summary>
         /// Get triggers of the specified table.
         /// </summary>
         /// <param name="tableName">Table name.</param>
@@ -107,6 +138,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out List<VelocipedeTriggerInfo> triggerInfo);
 
         /// <summary>
+        /// Asynchronously get triggers of the specified table.
+        /// </summary>
+        /// <param name="tableName">Table name.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> of <see cref="VelocipedeTriggerInfo"/> that contains info about table triggers.
+        /// </returns>
+        Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(
+            string tableName);
+
+        /// <summary>
         /// Get SQL definition of the specified table.
         /// </summary>
         /// <param name="tableName">Table name.</param>
@@ -115,6 +157,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         IVelocipedeDbConnection GetSqlDefinition(
             string tableName,
             out string? sqlDefinition);
+
+        /// <summary>
+        /// Asynchronously get SQL definition of the specified table.
+        /// </summary>
+        /// <param name="tableName">Table name.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="string"/> that contains SQL definition of the specified table.
+        /// </returns>
+        Task<string?> GetSqlDefinitionAsync(
+            string tableName);
 
         /// <summary>
         /// Create temporary table.

@@ -709,5 +709,35 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         {
             CloseDb();
         }
+
+        /// <inheritdoc/>
+        public Task<List<string>> GetTablesInDbAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Task<string?> GetSqlDefinitionAsync(string tableName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
