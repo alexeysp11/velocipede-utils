@@ -309,6 +309,120 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
+        public async Task QueryFirstOrDefaultAsync_OpenDbAndGetOneRecord_ResultEqualsToExpected()
+        {
+            // Arrange.
+            const int expected = 1;
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            int result = await dbConnection
+                .OpenDb()
+                .QueryFirstOrDefaultAsync<int>("SELECT 1");
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task QueryFirstOrDefaultAsync_FixtureWithoutRestrictions_GetTestModelWithIdEquals1()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            TestModel expected = new() { Id = 1, Name = "Test_1" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            TestModel? result = await dbConnection
+                .OpenDb()
+                .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task QueryFirstOrDefaultAsync_FixtureWithParams_GetTestModelWithIdEquals5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            TestModel expected = new() { Id = 5, Name = "Test_5" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            TestModel? result = await dbConnection
+                .OpenDb()
+                .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task QueryFirstOrDefaultAsync_FixtureWithParamsAndDelegate_GetTestModelWithIdEquals7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<TestModel, bool> predicate = x => x.Id >= 7;
+            TestModel expected = new() { Id = 7, Name = "Test_7" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            TestModel? result = await dbConnection
+                .OpenDb()
+                .QueryFirstOrDefaultAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public async Task QueryFirstOrDefaultAsync_FixtureWithDelegate_GetTestModelWithIdEquals7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<TestModel, bool> predicate = x => x.Id >= 7;
+            TestModel expected = new() { Id = 7, Name = "Test_7" };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            TestModel? result = await dbConnection
+                .OpenDb()
+                .QueryFirstOrDefaultAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().BeEquivalentTo(expected);
+        }
+
+        [Fact]
         public void Query_WithoutRestrictions_GetAllTestModels()
         {
             // Arrange.
