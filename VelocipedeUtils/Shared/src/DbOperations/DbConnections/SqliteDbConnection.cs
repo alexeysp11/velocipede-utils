@@ -17,6 +17,11 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <inheritdoc/>
         public string? ConnectionString { get; set; }
 
+        private readonly string _getTablesInDbSql;
+        private readonly string _getColumnsSql;
+        private readonly string _getTriggersSql;
+        private readonly string _getSqlDefinitionSql;
+
         /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.SQLite;
 
@@ -31,6 +36,36 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public SqliteDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
+
+            _getTablesInDbSql = @"
+SELECT name FROM sqlite_master
+WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
+UNION ALL
+SELECT name FROM sqlite_temp_master
+WHERE type IN ('table','view')
+ORDER BY 1";
+
+            _getColumnsSql = @"
+SELECT
+    cid as ColumnId,
+    name as ColumnName,
+    type as ColumnType,
+    dflt_value as DefaultValue,
+    pk as IsPrimaryKey,
+    not ""notnull"" as IsNullable
+FROM pragma_table_info(@TableName)";
+
+            _getTriggersSql = @"
+SELECT
+    --type,
+    name AS TriggerName,
+    tbl_name AS EventObjectTable,
+    rootpage AS RootPage,
+    sql AS SqlDefinition
+FROM sqlite_master
+WHERE type = 'trigger' AND tbl_name = @TableName";
+
+            _getSqlDefinitionSql = "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = @TableName";
         }
 
         /// <inheritdoc/>
@@ -157,15 +192,13 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <inheritdoc/>
         public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
-            string sql = @"
-SELECT name FROM sqlite_master
-WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
-UNION ALL
-SELECT name FROM sqlite_temp_master
-WHERE type IN ('table','view')
-ORDER BY 1";
-            Query(sql, out tables);
-            return this;
+            return Query(_getTablesInDbSql, out tables);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<string>> GetTablesInDbAsync()
+        {
+            return QueryAsync<string>(_getTablesInDbSql);
         }
 
         /// <inheritdoc/>
@@ -174,18 +207,16 @@ ORDER BY 1";
             out List<VelocipedeColumnInfo> columnInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = @"
-SELECT
-    cid as ColumnId,
-    name as ColumnName,
-    type as ColumnType,
-    dflt_value as DefaultValue,
-    pk as IsPrimaryKey,
-    not ""notnull"" as IsNullable
-FROM pragma_table_info(@TableName)";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            Query(sql, parameters, out columnInfo);
-            return this;
+            return Query(_getColumnsSql, parameters, out columnInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -219,60 +250,61 @@ FROM pragma_table_info(@TableName)";
         }
 
         /// <inheritdoc/>
+        public async Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+
+            // Get list of dynamic objects.
+            // In some versions of SQLite, PRAGMA statements could not support paramters.
+            string sql = $"PRAGMA foreign_key_list('{tableName}');";
+            List<dynamic> foreignKeyInfoDynamic = await QueryAsync<dynamic>(sql);
+
+            // Wrap the result.
+            return foreignKeyInfoDynamic
+                .Select(keyInfo => new VelocipedeForeignKeyInfo
+                {
+                    ForeignKeyId = keyInfo.id,
+                    SequenceNumber = keyInfo.seq,
+                    ToTableName = keyInfo.table,
+                    FromColumn = keyInfo.from,
+                    ToColumn = keyInfo.to,
+                    OnUpdate = keyInfo.on_update,
+                    OnDelete = keyInfo.on_delete,
+                    MatchingClause = keyInfo.match,
+                })
+                .ToList();
+        }
+
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = @"
-SELECT
-    --type,
-    name AS TriggerName,
-    tbl_name AS EventObjectTable,
-    rootpage AS RootPage,
-    sql AS SqlDefinition
-FROM sqlite_master
-WHERE type = 'trigger' AND tbl_name = @TableName";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            Query(sql, parameters, out triggerInfo);
-            return this;
+            return Query(_getTriggersSql, parameters, out triggerInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
         }
 
         /// <inheritdoc/>
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
-            string sql = @"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = @TableName";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            return QueryFirstOrDefault(sql, parameters, out sqlDefinition);
-        }
-
-        /// <inheritdoc/>
-        public Task<List<string>> GetTablesInDbAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
-        {
-            throw new NotImplementedException();
+            return QueryFirstOrDefault(_getSqlDefinitionSql, parameters, out sqlDefinition);
         }
 
         /// <inheritdoc/>
         public Task<string?> GetSqlDefinitionAsync(string tableName)
         {
-            throw new NotImplementedException();
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryFirstOrDefaultAsync<string>(_getSqlDefinitionSql, parameters);
         }
 
         /// <inheritdoc/>

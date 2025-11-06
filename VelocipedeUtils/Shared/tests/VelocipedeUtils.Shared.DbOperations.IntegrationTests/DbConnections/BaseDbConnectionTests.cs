@@ -969,7 +969,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetAllData_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+        public void GetAllData_FixtureGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -998,7 +998,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetAllData_ConnectionStringFromFixtureAndGetAllTestModelsAsList_QuantityEqualsToSpecified()
+        public void GetAllData_FixtureGetAllTestModelsAsList_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1078,7 +1078,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
         
         [Fact]
-        public async Task GetAllDataAsync_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+        public async Task GetAllDataAsync_FixtureGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1108,7 +1108,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public async Task GetAllDataAsync_ConnectionStringFromFixtureAndGetAllTestModelsAsList_QuantityEqualsToSpecified()
+        public async Task GetAllDataAsync_FixtureGetAllTestModelsAsList_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1501,7 +1501,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void CloseDb_ConnectionStringFromFixtureAndConnected_NotThrowAnyException()
+        public void CloseDb_FixtureConnected_NotThrowAnyException()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1559,7 +1559,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetTablesInDb_ConnectionStringFromFixtureAndNotConnected_ResultContainsAllExpectedStrings()
+        public void GetTablesInDb_FixtureNotConnected_ResultContainsAllExpectedStrings()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1586,7 +1586,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetTablesInDb_ConnectionStringFromFixtureAndConnected_ResultContainsAllExpectedStrings()
+        public void GetTablesInDb_FixtureConnected_ResultContainsAllExpectedStrings()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1670,7 +1670,119 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetColumns_ConnectionStringFromFixtureAndNotConnected_ResultContainsAllExpectedStrings()
+        public async Task GetTablesInDbAsync_FixtureNotConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            var expected = new List<string>
+            {
+                "TestModels",
+                "TestUsers",
+                "TestCities",
+            };
+
+            // Act.
+            List<string> result = await dbConnection.GetTablesInDbAsync();
+            result = result
+                .Select(x => x.Replace("public.", ""))
+                .ToList();
+
+            // Assert.
+            result.Should().HaveCountGreaterThanOrEqualTo(3);
+            foreach (var expectedString in expected)
+            {
+                result.Should().Contain(expectedString);
+            }
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task GetTablesInDbAsync_FixtureConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            var expected = new List<string>
+            {
+                "TestModels",
+                "TestUsers",
+                "TestCities",
+            };
+
+            // Act.
+            List<string> result = await dbConnection
+                .OpenDb()
+                .GetTablesInDbAsync();
+            dbConnection
+                .CloseDb();
+            result = result
+                .Select(x => x.Replace("public.", ""))
+                .ToList();
+
+            // Assert.
+            result.Should().HaveCountGreaterThanOrEqualTo(3);
+            foreach (var expectedString in expected)
+            {
+                result.Should().Contain(expectedString);
+            }
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task GetTablesInDbAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<string>>> act = async () => await dbConnection.GetTablesInDbAsync();
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task GetTablesInDbAsync_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<string>>> act = async () => await dbConnection.GetTablesInDbAsync();
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public async Task GetTablesInDbAsync_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<string>>> act = async () => await dbConnection.GetTablesInDbAsync();
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetColumns_FixtureNotConnected_ResultContainsAllExpectedStrings()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1685,7 +1797,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetColumns_ConnectionStringFromFixtureAndConnected_ResultContainsAllExpectedStrings()
+        public void GetColumns_FixtureConnected_ResultContainsAllExpectedStrings()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1759,10 +1871,101 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection.IsConnected.Should().BeFalse();
         }
 
+        [Fact]
+        public async Task GetColumnsAsync_FixtureNotConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string tableName = "\"TestModels\"";
+
+            // Act.
+            List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableName);
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(3);
+        }
+
+        [Fact]
+        public async Task GetColumnsAsync_FixtureConnected_ResultContainsAllExpectedStrings()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string tableName = "\"TestModels\"";
+
+            // Act.
+            List<VelocipedeColumnInfo>? result = await dbConnection
+                .OpenDb()
+                .GetColumnsAsync(tableName);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(3);
+        }
+
+        [Fact]
+        public async Task GetColumnsAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<VelocipedeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task GetColumnsAsync_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<VelocipedeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public async Task GetColumnsAsync_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<object>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
         [Theory]
         [InlineData("\"TestModels\"", 0)]
         [InlineData("\"TestUsers\"", 1)]
-        public void GetForeignKeys_ConnectionStringFromFixtureAndNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        public void GetForeignKeys_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1778,7 +1981,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [Theory]
         [InlineData("\"TestModels\"", 0)]
         [InlineData("\"TestUsers\"", 1)]
-        public void GetForeignKeys_ConnectionStringFromFixtureAndConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        public void GetForeignKeys_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1853,8 +2056,101 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 
         [Theory]
         [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 1)]
+        public async Task GetForeignKeysAsync_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            List<VelocipedeForeignKeyInfo>? result = await dbConnection.GetForeignKeysAsync(tableName);
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 1)]
+        public async Task GetForeignKeysAsync_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            List<VelocipedeForeignKeyInfo>? result = await dbConnection
+                .OpenDb()
+                .GetForeignKeysAsync(tableName);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Fact]
+        public async Task GetForeignKeysAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<VelocipedeForeignKeyInfo>>> act = async () => await dbConnection.GetForeignKeysAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task GetForeignKeysAsync_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<object>> act = async () => await dbConnection.GetForeignKeysAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public async Task GetForeignKeysAsync_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<object>> act = async () => await dbConnection.GetForeignKeysAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"", 0)]
         [InlineData("\"TestUsers\"", 2)]
-        public void GetTriggers_ConnectionStringFromFixtureAndNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        public void GetTriggers_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1870,7 +2166,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [Theory]
         [InlineData("\"TestModels\"", 0)]
         [InlineData("\"TestUsers\"", 2)]
-        public void GetTriggers_ConnectionStringFromFixtureAndConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        public void GetTriggers_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1944,9 +2240,102 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Theory]
+        [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 2)]
+        public async Task GetTriggersAsync_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            List<VelocipedeTriggerInfo>? result = await dbConnection.GetTriggersAsync(tableName);
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"", 0)]
+        [InlineData("\"TestUsers\"", 2)]
+        public async Task GetTriggersAsync_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            List<VelocipedeTriggerInfo>? result = await dbConnection
+                .OpenDb()
+                .GetTriggersAsync(tableName);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().HaveCount(expectedQty);
+        }
+
+        [Fact]
+        public async Task GetTriggersAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<VelocipedeTriggerInfo>>> act = async () => await dbConnection.GetTriggersAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task GetTriggersAsync_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<VelocipedeTriggerInfo>>> act = async () => await dbConnection.GetTriggersAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public async Task GetTriggersAsync_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<VelocipedeTriggerInfo>>> act = async () => await dbConnection.GetTriggersAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
-        public virtual void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
+        public virtual void GetSqlDefinition_FixtureNotConnected_ResultEqualsToExpected(string tableName)
         {
             // Arrange.
             string expected = GetExpectedSqlDefinition(tableName);
@@ -1965,7 +2354,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [Theory]
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
-        public virtual void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
+        public virtual void GetSqlDefinition_FixtureConnected_ResultEqualsToExpected(string tableName)
         {
             // Arrange.
             string expected = GetExpectedSqlDefinition(tableName);
@@ -2037,6 +2426,105 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             act
                 .Should()
                 .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+        public virtual async Task GetSqlDefinitionAsync_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+        {
+            // Arrange.
+            string expected = GetExpectedSqlDefinition(tableName);
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            string? result = await dbConnection.GetSqlDefinitionAsync(tableName);
+            result = result?.Replace("\r\n", "\n");
+            expected = expected.Replace("\r\n", "\n");
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().Be(expected);
+        }
+
+        [Theory]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+        public virtual async Task GetSqlDefinitionAsync_FixtureConnected_ResultEqualsToExpected(string tableName)
+        {
+            // Arrange.
+            string expected = GetExpectedSqlDefinition(tableName);
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+            // Act.
+            string? result = await dbConnection
+                .OpenDb()
+                .GetSqlDefinitionAsync(tableName);
+            dbConnection
+                .CloseDb();
+            result = result?.Replace("\r\n", "\n");
+            expected = expected.Replace("\r\n", "\n");
+
+            // Assert.
+            dbConnection.IsConnected.Should().BeFalse();
+            result.Should().Be(expected);
+        }
+
+        [Fact]
+        public async Task GetSqlDefinitionAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<string?>> act = async () => await dbConnection.GetSqlDefinitionAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public async Task GetSqlDefinitionAsync_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string? connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<string?>> act = async () => await dbConnection.GetSqlDefinitionAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            dbConnection.IsConnected.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public async Task GetSqlDefinitionAsync_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            string tableName = "\"TestModels\"";
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<string?>> act = async () => await dbConnection.GetSqlDefinitionAsync(tableName);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
                 .WithInnerException(typeof(ArgumentException));
             dbConnection.IsConnected.Should().BeFalse();
         }

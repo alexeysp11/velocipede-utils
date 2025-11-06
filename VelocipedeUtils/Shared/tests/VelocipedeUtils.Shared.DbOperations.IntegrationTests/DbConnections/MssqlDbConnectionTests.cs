@@ -89,7 +89,7 @@ insert into ""TestTableForExecuteAsyncWithParams"" (""Name"") values (@TestRecor
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-        public override void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
+        public override void GetSqlDefinition_FixtureNotConnected_ResultEqualsToExpected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
         }
@@ -98,7 +98,7 @@ insert into ""TestTableForExecuteAsyncWithParams"" (""Name"") values (@TestRecor
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-        public override void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
+        public override void GetSqlDefinition_FixtureConnected_ResultEqualsToExpected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
         }
