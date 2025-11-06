@@ -534,6 +534,117 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
+        public async Task QueryAsync_WithoutRestrictions_GetAllTestModels()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<TestModel> expected =
+            [
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
+            ];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            List<TestModel> result = await dbConnection
+                .OpenDb()
+                .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            result.Should().HaveCount(8);
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public async Task QueryAsync_WithParams_GetAllTestModelsWithIdBiggerThan5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            List<TestModel> expected =
+            [
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
+            ];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            List<TestModel> result = await dbConnection
+                .OpenDb()
+                .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public async Task QueryAsync_WithParamsAndDelegate_GetAllTestModelsWithIdBiggerThan5AndLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<TestModel, bool> predicate = x => x.Id <= 7;
+            List<TestModel> expected =
+            [
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+            ];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            List<TestModel> result = await dbConnection
+                .OpenDb()
+                .QueryAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
+        public async Task QueryAsync_WithDelegate_GetAllTestModelsWithIdLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<TestModel, bool> predicate = x => x.Id <= 7;
+            List<TestModel> expected =
+            [
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+            ];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            List<TestModel> result = await dbConnection
+                .OpenDb()
+                .QueryAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Fact]
         public void QueryDataTable_FixtureWithoutRestrictions_GetAllTestModels()
         {
             // Arrange.
