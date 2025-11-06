@@ -969,7 +969,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+        public void GetAllData_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -998,7 +998,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModelsAsList_QuantityEqualsToSpecified()
+        public void GetAllData_ConnectionStringFromFixtureAndGetAllTestModelsAsList_QuantityEqualsToSpecified()
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1029,7 +1029,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [Theory]
         [InlineData(null)]
         [InlineData("")]
-        public void GetAllDataFromTable_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        public void GetAllData_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1044,7 +1044,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
-        public void GetAllDataFromTable_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        public void GetAllData_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
         {
             // Arrange.
             string connectionString = Guid.NewGuid().ToString();
@@ -1063,7 +1063,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         [InlineData("INCORRECT CONNECTION STRING")]
         [InlineData("connect:localhost:0000;")]
         [InlineData("connect:localhost:0000;super-connection-string")]
-        public void GetAllDataFromTable_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        public void GetAllData_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1074,6 +1074,117 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             act
                 .Should()
                 .Throw<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+        }
+        
+        [Fact]
+        public async Task GetAllDataAsync_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            DataTable expected = new List<TestModel>
+            {
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
+            }.ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            DataTable result = await dbConnection
+                .OpenDb()
+                .GetAllDataAsync("\"TestModels\"");
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            result.Rows.Count.Should().Be(8);
+            DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task GetAllDataAsync_ConnectionStringFromFixtureAndGetAllTestModelsAsList_QuantityEqualsToSpecified()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<TestModel> expected =
+            [
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
+            ];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            List<TestModel> result = await dbConnection
+                .OpenDb()
+                .GetAllDataAsync<TestModel>("\"TestModels\"");
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            result.Count.Should().Be(8);
+            result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public async Task GetAllDataAsync_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<DataTable>> act = async () => await dbConnection.GetAllDataAsync("\"TestModels\"");
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+        }
+
+        [Fact]
+        public async Task GetAllDataAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<List<TestModel>>> act = async () => await dbConnection.GetAllDataAsync<TestModel>("\"TestModels\"");
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public async Task GetAllDataAsync_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task<DataTable>> act = async () => await dbConnection.GetAllDataAsync("\"TestModels\"");
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
                 .WithInnerException(typeof(ArgumentException));
         }
 
