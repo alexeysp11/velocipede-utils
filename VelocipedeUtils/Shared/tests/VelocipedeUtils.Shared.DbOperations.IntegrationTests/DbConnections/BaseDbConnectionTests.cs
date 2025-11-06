@@ -146,7 +146,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         {
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-            TestModel expected = new TestModel { Id = 1, Name = "Test_1" };
+            TestModel expected = new() { Id = 1, Name = "Test_1" };
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -169,7 +169,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
-            TestModel expected = new TestModel { Id = 5, Name = "Test_5" };
+            TestModel expected = new() { Id = 5, Name = "Test_5" };
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -193,7 +193,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
             Func<TestModel, bool> predicate = x => x.Id >= 7;
-            TestModel expected = new TestModel { Id = 7, Name = "Test_7" };
+            TestModel expected = new() { Id = 7, Name = "Test_7" };
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -216,7 +216,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Arrange.
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             Func<TestModel, bool> predicate = x => x.Id >= 7;
-            TestModel expected = new TestModel { Id = 7, Name = "Test_7" };
+            TestModel expected = new() { Id = 7, Name = "Test_7" };
 
             // Act.
             dbConnection.IsConnected.Should().BeFalse();
@@ -244,14 +244,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             List<TestModel> expected =
             [
-                new TestModel { Id = 1, Name = "Test_1" },
-                new TestModel { Id = 2, Name = "Test_2" },
-                new TestModel { Id = 3, Name = "Test_3" },
-                new TestModel { Id = 4, Name = "Test_4" },
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
-                new TestModel { Id = 8, Name = "Test_8" },
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
             ];
 
             // Act.
@@ -274,10 +274,10 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
             List<TestModel> expected =
             [
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
-                new TestModel { Id = 8, Name = "Test_8" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
             ];
 
             // Act.
@@ -300,9 +300,9 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             Func<TestModel, bool> predicate = x => x.Id <= 7;
             List<TestModel> expected =
             [
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
             ];
 
             // Act.
@@ -324,13 +324,13 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             Func<TestModel, bool> predicate = x => x.Id <= 7;
             List<TestModel> expected =
             [
-                new TestModel { Id = 1, Name = "Test_1" },
-                new TestModel { Id = 2, Name = "Test_2" },
-                new TestModel { Id = 3, Name = "Test_3" },
-                new TestModel { Id = 4, Name = "Test_4" },
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
             ];
 
             // Act.
@@ -355,14 +355,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             DataTable expected = new List<TestModel>
             {
-                new TestModel { Id = 1, Name = "Test_1" },
-                new TestModel { Id = 2, Name = "Test_2" },
-                new TestModel { Id = 3, Name = "Test_3" },
-                new TestModel { Id = 4, Name = "Test_4" },
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
-                new TestModel { Id = 8, Name = "Test_8" },
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
             }.Select(x => new { x.Id, x.Name }).ToDataTable();
 
             // Act.
@@ -385,10 +385,10 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
             DataTable expected = new List<TestModel>
             {
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
-                new TestModel { Id = 8, Name = "Test_8" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
             }.Select(x => new { x.Id, x.Name }).ToDataTable();
 
             // Act.
@@ -411,9 +411,9 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             Func<dynamic, bool> predicate = x => x.Id <= 7;
             DataTable expected = new List<TestModel>
             {
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
             }.Select(x => new { x.Id, x.Name }).ToDataTable();
 
             // Act.
@@ -435,13 +435,13 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             Func<dynamic, bool> predicate = x => x.Id <= 7;
             DataTable expected = new List<TestModel>
             {
-                new TestModel { Id = 1, Name = "Test_1" },
-                new TestModel { Id = 2, Name = "Test_2" },
-                new TestModel { Id = 3, Name = "Test_3" },
-                new TestModel { Id = 4, Name = "Test_4" },
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
             }.Select(x => new { x.Id, x.Name }).ToDataTable();
 
             // Act.
@@ -517,14 +517,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             DataTable expected = new List<TestModel>
             {
-                new TestModel { Id = 1, Name = "Test_1" },
-                new TestModel { Id = 2, Name = "Test_2" },
-                new TestModel { Id = 3, Name = "Test_3" },
-                new TestModel { Id = 4, Name = "Test_4" },
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
-                new TestModel { Id = 8, Name = "Test_8" },
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
             }.ToDataTable();
 
             // Act.
@@ -546,14 +546,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
             List<TestModel> expected =
             [
-                new TestModel { Id = 1, Name = "Test_1" },
-                new TestModel { Id = 2, Name = "Test_2" },
-                new TestModel { Id = 3, Name = "Test_3" },
-                new TestModel { Id = 4, Name = "Test_4" },
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
-                new TestModel { Id = 8, Name = "Test_8" },
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
             ];
 
             // Act.
@@ -1554,14 +1554,14 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Test models.
             var testModels = new List<TestModel>
             {
-                new TestModel { Id = 1, Name = "Test_1" },
-                new TestModel { Id = 2, Name = "Test_2" },
-                new TestModel { Id = 3, Name = "Test_3" },
-                new TestModel { Id = 4, Name = "Test_4" },
-                new TestModel { Id = 5, Name = "Test_5" },
-                new TestModel { Id = 6, Name = "Test_6" },
-                new TestModel { Id = 7, Name = "Test_7" },
-                new TestModel { Id = 8, Name = "Test_8" },
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
             };
             foreach (TestModel testModel in testModels)
             {
@@ -1575,10 +1575,10 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Cities.
             var cities = new List<TestCity>
             {
-                new TestCity { Id = 1, Name = "City_1" },
-                new TestCity { Id = 2, Name = "City_2" },
-                new TestCity { Id = 3, Name = "City_3" },
-                new TestCity { Id = 4, Name = "City_4" },
+                new() { Id = 1, Name = "City_1" },
+                new() { Id = 2, Name = "City_2" },
+                new() { Id = 3, Name = "City_3" },
+                new() { Id = 4, Name = "City_4" },
             };
             foreach (TestCity city in cities)
             {
@@ -1594,17 +1594,17 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             // Users.
             var users = new List<TestUser>
             {
-                new TestUser { Id = 1, Name = "User_1", Email = "User_1@example.com", CityId = lastCity?.Id, City = lastCity },
-                new TestUser { Id = 2, Name = "User_2", Email = "User_2@example.com" },
-                new TestUser { Id = 3, Name = "User_3", Email = "User_3@example.com" },
-                new TestUser { Id = 4, Name = "User_4", Email = "User_4@example.com", CityId = firstCity?.Id, City = firstCity },
-                new TestUser { Id = 5, Name = "User_5", Email = "User_5@example.com", CityId = firstCity?.Id, City = firstCity },
-                new TestUser { Id = 6, Name = "User_6", Email = "User_6@example.com" },
-                new TestUser { Id = 7, Name = "User_7", Email = "User_7@example.com", CityId = firstCity?.Id, City = firstCity },
-                new TestUser { Id = 8, Name = "User_8", Email = "User_8@example.com" },
-                new TestUser { Id = 9, Name = "User_9", Email = "User_9@example.com", CityId = lastCity?.Id, City = lastCity },
-                new TestUser { Id = 10, Name = "User_10", Email = "User_10@example.com", CityId = lastCity?.Id, City = lastCity },
-                new TestUser { Id = 11, Name = "User_11", Email = "User_11@example.com" },
+                new() { Id = 1, Name = "User_1", Email = "User_1@example.com", CityId = lastCity?.Id, City = lastCity },
+                new() { Id = 2, Name = "User_2", Email = "User_2@example.com" },
+                new() { Id = 3, Name = "User_3", Email = "User_3@example.com" },
+                new() { Id = 4, Name = "User_4", Email = "User_4@example.com", CityId = firstCity?.Id, City = firstCity },
+                new() { Id = 5, Name = "User_5", Email = "User_5@example.com", CityId = firstCity?.Id, City = firstCity },
+                new() { Id = 6, Name = "User_6", Email = "User_6@example.com" },
+                new() { Id = 7, Name = "User_7", Email = "User_7@example.com", CityId = firstCity?.Id, City = firstCity },
+                new() { Id = 8, Name = "User_8", Email = "User_8@example.com" },
+                new() { Id = 9, Name = "User_9", Email = "User_9@example.com", CityId = lastCity?.Id, City = lastCity },
+                new() { Id = 10, Name = "User_10", Email = "User_10@example.com", CityId = lastCity?.Id, City = lastCity },
+                new() { Id = 11, Name = "User_11", Email = "User_11@example.com" },
             };
             foreach (TestUser user in users)
             {
