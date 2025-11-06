@@ -807,6 +807,168 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         }
 
         [Fact]
+        public async Task QueryDataTableAsync_FixtureWithoutRestrictions_GetAllTestModels()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            DataTable expected = new List<TestModel>
+            {
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            DataTable result = await dbConnection
+                .OpenDb()
+                .QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            result.Rows.Count.Should().Be(8);
+            DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task QueryDataTableAsync_FixtureWithParams_GetTestModelsWithIdBiggerThan5()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            DataTable expected = new List<TestModel>
+            {
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+                new() { Id = 8, Name = "Test_8" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            DataTable result = await dbConnection
+                .OpenDb()
+                .QueryDataTableAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task QueryDataTableAsync_FixtureWithParamsAndDelegate_GetTestModelsWithIdBiggerThan5AndLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            List<VelocipedeCommandParameter>? parameters = [new() { Name = "TestModelsId", Value = 5 }];
+            Func<dynamic, bool> predicate = x => x.Id <= 7;
+            DataTable expected = new List<TestModel>
+            {
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            DataTable result = await dbConnection
+                .OpenDb()
+                .QueryDataTableAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task QueryDataTableAsync_FixtureWithDelegate_GetTestModelsWithIdLessThan7()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            Func<dynamic, bool> predicate = x => x.Id <= 7;
+            DataTable expected = new List<TestModel>
+            {
+                new() { Id = 1, Name = "Test_1" },
+                new() { Id = 2, Name = "Test_2" },
+                new() { Id = 3, Name = "Test_3" },
+                new() { Id = 4, Name = "Test_4" },
+                new() { Id = 5, Name = "Test_5" },
+                new() { Id = 6, Name = "Test_6" },
+                new() { Id = 7, Name = "Test_7" },
+            }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            DataTable result = await dbConnection
+                .OpenDb()
+                .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+            dbConnection
+                .CloseDb();
+
+            // Assert.
+            DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public async Task QueryDataTableAsync_NullOrEmptyConnectionString_ThrowsInvalidOperationException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<InvalidOperationException>()
+                .WithMessage(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+        }
+
+        [Fact]
+        public async Task QueryDataTableAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+        {
+            // Arrange.
+            string connectionString = Guid.NewGuid().ToString();
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+        }
+
+        [Theory]
+        [InlineData("INCORRECT CONNECTION STRING")]
+        [InlineData("connect:localhost:0000;")]
+        [InlineData("connect:localhost:0000;super-connection-string")]
+        public async Task QueryDataTableAsync_IncorrectConnectionString_ThrowsVelocipedeDbConnectParamsException(string connectionString)
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            dbConnection.SetConnectionString(connectionString);
+            Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+
+            // Act & Assert.
+            await act
+                .Should()
+                .ThrowAsync<VelocipedeDbConnectParamsException>()
+                .WithInnerException(typeof(ArgumentException));
+        }
+
+        [Fact]
         public void GetAllDataFromTable_ConnectionStringFromFixtureAndGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
         {
             // Arrange.
