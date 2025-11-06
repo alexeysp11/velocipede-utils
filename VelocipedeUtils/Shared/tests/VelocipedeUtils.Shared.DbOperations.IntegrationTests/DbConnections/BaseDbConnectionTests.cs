@@ -15,6 +15,9 @@ using VelocipedeUtils.Shared.Tests.Core.Compare;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
+    /// <summary>
+    /// Base class for unit testing <see cref="IVelocipedeDbConnection"/>.
+    /// </summary>
     public abstract class BaseDbConnectionTests
     {
         protected IDatabaseFixture _fixture;
@@ -28,9 +31,15 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
         private const string SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
 
         protected string _createTableSqlForExecuteQuery;
+        protected string _createTableSqlForExecuteAsyncQuery;
         protected string _createTableSqlForExecuteWithParamsQuery;
+        protected string _createTableSqlForExecuteAsyncWithParamsQuery;
 
-        protected BaseDbConnectionTests(IDatabaseFixture fixture, string sql, string createTestModelsSql, string createTestUsersSql)
+        protected BaseDbConnectionTests(
+            IDatabaseFixture fixture,
+            string sql,
+            string createTestModelsSql,
+            string createTestUsersSql)
         {
             _fixture = fixture;
             _connectionString = _fixture.ConnectionString;
@@ -39,6 +48,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             _createTestUsersSql = createTestUsersSql;
             _createTableSqlForExecuteQuery = string.Empty;
             _createTableSqlForExecuteWithParamsQuery = string.Empty;
+            _createTableSqlForExecuteAsyncQuery = string.Empty;
+            _createTableSqlForExecuteAsyncWithParamsQuery = string.Empty;
 
             CreateTestDatabase(sql);
             InitializeTestDatabase();
@@ -105,6 +116,66 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
             dbConnection
                 .OpenDb()
                 .Execute(_createTableSqlForExecuteWithParamsQuery, parameters);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.GetTablesInDb(out List<string> tables);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.Query(selectQuery, out List<string> names);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            tables.Should().Contain(expectedTable);
+            names.Should().Contain(expectedName);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_CreateTestTableForExecuteAsync_TableExists()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string expected = dbConnection.DatabaseType switch
+            {
+                DatabaseType.PostgreSQL => "public.TestTableForExecuteAsync",
+                _ => "TestTableForExecuteAsync",
+            };
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            await dbConnection
+                .OpenDb()
+                .ExecuteAsync(_createTableSqlForExecuteAsyncQuery);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.GetTablesInDb(out List<string> tables);
+            dbConnection.IsConnected.Should().BeTrue();
+            dbConnection.CloseDb();
+
+            // Assert.
+            dbConnection.Should().NotBeNull();
+            dbConnection.IsConnected.Should().BeFalse();
+            tables.Should().Contain(expected);
+        }
+
+        [Fact]
+        public async Task ExecuteAsync_CreateTestTableForExecuteWithParams_TableExists()
+        {
+            // Arrange.
+            using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+            string expectedTable = dbConnection.DatabaseType switch
+            {
+                DatabaseType.PostgreSQL => "public.TestTableForExecuteAsyncWithParams",
+                _ => "TestTableForExecuteAsyncWithParams",
+            };
+            const string expectedName = "Name_1";
+            const string selectQuery = @"SELECT ""Name"" FROM ""TestTableForExecuteAsyncWithParams""";
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TestRecordName", Value = expectedName }];
+
+            // Act.
+            dbConnection.IsConnected.Should().BeFalse();
+            await dbConnection
+                .OpenDb()
+                .ExecuteAsync(_createTableSqlForExecuteAsyncWithParamsQuery, parameters);
             dbConnection.IsConnected.Should().BeTrue();
             dbConnection.GetTablesInDb(out List<string> tables);
             dbConnection.IsConnected.Should().BeTrue();

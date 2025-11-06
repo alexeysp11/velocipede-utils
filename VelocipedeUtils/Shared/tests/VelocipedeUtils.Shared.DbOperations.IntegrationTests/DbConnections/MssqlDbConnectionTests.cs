@@ -1,7 +1,11 @@
-﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
+    /// <summary>
+    /// Unit tests for <see cref="MssqlDbConnection"/>.
+    /// </summary>
     public sealed class MssqlDbConnectionTests : BaseDbConnectionTests, IClassFixture<MssqlDatabaseFixture>
     {
         private const string CREATE_DATABASE_SQL = @"
@@ -58,10 +62,17 @@ EXEC sp_executesql @triggerSql;";
         public MssqlDbConnectionTests(MssqlDatabaseFixture fixture)
             : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
+            // Queries for Execute.
             _createTableSqlForExecuteQuery = @"create table ""TestTableForExecute"" (""Name"" varchar(50) NOT NULL)";
             _createTableSqlForExecuteWithParamsQuery = @"
 create table ""TestTableForExecuteWithParams"" (""Name"" varchar(50) NOT NULL);
 insert into ""TestTableForExecuteWithParams"" (""Name"") values (@TestRecordName);";
+
+            // Queries for ExecuteAsync.
+            _createTableSqlForExecuteAsyncQuery = @"create table ""TestTableForExecuteAsync"" (""Name"" varchar(50) NOT NULL)";
+            _createTableSqlForExecuteAsyncWithParamsQuery = @"
+create table ""TestTableForExecuteAsyncWithParams"" (""Name"" varchar(50) NOT NULL);
+insert into ""TestTableForExecuteAsyncWithParams"" (""Name"") values (@TestRecordName);";
         }
 
         [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]

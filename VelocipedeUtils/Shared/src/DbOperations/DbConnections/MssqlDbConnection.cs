@@ -340,6 +340,30 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         }
 
         /// <inheritdoc/>
+        public Task<DataTable> QueryDataTableAsync(string sqlRequest)
+        {
+            return QueryDataTableAsync(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            return QueryDataTableAsync(sqlRequest, parameters, predicate: null);
+        }
+
+        /// <inheritdoc/>
+        public async Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate)
+        {
+            List<dynamic> dynamicList = await QueryAsync(sqlRequest, parameters, predicate);
+            return dynamicList.ToDataTable();
+        }
+
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Execute(string sqlRequest)
         {
             return Execute(sqlRequest, null);
@@ -392,6 +416,62 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
                 }
             }
             return this;
+        }
+
+        /// <inheritdoc/>
+        public Task ExecuteAsync(string sqlRequest)
+        {
+            return ExecuteAsync(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public async Task ExecuteAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            bool newConnectionUsed = true;
+            Task<DynamicParameters?>? dapperParamsTask = parameters?.ToDapperParametersAsync();
+            SqlConnection? localConnection = null;
+            try
+            {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new SqlConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    await localConnection.OpenAsync();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
+                DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
+                await localConnection.ExecuteAsync(sqlRequest, dynamicParameters);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (newConnectionUsed && localConnection != null)
+                {
+                    await localConnection.CloseAsync();
+                    localConnection.Dispose();
+                }
+            }
         }
 
         /// <inheritdoc/>
@@ -473,6 +553,74 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         }
 
         /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(string sqlRequest)
+        {
+            return QueryAsync<T>(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            return QueryAsync<T>(sqlRequest, parameters, predicate: null);
+        }
+
+        /// <inheritdoc/>
+        public async Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate)
+        {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            bool newConnectionUsed = true;
+            Task<DynamicParameters?>? dapperParamsTask = parameters?.ToDapperParametersAsync();
+            SqlConnection? localConnection = null;
+            try
+            {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new SqlConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    await localConnection.OpenAsync();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
+                DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
+                IEnumerable<T> queryResult = await localConnection.QueryAsync<T>(sqlRequest, dynamicParameters);
+                if (predicate != null)
+                    queryResult = queryResult.Where(predicate);
+                return queryResult.ToList();
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (newConnectionUsed && localConnection != null)
+                {
+                    await localConnection.CloseAsync();
+                    localConnection.Dispose();
+                }
+            }
+        }
+
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             out T? result)
@@ -547,6 +695,76 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
                 return this;
             }
             return QueryFirstOrDefault(sqlRequest, parameters, out result);
+        }
+
+        /// <inheritdoc/>
+        public Task<T?> QueryFirstOrDefaultAsync<T>(string sqlRequest)
+        {
+            return QueryFirstOrDefaultAsync<T>(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public async Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            if (string.IsNullOrEmpty(ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            bool newConnectionUsed = true;
+            Task<DynamicParameters?>? dapperParamsTask = parameters?.ToDapperParametersAsync();
+            SqlConnection? localConnection = null;
+            try
+            {
+                // Initialize connection.
+                if (_connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = _connection;
+                }
+                else
+                {
+                    localConnection = new SqlConnection(ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    await localConnection.OpenAsync();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
+                DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
+                return await localConnection.QueryFirstOrDefaultAsync<T>(sqlRequest, dynamicParameters);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                if (newConnectionUsed && localConnection != null)
+                {
+                    await localConnection.CloseAsync();
+                    localConnection.Dispose();
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate)
+        {
+            if (predicate != null)
+            {
+                List<T> list = await QueryAsync<T>(sqlRequest, parameters);
+                return list.FirstOrDefault(predicate);
+            }
+            return await QueryFirstOrDefaultAsync<T>(sqlRequest, parameters);
         }
 
         /// <summary>
@@ -653,89 +871,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
 
         /// <inheritdoc/>
         public Task<string?> GetSqlDefinitionAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<DataTable> QueryDataTableAsync(string sqlRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<DataTable> QueryDataTableAsync(
-            string sqlRequest,
-            List<VelocipedeCommandParameter>? parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<DataTable> QueryDataTableAsync(
-            string sqlRequest,
-            List<VelocipedeCommandParameter>? parameters,
-            Func<dynamic, bool>? predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ExecuteAsync(string sqlRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task ExecuteAsync(
-            string sqlRequest,
-            List<VelocipedeCommandParameter>? parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<T>> QueryAsync<T>(string sqlRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<T>> QueryAsync<T>(
-            string sqlRequest,
-            List<VelocipedeCommandParameter>? parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<T>> QueryAsync<T>(
-            string sqlRequest,
-            List<VelocipedeCommandParameter>? parameters,
-            Func<T, bool>? predicate)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<T?> QueryFirstOrDefaultAsync<T>(string sqlRequest)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<T?> QueryFirstOrDefaultAsync<T>(
-            string sqlRequest,
-            List<VelocipedeCommandParameter>? parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<T?> QueryFirstOrDefaultAsync<T>(
-            string sqlRequest,
-            List<VelocipedeCommandParameter>? parameters,
-            Func<T, bool>? predicate)
         {
             throw new NotImplementedException();
         }

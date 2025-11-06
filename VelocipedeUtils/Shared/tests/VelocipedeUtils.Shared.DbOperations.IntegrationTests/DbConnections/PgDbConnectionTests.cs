@@ -1,7 +1,11 @@
-﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
+    /// <summary>
+    /// Unit tests for <see cref="PgDbConnection"/>.
+    /// </summary>
     public sealed class PgDbConnectionTests : BaseDbConnectionTests, IClassFixture<PgDatabaseFixture>
     {
         private const string CREATE_DATABASE_SQL = @"
@@ -57,10 +61,17 @@ execute function ""fn_TestUsers_CityId_Update""();";
         public PgDbConnectionTests(PgDatabaseFixture fixture)
             : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
+            // Queries for Execute.
             _createTableSqlForExecuteQuery = @"create table if not exists ""TestTableForExecute"" (""Name"" varchar(50) NOT NULL)";
             _createTableSqlForExecuteWithParamsQuery = @"
 create table if not exists ""TestTableForExecuteWithParams"" (""Name"" varchar(50) NOT NULL);
 insert into ""TestTableForExecuteWithParams"" (""Name"") values (@TestRecordName);";
+
+            // Queries for ExecuteAsync.
+            _createTableSqlForExecuteAsyncQuery = @"create table if not exists ""TestTableForExecuteAsync"" (""Name"" varchar(50) NOT NULL)";
+            _createTableSqlForExecuteAsyncWithParamsQuery = @"
+create table if not exists ""TestTableForExecuteAsyncWithParams"" (""Name"" varchar(50) NOT NULL);
+insert into ""TestTableForExecuteAsyncWithParams"" (""Name"") values (@TestRecordName);";
         }
     }
 }
