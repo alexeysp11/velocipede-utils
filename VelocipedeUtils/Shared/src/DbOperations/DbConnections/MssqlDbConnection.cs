@@ -17,6 +17,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <inheritdoc/>
         public string? ConnectionString { get; set; }
 
+        private readonly string _getTablesInDbSql;
+        private readonly string _getColumnsSql;
+        private readonly string _getForeignKeysSql;
+        private readonly string _getTriggersSql;
+        private readonly string _getSqlDefinitionSql;
+
         /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
 
@@ -31,6 +37,48 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public MssqlDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
+
+            _getTablesInDbSql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
+
+            _getColumnsSql = @"
+SELECT
+    COLUMN_NAME as ColumnName,
+    DATA_TYPE as ColumnType,
+    COLUMN_DEFAULT as DefaultValue,
+    case when IS_NULLABLE = 'YES' then 1 else 0 end as IsNullable
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE TABLE_NAME = @TableName";
+
+            _getForeignKeysSql = @"
+SELECT
+    fk.name AS ConstraintName,
+    OBJECT_NAME(fk.parent_object_id) AS FromTableName,
+    COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS FromColumn,
+    OBJECT_NAME(fk.referenced_object_id) AS ToTableName,
+    COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS ToColumn,
+    fk.delete_referential_action_desc AS OnDelete,
+    fk.update_referential_action_desc AS OnUpdate
+FROM
+    sys.foreign_keys AS fk
+INNER JOIN
+    sys.foreign_key_columns AS fkc ON fk.object_id = fkc.constraint_object_id
+WHERE OBJECT_NAME(fk.parent_object_id) = @TableName";
+
+            _getTriggersSql = @"
+SELECT 
+    name as [TriggerName],
+    object_name(parent_obj) as [EventObjectTable],
+    object_schema_name(parent_obj) as [EventObjectSchema],
+    --OBJECTPROPERTY(id, 'ExecIsUpdateTrigger') AS isupdate, 
+    --OBJECTPROPERTY(id, 'ExecIsDeleteTrigger') AS isdelete, 
+    --OBJECTPROPERTY(id, 'ExecIsInsertTrigger') AS isinsert, 
+    --OBJECTPROPERTY(id, 'ExecIsAfterTrigger') AS isafter, 
+    --OBJECTPROPERTY(id, 'ExecIsInsteadOfTrigger') AS isinsteadof,
+    case when OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') = 1 then 0 else 1 end AS [IsActive]
+FROM sysobjects s
+WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
+
+            _getSqlDefinitionSql = $"SELECT OBJECT_DEFINITION(OBJECT_ID(@TableName)) AS ObjectDefinition";
         }
 
         /// <inheritdoc/>
@@ -206,9 +254,13 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <inheritdoc/>
         public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
-            string sql = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
-            Query(sql, out tables);
-            return this;
+            return Query(_getTablesInDbSql, out tables);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<string>> GetTablesInDbAsync()
+        {
+            return QueryAsync<string>(_getTablesInDbSql);
         }
 
         /// <inheritdoc/>
@@ -217,17 +269,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             out List<VelocipedeColumnInfo> columnInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = @"
-SELECT
-    COLUMN_NAME as ColumnName,
-    DATA_TYPE as ColumnType,
-    COLUMN_DEFAULT as DefaultValue,
-    case when IS_NULLABLE = 'YES' then 1 else 0 end as IsNullable
-FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = @TableName";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            Query(sql, parameters, out columnInfo);
-            return this;
+            return Query(_getColumnsSql, parameters, out columnInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -236,23 +287,16 @@ WHERE TABLE_NAME = @TableName";
             out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = @"
-SELECT
-    fk.name AS ConstraintName,
-    OBJECT_NAME(fk.parent_object_id) AS FromTableName,
-    COL_NAME(fkc.parent_object_id, fkc.parent_column_id) AS FromColumn,
-    OBJECT_NAME(fk.referenced_object_id) AS ToTableName,
-    COL_NAME(fkc.referenced_object_id, fkc.referenced_column_id) AS ToColumn,
-    fk.delete_referential_action_desc AS OnDelete,
-    fk.update_referential_action_desc AS OnUpdate
-FROM
-    sys.foreign_keys AS fk
-INNER JOIN
-    sys.foreign_key_columns AS fkc ON fk.object_id = fkc.constraint_object_id
-WHERE OBJECT_NAME(fk.parent_object_id) = @TableName";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            Query(sql, parameters, out foreignKeyInfo);
-            return this;
+            return Query(_getForeignKeysSql, parameters, out foreignKeyInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeForeignKeyInfo>(_getForeignKeysSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -261,22 +305,16 @@ WHERE OBJECT_NAME(fk.parent_object_id) = @TableName";
             out List<VelocipedeTriggerInfo> triggerInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = @"
-SELECT 
-    name as [TriggerName],
-    object_name(parent_obj) as [EventObjectTable],
-    object_schema_name(parent_obj) as [EventObjectSchema],
-    --OBJECTPROPERTY(id, 'ExecIsUpdateTrigger') AS isupdate, 
-    --OBJECTPROPERTY(id, 'ExecIsDeleteTrigger') AS isdelete, 
-    --OBJECTPROPERTY(id, 'ExecIsInsertTrigger') AS isinsert, 
-    --OBJECTPROPERTY(id, 'ExecIsAfterTrigger') AS isafter, 
-    --OBJECTPROPERTY(id, 'ExecIsInsteadOfTrigger') AS isinsteadof,
-    case when OBJECTPROPERTY(id, 'ExecIsTriggerDisabled') = 1 then 0 else 1 end AS [IsActive]
-FROM sysobjects s
-WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            Query(sql, parameters, out triggerInfo);
-            return this;
+            return Query(_getTriggersSql, parameters, out triggerInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -285,10 +323,16 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
-            string sql = $"SELECT OBJECT_DEFINITION(OBJECT_ID(@TableName)) AS ObjectDefinition";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            QueryFirstOrDefault(sql, parameters, out sqlDefinition);
-            return this;
+            return QueryFirstOrDefault(_getSqlDefinitionSql, parameters, out sqlDefinition);
+        }
+
+        /// <inheritdoc/>
+        public Task<string?> GetSqlDefinitionAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryFirstOrDefaultAsync<string>(_getSqlDefinitionSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -843,36 +887,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         public void Dispose()
         {
             CloseDb();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<string>> GetTablesInDbAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<string?> GetSqlDefinitionAsync(string tableName)
-        {
-            throw new NotImplementedException();
         }
     }
 }

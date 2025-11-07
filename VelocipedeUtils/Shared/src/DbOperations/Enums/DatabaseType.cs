@@ -15,5 +15,6 @@
         HSQLDB = 7,
         Oracle = 8,
         Clickhouse = 9,
+        Firebird = 10,
     }
 }

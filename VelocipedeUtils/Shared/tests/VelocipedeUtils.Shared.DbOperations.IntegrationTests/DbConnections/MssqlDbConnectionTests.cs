@@ -102,5 +102,25 @@ insert into ""TestTableForExecuteAsyncWithParams"" (""Name"") values (@TestRecor
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
         }
+
+        [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+        public override Task GetSqlDefinitionAsync_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+        {
+            return Task.CompletedTask;
+        }
+
+        [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+        public override Task GetSqlDefinitionAsync_FixtureConnected_ResultEqualsToExpected(string tableName)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+        {
+            return Task.CompletedTask;
+        }
     }
 }
