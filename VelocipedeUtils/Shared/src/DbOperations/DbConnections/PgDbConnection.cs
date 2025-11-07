@@ -19,6 +19,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <inheritdoc/>
         public string? ConnectionString { get; set; }
 
+        private readonly string _getTablesInDbSql;
+        private readonly string _getColumnsSql;
+        private readonly string _getForeignKeysSql;
+        private readonly string _getTriggersSql;
+        private readonly string _getSqlDefinitionSql;
+
         /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
 
@@ -31,6 +37,103 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public PgDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
+
+            _getTablesInDbSql = "SELECT t.schemaname || '.' || t.relname AS name FROM (SELECT schemaname, relname FROM pg_stat_user_tables) t";
+
+            _getColumnsSql = @"
+SELECT
+    column_name as ColumnName,
+    ordinal_position as OrdinalPosition,
+    column_default as DefaultValue,
+    case when is_nullable = 'YES' then true else false end as IsNullable,
+    data_type as ColumnType,
+    case when is_self_referencing = 'YES' then true else false end as IsSelfReferencing,
+    case when is_generated = 'ALWAYS' then true else false end as IsGenerated,
+    case when is_updatable = 'YES' then true else false end as IsUpdatable
+FROM information_schema.columns
+WHERE table_schema = @SchemaName AND table_name = @TableName";
+
+            _getForeignKeysSql = @"
+SELECT
+    tc.constraint_name as ConstraintName,
+    tc.table_schema as FromTableSchema,
+    tc.table_name as FromTableName,
+    kcu.column_name as FromColumn,
+    ccu.table_schema AS ToTableSchema,
+    ccu.table_name AS ToTableName,
+    ccu.column_name AS ToColumn
+FROM 
+    information_schema.table_constraints AS tc
+JOIN information_schema.key_column_usage AS kcu
+    ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
+JOIN information_schema.constraint_column_usage AS ccu
+    ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema
+WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name = @TableName";
+
+            _getTriggersSql = @"
+SELECT
+    trigger_catalog AS TriggerCatalog,
+    trigger_schema AS TriggerSchema,
+    trigger_name AS TriggerName,
+    event_manipulation AS EventManipulation,
+    event_object_catalog AS EventObjectCatalog,
+    event_object_schema AS EventObjectSchema,
+    event_object_table AS EventObjectTable,
+    action_order AS ActionOrder,
+    action_condition AS ActionCondition,
+    action_statement AS ActionStatement,
+    action_orientation AS ActionOrientation,
+    action_timing AS ActionTiming,
+    action_reference_old_table AS ActionReferenceOldTable,
+    action_reference_new_table AS ActionReferenceNewTable
+FROM information_schema.triggers
+WHERE event_object_table = @TableName";
+
+            _getSqlDefinitionSql = @"
+CREATE OR REPLACE FUNCTION fGetSqlFromTable(aSchemaName VARCHAR(255), aTableName VARCHAR(255))
+    RETURNS TEXT
+    LANGUAGE plpgsql AS
+$func$
+DECLARE
+    i INTEGER;
+    lNumRec INTEGER;
+    rec RECORD;
+    lResult text;
+BEGIN
+    i := 0;
+    SELECT COUNT(*) INTO lNumRec FROM information_schema.columns WHERE table_schema LIKE aSchemaName AND table_name LIKE aTableName;
+    lResult := 'CREATE TABLE ' || aSchemaName || '.' || aTableName || chr(10) || '(' || chr(10);
+    FOR rec IN (
+        SELECT 
+            column_name, 
+            column_default, 
+            is_nullable, 
+            data_type, 
+            character_maximum_length
+        FROM information_schema.columns
+        WHERE table_schema LIKE aSchemaName AND table_name LIKE aTableName
+    )
+    LOOP
+        i := i + 1;
+        lResult := lResult || '    ' || rec.column_name || ' ' || rec.data_type;
+        IF UPPER(rec.data_type) LIKE '%CHAR%VAR%' THEN 
+            lResult := lResult || '(' || rec.character_maximum_length || ')';
+        END IF;
+        IF rec.column_default IS NOT NULL AND rec.column_default <> '' THEN
+            lResult := lResult || ' DEFAULT ' || rec.column_default;
+        END IF;
+        IF i = lNumRec THEN 
+            lResult := lResult || chr(10) || ');';
+        ELSE 
+            lResult := lResult || ', ' || chr(10);
+        END IF;
+    END LOOP;
+
+    RETURN lResult;
+END
+$func$;
+
+SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         }
 
         /// <inheritdoc/>
@@ -196,9 +299,13 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <inheritdoc/>
         public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
-            string sql = "SELECT t.schemaname || '.' || t.relname AS name FROM (SELECT schemaname, relname FROM pg_stat_user_tables) t";
-            Query(sql, out tables);
-            return this;
+            return Query(_getTablesInDbSql, out tables);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<string>> GetTablesInDbAsync()
+        {
+            return QueryAsync<string>(_getTablesInDbSql);
         }
 
         /// <inheritdoc/>
@@ -215,25 +322,32 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
             tableName = tableName.Trim('"');
 
-            string sql = @"
-SELECT
-    column_name as ColumnName,
-    ordinal_position as OrdinalPosition,
-    column_default as DefaultValue,
-    case when is_nullable = 'YES' then true else false end as IsNullable,
-    data_type as ColumnType,
-    case when is_self_referencing = 'YES' then true else false end as IsSelfReferencing,
-    case when is_generated = 'ALWAYS' then true else false end as IsGenerated,
-    case when is_updatable = 'YES' then true else false end as IsUpdatable
-FROM information_schema.columns
-WHERE table_schema = @SchemaName AND table_name = @TableName";
             List<VelocipedeCommandParameter> parameters =
             [
                 new() { Name = "TableName", Value = tableName },
                 new() { Name = "SchemaName", Value = schemaName }
             ];
-            Query(sql, parameters, out columnInfo);
-            return this;
+            return Query(_getColumnsSql, parameters, out columnInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+        {
+            string schemaName = "public";
+            string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
+            List<VelocipedeCommandParameter> parameters =
+            [
+                new() { Name = "TableName", Value = tableName },
+                new() { Name = "SchemaName", Value = schemaName }
+            ];
+            return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -249,25 +363,23 @@ WHERE table_schema = @SchemaName AND table_name = @TableName";
             }
             tableName = tableName.Trim('"');
 
-            string sql = @"
-SELECT
-    tc.constraint_name as ConstraintName,
-    tc.table_schema as FromTableSchema,
-    tc.table_name as FromTableName,
-    kcu.column_name as FromColumn,
-    ccu.table_schema AS ToTableSchema,
-    ccu.table_name AS ToTableName,
-    ccu.column_name AS ToColumn
-FROM 
-    information_schema.table_constraints AS tc
-JOIN information_schema.key_column_usage AS kcu
-    ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema
-JOIN information_schema.constraint_column_usage AS ccu
-    ON ccu.constraint_name = tc.constraint_name AND ccu.table_schema = tc.table_schema
-WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name = @TableName";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            Query(sql, parameters, out foreignKeyInfo);
-            return this;
+            return Query(_getForeignKeysSql, parameters, out foreignKeyInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
+        {
+            string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                string schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeForeignKeyInfo>(_getForeignKeysSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -283,27 +395,23 @@ WHERE tc.constraint_type = 'FOREIGN KEY' AND tc.table_name = @TableName";
             }
             tableName = tableName.Trim('"');
 
-            string sql = @"
-SELECT
-    trigger_catalog AS TriggerCatalog,
-    trigger_schema AS TriggerSchema,
-    trigger_name AS TriggerName,
-    event_manipulation AS EventManipulation,
-    event_object_catalog AS EventObjectCatalog,
-    event_object_schema AS EventObjectSchema,
-    event_object_table AS EventObjectTable,
-    action_order AS ActionOrder,
-    action_condition AS ActionCondition,
-    action_statement AS ActionStatement,
-    action_orientation AS ActionOrientation,
-    action_timing AS ActionTiming,
-    action_reference_old_table AS ActionReferenceOldTable,
-    action_reference_new_table AS ActionReferenceNewTable
-FROM information_schema.triggers
-WHERE event_object_table = @TableName";
             List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-            Query(sql, parameters, out triggerInfo);
-            return this;
+            return Query(_getTriggersSql, parameters, out triggerInfo);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
+        {
+            string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                string schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -320,57 +428,32 @@ WHERE event_object_table = @TableName";
             }
             tableName = tableName.Trim('"');
 
-            string sql = @"
-CREATE OR REPLACE FUNCTION fGetSqlFromTable(aSchemaName VARCHAR(255), aTableName VARCHAR(255))
-    RETURNS TEXT
-    LANGUAGE plpgsql AS
-$func$
-DECLARE
-    i INTEGER;
-    lNumRec INTEGER;
-    rec RECORD;
-    lResult text;
-BEGIN
-    i := 0;
-    SELECT COUNT(*) INTO lNumRec FROM information_schema.columns WHERE table_schema LIKE aSchemaName AND table_name LIKE aTableName;
-    lResult := 'CREATE TABLE ' || aSchemaName || '.' || aTableName || chr(10) || '(' || chr(10);
-    FOR rec IN (
-        SELECT 
-            column_name, 
-            column_default, 
-            is_nullable, 
-            data_type, 
-            character_maximum_length
-        FROM information_schema.columns
-        WHERE table_schema LIKE aSchemaName AND table_name LIKE aTableName
-    )
-    LOOP
-        i := i + 1;
-        lResult := lResult || '    ' || rec.column_name || ' ' || rec.data_type;
-        IF UPPER(rec.data_type) LIKE '%CHAR%VAR%' THEN 
-            lResult := lResult || '(' || rec.character_maximum_length || ')';
-        END IF;
-        IF rec.column_default IS NOT NULL AND rec.column_default <> '' THEN
-            lResult := lResult || ' DEFAULT ' || rec.column_default;
-        END IF;
-        IF i = lNumRec THEN 
-            lResult := lResult || chr(10) || ');';
-        ELSE 
-            lResult := lResult || ', ' || chr(10);
-        END IF;
-    END LOOP;
-
-    RETURN lResult;
-END
-$func$;
-
-SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             List<VelocipedeCommandParameter> parameters =
             [
                 new() { Name = "TableName", Value = tableName },
                 new() { Name = "SchemaName", Value = schemaName }
             ];
-            return QueryFirstOrDefault(sql, parameters, out sqlDefinition);
+            return QueryFirstOrDefault(_getSqlDefinitionSql, parameters, out sqlDefinition);
+        }
+
+        /// <inheritdoc/>
+        public Task<string?> GetSqlDefinitionAsync(string tableName)
+        {
+            string schemaName = "public";
+            string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+
+            List<VelocipedeCommandParameter> parameters =
+            [
+                new() { Name = "TableName", Value = tableName },
+                new() { Name = "SchemaName", Value = schemaName }
+            ];
+            return QueryFirstOrDefaultAsync<string>(_getSqlDefinitionSql, parameters);
         }
 
         /// <inheritdoc/>
@@ -926,36 +1009,6 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         public void Dispose()
         {
             CloseDb();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<string>> GetTablesInDbAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Task<string?> GetSqlDefinitionAsync(string tableName)
-        {
-            throw new NotImplementedException();
         }
     }
 }
