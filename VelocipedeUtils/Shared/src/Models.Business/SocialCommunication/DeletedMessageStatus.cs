@@ -1,19 +1,18 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
+namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication;
+
+/// <summary>
+/// Deleted message status.
+/// </summary>
+public enum DeletedMessageStatus
 {
-    /// <summary>
-    /// Deleted message status.
-    /// </summary>
-    public enum DeletedMessageStatus
-    {
-        [Display(Name = "None")]
-        None,
+    [Display(Name = "None")]
+    None,
 
-        [Display(Name = "Delete For Sender")]
-        DeleteForSender,
+    [Display(Name = "Delete For Sender")]
+    DeleteForSender,
 
-        [Display(Name = "Delete For Everybody")]
-        DeleteForEverybody
-    }
+    [Display(Name = "Delete For Everybody")]
+    DeleteForEverybody
 }

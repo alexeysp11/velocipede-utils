@@ -1,12 +1,11 @@
-namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
+namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication;
+
+/// <summary>
+/// Chatroom type.
+/// </summary>
+public enum ChatroomType
 {
-    /// <summary>
-    /// Chatroom type.
-    /// </summary>
-    public enum ChatroomType
-    {
-        Personal,
-        Group,
-        Bot
-    }
+    Personal,
+    Group,
+    Bot
 }

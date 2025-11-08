@@ -1,10 +1,9 @@
-namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
+namespace VelocipedeUtils.Shared.Models.Business.InformationSystem;
+
+/// <summary>
+/// Schedule.
+/// </summary>
+public class Schedule : WfBusinessEntity, IWfBusinessEntity
 {
-    /// <summary>
-    /// Schedule.
-    /// </summary>
-    public class Schedule : WfBusinessEntity, IWfBusinessEntity
-    {
-        // 
-    }
+    // 
 }

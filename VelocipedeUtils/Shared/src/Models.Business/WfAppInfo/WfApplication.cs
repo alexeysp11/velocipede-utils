@@ -1,9 +1,8 @@
-namespace VelocipedeUtils.Shared.Models.Business.WfAppInfo
+namespace VelocipedeUtils.Shared.Models.Business.WfAppInfo;
+
+/// <summary>
+/// Information about the application.
+/// </summary>
+public class WfApplication : WfBusinessEntity, IWfBusinessEntity
 {
-    /// <summary>
-    /// Information about the application.
-    /// </summary>
-    public class WfApplication : WfBusinessEntity, IWfBusinessEntity
-    {
-    }
 }

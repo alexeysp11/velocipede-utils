@@ -1,10 +1,9 @@
-namespace VelocipedeUtils.NetworkAPIs
+namespace VelocipedeUtils.NetworkAPIs;
+
+/// <summary>
+/// Interface for listeners.
+/// </summary>
+public interface IProtocolListener
 {
-    /// <summary>
-    /// Interface for listeners.
-    /// </summary>
-    public interface IProtocolListener
-    {
-        void Listen();
-    }
+    void Listen();
 }

@@ -1,16 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
+namespace VelocipedeUtils.Shared.Models.Business.InformationSystem;
+
+/// <summary>
+/// Authentication provider type.
+/// </summary>
+public enum AuthProviderType
 {
-    /// <summary>
-    /// Authentication provider type.
-    /// </summary>
-    public enum AuthProviderType
-    {
-        [Display(Name = "Standard")]
-        Standard,
-        
-        [Display(Name = "LDAP/AD")]
-        LdapAd
-    }
+    [Display(Name = "Standard")]
+    Standard,
+    
+    [Display(Name = "LDAP/AD")]
+    LdapAd
 }

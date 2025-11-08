@@ -1,14 +1,13 @@
-namespace VelocipedeUtils.Shared.Models.Business.Processes
+namespace VelocipedeUtils.Shared.Models.Business.Processes;
+
+/// <summary>
+/// Incident severity.
+/// </summary>
+public enum IncidentSeverity
 {
-    /// <summary>
-    /// Incident severity.
-    /// </summary>
-    public enum IncidentSeverity
-    {
-        Insignificant,
-        Minor,
-        Moderate,
-        Major,
-        Catastrophic
-    }
+    Insignificant,
+    Minor,
+    Moderate,
+    Major,
+    Catastrophic
 }

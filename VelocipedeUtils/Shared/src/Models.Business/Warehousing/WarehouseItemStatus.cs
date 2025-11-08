@@ -1,11 +1,10 @@
-namespace VelocipedeUtils.Shared.Models.Business.Warehousing
+namespace VelocipedeUtils.Shared.Models.Business.Warehousing;
+
+/// <summary>
+/// Status of the warehouse item.
+/// </summary>
+public enum WarehouseItemStatus
 {
-    /// <summary>
-    /// Status of the warehouse item.
-    /// </summary>
-    public enum WarehouseItemStatus
-    {
-        Active = 0,
-        Delete = 1
-    }
+    Active = 0,
+    Delete = 1
 }

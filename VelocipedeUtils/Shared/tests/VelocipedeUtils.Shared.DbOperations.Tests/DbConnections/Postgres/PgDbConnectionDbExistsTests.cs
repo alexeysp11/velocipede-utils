@@ -1,11 +1,10 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres
+namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres;
+
+public sealed class PgDbConnectionDbExistsTests : BaseDbConnectionDbExistsTests
 {
-    public sealed class PgDbConnectionDbExistsTests : BaseDbConnectionDbExistsTests
+    public PgDbConnectionDbExistsTests() : base(Enums.DatabaseType.PostgreSQL)
     {
-        public PgDbConnectionDbExistsTests() : base(Enums.DatabaseType.PostgreSQL)
-        {
-        }
     }
 }

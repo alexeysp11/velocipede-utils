@@ -1,11 +1,10 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
+namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql;
+
+public sealed class MssqlDbConnectionDbExistsTests : BaseDbConnectionDbExistsTests
 {
-    public sealed class MssqlDbConnectionDbExistsTests : BaseDbConnectionDbExistsTests
+    public MssqlDbConnectionDbExistsTests() : base(Enums.DatabaseType.MSSQL)
     {
-        public MssqlDbConnectionDbExistsTests() : base(Enums.DatabaseType.MSSQL)
-        {
-        }
     }
 }

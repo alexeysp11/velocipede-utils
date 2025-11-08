@@ -1,10 +1,9 @@
-namespace VelocipedeUtils.Shared.Office.DocFormats
+namespace VelocipedeUtils.Shared.Office.DocFormats;
+
+/// <summary>
+/// QR code converter.
+/// </summary>
+public class QrCodeConverter
 {
-    /// <summary>
-    /// QR code converter.
-    /// </summary>
-    public class QrCodeConverter
-    {
-        // 
-    }
+    // 
 }

@@ -1,9 +1,8 @@
-namespace VelocipedeUtils.Shared.Models.Business.Customers
+namespace VelocipedeUtils.Shared.Models.Business.Customers;
+
+/// <summary>
+/// Customer device.
+/// </summary>
+public class CustomerDevice
 {
-    /// <summary>
-    /// Customer device.
-    /// </summary>
-    public class CustomerDevice
-    {
-    }
 }

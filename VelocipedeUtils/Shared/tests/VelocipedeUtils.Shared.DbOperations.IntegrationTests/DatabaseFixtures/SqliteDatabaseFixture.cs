@@ -5,63 +5,62 @@ using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+
+public class SqliteDatabaseFixture : IDatabaseFixture
 {
-    public class SqliteDatabaseFixture : IDatabaseFixture
+    /// <inheritdoc/>
+    public string? DatabaseName => SqliteDbConnection.GetDatabaseName(ConnectionString);
+
+    /// <inheritdoc/>
+    public string ConnectionString { get; private set; }
+
+    /// <inheritdoc/>
+    public string ContainerId { get; private set; }
+
+    /// <inheritdoc/>
+    public DatabaseType DatabaseType => DatabaseType.SQLite;
+
+    public SqliteDatabaseFixture()
     {
-        /// <inheritdoc/>
-        public string? DatabaseName => SqliteDbConnection.GetDatabaseName(ConnectionString);
+        ContainerId = Guid.NewGuid().ToString();
+        ConnectionString = SqliteDbConnection.GetConnectionString($"{ContainerId}.db");
+    }
 
-        /// <inheritdoc/>
-        public string ConnectionString { get; private set; }
+    /// <inheritdoc/>
+    public DbConnection GetDbConnection()
+        => new SqliteConnection(ConnectionString);
 
-        /// <inheritdoc/>
-        public string ContainerId { get; private set; }
+    /// <inheritdoc/>
+    public TestDbContext GetTestDbContext()
+    {
+        var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
+        optionsBuilder.UseSqlite(ConnectionString);
 
-        /// <inheritdoc/>
-        public DatabaseType DatabaseType => DatabaseType.SQLite;
+        return new TestDbContext(optionsBuilder.Options);
+    }
 
-        public SqliteDatabaseFixture()
+    /// <inheritdoc/>
+    public Task InitializeAsync()
+    {
+        if (string.IsNullOrEmpty(DatabaseName))
+            throw new ArgumentNullException(nameof(DatabaseName));
+
+        if (!File.Exists(DatabaseName))
         {
-            ContainerId = Guid.NewGuid().ToString();
-            ConnectionString = SqliteDbConnection.GetConnectionString($"{ContainerId}.db");
+            File.Create(DatabaseName).Close();
         }
+        return Task.CompletedTask;
+    }
 
-        /// <inheritdoc/>
-        public DbConnection GetDbConnection()
-            => new SqliteConnection(ConnectionString);
-
-        /// <inheritdoc/>
-        public TestDbContext GetTestDbContext()
+    /// <inheritdoc/>
+    public Task DisposeAsync()
+    {
+        if (File.Exists(DatabaseName))
         {
-            var optionsBuilder = new DbContextOptionsBuilder<TestDbContext>();
-            optionsBuilder.UseSqlite(ConnectionString);
-
-            return new TestDbContext(optionsBuilder.Options);
+            SqliteConnection.ClearAllPools();
+            File.Delete(DatabaseName);
         }
-
-        /// <inheritdoc/>
-        public Task InitializeAsync()
-        {
-            if (string.IsNullOrEmpty(DatabaseName))
-                throw new ArgumentNullException(nameof(DatabaseName));
-
-            if (!File.Exists(DatabaseName))
-            {
-                File.Create(DatabaseName).Close();
-            }
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc/>
-        public Task DisposeAsync()
-        {
-            if (File.Exists(DatabaseName))
-            {
-                SqliteConnection.ClearAllPools();
-                File.Delete(DatabaseName);
-            }
-            return Task.CompletedTask;
-        }
+        return Task.CompletedTask;
     }
 }

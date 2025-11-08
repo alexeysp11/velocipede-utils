@@ -1,12 +1,11 @@
-namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
+namespace VelocipedeUtils.Shared.Models.Business.InformationSystem;
+
+/// <summary>
+/// Replacement mode.
+/// </summary>
+public enum ReplacementMode
 {
-    /// <summary>
-    /// Replacement mode.
-    /// </summary>
-    public enum ReplacementMode
-    {
-        None,
-        ManualReplacement,
-        AutoReplacement
-    }
+    None,
+    ManualReplacement,
+    AutoReplacement
 }

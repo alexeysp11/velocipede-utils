@@ -1,13 +1,12 @@
-namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations
+namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
+
+/// <summary>
+/// Endpoint status.
+/// </summary>
+public enum EndpointStatus
 {
-    /// <summary>
-    /// Endpoint status.
-    /// </summary>
-    public enum EndpointStatus
-    {
-        Unknown,
-        Active,
-        Inactive,
-        Delete
-    }
+    Unknown,
+    Active,
+    Inactive,
+    Delete
 }

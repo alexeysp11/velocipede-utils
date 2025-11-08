@@ -1,11 +1,10 @@
-namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
+namespace VelocipedeUtils.Shared.Models.Business.InformationSystem;
+
+/// <summary>
+/// Replacement status.
+/// </summary>
+public enum ReplacementStatus
 {
-    /// <summary>
-    /// Replacement status.
-    /// </summary>
-    public enum ReplacementStatus
-    {
-        Active = 0,
-        Delete = 1
-    }
+    Active = 0,
+    Delete = 1
 }

@@ -1,11 +1,10 @@
-namespace VelocipedeUtils.Shared.Models.Business.RiskManagement
+namespace VelocipedeUtils.Shared.Models.Business.RiskManagement;
+
+/// <summary>
+/// Risk status.
+/// </summary>
+public enum RiskStatus
 {
-    /// <summary>
-    /// Risk status.
-    /// </summary>
-    public enum RiskStatus
-    {
-        Open, 
-        Resolved
-    }
+    Open, 
+    Resolved
 }

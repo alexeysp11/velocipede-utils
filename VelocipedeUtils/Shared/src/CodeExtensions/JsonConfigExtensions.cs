@@ -1,22 +1,21 @@
 using Microsoft.Extensions.Configuration;
 
-namespace VelocipedeUtils.Extensions
+namespace VelocipedeUtils.Extensions;
+
+/// <summary>
+/// Class for getting settings from config file.
+/// </summary>
+public class JsonConfigExtensions : IConfigExtensions
 {
     /// <summary>
-    /// Class for getting settings from config file.
+    /// Gets settings for server from config file.
     /// </summary>
-    public class JsonConfigExtensions : IConfigExtensions
+    public T GetConfigSettings<T>(string filename, string sectionName)
     {
-        /// <summary>
-        /// Gets settings for server from config file.
-        /// </summary>
-        public T GetConfigSettings<T>(string filename, string sectionName)
-        {
-            IConfiguration config = new ConfigurationBuilder()
-                .AddJsonFile(filename)
-                .AddEnvironmentVariables()
-                .Build();
-            return config.GetSection(sectionName).Get<T>();
-        }
+        IConfiguration config = new ConfigurationBuilder()
+            .AddJsonFile(filename)
+            .AddEnvironmentVariables()
+            .Build();
+        return config.GetSection(sectionName).Get<T>();
     }
 }

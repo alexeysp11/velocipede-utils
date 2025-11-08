@@ -3,27 +3,27 @@
 
 using System;
 
-namespace VelocipedeUtils.Shared.Office.Translation.Digits
-{
+namespace VelocipedeUtils.Shared.Office.Translation.Digits;
+
 	public class DigitsTranslation_sv_SE
 	{
 		private static string[] OneThroughNineteen = {
-            "", "ett", "två", "tre", "fyra", "fem", "sex", "sju", "åtta",
-            "nio", "tio", "elva", "tolv", "tretton", "fjorton",
-            "femton", "sexton", "sjutton", "arton", "nitton"
-        };
+        "", "ett", "två", "tre", "fyra", "fem", "sex", "sju", "åtta",
+        "nio", "tio", "elva", "tolv", "tretton", "fjorton",
+        "femton", "sexton", "sjutton", "arton", "nitton"
+    };
 
 		private static string[] Tens = {
-            "","tio", "tjugo", "trettio", "fyrtio", "femtio", "sextio", "sjuttio", "åttio",
-            "nittio", "etthundra"
-        };
+        "","tio", "tjugo", "trettio", "fyrtio", "femtio", "sextio", "sjuttio", "åttio",
+        "nittio", "etthundra"
+    };
 
 		private static string[] OrdinalOneThroughNineteen = {
-            "", "första", "andra", "tredje", "fjärde", "femte", "sjätte", "sjunde",
-            "åttonde", "nionde", "tionde", "elfte", "tolfte", "trettonde",
-            "fjortonde", "femtonde", "sextonde", "sjuttonde",
-            "artonde", "nittonde"
-        };
+        "", "första", "andra", "tredje", "fjärde", "femte", "sjätte", "sjunde",
+        "åttonde", "nionde", "tionde", "elfte", "tolfte", "trettonde",
+        "fjortonde", "femtonde", "sextonde", "sjuttonde",
+        "artonde", "nittonde"
+    };
 
 		public static string GetListItemText(string languageCultureName, int levelNumber, string numFmt)
 		{
@@ -194,9 +194,9 @@ namespace VelocipedeUtils.Shared.Office.Translation.Digits
 		{
 			string levelAsString = levelNumber.ToString();
 
-            if (levelAsString == null)
-                return "";
-            if (levelAsString.Trim() == "")
+        if (levelAsString == null)
+            return "";
+        if (levelAsString.Trim() == "")
 				return "";
 
 			if(levelAsString.EndsWith("1"))
@@ -207,4 +207,3 @@ namespace VelocipedeUtils.Shared.Office.Translation.Digits
 				return levelAsString + ":e";
 		}
 	}
-}

@@ -1,12 +1,11 @@
-namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
+namespace VelocipedeUtils.Shared.Models.Business.InformationSystem;
+
+/// <summary>
+/// 
+/// </summary>
+public enum UserAccountStatus
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum UserAccountStatus
-    {
-        None = 0,
-        Active = 1,
-        Inactive = 2,
-    }
+    None = 0,
+    Active = 1,
+    Inactive = 2,
 }

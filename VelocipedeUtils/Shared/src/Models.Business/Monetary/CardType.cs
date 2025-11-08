@@ -1,11 +1,10 @@
-namespace VelocipedeUtils.Shared.Models.Business.Monetary
+namespace VelocipedeUtils.Shared.Models.Business.Monetary;
+
+/// <summary>
+/// Card type.
+/// </summary>
+public enum CardType
 {
-    /// <summary>
-    /// Card type.
-    /// </summary>
-    public enum CardType
-    {
-        Visa, 
-        MasterCard
-    }
+    Visa, 
+    MasterCard
 }

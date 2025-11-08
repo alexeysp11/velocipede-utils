@@ -6,47 +6,46 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using VelocipedeUtils.Shared.Models.Documents;
 
-namespace VelocipedeUtils.Shared.Office.DocFormats.TextBased
+namespace VelocipedeUtils.Shared.Office.DocFormats.TextBased;
+
+/// <summary>
+/// Class for using MS Word (MS Word converter)
+/// </summary>
+public class MSWordConverter : IWorkflowTextBased
 {
     /// <summary>
-    /// Class for using MS Word (MS Word converter)
+    /// Method for converting a list of TextDocElement into MS Word document.
     /// </summary>
-    public class MSWordConverter : IWorkflowTextBased
+    public void TextDocElementsToDocument(string foldername, string filename, List<TextDocElement> elements)
     {
-        /// <summary>
-        /// Method for converting a list of TextDocElement into MS Word document.
-        /// </summary>
-        public void TextDocElementsToDocument(string foldername, string filename, List<TextDocElement> elements)
+        if (!Directory.Exists(foldername))
+            throw new Exception("Folder does not exist");
+        if (string.IsNullOrEmpty(filename))
+            throw new Exception("File name could not be null or empty");
+        if (filename.Split('.').Last().ToLower() != "doc" && filename.Split('.').Last().ToLower() != "docx")
+            throw new Exception("Incorrect file extension");
+
+        string filepath = Path.Combine(foldername, filename);
+        if (!File.Exists(foldername)) 
         {
-            if (!Directory.Exists(foldername))
-                throw new Exception("Folder does not exist");
-            if (string.IsNullOrEmpty(filename))
-                throw new Exception("File name could not be null or empty");
-            if (filename.Split('.').Last().ToLower() != "doc" && filename.Split('.').Last().ToLower() != "docx")
-                throw new Exception("Incorrect file extension");
-
-            string filepath = Path.Combine(foldername, filename);
-            if (!File.Exists(foldername)) 
+            using (FileStream fs = File.Create(filepath))
             {
-                using (FileStream fs = File.Create(filepath))
-                {
-                }
             }
+        }
 
-            using (WordprocessingDocument doc = WordprocessingDocument.Open(filepath, true))
+        using (WordprocessingDocument doc = WordprocessingDocument.Open(filepath, true))
+        {
+            MainDocumentPart mainPart = doc.AddMainDocumentPart();
+            mainPart.Document = new Document();
+            mainPart.Document.Body = new Body();
+            foreach (var element in elements)
             {
-                MainDocumentPart mainPart = doc.AddMainDocumentPart();
-                mainPart.Document = new Document();
-                mainPart.Document.Body = new Body();
-                foreach (var element in elements)
-                {
-                    // TODO: Add alignment and font properties!
-                    Paragraph paragraph = new Paragraph();
-                    Run run = new Run(new Text(element.Content));
-                    paragraph.Append(run);
-                    mainPart.Document.Body.Append(paragraph);
-                    mainPart.Document.Save();
-                }
+                // TODO: Add alignment and font properties!
+                Paragraph paragraph = new Paragraph();
+                Run run = new Run(new Text(element.Content));
+                paragraph.Append(run);
+                mainPart.Document.Body.Append(paragraph);
+                mainPart.Document.Save();
             }
         }
     }
