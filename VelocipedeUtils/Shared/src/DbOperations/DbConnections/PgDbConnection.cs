@@ -611,53 +611,12 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         }
 
         /// <inheritdoc/>
-        public async Task<List<T>> QueryAsync<T>(
+        public Task<List<T>> QueryAsync<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             Func<T, bool>? predicate)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            Task<DynamicParameters?>? dapperParamsTask = parameters?.ToDapperParametersAsync();
-            NpgsqlConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new NpgsqlConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    await localConnection.OpenAsync();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
-                IEnumerable<T> queryResult = await localConnection.QueryAsync<T>(sqlRequest, dynamicParameters);
-                if (predicate != null)
-                    queryResult = queryResult.Where(predicate);
-                return queryResult.ToList();
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    await localConnection.CloseAsync();
-                    localConnection.Dispose();
-                }
-            }
+            return InternalQueryAsync(this, sqlRequest, parameters, predicate);
         }
 
         /// <inheritdoc/>
