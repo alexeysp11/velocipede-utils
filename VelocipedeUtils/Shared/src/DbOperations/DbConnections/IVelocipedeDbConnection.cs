@@ -477,5 +477,13 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <returns>The created <see cref="IVelocipedeForeachTableIterator"/> instance for performing <c>foreach</c> operations.</returns>
         IVelocipedeForeachTableIterator WithForeachTableIterator(
             List<string> tables);
+
+        /// <summary>
+        /// Initialize asynchronous <c>foreach</c> operation for the specified tables.
+        /// </summary>
+        /// <param name="tableNames">Table names.</param>
+        /// <returns>The created <see cref="IVelocipedeAsyncForeachIterator"/> instance for performing asynchronous <c>foreach</c> operations.</returns>
+        IVelocipedeAsyncForeachIterator WithAsyncForeachIterator(
+            List<string> tableNames);
     }
 }

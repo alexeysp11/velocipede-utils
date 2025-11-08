@@ -60,6 +60,9 @@ dotnet_diagnostic.CA1859.severity = error
 # CA1860: Avoid using 'Enumerable.Any()' extension method
 dotnet_diagnostic.CA1860.severity = error
 
+# CA1864: Prefer the 'IDictionary.TryAdd(TKey, TValue)' method
+dotnet_diagnostic.CA1864.severity = warning
+
 # CA2200: Rethrow to preserve stack details
 dotnet_diagnostic.CA2200.severity = error
 

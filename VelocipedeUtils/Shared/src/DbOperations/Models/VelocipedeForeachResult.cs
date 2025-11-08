@@ -3,7 +3,7 @@
     /// <summary>
     /// The result of executing the <c>foreach</c> operation for the specified database entities.
     /// </summary>
-    public class VelocipedeForeachResult
+    public sealed class VelocipedeForeachResult
     {
         /// <summary>
         /// A dictionary representing the result of the <c>foreach</c> operation.

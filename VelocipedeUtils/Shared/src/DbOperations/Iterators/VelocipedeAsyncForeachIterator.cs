@@ -6,54 +6,54 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 namespace VelocipedeUtils.Shared.DbOperations.Iterators
 {
     /// <summary>
-    /// Iterator for the <c>foreach</c> operation.
+    /// Iterator for the asynchronous <c>foreach</c> operation.
     /// </summary>
-    public sealed class VelocipedeForeachTableIterator : IVelocipedeForeachTableIterator
+    public sealed class VelocipedeAsyncForeachIterator : IVelocipedeAsyncForeachIterator
     {
         /// <summary>
         /// Type of the <c>foreach</c> operation for the table.
         /// </summary>
-        private enum ForeachTableOperationType
+        private enum AsyncForeachOperationType
         {
             /// <summary>
-            /// Get all data from table.
+            /// Asynchronously get all data from table.
             /// </summary>
-            GetAllData,
+            GetAllDataAsync,
 
             /// <summary>
-            /// Get columns from table.
+            /// Asynchronously get columns from table.
             /// </summary>
-            GetColumns,
+            GetColumnsAsync,
 
             /// <summary>
-            /// Get all foreign keys from table.
+            /// Asynchronously get all foreign keys from table.
             /// </summary>
-            GetForeignKeys,
+            GetForeignKeysAsync,
 
             /// <summary>
-            /// Get triggers from table.
+            /// Asynchronously get triggers from table.
             /// </summary>
-            GetTriggers,
+            GetTriggersAsync,
 
             /// <summary>
-            /// Get SQL definition from table.
+            /// Asynchronously get SQL definition from table.
             /// </summary>
-            GetSqlDefinition,
+            GetSqlDefinitionAsync,
         }
 
         private readonly IVelocipedeDbConnection _connection;
         private readonly List<string> _tableNames;
-        private readonly Dictionary<ForeachTableOperationType, bool> _operationTypes;
+        private readonly Dictionary<AsyncForeachOperationType, bool> _operationTypes;
         private bool _allowAddOperationTypes;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="VelocipedeForeachTableIterator"/> class with specified parameters.
+        /// Initializes a new instance of the <see cref="VelocipedeAsyncForeachIterator"/> class with specified parameters.
         /// </summary>
         /// <param name="connection">Instance of <see cref="IVelocipedeDbConnection"/> that is connected to database.</param>
         /// <param name="tableNames"><see cref="List{T}"/> of <see cref="string"/> that contains valid table names.</param>
         /// <exception cref="ArgumentNullException">When <c>connection</c>, or <c>tableNames</c> is null.</exception>
         /// <exception cref="ArgumentException">When <c>connection.IsConnected</c> equals to <c>false</c>, or <c>tableNames.Count == 0</c>.</exception>
-        public VelocipedeForeachTableIterator(IVelocipedeDbConnection connection, List<string> tableNames)
+        public VelocipedeAsyncForeachIterator(IVelocipedeDbConnection connection, List<string> tableNames)
         {
             ArgumentNullException.ThrowIfNull(connection, nameof(connection));
             if (!connection.IsConnected)
@@ -70,7 +70,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator BeginForeach()
+        public IVelocipedeAsyncForeachIterator BeginAsyncForeach()
         {
             _operationTypes.Clear();
             _allowAddOperationTypes = true;
@@ -78,62 +78,56 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator EndForeach()
+        public IVelocipedeAsyncForeachIterator EndAsyncForeach()
         {
             _allowAddOperationTypes = false;
             return this;
         }
 
         /// <inheritdoc/>
-        public IVelocipedeDbConnection GetForeachResult(out VelocipedeForeachResult? foreachResult)
+        public async Task<VelocipedeForeachResult?> GetResultAsync()
         {
             if (_allowAddOperationTypes)
                 throw new InvalidOperationException(ErrorMessageConstants.UnableToGetResultForOpenForeachOperation);
 
             // Get active operations.
-            IEnumerable<ForeachTableOperationType> operations = _operationTypes
+            IEnumerable<AsyncForeachOperationType> operations = _operationTypes
                 .Where(x => x.Value == true)
                 .Select(x => x.Key);
 
             // If there is no active operations, then return null.
             if (!operations.Any())
             {
-                foreachResult = null;
-                return _connection;
+                return null;
             }
 
             // Get foreach result in the loop.
-            foreachResult = new VelocipedeForeachResult();
+            VelocipedeForeachResult foreachResult = new();
             foreach (string tableName in _tableNames)
             {
                 VelocipedeForeachTableInfo tableInfo = new() { TableName = tableName };
-                foreach (ForeachTableOperationType operation in operations)
+                foreach (AsyncForeachOperationType operation in operations)
                 {
                     switch (operation)
                     {
-                        case ForeachTableOperationType.GetAllData:
-                            _connection.GetAllData(tableName, out DataTable? dataTable);
-                            tableInfo.Data = dataTable;
+                        case AsyncForeachOperationType.GetAllDataAsync:
+                            tableInfo.Data = await _connection.GetAllDataAsync(tableName);
                             break;
 
-                        case ForeachTableOperationType.GetColumns:
-                            _connection.GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo);
-                            tableInfo.ColumnInfo = columnInfo;
+                        case AsyncForeachOperationType.GetColumnsAsync:
+                            tableInfo.ColumnInfo = await _connection.GetColumnsAsync(tableName);
                             break;
 
-                        case ForeachTableOperationType.GetForeignKeys:
-                            _connection.GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo>? foreignKeyInfo);
-                            tableInfo.ForeignKeyInfo = foreignKeyInfo;
+                        case AsyncForeachOperationType.GetForeignKeysAsync:
+                            tableInfo.ForeignKeyInfo = await _connection.GetForeignKeysAsync(tableName);
                             break;
 
-                        case ForeachTableOperationType.GetTriggers:
-                            _connection.GetTriggers(tableName, out List<VelocipedeTriggerInfo>? triggerInfo);
-                            tableInfo.TriggerInfo = triggerInfo;
+                        case AsyncForeachOperationType.GetTriggersAsync:
+                            tableInfo.TriggerInfo = await _connection.GetTriggersAsync(tableName);
                             break;
 
-                        case ForeachTableOperationType.GetSqlDefinition:
-                            _connection.GetSqlDefinition(tableName, out string? sqlDefinition);
-                            tableInfo.SqlDefinition = sqlDefinition;
+                        case AsyncForeachOperationType.GetSqlDefinitionAsync:
+                            tableInfo.SqlDefinition = await _connection.GetSqlDefinitionAsync(tableName);
                             break;
 
                         default:
@@ -143,54 +137,54 @@ namespace VelocipedeUtils.Shared.DbOperations.Iterators
                 foreachResult.Add(tableName, tableInfo);
             }
 
-            return _connection;
+            return foreachResult;
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator GetAllData()
+        public IVelocipedeAsyncForeachIterator GetAllDataAsync()
         {
-            TryAddOperationType(ForeachTableOperationType.GetAllData);
+            TryAddOperationType(AsyncForeachOperationType.GetAllDataAsync);
             return this;
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator GetColumns()
+        public IVelocipedeAsyncForeachIterator GetColumnsAsync()
         {
-            TryAddOperationType(ForeachTableOperationType.GetColumns);
+            TryAddOperationType(AsyncForeachOperationType.GetColumnsAsync);
             return this;
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator GetForeignKeys()
+        public IVelocipedeAsyncForeachIterator GetForeignKeysAsync()
         {
-            TryAddOperationType(ForeachTableOperationType.GetForeignKeys);
+            TryAddOperationType(AsyncForeachOperationType.GetForeignKeysAsync);
             return this;
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator GetSqlDefinition()
+        public IVelocipedeAsyncForeachIterator GetSqlDefinitionAsync()
         {
-            TryAddOperationType(ForeachTableOperationType.GetSqlDefinition);
+            TryAddOperationType(AsyncForeachOperationType.GetSqlDefinitionAsync);
             return this;
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator GetTriggers()
+        public IVelocipedeAsyncForeachIterator GetTriggersAsync()
         {
-            TryAddOperationType(ForeachTableOperationType.GetTriggers);
+            TryAddOperationType(AsyncForeachOperationType.GetTriggersAsync);
             return this;
         }
 
         /// <summary>
-        /// Try to add <see cref="ForeachTableOperationType"/>.
+        /// Try to add <see cref="AsyncForeachOperationType"/>.
         /// </summary>
         /// <param name="operationType">Operation type</param>
         /// <exception cref="InvalidOperationException">Thrown when <see cref="EndForeach"/> was already called</exception>
-        private void TryAddOperationType(ForeachTableOperationType operationType)
+        private void TryAddOperationType(AsyncForeachOperationType operationType)
         {
             if (!_allowAddOperationTypes)
                 throw new InvalidOperationException(ErrorMessageConstants.UnableToAddActionForClosedForeachOperation);
-            
+
             if (!_operationTypes.TryAdd(operationType, true))
             {
                 _operationTypes[operationType] = true;

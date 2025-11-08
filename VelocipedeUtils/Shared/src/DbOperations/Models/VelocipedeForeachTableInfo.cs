@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Models
     /// <summary>
     /// The result of executing the <c>foreach</c> operation for a specific database table.
     /// </summary>
-    public class VelocipedeForeachTableInfo
+    public sealed class VelocipedeForeachTableInfo
     {
         /// <summary>
         /// Table name.

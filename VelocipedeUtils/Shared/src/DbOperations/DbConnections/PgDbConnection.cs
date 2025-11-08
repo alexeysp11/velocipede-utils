@@ -635,9 +635,15 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         }
 
         /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
+        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tableNames)
         {
-            return new VelocipedeForeachTableIterator(this, tables);
+            return new VelocipedeForeachTableIterator(this, tableNames);
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeAsyncForeachIterator WithAsyncForeachIterator(List<string> tableNames)
+        {
+            return new VelocipedeAsyncForeachIterator(this, tableNames);
         }
 
         /// <inheritdoc/>
