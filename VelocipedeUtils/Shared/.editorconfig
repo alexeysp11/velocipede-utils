@@ -46,8 +46,17 @@ dotnet_diagnostic.IDE0161.severity = warning
 # CA1001: Types that own disposable fields should be disposable
 dotnet_diagnostic.CA1001.severity = error
 
+# CA1005: Avoid excessive parameters on generic types
+dotnet_diagnostic.CA1005.severity = error
+
 # CA1008: Enums should have zero value
 dotnet_diagnostic.CA1008.severity = error
+
+# CA1012: Abstract types should not have public constructors
+dotnet_diagnostic.CA1012.severity = error
+
+# CA1024: Use properties where appropriate
+dotnet_diagnostic.CA1024.severity = error
 
 # CA1508: Avoid dead conditional code
 dotnet_diagnostic.CA1508.severity = error

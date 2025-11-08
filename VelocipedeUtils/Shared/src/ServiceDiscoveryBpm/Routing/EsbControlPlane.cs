@@ -94,7 +94,7 @@ public class EsbControlPlane
     {
         var transition2Delegate = m_esbRoutingConfigs.Transition2Delegate;
         if (transition2Delegate == null)
-            throw new System.InvalidOperationException("The dictionary that binds transition ID to delegate could not be null");
+            throw new InvalidOperationException("The dictionary that binds transition ID to delegate could not be null");
         
         var workflowInstanceId = parameters.WorkflowInstanceId;
         var transitionId = parameters.BPStateTransitionId;

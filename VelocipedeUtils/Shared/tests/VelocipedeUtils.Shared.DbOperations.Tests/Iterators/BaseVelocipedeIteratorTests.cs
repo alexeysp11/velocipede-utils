@@ -90,7 +90,7 @@ public abstract class BaseVelocipedeIteratorTests
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public BaseVelocipedeIteratorTests()
+    protected BaseVelocipedeIteratorTests()
     {
         // Table lists.
         _tableList1 =
@@ -142,10 +142,10 @@ public abstract class BaseVelocipedeIteratorTests
     }
 
     /// <summary>
-    /// Get null object instead of <see cref="IVelocipedeDbConnection"/>.
+    /// Gets null object instead of <see cref="IVelocipedeDbConnection"/>.
     /// </summary>
     /// <returns><c>null</c></returns>
-    protected static IVelocipedeDbConnection? GetNullVelocipedeConnection()
+    protected static IVelocipedeDbConnection? NullVelocipedeConnection
         => null;
 
     /// <summary>
@@ -248,7 +248,7 @@ public abstract class BaseVelocipedeIteratorTests
         if (isConnected)
         {
             // WithForeachTableIterator.
-            List<string> tableNames = GetTableNames();
+            List<string> tableNames = TableNames;
             mockConnection
                 .Setup(x => x.WithForeachTableIterator(tableNames))
                 .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
@@ -258,20 +258,20 @@ public abstract class BaseVelocipedeIteratorTests
     }
 
     /// <summary>
-    /// Get <c>null</c> instead of list of table names.
+    /// Gets <c>null</c> instead of list of table names.
     /// </summary>
     /// <returns><c>null</c></returns>
-    protected static List<string>? GetNullTableNames() => null;
+    protected static List<string>? NullTableNames => null;
 
     /// <summary>
-    /// Get empty list of table names.
+    /// Gets empty list of table names.
     /// </summary>
     /// <returns><see cref="List{T}"/> of <see cref="string"/> that contains no elements</returns>
-    protected static List<string> GetEmptyTableNames() => [];
+    protected static List<string> EmptyTableNames => [];
 
     /// <summary>
-    /// Get list of table names.
+    /// Gets list of table names.
     /// </summary>
     /// <returns><see cref="List{T}"/> of <see cref="string"/> that contains the specified table names</returns>
-    protected static List<string> GetTableNames() => [TABLE_NAME_1, TABLE_NAME_2, TABLE_NAME_3];
+    protected static List<string> TableNames => [TABLE_NAME_1, TABLE_NAME_2, TABLE_NAME_3];
 }

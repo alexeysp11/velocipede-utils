@@ -22,8 +22,8 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     public void Constructor_NullVelocipedeConnection_ThrowsArgumentNullException()
     {
         // Arrange.
-        IVelocipedeDbConnection? connection = GetNullVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        IVelocipedeDbConnection? connection = NullVelocipedeConnection;
+        List<string> tableNames = TableNames;
 #nullable disable
         Func<VelocipedeForeachTableIterator> act = () => new VelocipedeForeachTableIterator(connection, tableNames);
 #nullable restore
@@ -37,7 +37,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetNotConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 #nullable disable
         Func<VelocipedeForeachTableIterator> act = () => new VelocipedeForeachTableIterator(connection, tableNames);
 #nullable restore
@@ -51,7 +51,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string>? tableNames = GetNullTableNames();
+        List<string>? tableNames = NullTableNames;
 #nullable disable
         Func<VelocipedeForeachTableIterator> act = () => new VelocipedeForeachTableIterator(connection, tableNames);
 #nullable restore
@@ -65,7 +65,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetEmptyTableNames();
+        List<string> tableNames = EmptyTableNames;
         Func<VelocipedeForeachTableIterator> act = () => new VelocipedeForeachTableIterator(connection, tableNames);
 
         // Act & Assert.
@@ -77,7 +77,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act & Assert.
         IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
@@ -90,7 +90,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act & Assert.
         IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
@@ -105,7 +105,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act & Assert.
         IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
@@ -121,7 +121,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act & Assert.
         IVelocipedeForeachTableIterator iterator = connection.WithForeachTableIterator(tableNames);
@@ -136,7 +136,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
@@ -154,7 +154,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
@@ -193,7 +193,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
@@ -237,7 +237,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
@@ -272,7 +272,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
@@ -307,7 +307,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
@@ -342,7 +342,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
@@ -377,7 +377,7 @@ public sealed class VelocipedeForeachTableIteratorTests : BaseVelocipedeIterator
     {
         // Arrange.
         IVelocipedeDbConnection connection = GetConnectedVelocipedeConnection();
-        List<string> tableNames = GetTableNames();
+        List<string> tableNames = TableNames;
 
         // Act.
         connection
