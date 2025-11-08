@@ -105,7 +105,7 @@ INSERT INTO Employees (EmployeeID,FirstName,LastName,HireDate) VALUES ('103','Pe
     private static DataTable InitializeEmployeesDataTable(bool addRows = true)
     {
         // 1. Create a DataTable instance
-        DataTable dtEmployees = new DataTable("Employees");
+        DataTable dtEmployees = new("Employees");
 
         // 2. Define Columns
         dtEmployees.Columns.Add("EmployeeID", typeof(int));
