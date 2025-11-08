@@ -76,14 +76,23 @@ dotnet_diagnostic.CA1050.severity = error
 # CA1052: Static holder types should be Static or NotInheritable
 dotnet_diagnostic.CA1052.severity = error
 
-# CA1508: Avoid dead conditional code
-dotnet_diagnostic.CA1508.severity = error
+# CA1058: Types should not extend certain base types
+dotnet_diagnostic.CA1058.severity = error
+
+# CA1061: Do not hide base class methods
+dotnet_diagnostic.CA1061.severity = error
 
 # CA1068: CancellationToken parameters must come last
 dotnet_diagnostic.CA1068.severity = error
 
 # CA1069: Enums should not have duplicate values
 dotnet_diagnostic.CA1069.severity = error
+
+# CA1070: Do not declare event fields as virtual
+dotnet_diagnostic.CA1070.severity = error
+
+# CA1508: Avoid dead conditional code
+dotnet_diagnostic.CA1508.severity = error
 
 # CA1707: Identifiers should not contain underscores
 dotnet_diagnostic.CA1707.severity = warning
