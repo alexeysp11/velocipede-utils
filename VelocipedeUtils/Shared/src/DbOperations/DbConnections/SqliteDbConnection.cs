@@ -231,19 +231,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             Query(sql, out List<dynamic> foreignKeyInfoDynamic);
 
             // Wrap the result.
-            foreignKeyInfo = foreignKeyInfoDynamic
-                .Select(keyInfo => new VelocipedeForeignKeyInfo
-                {
-                    ForeignKeyId = keyInfo.id,
-                    SequenceNumber = keyInfo.seq,
-                    ToTableName = keyInfo.table,
-                    FromColumn = keyInfo.from,
-                    ToColumn = keyInfo.to,
-                    OnUpdate = keyInfo.on_update,
-                    OnDelete = keyInfo.on_delete,
-                    MatchingClause = keyInfo.match,
-                })
-                .ToList();
+            foreignKeyInfo = GetForeignKeyListFromDynamic(foreignKeyInfoDynamic);
 
             return this;
         }
@@ -259,19 +247,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             List<dynamic> foreignKeyInfoDynamic = await QueryAsync<dynamic>(sql);
 
             // Wrap the result.
-            return foreignKeyInfoDynamic
-                .Select(keyInfo => new VelocipedeForeignKeyInfo
-                {
-                    ForeignKeyId = keyInfo.id,
-                    SequenceNumber = keyInfo.seq,
-                    ToTableName = keyInfo.table,
-                    FromColumn = keyInfo.from,
-                    ToColumn = keyInfo.to,
-                    OnUpdate = keyInfo.on_update,
-                    OnDelete = keyInfo.on_delete,
-                    MatchingClause = keyInfo.match,
-                })
-                .ToList();
+            return GetForeignKeyListFromDynamic(foreignKeyInfoDynamic);
         }
 
         /// <inheritdoc/>
@@ -607,6 +583,28 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
         public void Dispose()
         {
             CloseDb();
+        }
+
+        /// <summary>
+        /// Get foreign key list from <see cref="List{T}"/> of <c>dynamic</c>.
+        /// </summary>
+        /// <param name="foreignKeyInfoDynamic"><see cref="List{T}"/> of <c>dynamic</c> that contins info about foreign keys.</param>
+        /// <returns><see cref="List{T}"/> of <see cref="VelocipedeForeignKeyInfo"/>.</returns>
+        private static List<VelocipedeForeignKeyInfo> GetForeignKeyListFromDynamic(List<dynamic> foreignKeyInfoDynamic)
+        {
+            return foreignKeyInfoDynamic
+                .Select(keyInfo => new VelocipedeForeignKeyInfo
+                {
+                    ForeignKeyId = keyInfo.id,
+                    SequenceNumber = keyInfo.seq,
+                    ToTableName = keyInfo.table,
+                    FromColumn = keyInfo.from,
+                    ToColumn = keyInfo.to,
+                    OnUpdate = keyInfo.on_update,
+                    OnDelete = keyInfo.on_delete,
+                    MatchingClause = keyInfo.match,
+                })
+                .ToList();
         }
     }
 }
