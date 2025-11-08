@@ -1,7 +1,11 @@
-﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections
 {
+    /// <summary>
+    /// Unit tests for <see cref="MssqlDbConnection"/>.
+    /// </summary>
     public sealed class MssqlDbConnectionTests : BaseDbConnectionTests, IClassFixture<MssqlDatabaseFixture>
     {
         private const string CREATE_DATABASE_SQL = @"
@@ -58,10 +62,17 @@ EXEC sp_executesql @triggerSql;";
         public MssqlDbConnectionTests(MssqlDatabaseFixture fixture)
             : base(fixture, CREATE_DATABASE_SQL, CREATE_TESTMODELS_SQL, CREATE_TESTUSERS_SQL)
         {
+            // Queries for Execute.
             _createTableSqlForExecuteQuery = @"create table ""TestTableForExecute"" (""Name"" varchar(50) NOT NULL)";
             _createTableSqlForExecuteWithParamsQuery = @"
 create table ""TestTableForExecuteWithParams"" (""Name"" varchar(50) NOT NULL);
 insert into ""TestTableForExecuteWithParams"" (""Name"") values (@TestRecordName);";
+
+            // Queries for ExecuteAsync.
+            _createTableSqlForExecuteAsyncQuery = @"create table ""TestTableForExecuteAsync"" (""Name"" varchar(50) NOT NULL)";
+            _createTableSqlForExecuteAsyncWithParamsQuery = @"
+create table ""TestTableForExecuteAsyncWithParams"" (""Name"" varchar(50) NOT NULL);
+insert into ""TestTableForExecuteAsyncWithParams"" (""Name"") values (@TestRecordName);";
         }
 
         [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]
@@ -78,7 +89,7 @@ insert into ""TestTableForExecuteWithParams"" (""Name"") values (@TestRecordName
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-        public override void GetSqlDefinition_ConnectionStringFromFixtureAndNotConnected_ResultEqualsToExpected(string tableName)
+        public override void GetSqlDefinition_FixtureNotConnected_ResultEqualsToExpected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
         }
@@ -87,9 +98,29 @@ insert into ""TestTableForExecuteWithParams"" (""Name"") values (@TestRecordName
         [InlineData("\"TestModels\"")]
         [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-        public override void GetSqlDefinition_ConnectionStringFromFixtureAndConnected_ResultEqualsToExpected(string tableName)
+        public override void GetSqlDefinition_FixtureConnected_ResultEqualsToExpected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
         {
+        }
+
+        [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+        public override Task GetSqlDefinitionAsync_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+        {
+            return Task.CompletedTask;
+        }
+
+        [Theory(Skip = "This test is not implemented because you cannot use OBJECT_DEFINITION() with User Tables (type 'U')")]
+        [InlineData("\"TestModels\"")]
+        [InlineData("\"TestUsers\"")]
+#pragma warning disable xUnit1026 // Theory methods should use all of their parameters
+        public override Task GetSqlDefinitionAsync_FixtureConnected_ResultEqualsToExpected(string tableName)
+#pragma warning restore xUnit1026 // Theory methods should use all of their parameters
+        {
+            return Task.CompletedTask;
         }
     }
 }

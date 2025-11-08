@@ -40,6 +40,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             return new TestDbContext(optionsBuilder.Options);
         }
 
+        /// <inheritdoc/>
         public Task InitializeAsync()
         {
             if (string.IsNullOrEmpty(DatabaseName))
@@ -52,6 +53,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc/>
         public Task DisposeAsync()
         {
             if (File.Exists(DatabaseName))

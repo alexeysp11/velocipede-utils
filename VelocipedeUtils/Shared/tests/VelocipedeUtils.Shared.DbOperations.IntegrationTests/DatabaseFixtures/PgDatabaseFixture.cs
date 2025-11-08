@@ -40,9 +40,11 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures
             return new TestDbContext(optionsBuilder.Options);
         }
 
+        /// <inheritdoc/>
         public Task InitializeAsync()
             => container.StartAsync();
 
+        /// <inheritdoc/>
         public Task DisposeAsync()
             => container.DisposeAsync().AsTask();
     }

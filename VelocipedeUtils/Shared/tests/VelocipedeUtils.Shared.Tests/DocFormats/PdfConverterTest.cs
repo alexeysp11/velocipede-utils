@@ -1,24 +1,23 @@
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats;
 using VelocipedeUtils.Shared.Models.Documents;
 using VelocipedeUtils.Shared.Models.Documents.Enums;
 
-namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
+namespace VelocipedeUtils.Shared.Tests.Office.DocFormats
 {
-    public class PdfConverterTest
+    public sealed class PdfConverterTest
     {
-        private readonly string FolderName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), typeof(PdfConverterTest).ToString().Split('.').Last());
+        private static string FolderName
+            => Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly()?.Location) ?? "", typeof(PdfConverterTest).ToString().Split('.').Last());
 
         [Fact]
         public void TextDocElementsToDocument_CorrectParams_FileExists()
         {
             // Arrange
-            string filename = System.Reflection.MethodBase.GetCurrentMethod().Name + ".pdf";
-            var elements = new System.Collections.Generic.List<TextDocElement>()
-            {
+            string filename = MethodBase.GetCurrentMethod()?.Name + ".pdf";
+            List<TextDocElement> elements =
+            [
                 new TextDocElement() 
                 {
                     Content = "Header 1", 
@@ -43,9 +42,9 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
                     FontSize = 14, 
                     TextAlignment = TextAlignment.JUSTIFIED
                 }
-            };
+            ];
 
-            PdfConverter converter = new PdfConverter();
+            PdfConverter converter = new();
             CreateFolderIfNotExists(FolderName);
 
             // Act
@@ -56,11 +55,10 @@ namespace Cims.Tests.VelocipedeUtils.Shared.Office.DocFormats
             Assert.True(File.Exists(filepath));
         }
 
-        #region Private methods
         private static void CreateFolderIfNotExists(string foldername)
         {
-            if (!Directory.Exists(foldername)) Directory.CreateDirectory(foldername);
+            if (!Directory.Exists(foldername))
+                Directory.CreateDirectory(foldername);
         }
-        #endregion  // Private methods
     }
 }

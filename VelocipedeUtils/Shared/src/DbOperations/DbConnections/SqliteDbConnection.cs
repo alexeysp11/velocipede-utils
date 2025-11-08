@@ -1,4 +1,3 @@
-using Dapper;
 using System.Data;
 using Microsoft.Data.Sqlite;
 using VelocipedeUtils.Shared.DbOperations.Enums;
@@ -6,26 +5,79 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Models;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
+using System.Data.Common;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections
 {
     /// <summary>
     /// Class for using SQLite database.
     /// </summary>
-    public sealed class SqliteDbConnection : IVelocipedeDbConnection
+    public sealed class SqliteDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbConnection
     {
+        /// <inheritdoc/>
         public string? ConnectionString { get; set; }
+
+        /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.SQLite;
+
+        /// <inheritdoc/>
         public string DatabaseName => GetDatabaseName(ConnectionString);
-        public bool IsConnected => _connection != null;
+
+        /// <inheritdoc/>
+        public bool IsConnected => Connection != null;
+
+        /// <inheritdoc/>
+        public DbConnection? Connection => _connection;
 
         private SqliteConnection? _connection;
+
+        private readonly string _getTablesInDbSql;
+        private readonly string _getColumnsSql;
+        private readonly string _getTriggersSql;
+        private readonly string _getSqlDefinitionSql;
 
         public SqliteDbConnection(string? connectionString = null)
         {
             ConnectionString = connectionString;
+
+            _getTablesInDbSql = @"
+SELECT name FROM sqlite_master
+WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
+UNION ALL
+SELECT name FROM sqlite_temp_master
+WHERE type IN ('table','view')
+ORDER BY 1";
+
+            _getColumnsSql = @"
+SELECT
+    cid as ColumnId,
+    name as ColumnName,
+    type as ColumnType,
+    dflt_value as DefaultValue,
+    pk as IsPrimaryKey,
+    not ""notnull"" as IsNullable
+FROM pragma_table_info(@TableName)";
+
+            _getTriggersSql = @"
+SELECT
+    --type,
+    name AS TriggerName,
+    tbl_name AS EventObjectTable,
+    rootpage AS RootPage,
+    sql AS SqlDefinition
+FROM sqlite_master
+WHERE type = 'trigger' AND tbl_name = @TableName";
+
+            _getSqlDefinitionSql = "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = @TableName";
         }
 
+        /// <inheritdoc/>
+        public DbConnection CreateConnection(string connectionString)
+        {
+            return new SqliteConnection(connectionString);
+        }
+
+        /// <inheritdoc/>
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -48,6 +100,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateDb()
         {
             if (DbExists())
@@ -70,6 +123,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection OpenDb()
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -88,16 +142,12 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
-        /// <summary>
-        /// Switch to the specified database and get new connection string.
-        /// </summary>
-        public IVelocipedeDbConnection SwitchDb(string? dbName, out string connectionString)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection SwitchDb(
+            string? dbName,
+            out string connectionString)
         {
             if (string.IsNullOrEmpty(dbName))
                 throw new VelocipedeDbNameException();
@@ -105,16 +155,16 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             try
             {
                 // Change connection string.
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = ConnectionString;
-                connectionStringBuilder.DataSource = dbName;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    ConnectionString = ConnectionString ?? "",
+                    DataSource = dbName
+                };
                 connectionString = connectionStringBuilder.ConnectionString;
                 ConnectionString = connectionString;
 
                 // Connect to the new database.
-                OpenDb();
-
-                return this;
+                return OpenDb();
             }
             catch (VelocipedeDbConnectParamsException)
             {
@@ -124,12 +174,9 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CloseDb()
         {
             if (_connection != null)
@@ -141,94 +188,113 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetTablesInDb(out List<string> tables)
         {
-            string sql = @"
-SELECT name FROM sqlite_master
-WHERE type IN ('table','view') AND name NOT LIKE 'sqlite_%'
-UNION ALL
-SELECT name FROM sqlite_temp_master
-WHERE type IN ('table','view')
-ORDER BY 1";
-            Query(sql, out tables);
-            return this;
+            return Query(_getTablesInDbSql, out tables);
         }
 
-        public IVelocipedeDbConnection GetColumns(string tableName, out List<VelocipedeColumnInfo> columnInfo)
+        /// <inheritdoc/>
+        public Task<List<string>> GetTablesInDbAsync()
+        {
+            return QueryAsync<string>(_getTablesInDbSql);
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetColumns(
+            string tableName,
+            out List<VelocipedeColumnInfo> columnInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = @$"
-SELECT
-    cid as ColumnId,
-    name as ColumnName,
-    type as ColumnType,
-    dflt_value as DefaultValue,
-    pk as IsPrimaryKey,
-    not ""notnull"" as IsNullable
-FROM pragma_table_info('{tableName}');";
-            Query(sql, out columnInfo);
-            return this;
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return Query(_getColumnsSql, parameters, out columnInfo);
         }
 
-        public IVelocipedeDbConnection GetForeignKeys(string tableName, out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
+        /// <inheritdoc/>
+        public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection GetForeignKeys(
+            string tableName,
+            out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
             tableName = tableName.Trim('"');
 
             // Get list of dynamic objects.
+            // In some versions of SQLite, PRAGMA statements could not support paramters.
             string sql = $"PRAGMA foreign_key_list('{tableName}');";
             Query(sql, out List<dynamic> foreignKeyInfoDynamic);
 
             // Wrap the result.
-            foreignKeyInfo = foreignKeyInfoDynamic
-                .Select(keyInfo => new VelocipedeForeignKeyInfo
-                {
-                    ForeignKeyId = keyInfo.id,
-                    SequenceNumber = keyInfo.seq,
-                    ToTableName = keyInfo.table,
-                    FromColumn = keyInfo.from,
-                    ToColumn = keyInfo.to,
-                    OnUpdate = keyInfo.on_update,
-                    OnDelete = keyInfo.on_delete,
-                    MatchingClause = keyInfo.match,
-                })
-                .ToList();
+            foreignKeyInfo = GetForeignKeyListFromDynamic(foreignKeyInfoDynamic);
 
             return this;
         }
 
+        /// <inheritdoc/>
+        public async Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+
+            // Get list of dynamic objects.
+            // In some versions of SQLite, PRAGMA statements could not support paramters.
+            string sql = $"PRAGMA foreign_key_list('{tableName}');";
+            List<dynamic> foreignKeyInfoDynamic = await QueryAsync<dynamic>(sql);
+
+            // Wrap the result.
+            return GetForeignKeyListFromDynamic(foreignKeyInfoDynamic);
+        }
+
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
         {
             tableName = tableName.Trim('"');
-            string sql = $@"
-SELECT
-    --type,
-    name AS TriggerName,
-    tbl_name AS EventObjectTable,
-    rootpage AS RootPage,
-    sql AS SqlDefinition
-FROM sqlite_master
-WHERE type = 'trigger' AND tbl_name = '{tableName}';";
-            Query(sql, out triggerInfo);
-            return this;
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return Query(_getTriggersSql, parameters, out triggerInfo);
         }
 
+        /// <inheritdoc/>
+        public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
+        }
+
+        /// <inheritdoc/>
         public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
         {
             tableName = tableName.Trim('"');
-            string sql = string.Format(@"SELECT sql FROM sqlite_master WHERE type='table' AND name LIKE '{0}'", tableName);
-            return QueryFirstOrDefault(sql, out sqlDefinition);
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryFirstOrDefault(_getSqlDefinitionSql, parameters, out sqlDefinition);
         }
 
+        /// <inheritdoc/>
+        public Task<string?> GetSqlDefinitionAsync(string tableName)
+        {
+            tableName = tableName.Trim('"');
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            return QueryFirstOrDefaultAsync<string>(_getSqlDefinitionSql, parameters);
+        }
+
+        /// <inheritdoc/>
         public IVelocipedeDbConnection CreateTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection ClearTemporaryTable(string tableName)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(string sqlRequest, out DataTable dtResult)
         {
             return QueryDataTable(
@@ -237,6 +303,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -249,6 +316,7 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 dtResult: out dtResult);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryDataTable(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -260,63 +328,72 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return this;
         }
 
-        public IVelocipedeDbConnection Execute(string sqlRequest)
+        /// <inheritdoc/>
+        public Task<DataTable> QueryDataTableAsync(string sqlRequest)
         {
-            return Execute(sqlRequest, null);
+            return QueryDataTableAsync(sqlRequest, parameters: null);
         }
 
-        public IVelocipedeDbConnection Execute(string sqlRequest, List<VelocipedeCommandParameter>? parameters)
+        /// <inheritdoc/>
+        public Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+            return QueryDataTableAsync(sqlRequest, parameters, predicate: null);
+        }
 
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
+        /// <inheritdoc/>
+        public async Task<DataTable> QueryDataTableAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<dynamic, bool>? predicate)
+        {
+            List<dynamic> dynamicList = await QueryAsync(sqlRequest, parameters, predicate);
+            return dynamicList.ToDataTable();
+        }
 
-                // Execute SQL command and dispose connection if necessary.
-                localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                }
-            }
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Execute(string sqlRequest)
+        {
+            return Execute(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Execute(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            InternalExecute(this, sqlRequest, parameters);
             return this;
         }
 
-        public IVelocipedeDbConnection Query<T>(string sqlRequest, out List<T> result)
+        /// <inheritdoc/>
+        public Task ExecuteAsync(string sqlRequest)
+        {
+            return ExecuteAsync(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public Task ExecuteAsync(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            return InternalExecuteAsync(this, sqlRequest, parameters);
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            out List<T> result)
         {
             return Query(sqlRequest, null, out result);
         }
 
-        public IVelocipedeDbConnection Query<T>(string sqlRequest, List<VelocipedeCommandParameter>? parameters, out List<T> result)
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection Query<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            out List<T> result)
         {
             return Query(
                 sqlRequest,
@@ -325,60 +402,44 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection Query<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             Func<T, bool>? predicate,
             out List<T> result)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters());
-                if (predicate != null)
-                    queryResult = queryResult.Where(predicate);
-                result = queryResult.ToList();
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                }
-            }
+            result = InternalQuery(this, sqlRequest, parameters, predicate);
             return this;
         }
 
-        public IVelocipedeDbConnection QueryFirstOrDefault<T>(string sqlRequest, out T? result)
+        /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(string sqlRequest)
+        {
+            return QueryAsync<T>(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            return QueryAsync<T>(sqlRequest, parameters, predicate: null);
+        }
+
+        /// <inheritdoc/>
+        public Task<List<T>> QueryAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate)
+        {
+            return InternalQueryAsync(this, sqlRequest, parameters, predicate);
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+            string sqlRequest,
+            out T? result)
         {
             return QueryFirstOrDefault(
                 sqlRequest,
@@ -386,55 +447,17 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
                 result: out result);
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
             out T? result)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                result = localConnection.QueryFirstOrDefault<T>(sqlRequest, parameters?.ToDapperParameters());
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                }
-            }
+            result = InternalQueryFirstOrDefault<T>(this, sqlRequest, parameters);
             return this;
         }
 
+        /// <inheritdoc/>
         public IVelocipedeDbConnection QueryFirstOrDefault<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters,
@@ -450,20 +473,60 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             return QueryFirstOrDefault(sqlRequest, parameters, out result);
         }
 
+        /// <inheritdoc/>
+        public Task<T?> QueryFirstOrDefaultAsync<T>(string sqlRequest)
+        {
+            return QueryFirstOrDefaultAsync<T>(sqlRequest, parameters: null);
+        }
+
+        /// <inheritdoc/>
+        public Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            return InternalQueryFirstOrDefaultAsync<T>(this, sqlRequest, parameters);
+        }
+
+        /// <inheritdoc/>
+        public async Task<T?> QueryFirstOrDefaultAsync<T>(
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters,
+            Func<T, bool>? predicate)
+        {
+            if (predicate != null)
+            {
+                List<T> list = await QueryAsync<T>(sqlRequest, parameters);
+                return list.FirstOrDefault(predicate);
+            }
+            return await QueryFirstOrDefaultAsync<T>(sqlRequest, parameters);
+        }
+
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
+        {
+            return new VelocipedeForeachTableIterator(this, tables);
+        }
+
         /// <summary>
         /// Check if the specified database file path is valid.
         /// </summary>
+        /// <param name="path">Database file path.</param>
+        /// <returns><c>true</c> if database file exists; otherwise, <c>false</c>.</returns>
         public static bool IsDatabaseFilePathValid(string path) => File.Exists(path);
 
         /// <summary>
         /// Get database file path by connection string.
         /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns>Database file path.</returns>
         public static string GetDatabaseName(string? connectionString)
         {
             try
             {
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    ConnectionString = connectionString
+                };
                 return connectionStringBuilder.DataSource;
             }
             catch (Exception ex)
@@ -475,12 +538,16 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         /// <summary>
         /// Get connection string by database file path.
         /// </summary>
+        /// <param name="path">Database file path.</param>
+        /// <returns>New connection string.</returns>
         public static string GetConnectionString(string path)
         {
             try
             {
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.DataSource = path;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    DataSource = path
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -492,13 +559,18 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
         /// <summary>
         /// Get connection string by database file path.
         /// </summary>
+        /// <param name="connectionString">Old connection string.</param>
+        /// <param name="path">Database file path.</param>
+        /// <returns>New connection string.</returns>
         public static string GetConnectionString(string connectionString, string path)
         {
             try
             {
-                var connectionStringBuilder = new SqliteConnectionStringBuilder();
-                connectionStringBuilder.ConnectionString = connectionString;
-                connectionStringBuilder.DataSource = path;
+                var connectionStringBuilder = new SqliteConnectionStringBuilder
+                {
+                    ConnectionString = connectionString,
+                    DataSource = path
+                };
                 return connectionStringBuilder.ConnectionString;
             }
             catch (Exception ex)
@@ -507,15 +579,32 @@ WHERE type = 'trigger' AND tbl_name = '{tableName}';";
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             CloseDb();
         }
 
-        /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
+        /// <summary>
+        /// Get foreign key list from <see cref="List{T}"/> of <c>dynamic</c>.
+        /// </summary>
+        /// <param name="foreignKeyInfoDynamic"><see cref="List{T}"/> of <c>dynamic</c> that contins info about foreign keys.</param>
+        /// <returns><see cref="List{T}"/> of <see cref="VelocipedeForeignKeyInfo"/>.</returns>
+        private static List<VelocipedeForeignKeyInfo> GetForeignKeyListFromDynamic(List<dynamic> foreignKeyInfoDynamic)
         {
-            return new VelocipedeForeachTableIterator(this, tables);
+            return foreignKeyInfoDynamic
+                .Select(keyInfo => new VelocipedeForeignKeyInfo
+                {
+                    ForeignKeyId = keyInfo.id,
+                    SequenceNumber = keyInfo.seq,
+                    ToTableName = keyInfo.table,
+                    FromColumn = keyInfo.from,
+                    ToColumn = keyInfo.to,
+                    OnUpdate = keyInfo.on_update,
+                    OnDelete = keyInfo.on_delete,
+                    MatchingClause = keyInfo.match,
+                })
+                .ToList();
         }
     }
 }

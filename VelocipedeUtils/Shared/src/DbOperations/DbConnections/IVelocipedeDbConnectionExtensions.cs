@@ -171,6 +171,41 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         }
 
         /// <summary>
+        /// Get all data from the table.
+        /// </summary>
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="tableName">Table name.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is an object of <see cref="DataTable"/>.
+        /// </returns>
+        public static Task<DataTable> GetAllDataAsync(
+            this IVelocipedeDbConnection connection,
+            string tableName)
+        {
+            string sql = $"SELECT * FROM {tableName}";
+            return connection.QueryDataTableAsync(sql);
+        }
+
+        /// <summary>
+        /// Get all data from the table.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="tableName">Table name.</param>
+        /// <returns>
+        /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+        /// The task result is a <see cref="List{T}"/> that contains the result of the executed query.
+        /// </returns>
+        public static Task<List<T>> GetAllDataAsync<T>(
+            this IVelocipedeDbConnection connection,
+            string tableName)
+        {
+            string sql = $"SELECT * FROM {tableName}";
+            return connection.QueryAsync<T>(sql);
+        }
+
+        /// <summary>
         /// Gets SQL definition of the specified <see cref="DataTable"/> object.
         /// </summary>
         /// <param name="connection">Valid instance of <see cref="IVelocipedeDbConnection"/>.</param>

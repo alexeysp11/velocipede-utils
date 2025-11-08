@@ -5,7 +5,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
 {
     public class MssqlDbConnectionTest 
     {
-        private string ConnectionString = "Data Source=LAPTOP\\SQLEXPRESS;Trusted_Connection=True;MultipleActiveResultSets=true";
+        private readonly string ConnectionString = "Data Source=LAPTOP\\SQLEXPRESS;Trusted_Connection=True;MultipleActiveResultSets=true";
 
         [Fact(Skip = "This test is currently failing due to dependencies on the real database")]
         public void QueryDataTable_CorrectConnectionString_DataRetrieved()
@@ -16,7 +16,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
             string sqlInsert = $"INSERT INTO studying.dbo.emp (emp_id, name) SELECT MAX(e.emp_id), '{employeeName}' FROM studying.dbo.emp e WHERE NOT EXISTS ({sqlSelect})";
             string sqlDelete = $"DELETE FROM studying.dbo.emp WHERE name = '{employeeName}'";
 
-            using IVelocipedeDbConnection dbConnection = new MssqlDbConnection(ConnectionString);
+            using MssqlDbConnection dbConnection = new(ConnectionString);
 
             // Act.
             dbConnection
