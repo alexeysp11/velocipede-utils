@@ -41,11 +41,11 @@ public static class DigitsTranslation_de_DE
         string numFmt)
     {
 			if (levelNumber > 19999)
-				throw new ArgumentOutOfRangeException("levelNumber", "Convering a levelNumber to ordinal text that is greater then 19 999 is not supported");
+				throw new ArgumentOutOfRangeException(nameof(levelNumber), "Convering a levelNumber to ordinal text that is greater then 19 999 is not supported");
 			if (levelNumber == 0)
 				return "Zero";
 			if (levelNumber < 0)
-				throw new ArgumentOutOfRangeException("levelNumber", "Converting a negative levelNumber to ordinal text is not supported");
+				throw new ArgumentOutOfRangeException(nameof(levelNumber), "Converting a negative levelNumber to ordinal text is not supported");
 
         if (numFmt == "ordinal")
             return GetOrdinal(levelNumber);

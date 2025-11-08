@@ -52,11 +52,11 @@ public static class DigitsTranslation_sv_SE
 
 		//Validation
 		if (thousands > 19)
-			throw new ArgumentOutOfRangeException("levelNumber", "Convering a levelNumber to ordinal text that is greater then 19 999 is not supported");
+			throw new ArgumentOutOfRangeException(nameof(levelNumber), "Convering a levelNumber to ordinal text that is greater then 19 999 is not supported");
 		if (levelNumber == 0)
 			return "Noll";
 		if (levelNumber < 0)
-			throw new ArgumentOutOfRangeException("levelNumber", "Converting a negative levelNumber to ordinal text is not supported");
+			throw new ArgumentOutOfRangeException(nameof(levelNumber), "Converting a negative levelNumber to ordinal text is not supported");
 
 		/* exact thousands */
 		if (levelNumber == 1000)
@@ -121,9 +121,9 @@ public static class DigitsTranslation_sv_SE
 		string result = "";
 
 		if (levelNumber <= 0)
-			throw new ArgumentOutOfRangeException("levelNumber", "Converting a zero or negative levelNumber to ordinal text is not supported");
+			throw new ArgumentOutOfRangeException(nameof(levelNumber), "Converting a zero or negative levelNumber to ordinal text is not supported");
 		if(levelNumber >= 10000)
-			throw new ArgumentOutOfRangeException("levelNumber", "Convering a levelNumber to ordinal text that is greater then 10000 is not supported");
+			throw new ArgumentOutOfRangeException(nameof(levelNumber), "Convering a levelNumber to ordinal text that is greater then 10000 is not supported");
 
 		if (levelNumber == 1)
 			return "Första";

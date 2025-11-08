@@ -91,6 +91,9 @@ dotnet_diagnostic.CA1069.severity = error
 # CA1070: Do not declare event fields as virtual
 dotnet_diagnostic.CA1070.severity = error
 
+# CA1507: Use nameof in place of string
+dotnet_diagnostic.CA1507.severity = error
+
 # CA1508: Avoid dead conditional code
 dotnet_diagnostic.CA1508.severity = error
 
