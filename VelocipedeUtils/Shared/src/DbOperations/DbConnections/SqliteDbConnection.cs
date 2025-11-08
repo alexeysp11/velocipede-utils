@@ -434,46 +434,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             Func<T, bool>? predicate,
             out List<T> result)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters());
-                if (predicate != null)
-                    queryResult = queryResult.Where(predicate);
-                result = queryResult.ToList();
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                }
-            }
+            result = InternalQuery(this, sqlRequest, parameters, predicate);
             return this;
         }
 
