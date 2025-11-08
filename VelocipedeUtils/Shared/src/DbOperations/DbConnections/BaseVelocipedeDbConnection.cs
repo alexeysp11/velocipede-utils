@@ -233,5 +233,57 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
                 }
             }
         }
+
+        /// <summary>
+        /// QInternal method for query first or default object.
+        /// </summary>
+        /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+        /// <param name="connection">Current instance of <see cref="IVelocipedeDbConnection"/>.</param>
+        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+        /// <returns></returns>
+        protected static T? InternalQueryFirstOrDefault<T>(
+            IVelocipedeDbConnection connection,
+            string sqlRequest,
+            List<VelocipedeCommandParameter>? parameters)
+        {
+            if (string.IsNullOrEmpty(connection.ConnectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            bool newConnectionUsed = true;
+            DbConnection? localConnection = null;
+            try
+            {
+                // Initialize connection.
+                if (connection.Connection != null)
+                {
+                    newConnectionUsed = false;
+                    localConnection = connection.Connection;
+                }
+                else
+                {
+                    localConnection = connection.CreateConnection(connection.ConnectionString);
+                }
+                if (localConnection.State != ConnectionState.Open)
+                {
+                    localConnection.Open();
+                }
+
+                // Execute SQL command and dispose connection if necessary.
+                return localConnection.QueryFirstOrDefault<T>(sqlRequest, parameters?.ToDapperParameters());
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+            finally
+            {
+                if (newConnectionUsed && localConnection != null)
+                {
+                    localConnection.Close();
+                    localConnection.Dispose();
+                }
+            }
+        }
     }
 }
