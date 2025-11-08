@@ -1,7 +1,7 @@
 using System.Net;
 using System.Threading;
 
-namespace VelocipedeUtils.NetworkAPIs;
+namespace VelocipedeUtils.Shared.Communication.NetworkAPIs;
 
 /// <summary>
 /// HTTP server.
@@ -11,19 +11,19 @@ public class HttpServerWF
     /// <summary>
     /// Reference to the method that adds Uniform Resource Identifier (URI) prefixes for HttpListener object.
     /// </summary>
-    private System.Action<HttpListener> AddPrefixes { get; set; }
+    private Action<HttpListener> AddPrefixes { get; set; }
 
     /// <summary>
     /// Reference to the method that handles HTTP request.
     /// </summary>
-    private System.Action<HttpListenerContext> ProcessRequest { get; set; }
+    private Action<HttpListenerContext> ProcessRequest { get; set; }
 
     /// <summary>
     /// Default constructor.
     /// </summary>
     public HttpServerWF(
-        System.Action<HttpListener> addPrefixes, 
-        System.Action<HttpListenerContext> processRequest)
+        Action<HttpListener> addPrefixes,
+        Action<HttpListenerContext> processRequest)
     {
         AddPrefixes = addPrefixes;
         ProcessRequest = processRequest;

@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Nethereum.Web3;
 
-namespace VelocipedeUtils.NethereumAPI;
+namespace VelocipedeUtils.Shared.Communication.NethereumAPI;
 
 /// <summary>
 /// Communication with ETH node (or imition of it)
@@ -60,7 +60,7 @@ public class EthNodeAPIWeb3
             }
             else 
             {
-                ethAmount = (new System.Random()).Next(0, 100);
+                ethAmount = new Random().Next(0, 100);
             }
         });
         task.Wait();

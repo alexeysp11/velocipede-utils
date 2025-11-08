@@ -1,4 +1,4 @@
-namespace Chat.Network.Client; 
+namespace VelocipedeUtils.Shared.Communication.NetworkAPIs; 
 
 /// <summary>
 /// Common interface for all protocols using in this application.

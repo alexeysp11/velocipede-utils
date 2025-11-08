@@ -1,8 +1,7 @@
-using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace VelocipedeUtils.NetworkAPIs;
+namespace VelocipedeUtils.Shared.Communication.NetworkAPIs;
 
 /// <summary>
 /// TCP listener.
@@ -17,17 +16,17 @@ public class TcpListenerWF
     /// <summary>
     /// 
     /// </summary>
-    private TcpClient Client { get; set; } 
+    private TcpClient? Client { get; set; } 
     
     /// <summary>
     /// 
     /// </summary>
-    public IPAddress Ip { get; }
+    public IPAddress? Ip { get; }
 
     /// <summary>
     /// Server name.
     /// </summary>
-    public string ServerName { get; private set; }
+    public string? ServerName { get; private set; }
 
     /// <summary>
     /// Port.
@@ -37,20 +36,20 @@ public class TcpListenerWF
     /// <summary>
     /// 
     /// </summary>
-    private byte[] ReceivedBytes;
+    private byte[]? ReceivedBytes;
     
     /// <summary>
     /// 
     /// </summary>
-    private byte[] ResponseBytes;
+    private byte[]? ResponseBytes;
 
     #region Constructors
     public TcpListenerWF()
     {
-        this.Ip = IPAddress.Parse("127.0.0.1");
-        this.ServerName = "localhost";
-        this.Port = 13000;
-        this.Listener = new TcpListener(this.Ip, this.Port);
+        Ip = IPAddress.Parse("127.0.0.1");
+        ServerName = "localhost";
+        Port = 13000;
+        Listener = new TcpListener(Ip, Port);
     }
 
     /// <summary>
@@ -58,10 +57,10 @@ public class TcpListenerWF
     /// </summary>
     public TcpListenerWF(string ip, string serverName, int port)
     {
-        this.Ip = IPAddress.Parse(ip);
-        this.ServerName = serverName;
-        this.Port = port;
-        this.Listener = new TcpListener(this.Ip, this.Port);
+        Ip = IPAddress.Parse(ip);
+        ServerName = serverName;
+        Port = port;
+        Listener = new TcpListener(Ip, Port);
     }
     #endregion  // Constructors
 
@@ -72,7 +71,7 @@ public class TcpListenerWF
     {
         try
         {
-            this.Listener.Start();
+            Listener.Start();
             while(true)
             {
                 GetMessage();
@@ -80,8 +79,8 @@ public class TcpListenerWF
         }
         finally
         {
-            this.Client.Close();        // Shutdown and end connection. 
-            this.Listener.Stop();       // Stop listening for new clients.
+            Client?.Close();
+            Listener.Stop();
         }
     }
 
@@ -92,12 +91,13 @@ public class TcpListenerWF
     {
         ReceivedBytes = new byte[256];
 
-        this.Client = this.Listener.AcceptTcpClient();
-        NetworkStream stream = this.Client.GetStream();
+        Client = Listener.AcceptTcpClient();
+        NetworkStream stream = Client.GetStream();
             
         int msgLength = stream.Read(ReceivedBytes, 0, ReceivedBytes.Length);
             
-        this.ProcessReceivedBytes(msgLength);
+        ProcessReceivedBytes(msgLength);
+        ResponseBytes ??= [];
         stream.Write(ResponseBytes, 0, ResponseBytes.Length);
 
         ReceivedBytes = new byte[1];

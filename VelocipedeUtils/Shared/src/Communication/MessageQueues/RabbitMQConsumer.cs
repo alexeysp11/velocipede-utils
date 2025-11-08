@@ -1,28 +1,26 @@
 using System.Text;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace VelocipedeUtils.Shared.Models.MessageQueues;
+namespace VelocipedeUtils.Shared.Communication.MessageQueues;
 
 /// <summary>
 /// RabbitMQ consumer.
 /// </summary>
-public class RabbitMQConsumer<TArg1, TRes>
+public class RabbitMQConsumer<TArg1, TRes> : IDisposable
 {
     private readonly IConnection _connection;
     private readonly IModel _channel;
     private readonly Timer _timer;
-    System.Func<TArg1, TRes> _func;
+    private readonly Func<TArg1, TRes> _func;
     
     private readonly string _queueName;
 
     /// <summary>
     /// 
     /// </summary>
-    public RabbitMQConsumer(string hostName, string queueName, System.TimeSpan timeInterval, System.Func<TArg1, TRes> func)
+    public RabbitMQConsumer(string hostName, string queueName, TimeSpan timeInterval, Func<TArg1, TRes> func)
     {
         _queueName = queueName;
         var factory = new ConnectionFactory { HostName = hostName };
@@ -33,14 +31,17 @@ public class RabbitMQConsumer<TArg1, TRes>
                     exclusive: false,
                     autoDelete: false,
                     arguments: null);
-        _timer = new Timer(OnTimerElapsed, null, System.TimeSpan.Zero, timeInterval);
+        _timer = new Timer(OnTimerElapsed, null, TimeSpan.Zero, timeInterval);
         _func = func;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    public Task StartAsync(CancellationToken cancellationToken)
+    public Task StartAsync(
+#pragma warning disable IDE0060 // Remove unused parameter
+        CancellationToken cancellationToken)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         return Task.CompletedTask;
     }
@@ -48,7 +49,10 @@ public class RabbitMQConsumer<TArg1, TRes>
     /// <summary>
     /// 
     /// </summary>
-    public Task StopAsync(CancellationToken cancellationToken)
+    public Task StopAsync(
+#pragma warning disable IDE0060 // Remove unused parameter
+        CancellationToken cancellationToken)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         _timer.Dispose();
         _channel.Close();
@@ -68,16 +72,24 @@ public class RabbitMQConsumer<TArg1, TRes>
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                TArg1 inputString = JsonSerializer.Deserialize<TArg1>(message);
-                _func(inputString);
+                TArg1? inputString = JsonSerializer.Deserialize<TArg1>(message);
+                if (inputString != null)
+                {
+                    _func(inputString);
+                }
             };
             _channel.BasicConsume(queue: _queueName,
                                 autoAck: true,
                                 consumer: consumer);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
-            System.Console.WriteLine($"Exception: {ex}");
+            Console.WriteLine($"Exception: {ex}");
         }
+    }
+
+    public void Dispose()
+    {
+        throw new NotImplementedException();
     }
 }
