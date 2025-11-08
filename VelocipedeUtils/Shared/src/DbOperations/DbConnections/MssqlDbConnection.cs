@@ -12,16 +12,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// MS SQL database connection.
     /// </summary>
-    public sealed class MssqlDbConnection : IVelocipedeDbConnection
+    public sealed class MssqlDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbConnection
     {
         /// <inheritdoc/>
         public string? ConnectionString { get; set; }
-
-        private readonly string _getTablesInDbSql;
-        private readonly string _getColumnsSql;
-        private readonly string _getForeignKeysSql;
-        private readonly string _getTriggersSql;
-        private readonly string _getSqlDefinitionSql;
 
         /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.MSSQL;
@@ -30,9 +24,18 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string DatabaseName => GetDatabaseName(ConnectionString);
 
         /// <inheritdoc/>
-        public bool IsConnected => _connection != null;
+        public bool IsConnected => Connection != null;
+
+        /// <inheritdoc/>
+        public IDbConnection? Connection => _connection;
 
         private SqlConnection? _connection;
+
+        private readonly string _getTablesInDbSql;
+        private readonly string _getColumnsSql;
+        private readonly string _getForeignKeysSql;
+        private readonly string _getTriggersSql;
+        private readonly string _getSqlDefinitionSql;
 
         public MssqlDbConnection(string? connectionString = null)
         {
@@ -79,6 +82,12 @@ FROM sysobjects s
 WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
 
             _getSqlDefinitionSql = $"SELECT OBJECT_DEFINITION(OBJECT_ID(@TableName)) AS ObjectDefinition";
+        }
+
+        /// <inheritdoc/>
+        public IDbConnection CreateConnection(string connectionString)
+        {
+            return new SqlConnection(connectionString);
         }
 
         /// <inheritdoc/>
@@ -135,8 +144,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         /// <inheritdoc/>
         public IVelocipedeDbConnection OpenDb()
         {
-            OpenDb(ConnectionString);
-            return this;
+            return OpenDb(ConnectionString);
         }
 
         /// <summary>
@@ -170,10 +178,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 
@@ -213,9 +217,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
                 ConnectionString = connectionString;
 
                 // Connect to the new database.
-                OpenDb();
-
-                return this;
+                return OpenDb();
             }
             catch (VelocipedeDbConnectParamsException)
             {
@@ -418,47 +420,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            SqlConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqlConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                }
-            }
+            InternalExecute(this, sqlRequest, parameters);
             return this;
         }
 
@@ -503,10 +465,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -581,10 +539,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (newConnectionUsed && localConnection != null)
@@ -650,10 +604,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (newConnectionUsed && localConnection != null)
@@ -709,10 +659,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -782,10 +728,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {

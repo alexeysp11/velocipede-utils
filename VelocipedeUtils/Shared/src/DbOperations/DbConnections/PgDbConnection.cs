@@ -12,18 +12,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// PostgreSQL database connection.
     /// </summary>
-    public sealed class PgDbConnection : IVelocipedeDbConnection
+    public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbConnection
     {
-        private NpgsqlConnection? _connection;
-
         /// <inheritdoc/>
         public string? ConnectionString { get; set; }
-
-        private readonly string _getTablesInDbSql;
-        private readonly string _getColumnsSql;
-        private readonly string _getForeignKeysSql;
-        private readonly string _getTriggersSql;
-        private readonly string _getSqlDefinitionSql;
 
         /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
@@ -32,7 +24,18 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string? DatabaseName => GetDatabaseName(ConnectionString);
 
         /// <inheritdoc/>
-        public bool IsConnected => _connection != null;
+        public bool IsConnected => Connection != null;
+
+        /// <inheritdoc/>
+        public IDbConnection? Connection => _connection;
+
+        private NpgsqlConnection? _connection;
+
+        private readonly string _getTablesInDbSql;
+        private readonly string _getColumnsSql;
+        private readonly string _getForeignKeysSql;
+        private readonly string _getTriggersSql;
+        private readonly string _getSqlDefinitionSql;
 
         public PgDbConnection(string? connectionString = null)
         {
@@ -137,6 +140,12 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         }
 
         /// <inheritdoc/>
+        public IDbConnection CreateConnection(string connectionString)
+        {
+            return new NpgsqlConnection(connectionString);
+        }
+
+        /// <inheritdoc/>
         public bool DbExists()
         {
             if (string.IsNullOrEmpty(ConnectionString))
@@ -190,15 +199,14 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         /// <inheritdoc/>
         public IVelocipedeDbConnection OpenDb()
         {
-            OpenDb(ConnectionString);
-            return this;
+            return OpenDb(ConnectionString);
         }
 
         /// <summary>
         /// Open database with the specified connection string.
         /// </summary>
         /// <param name="connectionString">Connection string.</param>
-        private void OpenDb(string? connectionString)
+        private PgDbConnection OpenDb(string? connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
@@ -209,14 +217,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
                 connectionString = UsePersistSecurityInfo(connectionString);
                 _connection = new NpgsqlConnection(connectionString);
                 _connection.Open();
+                return this;
             }
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 
@@ -258,9 +263,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
                 ConnectionString = connectionString;
 
                 // Connect to the new database.
-                OpenDb();
-
-                return this;
+                return OpenDb();
             }
             catch (VelocipedeDbConnectParamsException)
             {
@@ -539,47 +542,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            NpgsqlConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new NpgsqlConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                }
-            }
+            InternalExecute(this, sqlRequest, parameters);
             return this;
         }
 
@@ -624,10 +587,6 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -702,10 +661,6 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (newConnectionUsed && localConnection != null)
@@ -771,10 +726,6 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (newConnectionUsed && localConnection != null)
@@ -830,10 +781,6 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -903,10 +850,6 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {

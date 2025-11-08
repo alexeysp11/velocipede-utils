@@ -35,6 +35,20 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         bool IsConnected { get; }
 
         /// <summary>
+        /// Current connection to database.
+        /// </summary>
+        /// <remarks>By default, equals to <c>null</c>.</remarks>
+        IDbConnection? Connection { get; }
+
+        /// <summary>
+        /// Create a new connection to database.
+        /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns>Instance of <see cref="IDbConnection"/>.</returns>
+        IDbConnection CreateConnection(
+            string connectionString);
+
+        /// <summary>
         /// Whether database, specified in the <see cref="ConnectionString"/> property, exists.
         /// </summary>
         /// <returns><c>true</c> database exists; otherwise, <c>false</c>.</returns>
@@ -263,7 +277,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Execute SQL command.
         /// </summary>
-        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="sqlRequest">SQL query to execute.</param>
         /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
         IVelocipedeDbConnection Execute(
             string sqlRequest);
@@ -271,7 +285,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// <summary>
         /// Execute SQL command.
         /// </summary>
-        /// <param name="sqlRequest">SQL query.</param>
+        /// <param name="sqlRequest">SQL query to execute.</param>
         /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
         /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
         IVelocipedeDbConnection Execute(

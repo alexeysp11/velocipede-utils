@@ -12,15 +12,10 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// <summary>
     /// Class for using SQLite database.
     /// </summary>
-    public sealed class SqliteDbConnection : IVelocipedeDbConnection
+    public sealed class SqliteDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbConnection
     {
         /// <inheritdoc/>
         public string? ConnectionString { get; set; }
-
-        private readonly string _getTablesInDbSql;
-        private readonly string _getColumnsSql;
-        private readonly string _getTriggersSql;
-        private readonly string _getSqlDefinitionSql;
 
         /// <inheritdoc/>
         public DatabaseType DatabaseType => DatabaseType.SQLite;
@@ -29,9 +24,17 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public string DatabaseName => GetDatabaseName(ConnectionString);
 
         /// <inheritdoc/>
-        public bool IsConnected => _connection != null;
+        public bool IsConnected => Connection != null;
+
+        /// <inheritdoc/>
+        public IDbConnection? Connection => _connection;
 
         private SqliteConnection? _connection;
+
+        private readonly string _getTablesInDbSql;
+        private readonly string _getColumnsSql;
+        private readonly string _getTriggersSql;
+        private readonly string _getSqlDefinitionSql;
 
         public SqliteDbConnection(string? connectionString = null)
         {
@@ -66,6 +69,12 @@ FROM sqlite_master
 WHERE type = 'trigger' AND tbl_name = @TableName";
 
             _getSqlDefinitionSql = "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = @TableName";
+        }
+
+        /// <inheritdoc/>
+        public IDbConnection CreateConnection(string connectionString)
+        {
+            return new SqliteConnection(connectionString);
         }
 
         /// <inheritdoc/>
@@ -133,10 +142,6 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
         /// <inheritdoc/>
@@ -159,9 +164,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
                 ConnectionString = connectionString;
 
                 // Connect to the new database.
-                OpenDb();
-
-                return this;
+                return OpenDb();
             }
             catch (VelocipedeDbConnectParamsException)
             {
@@ -170,10 +173,6 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
         }
 
@@ -388,47 +387,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            SqliteConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqliteConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    localConnection.Open();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    localConnection.Close();
-                    localConnection.Dispose();
-                }
-            }
+            InternalExecute(this, sqlRequest, parameters);
             return this;
         }
 
@@ -473,10 +432,6 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -548,10 +503,6 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (newConnectionUsed && localConnection != null)
@@ -617,10 +568,6 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             {
                 throw new VelocipedeConnectionStringException(ex);
             }
-            catch (Exception)
-            {
-                throw;
-            }
             finally
             {
                 if (newConnectionUsed && localConnection != null)
@@ -676,10 +623,6 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
@@ -749,10 +692,6 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             catch (ArgumentException ex)
             {
                 throw new VelocipedeConnectionStringException(ex);
-            }
-            catch (Exception)
-            {
-                throw;
             }
             finally
             {
