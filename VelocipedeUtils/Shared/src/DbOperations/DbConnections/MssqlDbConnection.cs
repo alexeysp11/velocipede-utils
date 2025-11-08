@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using VelocipedeUtils.Shared.DbOperations.Constants;
@@ -27,7 +28,7 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         public bool IsConnected => Connection != null;
 
         /// <inheritdoc/>
-        public IDbConnection? Connection => _connection;
+        public DbConnection? Connection => _connection;
 
         private SqlConnection? _connection;
 
@@ -85,7 +86,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         }
 
         /// <inheritdoc/>
-        public IDbConnection CreateConnection(string connectionString)
+        public DbConnection CreateConnection(string connectionString)
         {
             return new SqlConnection(connectionString);
         }
@@ -431,49 +432,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         }
 
         /// <inheritdoc/>
-        public async Task ExecuteAsync(
+        public Task ExecuteAsync(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            Task<DynamicParameters?>? dapperParamsTask = parameters?.ToDapperParametersAsync();
-            SqlConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new SqlConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    await localConnection.OpenAsync();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
-                await localConnection.ExecuteAsync(sqlRequest, dynamicParameters);
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    await localConnection.CloseAsync();
-                    localConnection.Dispose();
-                }
-            }
+            return InternalExecuteAsync(this, sqlRequest, parameters);
         }
 
         /// <inheritdoc/>

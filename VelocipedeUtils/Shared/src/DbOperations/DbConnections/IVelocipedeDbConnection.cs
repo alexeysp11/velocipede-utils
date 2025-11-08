@@ -1,4 +1,5 @@
 using System.Data;
+using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
@@ -38,14 +39,14 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
         /// Current connection to database.
         /// </summary>
         /// <remarks>By default, equals to <c>null</c>.</remarks>
-        IDbConnection? Connection { get; }
+        DbConnection? Connection { get; }
 
         /// <summary>
         /// Create a new connection to database.
         /// </summary>
         /// <param name="connectionString">Connection string.</param>
         /// <returns>Instance of <see cref="IDbConnection"/>.</returns>
-        IDbConnection CreateConnection(
+        DbConnection CreateConnection(
             string connectionString);
 
         /// <summary>
