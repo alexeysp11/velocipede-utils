@@ -119,3 +119,39 @@ dbConnection
 - Вам нужна "пост-обработка" результатов SQL-запроса, которая включает фильтрацию.
 
 **Важно**: `predicate` не транслируется в SQL, а выполняется строго после того, как данные уже получены из базы данных. Если `sql` возвращает очень много записей, а `predicate` отфильтровывает подавляющее большинство из них, то вы перетаскиваете по сети и загружаете в память гораздо больше данных, чем необходимо, что может быть очень неэффективно.
+
+### Асинхронные операции
+
+Создать базу данных и выполнить запрос:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .CreateDbIfNotExists(newDatabaseName)
+    .SwitchDb(newDatabaseName);
+
+DataTable dtResult = await dbConnection.QueryDataTableAsync(sqlQuery, queryParameters);
+
+await dbConnection.CloseDbAsync();
+```
+
+Получить данные и метаданные:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
+await dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDbAsync();
+
+DataTable dtData = await dbConnection.GetAllDataAsync(tableName);
+List<VelocipedeColumnInfo> columnInfo = await dbConnection.GetColumnsAsync(tableName);
+List<VelocipedeForeignKeyInfo> foreignKeyInfo = await dbConnection.GetForeignKeysAsync(tableName);
+List<VelocipedeTriggerInfo> triggerInfo = await dbConnection.GetTriggersAsync(tableName);
+string sqlDefinition = await dbConnection.GetSqlDefinitionAsync(tableName);
+
+await dbConnection.CloseDbAsync();
+```

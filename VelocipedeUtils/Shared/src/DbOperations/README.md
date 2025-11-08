@@ -119,3 +119,39 @@ This functionality is suitable for situations where:
 - You need to "post-process" the results of an SQL query, which includes filtering.
 
 **Important**: `predicate` is not translated into SQL, but is executed strictly after the data has already been retrieved from the database. If `sql` returns a large number of records, and `predicate` filters out the vast majority of them, then you are dragging over the network and loading much more data into memory than necessary, which can be very inefficient.
+
+### Async operations
+
+Create database and execute request:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .CreateDbIfNotExists(newDatabaseName)
+    .SwitchDb(newDatabaseName);
+
+DataTable dtResult = await dbConnection.QueryDataTableAsync(sqlQuery, queryParameters);
+
+await dbConnection.CloseDbAsync();
+```
+
+Get data and metadata:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
+await dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDbAsync();
+
+DataTable dtData = await dbConnection.GetAllDataAsync(tableName);
+List<VelocipedeColumnInfo> columnInfo = await dbConnection.GetColumnsAsync(tableName);
+List<VelocipedeForeignKeyInfo> foreignKeyInfo = await dbConnection.GetForeignKeysAsync(tableName);
+List<VelocipedeTriggerInfo> triggerInfo = await dbConnection.GetTriggersAsync(tableName);
+string sqlDefinition = await dbConnection.GetSqlDefinitionAsync(tableName);
+
+await dbConnection.CloseDbAsync();
+```
