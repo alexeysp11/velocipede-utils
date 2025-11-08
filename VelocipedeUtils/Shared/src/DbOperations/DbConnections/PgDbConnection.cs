@@ -14,6 +14,13 @@ namespace VelocipedeUtils.Shared.DbOperations.DbConnections
     /// </summary>
     public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbConnection
     {
+        /// <summary>
+        /// Information about table and schema used after parsing table name.
+        /// </summary>
+        /// <param name="TableName">Table name.</param>
+        /// <param name="SchemaName">Schema name.</param>
+        private readonly record struct TableAndSchemaInfo(string TableName, string SchemaName);
+
         /// <inheritdoc/>
         public string? ConnectionString { get; set; }
 
@@ -202,47 +209,6 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             return OpenDb(ConnectionString);
         }
 
-        /// <summary>
-        /// Open database with the specified connection string.
-        /// </summary>
-        /// <param name="connectionString">Connection string.</param>
-        private PgDbConnection OpenDb(string? connectionString)
-        {
-            if (string.IsNullOrEmpty(connectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            try
-            {
-                CloseDb();
-                connectionString = UsePersistSecurityInfo(connectionString);
-                _connection = new NpgsqlConnection(connectionString);
-                _connection.Open();
-                return this;
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-        }
-
-        /// <summary>
-        /// Try to reconnect to the previous established connection.
-        /// </summary>
-        /// <param name="connectionString">Connection string.</param>
-        /// <returns><c>true</c> if connected successfully; otherwise, <c>false</c>.</returns>
-        private bool TryReconnect(string? connectionString)
-        {
-            try
-            {
-                OpenDb(connectionString);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return true;
-        }
-
         /// <inheritdoc/>
         public IVelocipedeDbConnection SwitchDb(
             string? dbName,
@@ -316,19 +282,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             string tableName,
             out List<VelocipedeColumnInfo> columnInfo)
         {
-            string schemaName = "public";
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
             List<VelocipedeCommandParameter> parameters =
             [
-                new() { Name = "TableName", Value = tableName },
-                new() { Name = "SchemaName", Value = schemaName }
+                new() { Name = "TableName", Value = tableAndSchemaInfo.TableName },
+                new() { Name = "SchemaName", Value = tableAndSchemaInfo.SchemaName }
             ];
             return Query(_getColumnsSql, parameters, out columnInfo);
         }
@@ -336,19 +294,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         /// <inheritdoc/>
         public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
         {
-            string schemaName = "public";
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
             List<VelocipedeCommandParameter> parameters =
             [
-                new() { Name = "TableName", Value = tableName },
-                new() { Name = "SchemaName", Value = schemaName }
+                new() { Name = "TableName", Value = tableAndSchemaInfo.TableName },
+                new() { Name = "SchemaName", Value = tableAndSchemaInfo.SchemaName }
             ];
             return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
         }
@@ -358,30 +308,16 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             string tableName,
             out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
         {
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                string schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
-            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
             return Query(_getForeignKeysSql, parameters, out foreignKeyInfo);
         }
 
         /// <inheritdoc/>
         public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
         {
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                string schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
-            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
             return QueryAsync<VelocipedeForeignKeyInfo>(_getForeignKeysSql, parameters);
         }
 
@@ -390,30 +326,16 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             string tableName,
             out List<VelocipedeTriggerInfo> triggerInfo)
         {
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                string schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
-            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
             return Query(_getTriggersSql, parameters, out triggerInfo);
         }
 
         /// <inheritdoc/>
         public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
         {
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                string schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
-            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
+            List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
             return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
         }
 
@@ -422,19 +344,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             string tableName,
             out string? sqlDefinition)
         {
-            string schemaName = "public";
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
             List<VelocipedeCommandParameter> parameters =
             [
-                new() { Name = "TableName", Value = tableName },
-                new() { Name = "SchemaName", Value = schemaName }
+                new() { Name = "TableName", Value = tableAndSchemaInfo.TableName },
+                new() { Name = "SchemaName", Value = tableAndSchemaInfo.SchemaName }
             ];
             return QueryFirstOrDefault(_getSqlDefinitionSql, parameters, out sqlDefinition);
         }
@@ -442,19 +356,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         /// <inheritdoc/>
         public Task<string?> GetSqlDefinitionAsync(string tableName)
         {
-            string schemaName = "public";
-            string[] tn = tableName.Split('.');
-            if (tn.Length >= 2)
-            {
-                schemaName = tn.First();
-                tableName = tableName.Replace($"{schemaName}.", "");
-            }
-            tableName = tableName.Trim('"');
-
+            TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
             List<VelocipedeCommandParameter> parameters =
             [
-                new() { Name = "TableName", Value = tableName },
-                new() { Name = "SchemaName", Value = schemaName }
+                new() { Name = "TableName", Value = tableAndSchemaInfo.TableName },
+                new() { Name = "SchemaName", Value = tableAndSchemaInfo.SchemaName }
             ];
             return QueryFirstOrDefaultAsync<string>(_getSqlDefinitionSql, parameters);
         }
@@ -728,6 +634,59 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             }
         }
 
+        /// <inheritdoc/>
+        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
+        {
+            return new VelocipedeForeachTableIterator(this, tables);
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            CloseDb();
+        }
+
+        /// <summary>
+        /// Open database with the specified connection string.
+        /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        private PgDbConnection OpenDb(string? connectionString)
+        {
+            if (string.IsNullOrEmpty(connectionString))
+                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
+
+            try
+            {
+                CloseDb();
+                connectionString = UsePersistSecurityInfo(connectionString);
+                _connection = new NpgsqlConnection(connectionString);
+                _connection.Open();
+                return this;
+            }
+            catch (ArgumentException ex)
+            {
+                throw new VelocipedeConnectionStringException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Try to reconnect to the previous established connection.
+        /// </summary>
+        /// <param name="connectionString">Connection string.</param>
+        /// <returns><c>true</c> if connected successfully; otherwise, <c>false</c>.</returns>
+        private bool TryReconnect(string? connectionString)
+        {
+            try
+            {
+                OpenDb(connectionString);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Get connection string adding <see cref="NpgsqlConnectionStringBuilder.PersistSecurityInfo"/>.
         /// </summary>
@@ -750,16 +709,22 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             }
         }
 
-        /// <inheritdoc/>
-        public IVelocipedeForeachTableIterator WithForeachTableIterator(List<string> tables)
+        /// <summary>
+        /// Parse original table name to separate it from schema name.
+        /// </summary>
+        /// <param name="tableName">Table name</param>
+        /// <returns>Instance of <see cref="TableAndSchemaInfo"/>.</returns>
+        private static TableAndSchemaInfo GetTableAndSchemaName(string tableName)
         {
-            return new VelocipedeForeachTableIterator(this, tables);
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            CloseDb();
+            string schemaName = "public";
+            string[] tn = tableName.Split('.');
+            if (tn.Length >= 2)
+            {
+                schemaName = tn.First();
+                tableName = tableName.Replace($"{schemaName}.", "");
+            }
+            tableName = tableName.Trim('"');
+            return new TableAndSchemaInfo { TableName = tableName, SchemaName = schemaName };
         }
     }
 }
