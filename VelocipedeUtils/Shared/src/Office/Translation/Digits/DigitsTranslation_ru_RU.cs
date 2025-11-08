@@ -8,37 +8,37 @@ namespace VelocipedeUtils.Shared.Office.Translation.Digits;
 /// <summary>
 /// Digits translation (Russian).
 /// </summary>
-public class DigitsTranslation_ru_RU
+public static class DigitsTranslation_ru_RU
 {
-    private static string[] OneThroughNineteen = {
+    private static readonly string[] OneThroughNineteen = {
         "один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь",
         "девять", "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать",
         "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
     };
 
-    private static string[] Tens = {
+    private static readonly string[] Tens = {
         "десять", "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят",
         "восемьдесят", "девяносто"
     };
 
-    private static string[] Hundreds = {
+    private static readonly string[] Hundreds = {
         "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот",
         "восемьсот", "девятьсот"
     };
 
-    private static string[] OrdinalOneThroughNineteen = {
+    private static readonly string[] OrdinalOneThroughNineteen = {
         "первый", "второй", "третий", "четвертый", "пятый", "шестой",
         "седьмой", "восьмой", "девятый", "десятый", "одиннадцатый", "двенадцатый",
         "тринадцатый", "четырнадцатый", "пятнадцатый", "шестнадцатый",
         "семнадцатый", "восемнадцатый", "девятнадцатый"
     };
 
-    private static string[] OrdinalTens = {
+    private static readonly string[] OrdinalTens = {
         "десятый", "двадцатый", "тридцатый", "сороковой", "пятидесятый",
         "шестидесятый", "семидесятый", "восьмидесятый", "девяностый"
     };
     
-    private static string[] OrdinalOneThroughNineteenHT = {
+    private static readonly string[] OrdinalOneThroughNineteenHT = {
         "одно", "двух", "трёх", "четырёх", "пяти", "шести", "семи", "восьми", "девяти", 
         "десяти", "одиннадцати", "двеннадцати", "четырнадцати", "пятнадцати", "шестнадцати", 
         "семнадцати", "восемьнадцати", "девятнадцати"

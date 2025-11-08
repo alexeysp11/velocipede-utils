@@ -9,12 +9,12 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 using Microsoft.CodeAnalysis.Text;
 
-namespace VelocipedeUtils.Dynamical;
+namespace VelocipedeUtils.Shared.CodeExtensions.Dynamical;
 
 /// <summary>
 /// Class for dynamically compiling a string containing a C# code
 /// </summary>
-public class DynamicCompiling 
+public static class DynamicCompiling 
 {
     /// <summary>
     /// Method for compiling a string containing C# code and run it
@@ -107,7 +107,7 @@ public class DynamicCompiling
                 foreach (Diagnostic diagnostic in failures)
                     errors.Add($"{diagnostic.Id}: {diagnostic.GetMessage()}");
 
-                throw new System.Exception(string.Join("\n", errors));
+                throw new Exception(string.Join("\n", errors));
             }
             return (assemblyStream.GetBuffer(), symbolsStream.GetBuffer());
         }

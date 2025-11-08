@@ -8,32 +8,37 @@ namespace VelocipedeUtils.Shared.Office.Translation.Digits;
 /// <summary>
 /// Digits translation (German).
 /// </summary>
-public class DigitsTranslation_de_DE
+public static class DigitsTranslation_de_DE
 {
-    private static string[] OneThroughNineteen = {
+    private static readonly string[] OneThroughNineteen = {
         "eins", "zwei", "drei", "vier", "fünf", "sechs", "sieben", "acht",
         "nuen", "zehn", "elf", "zwölf", "dreizehn", "vierzehn",
         "fünfzehn", "sechzehn", "siebzehn", "achtzehn", "nuenzehn"
     };
 
-    private static string[] Tens = {
+    private static readonly string[] Tens = {
         "zehn", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig",
         "achtzig", "nuenzig"
     };
     
-    private static string[] OrdinalOneThroughNineteen = {
+    private static readonly string[] OrdinalOneThroughNineteen = {
         "erste", "zweite", "dritte", "vierte", "fünfte", "sechste",
         "siebte", "achte", "nuente", "zehnte", "elfte", "zwölfte",
         "dreizehnte", "vierzehnte", "fünfzehnte", "sechzehnte",
         "siebzehnte", "achtzehnte", "nuenzehnte"
     };
 
-    private static string[] OrdinalTens = {
+    private static readonly string[] OrdinalTens = {
         "zehnte", "zwanzigste", "dreißigste", "vierzigste", "fünfzigste",
         "sechzigste", "siebzigste", "achtzigste", "nuenzigste"
     };
 
-    public static string GetListItemText(string languageCultureName, int levelNumber, string numFmt)
+    public static string GetListItemText(
+#pragma warning disable IDE0060 // Remove unused parameter
+        string languageCultureName,
+#pragma warning restore IDE0060 // Remove unused parameter
+        int levelNumber,
+        string numFmt)
     {
 			if (levelNumber > 19999)
 				throw new ArgumentOutOfRangeException("levelNumber", "Convering a levelNumber to ordinal text that is greater then 19 999 is not supported");

@@ -1,4 +1,4 @@
-namespace VelocipedeUtils.Extensions;
+namespace VelocipedeUtils.Shared.CodeExtensions;
 
 /// <summary>
 /// Class for getting settings from config file.

@@ -8,42 +8,47 @@ namespace VelocipedeUtils.Shared.Office.Translation.Digits;
 /// <summary>
 /// Digits translation (Spanish).
 /// </summary>
-public class DigitsTranslation_es_ES
+public static class DigitsTranslation_es_ES
 {
-    private static string[] OneThroughNineteen = {
+    private static readonly string[] OneThroughNineteen = {
         "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho",
         "nueve", "diez", "once", "doce", "trece", "catorce",
         "quince", "dieciseis", "diecisiete", "dieciocho", "diecinueve"
     };
 
-    private static string[] Tens = {
+    private static readonly string[] Tens = {
         "diez", "veinte", "treinta", "cuarenta", "cincuenta", "sesenta", "setenta",
         "ochenta", "noventa"
     };
 
-    private static string[] Hundreds = {
+    private static readonly string[] Hundreds = {
         "cien", "doscientos", "trescientos", "cuatrocientos", "quinientos", "seiscientos", "setecientos",
         "ochocientos", "novecientos"
     };
 
-    private static string[] OrdinalOneThroughNineteen = {
+    private static readonly string[] OrdinalOneThroughNineteen = {
         "primero", "segundo", "tercero", "cuarto", "quinto", "sexto",
         "septimo", "octavo", "noveno", "decimo", "undecimo", "duodecimo",
         "decimotercio", "decimocuarto", "decimoquinto", "decimosexto",
         "decimoseptimo", "decimoctavo", "decimonono"
     };
 
-    private static string[] OrdinalTens = {
+    private static readonly string[] OrdinalTens = {
         "decimo", "vigesimo", "trigesimo", "cuadragesimo", "quincuagesimo",
         "sexagesimo", "septuagesimo", "octogesimo", "nonagesimo"
     };
     
-    private static string[] OrdinalHundreds = {
+    private static readonly string[] OrdinalHundreds = {
         "cienesimo", "ducentesimo", "tricentesimo", "cuadringentesimo", "quingentesimo", "sexcentesimo", "septingentesimo",
         "octingentesimo", "noningentesimo"
     };
 
-    public static string GetListItemText(string languageCultureName, int levelNumber, string numFmt)
+    public static string GetListItemText(
+#pragma warning disable IDE0060 // Remove unused parameter
+        string languageCultureName,
+#pragma warning restore IDE0060 // Remove unused parameter
+        int levelNumber,
+        string numFmt)
     {
 			if (levelNumber > 19999)
 				throw new ArgumentOutOfRangeException("levelNumber", "Convering a levelNumber to ordinal text that is greater then 19 999 is not supported");

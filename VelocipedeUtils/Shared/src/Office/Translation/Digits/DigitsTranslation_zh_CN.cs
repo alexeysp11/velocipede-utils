@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.Office.Translation.Digits;
 /// <summary>
 /// Digits translation (Chinese).
 /// </summary>
-public class DigitsTranslation_zh_CN
+public static class DigitsTranslation_zh_CN
 {
     public static string GetListItemText(string languageCultureName, int levelNumber, string numFmt)
     {

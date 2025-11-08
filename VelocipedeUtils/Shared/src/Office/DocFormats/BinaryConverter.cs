@@ -5,7 +5,7 @@ namespace VelocipedeUtils.Shared.Office.DocFormats;
 /// <summary>
 /// Class for using banaries (binary converter)
 /// </summary>
-public class BinaryConverter
+public static class BinaryConverter
 {
     /// <summary>
     /// Saves array of bytes as a binary file.

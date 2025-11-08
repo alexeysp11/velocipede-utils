@@ -1,10 +1,7 @@
-using System.Collections.Generic;
-using System.Net.Http;
 #if NET6_0_OR_GREATER
 using System.Net.Http.Json;
 #endif
 using System.Text.Json;
-using System.Threading.Tasks;
 using VelocipedeUtils.Shared.Models.Network;
 
 namespace VelocipedeUtils.Shared.Communication.NetworkAPIs;
@@ -12,7 +9,7 @@ namespace VelocipedeUtils.Shared.Communication.NetworkAPIs;
 /// <summary>
 /// Class for sending objects via HTTP
 /// </summary>
-public class HttpSender 
+public static class HttpSender 
 {
 #if NET5_0_OR_GREATER
     /// <summary>

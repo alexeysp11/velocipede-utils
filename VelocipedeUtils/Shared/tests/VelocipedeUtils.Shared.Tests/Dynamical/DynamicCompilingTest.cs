@@ -1,5 +1,5 @@
 using Xunit;
-using VelocipedeUtils.Dynamical;
+using VelocipedeUtils.Shared.CodeExtensions.Dynamical;
 
 namespace VelocipedeUtils.Shared.Tests.Dynamical;
 

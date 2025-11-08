@@ -2,7 +2,7 @@
 
 namespace VelocipedeUtils.Shared.Tests.Core.Compare;
 
-public class DataTableCompareHelper
+public static class DataTableCompareHelper
 {
     public static bool CompareDataTableSchema(DataTable dt1, DataTable dt2)
     {
