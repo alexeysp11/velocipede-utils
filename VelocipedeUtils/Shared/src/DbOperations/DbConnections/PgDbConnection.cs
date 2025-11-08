@@ -1,6 +1,5 @@
 using System.Data;
 using System.Data.Common;
-using Dapper;
 using Npgsql;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
@@ -663,49 +662,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         }
 
         /// <inheritdoc/>
-        public async Task<T?> QueryFirstOrDefaultAsync<T>(
+        public Task<T?> QueryFirstOrDefaultAsync<T>(
             string sqlRequest,
             List<VelocipedeCommandParameter>? parameters)
         {
-            if (string.IsNullOrEmpty(ConnectionString))
-                throw new InvalidOperationException(ErrorMessageConstants.ConnectionStringShouldNotBeNullOrEmpty);
-
-            bool newConnectionUsed = true;
-            Task<DynamicParameters?>? dapperParamsTask = parameters?.ToDapperParametersAsync();
-            NpgsqlConnection? localConnection = null;
-            try
-            {
-                // Initialize connection.
-                if (_connection != null)
-                {
-                    newConnectionUsed = false;
-                    localConnection = _connection;
-                }
-                else
-                {
-                    localConnection = new NpgsqlConnection(ConnectionString);
-                }
-                if (localConnection.State != ConnectionState.Open)
-                {
-                    await localConnection.OpenAsync();
-                }
-
-                // Execute SQL command and dispose connection if necessary.
-                DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
-                return await localConnection.QueryFirstOrDefaultAsync<T>(sqlRequest, dynamicParameters);
-            }
-            catch (ArgumentException ex)
-            {
-                throw new VelocipedeConnectionStringException(ex);
-            }
-            finally
-            {
-                if (newConnectionUsed && localConnection != null)
-                {
-                    await localConnection.CloseAsync();
-                    localConnection.Dispose();
-                }
-            }
+            return InternalQueryFirstOrDefaultAsync<T>(this, sqlRequest, parameters);
         }
 
         /// <inheritdoc/>
