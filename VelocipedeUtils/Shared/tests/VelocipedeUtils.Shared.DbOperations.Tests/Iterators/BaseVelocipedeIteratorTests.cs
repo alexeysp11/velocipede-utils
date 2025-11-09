@@ -234,12 +234,14 @@ public abstract class BaseVelocipedeIteratorTests
         mockConnection
             .Setup(x => x.GetForeignKeys(TABLE_NAME_3, out foreignKeys3))
             .Returns(mockConnection.Object);
+#nullable disable
         mockConnection
             .Setup(x => x.GetForeignKeysAsync(TABLE_NAME_1))
             .ReturnsAsync(nullForeignKeys);
         mockConnection
             .Setup(x => x.GetForeignKeysAsync(TABLE_NAME_2))
             .ReturnsAsync(nullForeignKeys);
+#nullable restore
         mockConnection
             .Setup(x => x.GetForeignKeysAsync(TABLE_NAME_3))
             .ReturnsAsync(foreignKeys3);
@@ -259,12 +261,14 @@ public abstract class BaseVelocipedeIteratorTests
         mockConnection
             .Setup(x => x.GetTriggersAsync(TABLE_NAME_1))
             .ReturnsAsync(triggers1);
+#nullable disable
         mockConnection
             .Setup(x => x.GetTriggersAsync(TABLE_NAME_2))
             .ReturnsAsync(nullTriggers);
         mockConnection
             .Setup(x => x.GetTriggersAsync(TABLE_NAME_3))
             .ReturnsAsync(nullTriggers);
+#nullable restore
 
         // SQL definition.
         string? sqlDefinition1 = TABLE_SQL_DEFINITION_1;
