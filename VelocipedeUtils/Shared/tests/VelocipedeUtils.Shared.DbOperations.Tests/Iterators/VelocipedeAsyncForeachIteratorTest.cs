@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.Tests.Core.Compare;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators;
 
+/// <summary>
+/// Class for unit testing <see cref="VelocipedeAsyncForeachIterator"/>.
+/// </summary>
 public sealed class VelocipedeAsyncForeachIteratorTest : BaseVelocipedeIteratorTests
 {
     /// <summary>

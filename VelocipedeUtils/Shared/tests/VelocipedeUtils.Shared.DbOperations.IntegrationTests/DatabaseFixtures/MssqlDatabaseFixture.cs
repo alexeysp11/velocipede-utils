@@ -8,6 +8,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
+/// <summary>
+/// MS SQL fixture.
+/// </summary>
 public sealed class MssqlDatabaseFixture : IDatabaseFixture
 {
     private readonly MsSqlContainer container =

@@ -11,12 +11,34 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators;
 /// </summary>
 public abstract class BaseVelocipedeIteratorTests
 {
+    /// <summary>
+    /// Name of the test table 1.
+    /// </summary>
     protected const string TABLE_NAME_1 = "TableName1";
+
+    /// <summary>
+    /// Name of the test table 2.
+    /// </summary>
     protected const string TABLE_NAME_2 = "TableName2";
+
+    /// <summary>
+    /// Name of the test table 3.
+    /// </summary>
     protected const string TABLE_NAME_3 = "TableName3";
 
+    /// <summary>
+    /// SQL definition of the test table 1.
+    /// </summary>
     protected const string TABLE_SQL_DEFINITION_1 = "CREATE TABLE TableName1 ...";
+
+    /// <summary>
+    /// SQL definition of the test table 2.
+    /// </summary>
     protected const string TABLE_SQL_DEFINITION_2 = "CREATE TABLE TableName2 ...";
+
+    /// <summary>
+    /// SQL definition of the test table 3.
+    /// </summary>
     protected const string TABLE_SQL_DEFINITION_3 = "CREATE TABLE TableName3 ...";
 
     /// <summary>
@@ -64,7 +86,14 @@ public abstract class BaseVelocipedeIteratorTests
     /// </summary>
     protected sealed class Table1
     {
+        /// <summary>
+        /// Identifier of the test instance.
+        /// </summary>
         public required int Id { get; set; }
+
+        /// <summary>
+        /// Name of the test instance.
+        /// </summary>
         public required string Name { get; set; }
     }
 
@@ -73,7 +102,14 @@ public abstract class BaseVelocipedeIteratorTests
     /// </summary>
     protected sealed class Table2
     {
+        /// <summary>
+        /// Name of the test instance.
+        /// </summary>
         public required string Name { get; set; }
+
+        /// <summary>
+        /// Value of the test instance.
+        /// </summary>
         public string? Value { get; set; }
     }
 
@@ -82,8 +118,19 @@ public abstract class BaseVelocipedeIteratorTests
     /// </summary>
     protected sealed class Table3
     {
+        /// <summary>
+        /// Identifier of the test instance.
+        /// </summary>
         public required int Id { get; set; }
+
+        /// <summary>
+        /// Name of the test instance.
+        /// </summary>
         public required string Name { get; set; }
+
+        /// <summary>
+        /// Value of the test instance.
+        /// </summary>
         public string? Value { get; set; }
     }
 

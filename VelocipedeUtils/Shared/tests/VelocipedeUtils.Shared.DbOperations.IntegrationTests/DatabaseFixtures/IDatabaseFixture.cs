@@ -4,6 +4,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
+/// <summary>
+/// Interface for database fixture.
+/// </summary>
 public interface IDatabaseFixture : IAsyncLifetime
 {
     /// <summary>

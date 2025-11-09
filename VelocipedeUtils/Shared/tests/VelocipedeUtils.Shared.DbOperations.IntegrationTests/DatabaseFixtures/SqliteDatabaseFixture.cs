@@ -7,6 +7,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
+/// <summary>
+/// SQLite fixture.
+/// </summary>
 public class SqliteDatabaseFixture : IDatabaseFixture
 {
     /// <inheritdoc/>
@@ -21,6 +24,9 @@ public class SqliteDatabaseFixture : IDatabaseFixture
     /// <inheritdoc/>
     public DatabaseType DatabaseType => DatabaseType.SQLite;
 
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
     public SqliteDatabaseFixture()
     {
         ContainerId = Guid.NewGuid().ToString();

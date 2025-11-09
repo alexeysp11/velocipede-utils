@@ -37,6 +37,10 @@ public sealed class MssqlDbConnection : BaseVelocipedeDbConnection, IVelocipedeD
     private readonly string _getTriggersSql;
     private readonly string _getSqlDefinitionSql;
 
+    /// <summary>
+    /// Creates an instance of <see cref="MssqlDbConnection"/> by connection string.
+    /// </summary>
+    /// <param name="connectionString">Specified connection string.</param>
     public MssqlDbConnection(string? connectionString = null)
     {
         ConnectionString = connectionString;

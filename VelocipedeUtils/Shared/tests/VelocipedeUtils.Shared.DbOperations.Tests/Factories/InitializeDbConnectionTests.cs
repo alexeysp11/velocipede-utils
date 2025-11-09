@@ -5,6 +5,9 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Factories;
 
+/// <summary>
+/// Class for unit testing <see cref="VelocipedeDbConnectionFactory"/>: initialize database connection.
+/// </summary>
 public class InitializeDbConnectionTests
 {
     [Theory]

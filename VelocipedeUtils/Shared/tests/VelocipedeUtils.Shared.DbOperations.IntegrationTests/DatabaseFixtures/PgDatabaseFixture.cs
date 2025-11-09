@@ -8,6 +8,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
+/// <summary>
+/// PostgreSQL fixture.
+/// </summary>
 public class PgDatabaseFixture : IDatabaseFixture
 {
     private readonly PostgreSqlContainer container =

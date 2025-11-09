@@ -5,6 +5,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres;
 
 public sealed class PgDbConnectionIsConnectedTests : BaseDbConnectionIsConnectedTests
 {
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
     public PgDbConnectionIsConnectedTests() : base(DatabaseType.PostgreSQL)
     {
         _connectionString = "Host=localhost;Port=5432;Username=myuser;Password=mypassword;Database=mydatabase;";

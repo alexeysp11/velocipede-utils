@@ -4,6 +4,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite;
 
 public sealed class SqliteDbConnectionCreateDbTests : BaseDbConnectionCreateDbTests
 {
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
     public SqliteDbConnectionCreateDbTests() : base(Enums.DatabaseType.SQLite)
     {
     }

@@ -9,6 +9,9 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
 public class TestDbContext : DbContext
 {
 #nullable disable
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
     public TestDbContext(DbContextOptions<TestDbContext> options) : base(options)
     {
     }

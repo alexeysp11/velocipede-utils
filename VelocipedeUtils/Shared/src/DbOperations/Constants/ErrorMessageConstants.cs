@@ -5,6 +5,7 @@
 /// </summary>
 public static class ErrorMessageConstants
 {
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
     public const string ConnectionStringShouldNotBeNullOrEmpty = "Connection string should not be null or empty";
     public const string DatabaseAlreadyExists = "Database already exists";
     public const string UnableToCreateDatabase = "Unable to create database";
@@ -17,4 +18,5 @@ public static class ErrorMessageConstants
     public const string UnableToAddActionForClosedForeachOperation = "Unable to add action for closed foreach operation";
     public const string ForeachRequiresNotEmptyTableNames = "Foreach operation requires not empty list of table names";
     public const string DatabaseShouldBeConnected = "Database should be connected";
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }

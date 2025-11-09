@@ -9,6 +9,9 @@ public sealed class SqliteDbConnectionDbExistsTests : BaseDbConnectionDbExistsTe
 {
     private readonly string _folderName;
 
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
     public SqliteDbConnectionDbExistsTests() : base(Enums.DatabaseType.SQLite)
     {
         _folderName = nameof(SqliteDbConnectionDbExistsTests);

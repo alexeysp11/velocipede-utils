@@ -36,6 +36,10 @@ public sealed class SqliteDbConnection : BaseVelocipedeDbConnection, IVelocipede
     private readonly string _getTriggersSql;
     private readonly string _getSqlDefinitionSql;
 
+    /// <summary>
+    /// Creates an instance of <see cref="SqliteDbConnection"/> by connection string.
+    /// </summary>
+    /// <param name="connectionString">Specified connection string.</param>
     public SqliteDbConnection(string? connectionString = null)
     {
         ConnectionString = connectionString;

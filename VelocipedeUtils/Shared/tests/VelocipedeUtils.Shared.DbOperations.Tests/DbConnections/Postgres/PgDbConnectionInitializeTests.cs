@@ -7,6 +7,9 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Postgres;
 
 public sealed class PgDbConnectionInitializeTests : BaseDbConnectionInitializeTests
 {
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
     public PgDbConnectionInitializeTests() : base(DatabaseType.PostgreSQL)
     {
         _connectionString = $"Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mydatabase;";

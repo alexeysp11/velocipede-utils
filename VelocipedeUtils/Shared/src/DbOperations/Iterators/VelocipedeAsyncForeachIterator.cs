@@ -188,7 +188,7 @@ public sealed class VelocipedeAsyncForeachIterator : IVelocipedeAsyncForeachIter
     /// Try to add <see cref="AsyncForeachOperationType"/>.
     /// </summary>
     /// <param name="operationType">Operation type</param>
-    /// <exception cref="InvalidOperationException">Thrown when <see cref="EndForeach"/> was already called</exception>
+    /// <exception cref="InvalidOperationException">Thrown when <see cref="EndAsyncForeach"/> was already called</exception>
     private void TryAddOperationType(AsyncForeachOperationType operationType)
     {
         if (!_allowAddOperationTypes)

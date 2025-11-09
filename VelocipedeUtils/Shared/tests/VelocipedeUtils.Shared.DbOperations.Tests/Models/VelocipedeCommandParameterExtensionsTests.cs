@@ -5,6 +5,9 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Models;
 
+/// <summary>
+/// Class for unit testing <see cref="VelocipedeCommandParameterExtensions"/>.
+/// </summary>
 public sealed class VelocipedeCommandParameterExtensionsTests
 {
     [Theory]

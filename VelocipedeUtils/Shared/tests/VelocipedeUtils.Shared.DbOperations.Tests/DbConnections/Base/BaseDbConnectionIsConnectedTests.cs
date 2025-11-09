@@ -5,11 +5,18 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
+/// <summary>
+/// Base class for testing whether database is connected.
+/// </summary>
 public abstract class BaseDbConnectionIsConnectedTests
 {
     private readonly DatabaseType _databaseType;
     protected string _connectionString;
 
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="databaseType">Database type.</param>
     protected BaseDbConnectionIsConnectedTests(DatabaseType databaseType)
     {
         _databaseType = databaseType;

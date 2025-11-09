@@ -44,6 +44,10 @@ public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbCo
     private readonly string _getTriggersSql;
     private readonly string _getSqlDefinitionSql;
 
+    /// <summary>
+    /// Creates an instance of <see cref="PgDbConnection"/> by connection string.
+    /// </summary>
+    /// <param name="connectionString">Specified connection string.</param>
     public PgDbConnection(string? connectionString = null)
     {
         ConnectionString = connectionString;

@@ -6,10 +6,17 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
+/// <summary>
+/// Base class for testing get SQL definition operation.
+/// </summary>
 public abstract class BaseDbConnectionGetSqlFromDataTableTests
 {
     private readonly DatabaseType _databaseType;
 
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    /// <param name="databaseType">Database type.</param>
     protected BaseDbConnectionGetSqlFromDataTableTests(DatabaseType databaseType)
     {
         _databaseType = databaseType;
