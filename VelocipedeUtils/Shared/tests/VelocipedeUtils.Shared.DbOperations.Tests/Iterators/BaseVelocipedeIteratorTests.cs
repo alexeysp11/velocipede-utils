@@ -189,6 +189,15 @@ public abstract class BaseVelocipedeIteratorTests
         mockConnection
             .Setup(x => x.QueryDataTable($"SELECT * FROM {TABLE_NAME_3}", out table3))
             .Returns(mockConnection.Object);
+        mockConnection
+            .Setup(x => x.QueryDataTableAsync($"SELECT * FROM {TABLE_NAME_1}"))
+            .ReturnsAsync(table1);
+        mockConnection
+            .Setup(x => x.QueryDataTableAsync($"SELECT * FROM {TABLE_NAME_2}"))
+            .ReturnsAsync(table2);
+        mockConnection
+            .Setup(x => x.QueryDataTableAsync($"SELECT * FROM {TABLE_NAME_3}"))
+            .ReturnsAsync(table3);
 
         // Columns.
         List<VelocipedeColumnInfo> columns1 = _tableColumns1;
@@ -203,6 +212,15 @@ public abstract class BaseVelocipedeIteratorTests
         mockConnection
             .Setup(x => x.GetColumns(TABLE_NAME_3, out columns3))
             .Returns(mockConnection.Object);
+        mockConnection
+            .Setup(x => x.GetColumnsAsync(TABLE_NAME_1))
+            .ReturnsAsync(columns1);
+        mockConnection
+            .Setup(x => x.GetColumnsAsync(TABLE_NAME_2))
+            .ReturnsAsync(columns2);
+        mockConnection
+            .Setup(x => x.GetColumnsAsync(TABLE_NAME_3))
+            .ReturnsAsync(columns3);
 
         // Foreign keys.
         List<VelocipedeForeignKeyInfo>? nullForeignKeys = null;
@@ -216,6 +234,15 @@ public abstract class BaseVelocipedeIteratorTests
         mockConnection
             .Setup(x => x.GetForeignKeys(TABLE_NAME_3, out foreignKeys3))
             .Returns(mockConnection.Object);
+        mockConnection
+            .Setup(x => x.GetForeignKeysAsync(TABLE_NAME_1))
+            .ReturnsAsync(nullForeignKeys);
+        mockConnection
+            .Setup(x => x.GetForeignKeysAsync(TABLE_NAME_2))
+            .ReturnsAsync(nullForeignKeys);
+        mockConnection
+            .Setup(x => x.GetForeignKeysAsync(TABLE_NAME_3))
+            .ReturnsAsync(foreignKeys3);
 
         // Triggers.
         List<VelocipedeTriggerInfo> triggers1 = _tableTriggers1;
@@ -229,6 +256,15 @@ public abstract class BaseVelocipedeIteratorTests
         mockConnection
             .Setup(x => x.GetTriggers(TABLE_NAME_3, out nullTriggers))
             .Returns(mockConnection.Object);
+        mockConnection
+            .Setup(x => x.GetTriggersAsync(TABLE_NAME_1))
+            .ReturnsAsync(triggers1);
+        mockConnection
+            .Setup(x => x.GetTriggersAsync(TABLE_NAME_2))
+            .ReturnsAsync(nullTriggers);
+        mockConnection
+            .Setup(x => x.GetTriggersAsync(TABLE_NAME_3))
+            .ReturnsAsync(nullTriggers);
 
         // SQL definition.
         string? sqlDefinition1 = TABLE_SQL_DEFINITION_1;
@@ -243,15 +279,27 @@ public abstract class BaseVelocipedeIteratorTests
         mockConnection
             .Setup(x => x.GetSqlDefinition(TABLE_NAME_3, out sqlDefinition3))
             .Returns(mockConnection.Object);
+        mockConnection
+            .Setup(x => x.GetSqlDefinitionAsync(TABLE_NAME_1))
+            .ReturnsAsync(sqlDefinition1);
+        mockConnection
+            .Setup(x => x.GetSqlDefinitionAsync(TABLE_NAME_2))
+            .ReturnsAsync(sqlDefinition2);
+        mockConnection
+            .Setup(x => x.GetSqlDefinitionAsync(TABLE_NAME_3))
+            .ReturnsAsync(sqlDefinition3);
 
         // Fluent interfaces for connected object.
         if (isConnected)
         {
-            // WithForeachTableIterator.
+            // Iterators.
             List<string> tableNames = TableNames;
             mockConnection
                 .Setup(x => x.WithForeachTableIterator(tableNames))
                 .Returns(new VelocipedeForeachTableIterator(mockConnection.Object, tableNames));
+            mockConnection
+                .Setup(x => x.WithAsyncForeachIterator(tableNames))
+                .Returns(new VelocipedeAsyncForeachIterator(mockConnection.Object, tableNames));
         }
 
         return mockConnection.Object;
