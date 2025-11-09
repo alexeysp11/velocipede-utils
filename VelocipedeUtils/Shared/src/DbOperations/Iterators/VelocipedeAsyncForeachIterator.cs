@@ -102,41 +102,50 @@ public sealed class VelocipedeAsyncForeachIterator : IVelocipedeAsyncForeachIter
         }
 
         // Get foreach result in the loop.
+        object lockObject = new();
+        List<Task> tasks = [];
         VelocipedeForeachResult foreachResult = new();
         foreach (string tableName in _tableNames)
         {
-            VelocipedeForeachTableInfo tableInfo = new() { TableName = tableName };
-            foreach (AsyncForeachOperationType operation in operations)
+            Task task = Task.Run(async () =>
             {
-                switch (operation)
+                VelocipedeForeachTableInfo tableInfo = new() { TableName = tableName };
+                foreach (AsyncForeachOperationType operation in operations)
                 {
-                    case AsyncForeachOperationType.GetAllDataAsync:
-                        tableInfo.Data = await _connection.GetAllDataAsync(tableName);
-                        break;
+                    switch (operation)
+                    {
+                        case AsyncForeachOperationType.GetAllDataAsync:
+                            tableInfo.Data = await _connection.GetAllDataAsync(tableName);
+                            break;
 
-                    case AsyncForeachOperationType.GetColumnsAsync:
-                        tableInfo.ColumnInfo = await _connection.GetColumnsAsync(tableName);
-                        break;
+                        case AsyncForeachOperationType.GetColumnsAsync:
+                            tableInfo.ColumnInfo = await _connection.GetColumnsAsync(tableName);
+                            break;
 
-                    case AsyncForeachOperationType.GetForeignKeysAsync:
-                        tableInfo.ForeignKeyInfo = await _connection.GetForeignKeysAsync(tableName);
-                        break;
+                        case AsyncForeachOperationType.GetForeignKeysAsync:
+                            tableInfo.ForeignKeyInfo = await _connection.GetForeignKeysAsync(tableName);
+                            break;
 
-                    case AsyncForeachOperationType.GetTriggersAsync:
-                        tableInfo.TriggerInfo = await _connection.GetTriggersAsync(tableName);
-                        break;
+                        case AsyncForeachOperationType.GetTriggersAsync:
+                            tableInfo.TriggerInfo = await _connection.GetTriggersAsync(tableName);
+                            break;
 
-                    case AsyncForeachOperationType.GetSqlDefinitionAsync:
-                        tableInfo.SqlDefinition = await _connection.GetSqlDefinitionAsync(tableName);
-                        break;
+                        case AsyncForeachOperationType.GetSqlDefinitionAsync:
+                            tableInfo.SqlDefinition = await _connection.GetSqlDefinitionAsync(tableName);
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                    }
                 }
-            }
-            foreachResult.Add(tableName, tableInfo);
+                lock (lockObject)
+                {
+                    foreachResult.Add(tableName, tableInfo);
+                }
+            });
+            tasks.Add(task);
         }
-
+        await Task.WhenAll(tasks.ToArray());
         return foreachResult;
     }
 
