@@ -46,7 +46,7 @@ public abstract class BaseVelocipedeDbConnection
             }
 
             // Execute SQL command and dispose connection if necessary.
-            localConnection.Execute(sqlRequest, parameters?.ToDapperParameters());
+            localConnection.Execute(sqlRequest, parameters?.ToDapperParameters(), connection.Transaction);
         }
         catch (ArgumentException ex)
         {
@@ -99,7 +99,7 @@ public abstract class BaseVelocipedeDbConnection
 
             // Execute SQL command and dispose connection if necessary.
             DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
-            await localConnection.ExecuteAsync(sqlRequest, dynamicParameters);
+            await localConnection.ExecuteAsync(sqlRequest, dynamicParameters, connection.Transaction);
         }
         catch (ArgumentException ex)
         {
@@ -153,7 +153,7 @@ public abstract class BaseVelocipedeDbConnection
             }
 
             // Execute SQL command and dispose connection if necessary.
-            IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters());
+            IEnumerable<T> queryResult = localConnection.Query<T>(sqlRequest, parameters?.ToDapperParameters(), connection.Transaction);
             if (predicate != null)
                 queryResult = queryResult.Where(predicate);
             return queryResult.ToList();
@@ -215,7 +215,7 @@ public abstract class BaseVelocipedeDbConnection
 
             // Execute SQL command and dispose connection if necessary.
             DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
-            IEnumerable<T> queryResult = await localConnection.QueryAsync<T>(sqlRequest, dynamicParameters);
+            IEnumerable<T> queryResult = await localConnection.QueryAsync<T>(sqlRequest, dynamicParameters, connection.Transaction);
             if (predicate != null)
                 queryResult = queryResult.Where(predicate);
             return queryResult.ToList();
@@ -270,7 +270,7 @@ public abstract class BaseVelocipedeDbConnection
             }
 
             // Execute SQL command and dispose connection if necessary.
-            return localConnection.QueryFirstOrDefault<T>(sqlRequest, parameters?.ToDapperParameters());
+            return localConnection.QueryFirstOrDefault<T>(sqlRequest, parameters?.ToDapperParameters(), connection.Transaction);
         }
         catch (ArgumentException ex)
         {
@@ -326,7 +326,7 @@ public abstract class BaseVelocipedeDbConnection
 
             // Execute SQL command and dispose connection if necessary.
             DynamicParameters? dynamicParameters = dapperParamsTask == null ? null : await dapperParamsTask;
-            return await localConnection.QueryFirstOrDefaultAsync<T>(sqlRequest, dynamicParameters);
+            return await localConnection.QueryFirstOrDefaultAsync<T>(sqlRequest, dynamicParameters, connection.Transaction);
         }
         catch (ArgumentException ex)
         {
