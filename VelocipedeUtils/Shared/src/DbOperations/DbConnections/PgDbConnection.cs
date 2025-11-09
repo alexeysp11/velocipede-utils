@@ -36,7 +36,11 @@ public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbCo
     /// <inheritdoc/>
     public DbConnection? Connection => _connection;
 
+    /// <inheritdoc/>
+    public DbTransaction? Transaction => _transaction;
+
     private NpgsqlConnection? _connection;
+    private NpgsqlTransaction? _transaction;
 
     private readonly string _getTablesInDbSql;
     private readonly string _getColumnsSql;
@@ -266,6 +270,41 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             _connection.Dispose();
             _connection = null;
         }
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection BeginTransaction()
+    {
+        if (_connection == null)
+        {
+            OpenDb();
+        }
+        _transaction = _connection!.BeginTransaction();
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection CommitTransaction()
+    {
+        if (_connection == null || _transaction == null || !IsConnected)
+            throw new InvalidOperationException(ErrorMessageConstants.UnableToCommitNotOpenTransaction);
+
+        _transaction.Commit();
+        _transaction.Dispose();
+        _transaction = null;
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection RollbackTransaction()
+    {
+        if (_connection == null || _transaction == null || !IsConnected)
+            throw new InvalidOperationException(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
+
+        _transaction.Rollback();
+        _transaction.Dispose();
+        _transaction = null;
         return this;
     }
 

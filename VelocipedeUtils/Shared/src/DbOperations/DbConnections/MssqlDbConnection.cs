@@ -29,7 +29,11 @@ public sealed class MssqlDbConnection : BaseVelocipedeDbConnection, IVelocipedeD
     /// <inheritdoc/>
     public DbConnection? Connection => _connection;
 
+    /// <inheritdoc/>
+    public DbTransaction? Transaction => _transaction;
+
     private SqlConnection? _connection;
+    private SqlTransaction? _transaction;
 
     private readonly string _getTablesInDbSql;
     private readonly string _getColumnsSql;
@@ -254,6 +258,41 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             _connection.Dispose();
             _connection = null;
         }
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection BeginTransaction()
+    {
+        if (_connection == null)
+        {
+            OpenDb();
+        }
+        _transaction = _connection!.BeginTransaction();
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection CommitTransaction()
+    {
+        if (_connection == null || _transaction == null || !IsConnected)
+            throw new InvalidOperationException(ErrorMessageConstants.UnableToCommitNotOpenTransaction);
+
+        _transaction.Commit();
+        _transaction.Dispose();
+        _transaction = null;
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection RollbackTransaction()
+    {
+        if (_connection == null || _transaction == null || !IsConnected)
+            throw new InvalidOperationException(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
+
+        _transaction.Rollback();
+        _transaction.Dispose();
+        _transaction = null;
         return this;
     }
 

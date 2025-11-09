@@ -29,7 +29,11 @@ public sealed class SqliteDbConnection : BaseVelocipedeDbConnection, IVelocipede
     /// <inheritdoc/>
     public DbConnection? Connection => _connection;
 
+    /// <inheritdoc/>
+    public DbTransaction? Transaction => _transaction;
+
     private SqliteConnection? _connection;
+    private SqliteTransaction? _transaction;
 
     private readonly string _getTablesInDbSql;
     private readonly string _getColumnsSql;
@@ -189,6 +193,41 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             _connection.Dispose();
             _connection = null;
         }
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection BeginTransaction()
+    {
+        if (_connection == null)
+        {
+            OpenDb();
+        }
+        _transaction = _connection!.BeginTransaction();
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection CommitTransaction()
+    {
+        if (_connection == null || _transaction == null || !IsConnected)
+            throw new InvalidOperationException(ErrorMessageConstants.UnableToCommitNotOpenTransaction);
+
+        _transaction.Commit();
+        _transaction.Dispose();
+        _transaction = null;
+        return this;
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection RollbackTransaction()
+    {
+        if (_connection == null || _transaction == null || !IsConnected)
+            throw new InvalidOperationException(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
+
+        _transaction.Rollback();
+        _transaction.Dispose();
+        _transaction = null;
         return this;
     }
 
