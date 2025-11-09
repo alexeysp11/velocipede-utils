@@ -1,12 +1,11 @@
-namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication
+namespace VelocipedeUtils.Shared.Models.Business.SocialCommunication;
+
+/// <summary>
+/// Like type.
+/// </summary>
+public enum LikeType
 {
-    /// <summary>
-    /// Like type.
-    /// </summary>
-    public enum LikeType
-    {
-        User,
-        Message,
-        Post
-    }
+    User,
+    Message,
+    Post
 }

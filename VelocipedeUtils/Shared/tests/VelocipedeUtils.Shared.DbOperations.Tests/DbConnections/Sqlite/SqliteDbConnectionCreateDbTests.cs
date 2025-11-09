@@ -1,11 +1,13 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite
+namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Sqlite;
+
+public sealed class SqliteDbConnectionCreateDbTests : BaseDbConnectionCreateDbTests
 {
-    public sealed class SqliteDbConnectionCreateDbTests : BaseDbConnectionCreateDbTests
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public SqliteDbConnectionCreateDbTests() : base(Enums.DatabaseType.SQLite)
     {
-        public SqliteDbConnectionCreateDbTests() : base(Enums.DatabaseType.SQLite)
-        {
-        }
     }
 }

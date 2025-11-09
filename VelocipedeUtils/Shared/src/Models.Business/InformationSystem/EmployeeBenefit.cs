@@ -1,13 +1,12 @@
-namespace VelocipedeUtils.Shared.Models.Business.InformationSystem
+namespace VelocipedeUtils.Shared.Models.Business.InformationSystem;
+
+/// <summary>
+/// Employee benifit.
+/// </summary>
+public class EmployeeBenefit : WfBusinessEntity, IWfBusinessEntity
 {
     /// <summary>
-    /// Employee benifit.
+    /// Employee benifit type.
     /// </summary>
-    public class EmployeeBenefit : WfBusinessEntity, IWfBusinessEntity
-    {
-        /// <summary>
-        /// Employee benifit type.
-        /// </summary>
-        public EmployeeBenefitType Type { get; set; }
-    }
+    public EmployeeBenefitType Type { get; set; }
 }

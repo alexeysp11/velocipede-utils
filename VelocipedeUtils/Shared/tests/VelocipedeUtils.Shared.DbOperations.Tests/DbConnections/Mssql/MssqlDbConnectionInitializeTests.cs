@@ -1,13 +1,15 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
+namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql;
+
+public sealed class MssqlDbConnectionInitializeTests : BaseDbConnectionInitializeTests
 {
-    public sealed class MssqlDbConnectionInitializeTests : BaseDbConnectionInitializeTests
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public MssqlDbConnectionInitializeTests() : base(DatabaseType.MSSQL)
     {
-        public MssqlDbConnectionInitializeTests() : base(DatabaseType.MSSQL)
-        {
-            _connectionString = "Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;";
-        }
+        _connectionString = "Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;";
     }
 }

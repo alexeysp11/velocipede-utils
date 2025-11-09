@@ -122,30 +122,14 @@ This functionality is suitable for situations where:
 
 ### Async operations
 
-Create database and execute request:
+This library also supports asynchronous operations. For example, you can asynchronously retrieve data and metadata about a table as follows:
 ```C#
 using IVelocipedeDbConnection dbConnection
     = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
 
 dbConnection
     .SetConnectionString(connectionString)
-    .OpenDb()
-    .CreateDbIfNotExists(newDatabaseName)
-    .SwitchDb(newDatabaseName);
-
-DataTable dtResult = await dbConnection.QueryDataTableAsync(sqlQuery, queryParameters);
-
-await dbConnection.CloseDbAsync();
-```
-
-Get data and metadata:
-```C#
-using IVelocipedeDbConnection dbConnection
-    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
-
-await dbConnection
-    .SetConnectionString(connectionString)
-    .OpenDbAsync();
+    .OpenDb();
 
 DataTable dtData = await dbConnection.GetAllDataAsync(tableName);
 List<VelocipedeColumnInfo> columnInfo = await dbConnection.GetColumnsAsync(tableName);
@@ -154,4 +138,25 @@ List<VelocipedeTriggerInfo> triggerInfo = await dbConnection.GetTriggersAsync(ta
 string sqlDefinition = await dbConnection.GetSqlDefinitionAsync(tableName);
 
 await dbConnection.CloseDbAsync();
+```
+
+It is possible to use an iterator to asynchronously retrieve metainformation about the specified tables:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb();
+
+VelocipedeForeachResult? foreachResult = await dbConnection
+    .WithAsyncForeachIterator(tableNames)
+    .BeginAsyncForeach()
+        .GetAllDataAsync()
+        .GetColumnsAsync()
+        .GetForeignKeysAsync()
+        .GetTriggersAsync()
+        .GetSqlDefinitionAsync()
+    .EndAsyncForeach()
+    .GetResultAsync();
 ```

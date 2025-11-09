@@ -1,13 +1,12 @@
-namespace VelocipedeUtils.Shared.Models.Documents.Enums
+namespace VelocipedeUtils.Shared.Models.Documents.Enums;
+
+/// <summary>
+/// Text alignment enumeration.
+/// </summary>
+public enum TextAlignment
 {
-    /// <summary>
-    /// Text alignment enumeration.
-    /// </summary>
-    public enum TextAlignment
-    {
-        LEFT,
-        CENTER,
-        RIGHT,
-        JUSTIFIED
-    }
+    LEFT,
+    CENTER,
+    RIGHT,
+    JUSTIFIED
 }

@@ -1,12 +1,11 @@
-namespace VelocipedeUtils.Shared.Models.Business.Processes
+namespace VelocipedeUtils.Shared.Models.Business.Processes;
+
+/// <summary>
+/// Task priority.
+/// </summary>
+public enum TaskPriority
 {
-    /// <summary>
-    /// Task priority.
-    /// </summary>
-    public enum TaskPriority
-    {
-        High,
-        Medium,
-        Low
-    }
+    High,
+    Medium,
+    Low
 }

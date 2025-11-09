@@ -1,10 +1,9 @@
-namespace VelocipedeUtils.Shared.Models.Business.Reporting
+namespace VelocipedeUtils.Shared.Models.Business.Reporting;
+
+/// <summary>
+/// Printer object.
+/// </summary>
+public class WfPrinter : WfBusinessEntity, IWfBusinessEntity
 {
-    /// <summary>
-    /// Printer object.
-    /// </summary>
-    public class WfPrinter : WfBusinessEntity, IWfBusinessEntity
-    {
-        public WfPrinterLocation? PrinterLocation { get; set; }
-    }
+    public WfPrinterLocation? PrinterLocation { get; set; }
 }

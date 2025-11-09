@@ -1,18 +1,17 @@
-namespace VelocipedeUtils.Shared.Models.Business.Customers
+namespace VelocipedeUtils.Shared.Models.Business.Customers;
+
+/// <summary>
+/// Phone number.
+/// </summary>
+public class PhoneNumber
 {
     /// <summary>
-    /// Phone number.
+    /// Number.
     /// </summary>
-    public class PhoneNumber
-    {
-        /// <summary>
-        /// Number.
-        /// </summary>
-        public string? Number { get; set; }
-        
-        /// <summary>
-        /// Notes.
-        /// </summary>
-        public string? Notes { get; set; }
-    }
+    public string? Number { get; set; }
+    
+    /// <summary>
+    /// Notes.
+    /// </summary>
+    public string? Notes { get; set; }
 }

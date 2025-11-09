@@ -1,12 +1,11 @@
-namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations
+namespace VelocipedeUtils.Shared.Models.Network.MicroserviceConfigurations;
+
+/// <summary>
+/// Type of endpoint call.
+/// </summary>
+public enum EndpointCallType
 {
-    /// <summary>
-    /// Type of endpoint call.
-    /// </summary>
-    public enum EndpointCallType
-    {
-        Monolith,
-        HTTP,
-        gRPC
-    }
+    Monolith,
+    HTTP,
+    gRPC
 }

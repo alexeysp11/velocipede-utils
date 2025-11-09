@@ -1,13 +1,12 @@
-namespace VelocipedeUtils.Shared.Models.Business.Processes
+namespace VelocipedeUtils.Shared.Models.Business.Processes;
+
+/// <summary>
+/// Business process diagram
+/// </summary>
+public class BusinessDiagram : WfBusinessEntity, IWfBusinessEntity
 {
     /// <summary>
-    /// Business process diagram
+    /// Collection of business diagram elements.
     /// </summary>
-    public class BusinessDiagram : WfBusinessEntity, IWfBusinessEntity
-    {
-        /// <summary>
-        /// Collection of business diagram elements.
-        /// </summary>
-        public required ICollection<BusinessDiagramElement> Elements { get; set; }
-    }
+    public required ICollection<BusinessDiagramElement> Elements { get; set; }
 }

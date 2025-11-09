@@ -9,7 +9,7 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
 public class WeightedRoundRobinLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalancer
 {
     private readonly object m_lock = new object();
-    private readonly System.Random m_random;
+    private readonly Random m_random;
     private int m_currentIndex;
 
     /// <summary>
@@ -18,7 +18,7 @@ public class WeightedRoundRobinLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalan
     public WeightedRoundRobinLoadBalancer(
         EndpointPool endpointPool)
     {
-        m_random = new System.Random();
+        m_random = new Random();
         m_currentIndex = 0;
         m_endpointPool = endpointPool;
     }

@@ -1,13 +1,12 @@
-namespace VelocipedeUtils.Shared.Models.Business
+namespace VelocipedeUtils.Shared.Models.Business;
+
+/// <summary>
+/// Interface that represents a business entity which could be received.
+/// </summary>
+public interface IReceivableBusinessEntity : IWfBusinessEntity
 {
     /// <summary>
-    /// Interface that represents a business entity which could be received.
+    /// Date the business entity was received.
     /// </summary>
-    public interface IReceivableBusinessEntity : IWfBusinessEntity
-    {
-        /// <summary>
-        /// Date the business entity was received.
-        /// </summary>
-        DateTime? DateReceived { get; set; }
-    }
+    DateTime? DateReceived { get; set; }
 }

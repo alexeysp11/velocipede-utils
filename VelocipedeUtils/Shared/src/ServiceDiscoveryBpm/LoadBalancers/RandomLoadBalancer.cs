@@ -8,7 +8,7 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.LoadBalancers;
 /// </summary>
 public class RandomLoadBalancer : BaseEsbLoadBalancer, IEsbLoadBalancer
 {
-    private readonly System.Random m_random;
+    private readonly Random m_random;
 
     /// <summary>
     /// Initializes a new instance of the RandomLoadBalancer class with the specified endpoints.

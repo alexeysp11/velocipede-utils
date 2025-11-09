@@ -3,48 +3,50 @@ using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql
+namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Mssql;
+
+public sealed class MssqlDbConnectionIsConnectedTests : BaseDbConnectionIsConnectedTests
 {
-    public sealed class MssqlDbConnectionIsConnectedTests : BaseDbConnectionIsConnectedTests
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public MssqlDbConnectionIsConnectedTests() : base(DatabaseType.MSSQL)
     {
-        public MssqlDbConnectionIsConnectedTests() : base(DatabaseType.MSSQL)
-        {
-            _connectionString = "Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;";
-        }
+        _connectionString = "Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;";
+    }
 
-        [Theory]
-        [InlineData("Data Source=myServer;Initial Catalog=myDatabase", "myDatabase")]
-        [InlineData("Data Source=myServer;Initial Catalog=myDatabase;", "myDatabase")]
-        [InlineData("Data Source=myServer;Initial Catalog=myDatabase;Connection Timeout=30;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;Connection Timeout=30;", "myDatabase")]
-        [InlineData("Data Source=myServer;Initial Catalog=myDatabase;Integrated Security=True", "myDatabase")]
-        [InlineData("Data Source=myServer;Initial Catalog=myDatabase;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Password=myPassword;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Pwd=myPassword;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Password=myPassword;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Pwd=myPassword;Integrated Security=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Pwd=myPassword;Integrated Security=True;Encrypt=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Pwd=myPassword;Integrated Security=True;Encrypt=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Pwd=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True", "myDatabase")]
-        [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        [InlineData("Data Source='myServer';Database=myDatabase;User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        [InlineData("Data Source='myServer';Database=myDatabase;User Id=myUsername;Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        [InlineData("Data Source='myServer';Database=myDatabase;User Id='myUsername';Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        [InlineData("Data Source=myServer;Database='myDatabase';User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        [InlineData("Data Source='myServer';Database='myDatabase';User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        [InlineData("Data Source='myServer';Database='myDatabase';User Id=myUsername;Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        [InlineData("Data Source='myServer';Database='myDatabase';User Id='myUsername';Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
-        public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
-        {
-            // Arrange & Act.
-            string result = MssqlDbConnection.GetDatabaseName(connectionString);
+    [Theory]
+    [InlineData("Data Source=myServer;Initial Catalog=myDatabase", "myDatabase")]
+    [InlineData("Data Source=myServer;Initial Catalog=myDatabase;", "myDatabase")]
+    [InlineData("Data Source=myServer;Initial Catalog=myDatabase;Connection Timeout=30;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;Connection Timeout=30;", "myDatabase")]
+    [InlineData("Data Source=myServer;Initial Catalog=myDatabase;Integrated Security=True", "myDatabase")]
+    [InlineData("Data Source=myServer;Initial Catalog=myDatabase;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Password=myPassword;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Pwd=myPassword;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Password=myPassword;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Pwd=myPassword;Integrated Security=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Pwd=myPassword;Integrated Security=True;Encrypt=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Pwd=myPassword;Integrated Security=True;Encrypt=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;Uid=myUsername;Pwd=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True", "myDatabase")]
+    [InlineData("Data Source=myServer;Database=myDatabase;User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    [InlineData("Data Source='myServer';Database=myDatabase;User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    [InlineData("Data Source='myServer';Database=myDatabase;User Id=myUsername;Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    [InlineData("Data Source='myServer';Database=myDatabase;User Id='myUsername';Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    [InlineData("Data Source=myServer;Database='myDatabase';User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    [InlineData("Data Source='myServer';Database='myDatabase';User Id=myUsername;Password=myPassword;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    [InlineData("Data Source='myServer';Database='myDatabase';User Id=myUsername;Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    [InlineData("Data Source='myServer';Database='myDatabase';User Id='myUsername';Password='myPassword';Integrated Security=True;Encrypt=True;Trust Server Certificate=True;", "myDatabase")]
+    public void GetDatabaseName_StaticGetter_DatabaseNameEqualsToExpected(string connectionString, string expected)
+    {
+        // Arrange & Act.
+        string result = MssqlDbConnection.GetDatabaseName(connectionString);
 
-            // Assert.
-            result.Should().Be(expected);
-        }
+        // Assert.
+        result.Should().Be(expected);
     }
 }

@@ -5,12 +5,12 @@ namespace VelocipedeUtils.Shared.ServiceDiscoveryBpm.ProcPipes;
 /// </summary>
 public abstract class AbstractProcPipe
 {
-    protected System.Action<IPipeDelegateParams> m_function;
+    protected Action<IPipeDelegateParams> m_function;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public AbstractProcPipe(System.Action<IPipeDelegateParams> function)
+    protected AbstractProcPipe(Action<IPipeDelegateParams> function)
     {
         m_function = function;
     }

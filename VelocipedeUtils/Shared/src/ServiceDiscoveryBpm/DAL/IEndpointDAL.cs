@@ -11,5 +11,5 @@ public interface IEndpointDAL
     /// <summary>
     /// Method for obtaining endpoint data for a given predicate.
     /// </summary>
-    Endpoint GetEndpoint(Expression<System.Func<EndpointCall, bool>> predicate);
+    Endpoint GetEndpoint(Expression<Func<EndpointCall, bool>> predicate);
 }

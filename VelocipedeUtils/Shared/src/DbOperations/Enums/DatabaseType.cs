@@ -1,20 +1,62 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.Enums
+﻿namespace VelocipedeUtils.Shared.DbOperations.Enums;
+
+/// <summary>
+/// Database type.
+/// </summary>
+public enum DatabaseType
 {
     /// <summary>
-    /// Database type.
+    /// Undefined database.
     /// </summary>
-    public enum DatabaseType
-    {
-        None = 0,
-        InMemory = 1,
-        SQLite = 2,
-        PostgreSQL = 3,
-        MSSQL = 4,
-        MySQL = 5,
-        MariaDB = 6,
-        HSQLDB = 7,
-        Oracle = 8,
-        Clickhouse = 9,
-        Firebird = 10,
-    }
+    None = 0,
+
+    /// <summary>
+    /// In-memory database.
+    /// </summary>
+    InMemory = 1,
+
+    /// <summary>
+    /// SQLite database.
+    /// </summary>
+    SQLite = 2,
+
+    /// <summary>
+    /// PostgreSQL database.
+    /// </summary>
+    PostgreSQL = 3,
+
+    /// <summary>
+    /// MS SQL database.
+    /// </summary>
+    MSSQL = 4,
+
+    /// <summary>
+    /// MySQL database.
+    /// </summary>
+    MySQL = 5,
+
+    /// <summary>
+    /// MariaDB database.
+    /// </summary>
+    MariaDB = 6,
+
+    /// <summary>
+    /// HSQLDB database.
+    /// </summary>
+    HSQLDB = 7,
+
+    /// <summary>
+    /// Oracle database.
+    /// </summary>
+    Oracle = 8,
+
+    /// <summary>
+    /// Clickhouse database.
+    /// </summary>
+    Clickhouse = 9,
+
+    /// <summary>
+    /// Firebird database.
+    /// </summary>
+    Firebird = 10,
 }
