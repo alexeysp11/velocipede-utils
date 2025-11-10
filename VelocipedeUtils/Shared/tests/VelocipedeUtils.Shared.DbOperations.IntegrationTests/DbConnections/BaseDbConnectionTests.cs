@@ -2624,6 +2624,76 @@ public abstract class BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
     }
 
+    [Fact]
+    public void BeginTransaction_ActiveConnection_Ok()
+    {
+        // Arrange.
+        var sql = $@"create table ""{nameof(BeginTransaction_ActiveConnection_Ok)}"" (""Name"" varchar(50) NOT NULL)";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection().OpenDb();
+
+        // Act.
+        Action act = () => dbConnection.BeginTransaction().RollbackTransaction().CloseDb();
+
+        // Assert.
+        act
+            .Should()
+            .NotThrow();
+        dbConnection.IsConnected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void BeginTransaction_InactiveConnection_Ok()
+    {
+        // Arrange.
+        var sql = $@"create table ""{nameof(BeginTransaction_InactiveConnection_Ok)}"" (""Name"" varchar(50) NOT NULL)";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // Act.
+        Action act = () => dbConnection.BeginTransaction().RollbackTransaction().CloseDb();
+
+        // Assert.
+        act
+            .Should()
+            .NotThrow();
+        dbConnection.IsConnected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void CommitTransaction_InactiveConnection_ThrowsInvalidOperationException()
+    {
+        // Arrange.
+        var sql = $@"create table ""{nameof(CommitTransaction_InactiveConnection_ThrowsInvalidOperationException)}"" (""Name"" varchar(50) NOT NULL)";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // Act.
+        Action act = () => dbConnection.CommitTransaction();
+
+        // Assert.
+        act
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.UnableToCommitNotOpenTransaction);
+        dbConnection.IsConnected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void RollbackTransaction_InactiveConnection_ThrowsInvalidOperationException()
+    {
+        // Arrange.
+        var sql = $@"create table ""{nameof(RollbackTransaction_InactiveConnection_ThrowsInvalidOperationException)}"" (""Name"" varchar(50) NOT NULL)";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // Act.
+        Action act = () => dbConnection.RollbackTransaction();
+
+        // Assert.
+        act
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
+        dbConnection.IsConnected.Should().BeFalse();
+    }
+
     private void CreateTestDatabase(string sql)
     {
         using DbConnection connection = _fixture.GetDbConnection();
