@@ -193,6 +193,12 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             _connection.Dispose();
             _connection = null;
         }
+        if (_transaction != null)
+        {
+            _transaction.Rollback();
+            _transaction.Dispose();
+            _transaction = null;
+        }
         return this;
     }
 
@@ -210,7 +216,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection CommitTransaction()
     {
-        if (_connection == null || _transaction == null || !IsConnected)
+        if (!IsConnected || _transaction == null)
             throw new InvalidOperationException(ErrorMessageConstants.UnableToCommitNotOpenTransaction);
 
         _transaction.Commit();
@@ -222,7 +228,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection RollbackTransaction()
     {
-        if (_connection == null || _transaction == null || !IsConnected)
+        if (!IsConnected || _transaction == null)
             throw new InvalidOperationException(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
 
         _transaction.Rollback();

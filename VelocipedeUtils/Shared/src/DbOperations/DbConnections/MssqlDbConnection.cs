@@ -258,6 +258,12 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             _connection.Dispose();
             _connection = null;
         }
+        if (_transaction != null)
+        {
+            _transaction.Rollback();
+            _transaction.Dispose();
+            _transaction = null;
+        }
         return this;
     }
 
@@ -275,7 +281,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection CommitTransaction()
     {
-        if (_connection == null || _transaction == null || !IsConnected)
+        if (!IsConnected || _transaction == null)
             throw new InvalidOperationException(ErrorMessageConstants.UnableToCommitNotOpenTransaction);
 
         _transaction.Commit();
@@ -287,7 +293,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection RollbackTransaction()
     {
-        if (_connection == null || _transaction == null || !IsConnected)
+        if (!IsConnected || _transaction == null)
             throw new InvalidOperationException(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
 
         _transaction.Rollback();

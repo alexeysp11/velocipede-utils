@@ -270,6 +270,12 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             _connection.Dispose();
             _connection = null;
         }
+        if (_transaction != null)
+        {
+            _transaction.Rollback();
+            _transaction.Dispose();
+            _transaction = null;
+        }
         return this;
     }
 
@@ -287,7 +293,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public IVelocipedeDbConnection CommitTransaction()
     {
-        if (_connection == null || _transaction == null || !IsConnected)
+        if (!IsConnected || _transaction == null)
             throw new InvalidOperationException(ErrorMessageConstants.UnableToCommitNotOpenTransaction);
 
         _transaction.Commit();
@@ -299,7 +305,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public IVelocipedeDbConnection RollbackTransaction()
     {
-        if (_connection == null || _transaction == null || !IsConnected)
+        if (!IsConnected || _transaction == null)
             throw new InvalidOperationException(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
 
         _transaction.Rollback();
