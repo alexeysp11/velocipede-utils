@@ -187,17 +187,17 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection CloseDb()
     {
-        if (_connection != null)
-        {
-            _connection.Close();
-            _connection.Dispose();
-            _connection = null;
-        }
         if (_transaction != null)
         {
             _transaction.Rollback();
             _transaction.Dispose();
             _transaction = null;
+        }
+        if (_connection != null)
+        {
+            _connection.Close();
+            _connection.Dispose();
+            _connection = null;
         }
         return this;
     }

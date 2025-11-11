@@ -170,13 +170,6 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             if (IsConnected)
             {
                 CloseDb();
-
-                // TODO:
-                // During the tests it turned out that MS SQL can throw an error
-                // when there are a large number of repeated connections for the same user in a short period of time.
-                // Therefore, from a performance and reliability perspective,
-                // it's better to consider connecting to another DB within an existing connection if it's active.
-                Thread.Sleep(5000);
             }
             connectionString = UsePersistSecurityInfo(connectionString);
             _connection = new SqlConnection(connectionString);
@@ -252,17 +245,17 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection CloseDb()
     {
-        if (_connection != null)
-        {
-            _connection.Close();
-            _connection.Dispose();
-            _connection = null;
-        }
         if (_transaction != null)
         {
             _transaction.Rollback();
             _transaction.Dispose();
             _transaction = null;
+        }
+        if (_connection != null)
+        {
+            _connection.Close();
+            _connection.Dispose();
+            _connection = null;
         }
         return this;
     }

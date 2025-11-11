@@ -2659,6 +2659,32 @@ public abstract class BaseDbConnectionTests
     }
 
     [Fact]
+    public void CommitTransaction_CreateTableUsingActiveConnection_TableExists()
+    {
+        // Arrange.
+        string tableName = nameof(CommitTransaction_CreateTableUsingActiveConnection_TableExists);
+        var sql = $@"create table ""{tableName}"" (""Name"" varchar(50) NOT NULL)";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // Act.
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .CommitTransaction()
+            .GetTablesInDb(out List<string>? tables)
+            .CloseDb();
+        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        {
+            tableName = $"public.{tableName}";
+        }
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        tables.Should().Contain(tableName);
+    }
+
+    [Fact]
     public void CommitTransaction_InactiveConnection_ThrowsInvalidOperationException()
     {
         // Arrange.
@@ -2692,6 +2718,60 @@ public abstract class BaseDbConnectionTests
             .Throw<InvalidOperationException>()
             .WithMessage(ErrorMessageConstants.UnableToRollbackNotOpenTransaction);
         dbConnection.IsConnected.Should().BeFalse();
+    }
+
+    [Fact]
+    public void RollbackTransaction_CreateTableUsingActiveConnection_TableNotExist()
+    {
+        // Arrange.
+        string tableName = nameof(RollbackTransaction_CreateTableUsingActiveConnection_TableNotExist);
+        var sql = $@"create table ""{tableName}"" (""Name"" varchar(50) NOT NULL)";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // Act.
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .RollbackTransaction()
+            .GetTablesInDb(out List<string>? tables)
+            .CloseDb();
+        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        {
+            tableName = $"public.{tableName}";
+        }
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        tables.Should().NotContain(tableName);
+    }
+
+    [Fact]
+    public void CloseConnectionInTransaction_CreateTableUsingActiveConnection_TableNotExist()
+    {
+        // Arrange.
+        string tableName = nameof(CloseConnectionInTransaction_CreateTableUsingActiveConnection_TableNotExist);
+        var sql = $@"create table ""{tableName}"" (""Name"" varchar(50) NOT NULL)";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // Act.
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .CloseDb();
+        dbConnection
+            .OpenDb()
+            .GetTablesInDb(out List<string>? tables)
+            .CloseDb();
+        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        {
+            tableName = $"public.{tableName}";
+        }
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        tables.Should().NotContain(tableName);
     }
 
     private void CreateTestDatabase(string sql)
