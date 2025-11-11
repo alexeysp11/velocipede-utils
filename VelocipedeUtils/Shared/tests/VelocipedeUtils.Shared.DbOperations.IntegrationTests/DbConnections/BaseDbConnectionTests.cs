@@ -336,6 +336,81 @@ public abstract class BaseDbConnectionTests
     }
 
     [Fact]
+    public async Task QueryFirstOrDefaultAsync_ConnectionAndDapper()
+    {
+        // Arrange.
+        const int expected1 = 1;
+        const int expected2 = 2;
+        using IVelocipedeDbConnection velocipedeConnection = _fixture.GetVelocipedeDbConnection().OpenDb();
+        using DbConnection connection = _fixture.GetDbConnection();
+
+        // Act.
+        velocipedeConnection.IsConnected.Should().BeTrue();
+        int result1 = await velocipedeConnection.QueryFirstOrDefaultAsync<int>("SELECT 1");
+        int result2 = await connection.QueryFirstOrDefaultAsync<int>("SELECT 2");
+        velocipedeConnection.IsConnected.Should().BeTrue();
+        velocipedeConnection.CloseDb();
+
+        // Assert.
+        result1.Should().Be(expected1);
+        result2.Should().Be(expected2);
+    }
+
+    [Fact]
+    public async Task QueryFirstOrDefaultAsync_ConnectionAndTransaction()
+    {
+        // Arrange.
+        const int expected1 = 1;
+        const int expected2 = 2;
+        using IVelocipedeDbConnection connection1 = _fixture.GetVelocipedeDbConnection().OpenDb();
+        using IVelocipedeDbConnection connection2 = _fixture.GetVelocipedeDbConnection().OpenDb().BeginTransaction();
+
+        // Act.
+        connection1.IsConnected.Should().BeTrue();
+        connection2.IsConnected.Should().BeTrue();
+        int result1 = await connection1.QueryFirstOrDefaultAsync<int>("SELECT 1");
+        int result2 = await connection2.QueryFirstOrDefaultAsync<int>("SELECT 2");
+        connection1.IsConnected.Should().BeTrue();
+        connection2.IsConnected.Should().BeTrue();
+        connection1.CloseDb();
+        connection2.CloseDb();
+
+        // Assert.
+        (connection1 == connection2).Should().BeFalse();
+        connection1.ConnectionString.Should().Be(connection2.ConnectionString);
+        connection1.DatabaseName.Should().Be(connection2.DatabaseName);
+        result1.Should().Be(expected1);
+        result2.Should().Be(expected2);
+    }
+
+    [Fact]
+    public virtual async Task QueryFirstOrDefaultAsync_TwoTransactions()
+    {
+        // Arrange.
+        const int expected1 = 1;
+        const int expected2 = 2;
+        using IVelocipedeDbConnection connection1 = _fixture.GetVelocipedeDbConnection().OpenDb().BeginTransaction();
+        using IVelocipedeDbConnection connection2 = _fixture.GetVelocipedeDbConnection().OpenDb().BeginTransaction();
+
+        // Act.
+        connection1.IsConnected.Should().BeTrue();
+        connection2.IsConnected.Should().BeTrue();
+        int result1 = await connection1.QueryFirstOrDefaultAsync<int>("SELECT 1");
+        int result2 = await connection2.QueryFirstOrDefaultAsync<int>("SELECT 2");
+        connection1.IsConnected.Should().BeTrue();
+        connection2.IsConnected.Should().BeTrue();
+        connection1.CloseDb();
+        connection2.CloseDb();
+
+        // Assert.
+        (connection1 == connection2).Should().BeFalse();
+        connection1.ConnectionString.Should().Be(connection2.ConnectionString);
+        connection1.DatabaseName.Should().Be(connection2.DatabaseName);
+        result1.Should().Be(expected1);
+        result2.Should().Be(expected2);
+    }
+
+    [Fact]
     public async Task QueryFirstOrDefaultAsync_OpenDbAndGetOneRecord_ResultEqualsToExpected()
     {
         // Arrange.
