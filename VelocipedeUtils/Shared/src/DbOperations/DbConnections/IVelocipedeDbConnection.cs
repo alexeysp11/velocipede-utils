@@ -42,6 +42,12 @@ public interface IVelocipedeDbConnection : IDisposable
     DbConnection? Connection { get; }
 
     /// <summary>
+    /// Current transaction to database.
+    /// </summary>
+    /// <remarks>By default, equals to <c>null</c>.</remarks>
+    DbTransaction? Transaction { get; }
+
+    /// <summary>
     /// Create a new connection to database.
     /// </summary>
     /// <param name="connectionString">Connection string.</param>
@@ -82,6 +88,24 @@ public interface IVelocipedeDbConnection : IDisposable
     /// </summary>
     /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
     IVelocipedeDbConnection CloseDb();
+
+    /// <summary>
+    /// Begin transaction.
+    /// </summary>
+    /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+    IVelocipedeDbConnection BeginTransaction();
+
+    /// <summary>
+    /// Commit transaction.
+    /// </summary>
+    /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+    IVelocipedeDbConnection CommitTransaction();
+
+    /// <summary>
+    /// Rollback transaction.
+    /// </summary>
+    /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+    IVelocipedeDbConnection RollbackTransaction();
 
     /// <summary>
     /// Get tables in the current database.

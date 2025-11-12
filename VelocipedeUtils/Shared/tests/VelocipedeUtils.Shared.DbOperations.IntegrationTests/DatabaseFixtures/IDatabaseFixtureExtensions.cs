@@ -12,7 +12,7 @@ public static class IDatabaseFixtureExtensions
     /// Get database connection that implements <see cref="IVelocipedeDbConnection"/> interface.
     /// </summary>
     /// <param name="fixture">Instance of <see cref="IDatabaseFixture"/>.</param>
-    /// <returns>Instance of <see cref="IVelocipedeDbConnection"/>.</returns>
+    /// <returns>A new instance of <see cref="IVelocipedeDbConnection"/>.</returns>
     public static IVelocipedeDbConnection GetVelocipedeDbConnection(this IDatabaseFixture fixture)
     {
         return VelocipedeDbConnectionFactory.InitializeDbConnection(fixture.DatabaseType, fixture.ConnectionString);

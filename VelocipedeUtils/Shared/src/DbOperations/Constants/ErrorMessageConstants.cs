@@ -18,5 +18,7 @@ public static class ErrorMessageConstants
     public const string UnableToAddActionForClosedForeachOperation = "Unable to add action for closed foreach operation";
     public const string ForeachRequiresNotEmptyTableNames = "Foreach operation requires not empty list of table names";
     public const string DatabaseShouldBeConnected = "Database should be connected";
+    public const string UnableToCommitNotOpenTransaction = "Unable to commit transaction: either connection or transactin was not open";
+    public const string UnableToRollbackNotOpenTransaction = "Unable to rollback transaction: either connection or transactin was not open";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
