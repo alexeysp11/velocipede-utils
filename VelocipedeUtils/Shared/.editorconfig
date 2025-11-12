@@ -43,6 +43,12 @@ dotnet_diagnostic.IDE0130.severity = warning
 csharp_style_namespace_declarations = file_scoped:warning
 dotnet_diagnostic.IDE0161.severity = warning
 
+# IDE0250: Make struct 'readonly'
+dotnet_diagnostic.IDE0250.severity = error
+
+# IDE0251: Make member 'readonly'
+dotnet_diagnostic.IDE0251.severity = error
+
 # CA1001: Types that own disposable fields should be disposable
 dotnet_diagnostic.CA1001.severity = error
 
