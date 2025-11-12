@@ -160,3 +160,20 @@ VelocipedeForeachResult? foreachResult = await dbConnection
     .EndAsyncForeach()
     .GetResultAsync();
 ```
+
+### Транзакции
+
+Через интерфейс `IVelocipedeDbConnection` возможно работать с транзакциями (с использованием методов `BeginTransaction`, `CommitTransaction` и `RollbackTransaction`):
+```C#
+string sql = @"create table ""TestTable"" (""Name"" varchar(50) NOT NULL)";
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
+
+dbConnection
+    .OpenDb()
+    .BeginTransaction()
+    .Execute(sql)
+    .CommitTransaction()
+    .GetTablesInDb(out List<string>? tables)
+    .CloseDb();
+```
