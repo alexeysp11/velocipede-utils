@@ -1,4 +1,6 @@
-﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
+﻿using FluentAssertions;
+using Microsoft.Data.Sqlite;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections;
@@ -67,9 +69,22 @@ create table if not exists ""TestTableForExecuteAsyncWithParams"" (""Name"" varc
 insert into ""TestTableForExecuteAsyncWithParams"" (""Name"") values (@TestRecordName);";
     }
 
-    [Fact(Skip = "This test is failed due to 'database is locked' exception")]
+    [Fact]
     public override Task QueryFirstOrDefaultAsync_TwoTransactions()
     {
+        // Arrange & Act.
+        using IVelocipedeDbConnection connection1 = _fixture.GetVelocipedeDbConnection().OpenDb().BeginTransaction();
+        using IVelocipedeDbConnection connection2 = _fixture.GetVelocipedeDbConnection().OpenDb();
+        var act = () => connection2.BeginTransaction();
+
+        // Assert.
+        act
+            .Should()
+            .Throw<SqliteException>("'database is locked' exception expected to be thrown");
+
+        // Rollback active transactions to prevent "Test Class Cleanup Failure" when deleting database files.
+        connection1.RollbackTransaction();
+
         return Task.CompletedTask;
     }
 }
