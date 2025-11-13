@@ -1,7 +1,7 @@
 ﻿namespace VelocipedeUtils.Shared.DbOperations.Models;
 
 /// <summary>
-/// Record that contains the information needed for pagination.
+/// Contains the information needed for pagination.
 /// </summary>
 public readonly struct VelocipedePaginationInfo
 {

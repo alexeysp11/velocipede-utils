@@ -661,4 +661,67 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
             })
             .ToList();
     }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection QueryDataTable(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<dynamic, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out DataTable dtResult)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public Task<DataTable> QueryDataTableAsync(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<dynamic, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection Query<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out List<T> result)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public Task<List<T>> QueryAsync<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out T? result)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public Task<T?> QueryFirstOrDefaultAsync<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo)
+    {
+        throw new NotImplementedException();
+    }
 }

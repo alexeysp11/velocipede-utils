@@ -261,6 +261,22 @@ public interface IVelocipedeDbConnection : IDisposable
         out DataTable dtResult);
 
     /// <summary>
+    /// Execute SQL command and get <see cref="DataTable"/> object as a result.
+    /// </summary>
+    /// <param name="sqlRequest">SQL query.</param>
+    /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+    /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+    /// <param name="paginationInfo">Contains the information needed for pagination.</param>
+    /// <param name="dtResult">Resulting object of <see cref="DataTable"/>.</param>
+    /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+    IVelocipedeDbConnection QueryDataTable(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<dynamic, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out DataTable dtResult);
+
+    /// <summary>
     /// Asynchronously execute SQL command and get <see cref="DataTable"/> object as a result.
     /// </summary>
     /// <param name="sqlRequest">SQL query.</param>
@@ -300,6 +316,23 @@ public interface IVelocipedeDbConnection : IDisposable
         Func<dynamic, bool>? predicate);
 
     /// <summary>
+    /// Asynchronously execute SQL command and get <see cref="DataTable"/> object as a result.
+    /// </summary>
+    /// <param name="sqlRequest">SQL query.</param>
+    /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+    /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+    /// <param name="paginationInfo">Contains the information needed for pagination.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+    /// The task result is an object of <see cref="DataTable"/>.
+    /// </returns>
+    Task<DataTable> QueryDataTableAsync(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<dynamic, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo);
+
+    /// <summary>
     /// Execute SQL command.
     /// </summary>
     /// <param name="sqlRequest">SQL query to execute.</param>
@@ -375,6 +408,23 @@ public interface IVelocipedeDbConnection : IDisposable
         out List<T> result);
 
     /// <summary>
+    /// Query to get <see cref="List{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+    /// <param name="sqlRequest">SQL query.</param>
+    /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+    /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+    /// <param name="paginationInfo">Contains the information needed for pagination.</param>
+    /// <param name="result"><see cref="List{T}"/> that contains the result of the executed query.</param>
+    /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+    IVelocipedeDbConnection Query<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out List<T> result);
+
+    /// <summary>
     /// Asynchronously query to get <see cref="List{T}"/>.
     /// </summary>
     /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
@@ -415,6 +465,24 @@ public interface IVelocipedeDbConnection : IDisposable
         string sqlRequest,
         List<VelocipedeCommandParameter>? parameters,
         Func<T, bool>? predicate);
+
+    /// <summary>
+    /// Asynchronously query to get <see cref="List{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+    /// <param name="sqlRequest">SQL query.</param>
+    /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+    /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+    /// <param name="paginationInfo">Contains the information needed for pagination.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
+    /// The task result is a <see cref="List{T}"/> that contains the result of the executed query.
+    /// </returns>
+    Task<List<T>> QueryAsync<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo);
 
     /// <summary>
     /// Query first or default object.
@@ -456,6 +524,23 @@ public interface IVelocipedeDbConnection : IDisposable
         out T? result);
 
     /// <summary>
+    /// Query first or default object.
+    /// </summary>
+    /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+    /// <param name="sqlRequest">SQL query.</param>
+    /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+    /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+    /// <param name="paginationInfo">Contains the information needed for pagination.</param>
+    /// <param name="result">Result of the query.</param>
+    /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
+    IVelocipedeDbConnection QueryFirstOrDefault<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out T? result);
+
+    /// <summary>
     /// Asynchronously query first or default object.
     /// </summary>
     /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
@@ -493,6 +578,23 @@ public interface IVelocipedeDbConnection : IDisposable
         string sqlRequest,
         List<VelocipedeCommandParameter>? parameters,
         Func<T, bool>? predicate);
+
+    /// <summary>
+    /// Asynchronously query first or default object.
+    /// </summary>
+    /// <typeparam name="T">The data type to which the query result is converted.</typeparam>
+    /// <param name="sqlRequest">SQL query.</param>
+    /// <param name="parameters"><see cref="List{T}"/> of <see cref="VelocipedeCommandParameter"/> that contains query parameters.</param>
+    /// <param name="predicate">Predicate that is executed strictly after the data has already been retrieved from the database.</param>
+    /// <param name="paginationInfo">Contains the information needed for pagination.</param>
+    /// <returns>
+    /// A <see cref="Task{TResult}"/> that represents the asynchronous operation that contains the result of the executed query.
+    /// </returns>
+    Task<T?> QueryFirstOrDefaultAsync<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo);
 
     /// <summary>
     /// Initialize <c>foreach</c> operation for the specified tables.
