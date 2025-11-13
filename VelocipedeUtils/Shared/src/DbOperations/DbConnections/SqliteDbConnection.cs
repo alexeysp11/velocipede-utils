@@ -276,7 +276,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
 
         // Get list of dynamic objects.
         // In some versions of SQLite, PRAGMA statements could not support paramters.
-        string sql = $"PRAGMA foreign_key_list('{tableName}');";
+        string sql = $"PRAGMA foreign_key_list('{tableName}')";
         Query(sql, out List<dynamic> foreignKeyInfoDynamic);
 
         // Wrap the result.
@@ -292,7 +292,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
 
         // Get list of dynamic objects.
         // In some versions of SQLite, PRAGMA statements could not support paramters.
-        string sql = $"PRAGMA foreign_key_list('{tableName}');";
+        string sql = $"PRAGMA foreign_key_list('{tableName}')";
         List<dynamic> foreignKeyInfoDynamic = await QueryAsync<dynamic>(sql);
 
         // Wrap the result.
