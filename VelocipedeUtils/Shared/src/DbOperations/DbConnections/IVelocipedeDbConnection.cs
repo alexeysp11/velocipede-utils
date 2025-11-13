@@ -611,4 +611,14 @@ public interface IVelocipedeDbConnection : IDisposable
     /// <returns>The created <see cref="IVelocipedeAsyncForeachIterator"/> instance for performing asynchronous <c>foreach</c> operations.</returns>
     IVelocipedeAsyncForeachIterator WithAsyncForeachIterator(
         List<string> tableNames);
+
+    /// <summary>
+    /// Get SQL query for pagination.
+    /// </summary>
+    /// <param name="sqlRequest">Original SQL query.</param>
+    /// <param name="paginationInfo">Pagination info.</param>
+    /// <returns><see cref="string"/> that contains SQL query for pagination.</returns>
+    string GetPaginatedSql(
+        string sqlRequest,
+        VelocipedePaginationInfo paginationInfo);
 }

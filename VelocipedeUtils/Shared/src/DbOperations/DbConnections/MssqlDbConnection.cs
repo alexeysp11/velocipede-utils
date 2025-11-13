@@ -428,6 +428,18 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     }
 
     /// <inheritdoc/>
+    public IVelocipedeDbConnection QueryDataTable(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<dynamic, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out DataTable dtResult)
+    {
+        string sqlPaginated = GetPaginatedSql(sqlRequest, paginationInfo);
+        return QueryDataTable(sqlPaginated, parameters, predicate, out dtResult);
+    }
+
+    /// <inheritdoc/>
     public Task<DataTable> QueryDataTableAsync(string sqlRequest)
     {
         return QueryDataTableAsync(sqlRequest, parameters: null);
@@ -449,6 +461,17 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     {
         List<dynamic> dynamicList = await QueryAsync(sqlRequest, parameters, predicate);
         return dynamicList.ToDataTable();
+    }
+
+    /// <inheritdoc/>
+    public Task<DataTable> QueryDataTableAsync(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<dynamic, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo)
+    {
+        string sqlPaginated = GetPaginatedSql(sqlRequest, paginationInfo);
+        return QueryDataTableAsync(sqlPaginated, parameters, predicate);
     }
 
     /// <inheritdoc/>
@@ -516,6 +539,18 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     }
 
     /// <inheritdoc/>
+    public IVelocipedeDbConnection Query<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out List<T> result)
+    {
+        string sqlPaginated = GetPaginatedSql(sqlRequest, paginationInfo);
+        return Query(sqlPaginated, parameters, predicate, out result);
+    }
+
+    /// <inheritdoc/>
     public Task<List<T>> QueryAsync<T>(string sqlRequest)
     {
         return QueryAsync<T>(sqlRequest, parameters: null);
@@ -536,6 +571,17 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         Func<T, bool>? predicate)
     {
         return InternalQueryAsync(this, sqlRequest, parameters, predicate);
+    }
+
+    /// <inheritdoc/>
+    public Task<List<T>> QueryAsync<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo)
+    {
+        string sqlPaginated = GetPaginatedSql(sqlRequest, paginationInfo);
+        return QueryAsync(sqlPaginated, parameters, predicate);
     }
 
     /// <inheritdoc/>
@@ -576,6 +622,18 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     }
 
     /// <inheritdoc/>
+    public IVelocipedeDbConnection QueryFirstOrDefault<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo,
+        out T? result)
+    {
+        string sqlPaginated = GetPaginatedSql(sqlRequest, paginationInfo);
+        return QueryFirstOrDefault(sqlPaginated, parameters, predicate, out result);
+    }
+
+    /// <inheritdoc/>
     public Task<T?> QueryFirstOrDefaultAsync<T>(string sqlRequest)
     {
         return QueryFirstOrDefaultAsync<T>(sqlRequest, parameters: null);
@@ -601,6 +659,17 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
             return list.FirstOrDefault(predicate);
         }
         return await QueryFirstOrDefaultAsync<T>(sqlRequest, parameters);
+    }
+
+    /// <inheritdoc/>
+    public Task<T?> QueryFirstOrDefaultAsync<T>(
+        string sqlRequest,
+        List<VelocipedeCommandParameter>? parameters,
+        Func<T, bool>? predicate,
+        VelocipedePaginationInfo paginationInfo)
+    {
+        string sqlPaginated = GetPaginatedSql(sqlRequest, paginationInfo);
+        return QueryFirstOrDefaultAsync(sqlPaginated, parameters, predicate);
     }
 
     /// <summary>
@@ -682,71 +751,12 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     }
 
     /// <inheritdoc/>
+    public string GetPaginatedSql(string sqlRequest, VelocipedePaginationInfo paginationInfo)
+        => $"SELECT t.* FROM ({sqlRequest}) t LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
+
+    /// <inheritdoc/>
     public void Dispose()
     {
         CloseDb();
-    }
-
-    /// <inheritdoc/>
-    public IVelocipedeDbConnection QueryDataTable(
-        string sqlRequest,
-        List<VelocipedeCommandParameter>? parameters,
-        Func<dynamic, bool>? predicate,
-        VelocipedePaginationInfo paginationInfo,
-        out DataTable dtResult)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public Task<DataTable> QueryDataTableAsync(
-        string sqlRequest,
-        List<VelocipedeCommandParameter>? parameters,
-        Func<dynamic, bool>? predicate,
-        VelocipedePaginationInfo paginationInfo)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public IVelocipedeDbConnection Query<T>(
-        string sqlRequest,
-        List<VelocipedeCommandParameter>? parameters,
-        Func<T, bool>? predicate,
-        VelocipedePaginationInfo paginationInfo,
-        out List<T> result)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public Task<List<T>> QueryAsync<T>(
-        string sqlRequest,
-        List<VelocipedeCommandParameter>? parameters,
-        Func<T, bool>? predicate,
-        VelocipedePaginationInfo paginationInfo)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public IVelocipedeDbConnection QueryFirstOrDefault<T>(
-        string sqlRequest,
-        List<VelocipedeCommandParameter>? parameters,
-        Func<T, bool>? predicate,
-        VelocipedePaginationInfo paginationInfo,
-        out T? result)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc/>
-    public Task<T?> QueryFirstOrDefaultAsync<T>(
-        string sqlRequest,
-        List<VelocipedeCommandParameter>? parameters,
-        Func<T, bool>? predicate,
-        VelocipedePaginationInfo paginationInfo)
-    {
-        throw new NotImplementedException();
     }
 }
