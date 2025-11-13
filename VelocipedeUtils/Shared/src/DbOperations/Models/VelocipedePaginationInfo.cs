@@ -23,6 +23,17 @@ public readonly struct VelocipedePaginationInfo
     /// <summary>
     /// Default constructor for creating <see cref="VelocipedePaginationInfo"/>.
     /// </summary>
+    /// <remarks>By default, <see cref="Limit"/> = <see cref="int.MaxValue"/>, <see cref="Index"/> = 0, <see cref="Offset"/> = 0.</remarks>
+    public VelocipedePaginationInfo()
+    {
+        Limit = int.MaxValue;
+        Index = 0;
+        Offset = 0;
+    }
+
+    /// <summary>
+    /// Parameterized constructor for creating <see cref="VelocipedePaginationInfo"/>.
+    /// </summary>
     /// <param name="limit">Limit.</param>
     /// <param name="index">Index of page (starts from 0).</param>
     /// <param name="offset">Offset.</param>
