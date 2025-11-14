@@ -678,6 +678,104 @@ public abstract class BaseDbConnectionTests
     }
 
     [Fact]
+    public void Query_FixtureWithPagination_GetAllTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        List<TestModel> expected =
+        [
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        ];
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .Query(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                result: out List<TestModel> result)
+            .CloseDb();
+
+        // Assert.
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public void Query_FixtureWithPaginationByIndex_GetAllTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        List<TestModel> expected =
+        [
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        ];
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .Query(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                result: out List<TestModel> result)
+            .CloseDb();
+
+        // Assert.
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public void Query_FixtureWithPaginationAndOffset_GetAllTestModelsWithIdFrom2To7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        List<TestModel> expected =
+        [
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        ];
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .Query(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                result: out List<TestModel> result)
+            .CloseDb();
+
+        // Assert.
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
     public async Task QueryAsync_WithoutRestrictions_GetAllTestModels()
     {
         // Arrange.
@@ -781,6 +879,92 @@ public abstract class BaseDbConnectionTests
         List<TestModel> result = await dbConnection
             .OpenDb()
             .QueryAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task QueryAsync_FixtureWithPagination_GetAllTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        List<TestModel> expected =
+        [
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        ];
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        List<TestModel> result = await dbConnection
+            .OpenDb()
+            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task QueryAsync_FixtureWithPaginationByIndex_GetAllTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        List<TestModel> expected =
+        [
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        ];
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        List<TestModel> result = await dbConnection
+            .OpenDb()
+            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Fact]
+    public async Task QueryAsync_FixtureWithPaginationAndOffset_GetAllTestModelsWithIdFrom2To7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        List<TestModel> expected =
+        [
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        ];
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        List<TestModel> result = await dbConnection
+            .OpenDb()
+            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -966,7 +1150,7 @@ public abstract class BaseDbConnectionTests
     }
 
     [Fact]
-    public void QueryDataTable_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom1To7()
+    public void QueryDataTable_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom2To7()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -1218,7 +1402,7 @@ public abstract class BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task QueryDataTableAsync_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom1To7()
+    public async Task QueryDataTableAsync_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom2To7()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
