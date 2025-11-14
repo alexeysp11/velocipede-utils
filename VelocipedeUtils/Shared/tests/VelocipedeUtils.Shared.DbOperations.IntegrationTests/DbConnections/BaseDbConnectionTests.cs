@@ -309,6 +309,90 @@ public abstract class BaseDbConnectionTests
     }
 
     [Fact]
+    public void QueryFirstOrDefault_FixtureWithPagination_GetTestModelWithIdEquals1()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        TestModel expected = new() { Id = 1, Name = "Test_1" };
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .QueryFirstOrDefault(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                result: out TestModel? result);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void QueryFirstOrDefault_FixtureWithPaginationByIndex_GetTestModelWithIdEquals1()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        TestModel expected = new() { Id = 1, Name = "Test_1" };
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .QueryFirstOrDefault(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                result: out TestModel? result);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public void QueryFirstOrDefault_FixtureWithPaginationAndOffset_GetTestModelWithIdEquals2()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        TestModel expected = new() { Id = 2, Name = "Test_2" };
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .QueryFirstOrDefault(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                result: out TestModel? result);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public async Task QueryFirstOrDefaultAsync_TwoActiveConnections()
     {
         // Arrange.
@@ -556,6 +640,75 @@ public abstract class BaseDbConnectionTests
         TestModel? result = await dbConnection
             .OpenDb()
             .QueryFirstOrDefaultAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public async Task QueryFirstOrDefaultAsync_FixtureWithPagination_GetTestModelWithIdEquals1()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        TestModel expected = new() { Id = 1, Name = "Test_1" };
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        TestModel? result = await dbConnection
+            .OpenDb()
+            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByIndex_GetTestModelWithIdEquals1()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        TestModel expected = new() { Id = 1, Name = "Test_1" };
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        TestModel? result = await dbConnection
+            .OpenDb()
+            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
+    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationAndOffset_GetTestModelWithIdEquals2()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        TestModel expected = new() { Id = 2, Name = "Test_2" };
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        TestModel? result = await dbConnection
+            .OpenDb()
+            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
