@@ -899,6 +899,104 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
+    [Fact]
+    public void QueryDataTable_FixtureWithPagination_GetTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        DataTable expected = new List<TestModel>
+        {
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .QueryDataTable(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                dtResult: out DataTable result)
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
+    [Fact]
+    public void QueryDataTable_FixtureWithPaginationByIndex_GetTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        DataTable expected = new List<TestModel>
+        {
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .QueryDataTable(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                dtResult: out DataTable result)
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
+    [Fact]
+    public void QueryDataTable_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom1To7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        DataTable expected = new List<TestModel>
+        {
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection
+            .OpenDb()
+            .QueryDataTable(
+                SELECT_FROM_TESTMODELS,
+                parameters: null,
+                predicate: null,
+                paginationInfo: paginationInfo,
+                dtResult: out DataTable result)
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
@@ -1054,6 +1152,92 @@ public abstract class BaseDbConnectionTests
         DataTable result = await dbConnection
             .OpenDb()
             .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task QueryDataTableAsync_FixtureWithPagination_GetTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        DataTable expected = new List<TestModel>
+        {
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        DataTable result = await dbConnection
+            .OpenDb()
+            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task QueryDataTableAsync_FixtureWithPaginationByIndex_GetTestModelsWithIdLessThan7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        DataTable expected = new List<TestModel>
+        {
+            new() { Id = 1, Name = "Test_1" },
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        DataTable result = await dbConnection
+            .OpenDb()
+            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+        dbConnection
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task QueryDataTableAsync_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom1To7()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        DataTable expected = new List<TestModel>
+        {
+            new() { Id = 2, Name = "Test_2" },
+            new() { Id = 3, Name = "Test_3" },
+            new() { Id = 4, Name = "Test_4" },
+            new() { Id = 5, Name = "Test_5" },
+            new() { Id = 6, Name = "Test_6" },
+            new() { Id = 7, Name = "Test_7" },
+        }.Select(x => new { x.Id, x.Name }).ToDataTable();
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        DataTable result = await dbConnection
+            .OpenDb()
+            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
