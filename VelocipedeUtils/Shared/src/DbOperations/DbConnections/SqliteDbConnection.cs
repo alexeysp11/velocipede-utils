@@ -705,7 +705,7 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
 
     /// <inheritdoc/>
     public string GetPaginatedSql(string sqlRequest, VelocipedePaginationInfo paginationInfo)
-        => $"SELECT t.* FROM ({sqlRequest}) t LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
+        => $"SELECT t.* FROM ({sqlRequest}) t ORDER BY {paginationInfo.OrderingFieldName} LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
 
     /// <inheritdoc/>
     public void Dispose()
