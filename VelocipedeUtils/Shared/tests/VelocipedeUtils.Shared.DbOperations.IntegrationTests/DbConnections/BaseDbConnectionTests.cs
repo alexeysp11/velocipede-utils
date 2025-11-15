@@ -312,8 +312,13 @@ public abstract class BaseDbConnectionTests
     public void QueryFirstOrDefault_FixtureWithPagination_GetTestModelWithIdEquals1()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
         // Act.
@@ -340,8 +345,13 @@ public abstract class BaseDbConnectionTests
     public void QueryFirstOrDefault_FixtureWithPaginationByIndex_GetTestModelWithIdEquals1()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
         // Act.
@@ -368,8 +378,13 @@ public abstract class BaseDbConnectionTests
     public void QueryFirstOrDefault_FixtureWithPaginationAndOffset_GetTestModelWithIdEquals2()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            6,
+            1,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         TestModel expected = new() { Id = 2, Name = "Test_2" };
 
         // Act.
@@ -654,8 +669,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryFirstOrDefaultAsync_FixtureWithPagination_GetTestModelWithIdEquals1()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
         // Act.
@@ -677,8 +697,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByIndex_GetTestModelWithIdEquals1()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
         // Act.
@@ -700,8 +725,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationAndOffset_GetTestModelWithIdEquals2()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            6,
+            1,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         TestModel expected = new() { Id = 2, Name = "Test_2" };
 
         // Act.
@@ -834,8 +864,13 @@ public abstract class BaseDbConnectionTests
     public void Query_FixtureWithPagination_GetAllTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         List<TestModel> expected =
         [
             new() { Id = 1, Name = "Test_1" },
@@ -867,8 +902,13 @@ public abstract class BaseDbConnectionTests
     public void Query_FixtureWithPaginationByIndex_GetAllTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         List<TestModel> expected =
         [
             new() { Id = 1, Name = "Test_1" },
@@ -900,8 +940,13 @@ public abstract class BaseDbConnectionTests
     public void Query_FixtureWithPaginationAndOffset_GetAllTestModelsWithIdFrom2To7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            6,
+            1,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         List<TestModel> expected =
         [
             new() { Id = 2, Name = "Test_2" },
@@ -1043,8 +1088,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryAsync_FixtureWithPagination_GetAllTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         List<TestModel> expected =
         [
             new() { Id = 1, Name = "Test_1" },
@@ -1072,8 +1122,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryAsync_FixtureWithPaginationByIndex_GetAllTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         List<TestModel> expected =
         [
             new() { Id = 1, Name = "Test_1" },
@@ -1101,8 +1156,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryAsync_FixtureWithPaginationAndOffset_GetAllTestModelsWithIdFrom2To7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            6,
+            1,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         List<TestModel> expected =
         [
             new() { Id = 2, Name = "Test_2" },
@@ -1240,8 +1300,13 @@ public abstract class BaseDbConnectionTests
     public void QueryDataTable_FixtureWithPagination_GetTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         DataTable expected = new List<TestModel>
         {
             new() { Id = 1, Name = "Test_1" },
@@ -1273,8 +1338,13 @@ public abstract class BaseDbConnectionTests
     public void QueryDataTable_FixtureWithPaginationByIndex_GetTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         DataTable expected = new List<TestModel>
         {
             new() { Id = 1, Name = "Test_1" },
@@ -1306,8 +1376,13 @@ public abstract class BaseDbConnectionTests
     public void QueryDataTable_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom2To7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            6,
+            1,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         DataTable expected = new List<TestModel>
         {
             new() { Id = 2, Name = "Test_2" },
@@ -1500,8 +1575,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryDataTableAsync_FixtureWithPagination_GetTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         DataTable expected = new List<TestModel>
         {
             new() { Id = 1, Name = "Test_1" },
@@ -1529,8 +1609,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryDataTableAsync_FixtureWithPaginationByIndex_GetTestModelsWithIdLessThan7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(7, 0);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+            7,
+            0,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         DataTable expected = new List<TestModel>
         {
             new() { Id = 1, Name = "Test_1" },
@@ -1558,8 +1643,13 @@ public abstract class BaseDbConnectionTests
     public async Task QueryDataTableAsync_FixtureWithPaginationAndOffset_GetTestModelsWithIdFrom2To7()
     {
         // Arrange.
+        string orderingFieldName = "Id";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(6, 1);
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            6,
+            1,
+            VelocipedePaginationType.LimitOffset,
+            orderingFieldName);
         DataTable expected = new List<TestModel>
         {
             new() { Id = 2, Name = "Test_2" },
