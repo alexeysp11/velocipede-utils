@@ -120,6 +120,28 @@ This functionality is suitable for situations where:
 
 **Important**: `predicate` is not translated into SQL, but is executed strictly after the data has already been retrieved from the database. If `sql` returns a large number of records, and `predicate` filters out the vast majority of them, then you are dragging over the network and loading much more data into memory than necessary, which can be very inefficient.
 
+### Query pagination
+
+The `IVelocipedeDbConnection` interface supports pagination. To do this, you must initialize an instance of the `VelocipedePaginationInfo` structure:
+```C#
+string sql = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
+VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+    limit: 4,
+    index: 1,
+    paginationType: VelocipedePaginationType.LimitOffset,
+    orderingFieldName: "Id");
+
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
+// Get the page with index 1, or the second page, containing 4 elements.
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .Query(sql, parameters: null, predicate: null, paginationInfo: paginationInfo, out TestModel? result)
+    .CloseDb();
+```
+
 ### Async operations
 
 This library also supports asynchronous operations. For example, you can asynchronously retrieve data and metadata about a table as follows:

@@ -120,6 +120,28 @@ dbConnection
 
 **Важно**: `predicate` не транслируется в SQL, а выполняется строго после того, как данные уже получены из базы данных. Если `sql` возвращает очень много записей, а `predicate` отфильтровывает подавляющее большинство из них, то вы перетаскиваете по сети и загружаете в память гораздо больше данных, чем необходимо, что может быть очень неэффективно.
 
+### Пагинация запросов
+
+Интерфейс `IVelocipedeDbConnection` допускает использование пагинации. Для этого необходимо инициализировать экземпляр структуры `VelocipedePaginationInfo`:
+```C#
+string sql = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
+VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
+    limit: 4,
+    index: 1,
+    paginationType: VelocipedePaginationType.LimitOffset,
+    orderingFieldName: "Id");
+
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType, connectionString);
+
+// Get the page with index 1, or the second page, containing 4 elements.
+dbConnection
+    .SetConnectionString(connectionString)
+    .OpenDb()
+    .Query(sql, parameters: null, predicate: null, paginationInfo: paginationInfo, out TestModel? result)
+    .CloseDb();
+```
+
 ### Асинхронные операции
 
 Данная библиотека также поддерживает выполнение асинхронных операций. Например, асинхронно получить данные и метаданные о таблице можно следующим образом:
