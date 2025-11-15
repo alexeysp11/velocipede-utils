@@ -757,7 +757,9 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         {
             throw new InvalidOperationException(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
         }
-        return $"SELECT t.* FROM ({sqlRequest}) t ORDER BY {paginationInfo.OrderingFieldName} ASC OFFSET {paginationInfo.Offset} ROWS FETCH NEXT {paginationInfo.Limit} ROWS ONLY";
+        return paginationInfo.PaginationType == VelocipedePaginationType.KeysetById
+            ? $"SELECT TOP {paginationInfo.Limit} t.* FROM ({sqlRequest}) t WHERE {paginationInfo.OrderingFieldName} > {paginationInfo.Offset} ORDER BY {paginationInfo.OrderingFieldName} ASC"
+            : $"SELECT t.* FROM ({sqlRequest}) t ORDER BY {paginationInfo.OrderingFieldName} ASC OFFSET {paginationInfo.Offset} ROWS FETCH NEXT {paginationInfo.Limit} ROWS ONLY";
     }
 
     /// <inheritdoc/>

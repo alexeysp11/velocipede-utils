@@ -771,7 +771,9 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         {
             throw new InvalidOperationException(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
         }
-        return $@"SELECT t.* FROM ({sqlRequest}) t ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
+        return paginationInfo.PaginationType == VelocipedePaginationType.KeysetById
+            ? $@"SELECT t.* FROM ({sqlRequest}) t WHERE ""{paginationInfo.OrderingFieldName}"" > {paginationInfo.Offset} ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit}"
+            : $@"SELECT t.* FROM ({sqlRequest}) t ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
     }
 
     /// <inheritdoc/>
