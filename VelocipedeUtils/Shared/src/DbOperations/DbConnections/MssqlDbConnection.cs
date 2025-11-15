@@ -752,7 +752,13 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
 
     /// <inheritdoc/>
     public string GetPaginatedSql(string sqlRequest, VelocipedePaginationInfo paginationInfo)
-        => $"SELECT t.* FROM ({sqlRequest}) t ORDER BY {paginationInfo.OrderingFieldName} ASC OFFSET {paginationInfo.Offset} ROWS FETCH NEXT {paginationInfo.Limit} ROWS ONLY";
+    {
+        if (string.IsNullOrEmpty(paginationInfo.OrderingFieldName))
+        {
+            throw new InvalidOperationException(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
+        }
+        return $"SELECT t.* FROM ({sqlRequest}) t ORDER BY {paginationInfo.OrderingFieldName} ASC OFFSET {paginationInfo.Offset} ROWS FETCH NEXT {paginationInfo.Limit} ROWS ONLY";
+    }
 
     /// <inheritdoc/>
     public void Dispose()

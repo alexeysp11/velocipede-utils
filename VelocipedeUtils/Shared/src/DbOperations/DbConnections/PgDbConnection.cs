@@ -766,7 +766,13 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
 
     /// <inheritdoc/>
     public string GetPaginatedSql(string sqlRequest, VelocipedePaginationInfo paginationInfo)
-        => $@"SELECT t.* FROM ({sqlRequest}) t ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
+    {
+        if (string.IsNullOrEmpty(paginationInfo.OrderingFieldName))
+        {
+            throw new InvalidOperationException(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
+        }
+        return $@"SELECT t.* FROM ({sqlRequest}) t ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
+    }
 
     /// <inheritdoc/>
     public void Dispose()

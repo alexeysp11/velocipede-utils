@@ -407,6 +407,48 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
+    [Theory]
+    [InlineData(7, 0, VelocipedePaginationType.None, "")]
+    [InlineData(7, 0, VelocipedePaginationType.None, null)]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, "")]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, null)]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, "")]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, null)]
+    public void QueryFirstOrDefault_NullOrEmptyOrderingFieldName_ThrowsInvalidOperationException(
+        int limit,
+        int offset,
+        VelocipedePaginationType paginationType,
+        string? orderingFieldName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            limit,
+            offset,
+            paginationType,
+            orderingFieldName);
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection.OpenDb();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.QueryFirstOrDefault<TestModel>(
+            SELECT_FROM_TESTMODELS,
+            parameters: null,
+            predicate: null,
+            paginationInfo: paginationInfo,
+            result: out _);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection.CloseDb();
+        dbConnection.IsConnected.Should().BeFalse();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        act
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
+    }
+
     [Fact]
     public async Task QueryFirstOrDefaultAsync_TwoActiveConnections()
     {
@@ -749,6 +791,47 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
+    [Theory]
+    [InlineData(7, 0, VelocipedePaginationType.None, "")]
+    [InlineData(7, 0, VelocipedePaginationType.None, null)]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, "")]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, null)]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, "")]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, null)]
+    public async Task QueryFirstOrDefaultAsync_NullOrEmptyOrderingFieldName_ThrowsInvalidOperationException(
+        int limit,
+        int offset,
+        VelocipedePaginationType paginationType,
+        string? orderingFieldName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            limit,
+            offset,
+            paginationType,
+            orderingFieldName);
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection.OpenDb();
+        Func<Task<TestModel?>> act = async () => await dbConnection.QueryFirstOrDefaultAsync<TestModel>(
+            SELECT_FROM_TESTMODELS,
+            parameters: null,
+            predicate: null,
+            paginationInfo: paginationInfo);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection.CloseDb();
+        dbConnection.IsConnected.Should().BeFalse();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        await act
+            .Should()
+            .ThrowAsync<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
+    }
+
     [Fact]
     public void Query_WithoutRestrictions_GetAllTestModels()
     {
@@ -973,6 +1056,48 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
+    [Theory]
+    [InlineData(7, 0, VelocipedePaginationType.None, "")]
+    [InlineData(7, 0, VelocipedePaginationType.None, null)]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, "")]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, null)]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, "")]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, null)]
+    public void Query_NullOrEmptyOrderingFieldName_ThrowsInvalidOperationException(
+        int limit,
+        int offset,
+        VelocipedePaginationType paginationType,
+        string? orderingFieldName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            limit,
+            offset,
+            paginationType,
+            orderingFieldName);
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection.OpenDb();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.Query<TestModel>(
+            SELECT_FROM_TESTMODELS,
+            parameters: null,
+            predicate: null,
+            paginationInfo: paginationInfo,
+            result: out _);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection.CloseDb();
+        dbConnection.IsConnected.Should().BeFalse();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        act
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
+    }
+
     [Fact]
     public async Task QueryAsync_WithoutRestrictions_GetAllTestModels()
     {
@@ -1183,6 +1308,47 @@ public abstract class BaseDbConnectionTests
 
         // Assert.
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    [InlineData(7, 0, VelocipedePaginationType.None, "")]
+    [InlineData(7, 0, VelocipedePaginationType.None, null)]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, "")]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, null)]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, "")]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, null)]
+    public async Task QueryAsync_NullOrEmptyOrderingFieldName_ThrowsInvalidOperationException(
+        int limit,
+        int offset,
+        VelocipedePaginationType paginationType,
+        string? orderingFieldName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            limit,
+            offset,
+            paginationType,
+            orderingFieldName);
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection.OpenDb();
+        Func<Task<List<TestModel>>> act = async () => await dbConnection.QueryAsync<TestModel>(
+            SELECT_FROM_TESTMODELS,
+            parameters: null,
+            predicate: null,
+            paginationInfo: paginationInfo);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection.CloseDb();
+        dbConnection.IsConnected.Should().BeFalse();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        await act
+            .Should()
+            .ThrowAsync<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
     }
 
     [Fact]
@@ -1407,6 +1573,48 @@ public abstract class BaseDbConnectionTests
 
         // Assert.
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(7, 0, VelocipedePaginationType.None, "")]
+    [InlineData(7, 0, VelocipedePaginationType.None, null)]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, "")]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, null)]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, "")]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, null)]
+    public void QueryDataTable_NullOrEmptyOrderingFieldName_ThrowsInvalidOperationException(
+        int limit,
+        int offset,
+        VelocipedePaginationType paginationType,
+        string? orderingFieldName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            limit,
+            offset,
+            paginationType,
+            orderingFieldName);
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection.OpenDb();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.QueryDataTable(
+            SELECT_FROM_TESTMODELS,
+            parameters: null,
+            predicate: null,
+            paginationInfo: paginationInfo,
+            dtResult: out _);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection.CloseDb();
+        dbConnection.IsConnected.Should().BeFalse();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        act
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
     }
 
     [Theory]
@@ -1721,6 +1929,47 @@ public abstract class BaseDbConnectionTests
             .Should()
             .ThrowAsync<VelocipedeDbConnectParamsException>()
             .WithInnerException(typeof(ArgumentException));
+    }
+
+    [Theory]
+    [InlineData(7, 0, VelocipedePaginationType.None, "")]
+    [InlineData(7, 0, VelocipedePaginationType.None, null)]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, "")]
+    [InlineData(7, 0, VelocipedePaginationType.LimitOffset, null)]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, "")]
+    [InlineData(7, 0, VelocipedePaginationType.KeysetById, null)]
+    public async Task QueryDataTableAsync_NullOrEmptyOrderingFieldName_ThrowsInvalidOperationException(
+        int limit,
+        int offset,
+        VelocipedePaginationType paginationType,
+        string? orderingFieldName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
+            limit,
+            offset,
+            paginationType,
+            orderingFieldName);
+
+        // Act.
+        dbConnection.IsConnected.Should().BeFalse();
+        dbConnection.OpenDb();
+        Func<Task<DataTable>> act = async () => await dbConnection.QueryDataTableAsync(
+            SELECT_FROM_TESTMODELS,
+            parameters: null,
+            predicate: null,
+            paginationInfo: paginationInfo);
+        dbConnection.IsConnected.Should().BeTrue();
+        dbConnection.CloseDb();
+        dbConnection.IsConnected.Should().BeFalse();
+
+        // Assert.
+        dbConnection.Should().NotBeNull();
+        await act
+            .Should()
+            .ThrowAsync<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.OrderingFieldNameCouldNotBeNullOrEmpty);
     }
 
     [Fact]

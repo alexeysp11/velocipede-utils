@@ -20,5 +20,6 @@ public static class ErrorMessageConstants
     public const string DatabaseShouldBeConnected = "Database should be connected";
     public const string UnableToCommitNotOpenTransaction = "Unable to commit transaction: either connection or transactin was not open";
     public const string UnableToRollbackNotOpenTransaction = "Unable to rollback transaction: either connection or transactin was not open";
+    public const string OrderingFieldNameCouldNotBeNullOrEmpty = "Ordering field name could not be null or empty";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
