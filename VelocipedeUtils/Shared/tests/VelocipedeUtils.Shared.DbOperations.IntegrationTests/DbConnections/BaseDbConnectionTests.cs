@@ -293,8 +293,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public void QueryFirstOrDefault_FixtureWithPaginationByZeroOffset_GetTestModelWithIdEquals1()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryFirstOrDefault_FixtureWithPaginationByZeroOffset_GetTestModelWithIdEquals1(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -302,7 +305,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 7,
             offset: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
@@ -326,8 +329,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public void QueryFirstOrDefault_FixtureWithPaginationByZeroIndex_GetTestModelWithIdEquals1()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryFirstOrDefault_FixtureWithPaginationByZeroIndex_GetTestModelWithIdEquals1(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -335,7 +341,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 7,
             index: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
@@ -359,8 +365,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public void QueryFirstOrDefault_FixtureWithPaginationByIndex_GetTestModelWithIdEquals5()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryFirstOrDefault_FixtureWithPaginationByIndex_GetTestModelWithIdEquals5(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -368,7 +377,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 4,
             index: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 5, Name = "Test_5" };
 
@@ -392,8 +401,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public void QueryFirstOrDefault_FixtureWithPaginationByOffset_GetTestModelWithIdEquals2()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryFirstOrDefault_FixtureWithPaginationByOffset_GetTestModelWithIdEquals2(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -401,7 +413,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 6,
             offset: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 2, Name = "Test_2" };
 
@@ -725,8 +737,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByZeroOffset_GetTestModelWithIdEquals1()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByZeroOffset_GetTestModelWithIdEquals1(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -734,7 +749,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 7,
             offset: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
@@ -753,8 +768,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByZeroIndex_GetTestModelWithIdEquals1()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByZeroIndex_GetTestModelWithIdEquals1(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -762,7 +780,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 7,
             index: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 1, Name = "Test_1" };
 
@@ -781,8 +799,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByIndex_GetTestModelWithIdEquals1()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByIndex_GetTestModelWithIdEquals1(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -790,7 +811,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 4,
             index: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 5, Name = "Test_5" };
 
@@ -809,8 +830,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected);
     }
 
-    [Fact]
-    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByOffset_GetTestModelWithIdEquals2()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryFirstOrDefaultAsync_FixtureWithPaginationByOffset_GetTestModelWithIdEquals2(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -818,7 +842,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 6,
             offset: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         TestModel expected = new() { Id = 2, Name = "Test_2" };
 
@@ -989,8 +1013,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public void Query_FixtureWithPaginationByZeroOffset_GetAllTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void Query_FixtureWithPaginationByZeroOffset_GetAllTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -998,7 +1025,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 7,
             offset: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1027,8 +1054,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public void Query_FixtureWithPaginationByZeroIndex_GetAllTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void Query_FixtureWithPaginationByZeroIndex_GetAllTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1036,7 +1066,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 7,
             index: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1065,8 +1095,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public void Query_FixtureWithPaginationByIndex_GetAllTestModelsWithIdFrom5To8()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void Query_FixtureWithPaginationByIndex_GetAllTestModelsWithIdFrom5To8(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1074,7 +1107,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 4,
             index: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1100,8 +1133,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public void Query_FixtureWithPaginationByOffset_GetAllTestModelsWithIdFrom2To7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void Query_FixtureWithPaginationByOffset_GetAllTestModelsWithIdFrom2To7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1109,7 +1145,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 6,
             offset: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1290,8 +1326,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public async Task QueryAsync_FixtureWithPaginationByZeroOffset_GetAllTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryAsync_FixtureWithPaginationByZeroOffset_GetAllTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1299,7 +1338,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 7,
             offset: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1324,8 +1363,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public async Task QueryAsync_FixtureWithPaginationByZeroIndex_GetAllTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryAsync_FixtureWithPaginationByZeroIndex_GetAllTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1333,7 +1375,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 7,
             index: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1358,8 +1400,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public async Task QueryAsync_FixtureWithPaginationByIndex_GetAllTestModelsWithIdFrom5To8()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryAsync_FixtureWithPaginationByIndex_GetAllTestModelsWithIdFrom5To8(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1367,7 +1412,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 4,
             index: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1389,8 +1434,11 @@ public abstract class BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public async Task QueryAsync_FixtureWithPaginationByOffset_GetAllTestModelsWithIdFrom2To7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryAsync_FixtureWithPaginationByOffset_GetAllTestModelsWithIdFrom2To7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1398,7 +1446,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 6,
             offset: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         List<TestModel> expected =
         [
@@ -1574,8 +1622,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public void QueryDataTable_FixtureWithPaginationByZeroOffset_GetTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryDataTable_FixtureWithPaginationByZeroOffset_GetTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1583,7 +1634,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 7,
             offset: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
@@ -1612,8 +1663,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public void QueryDataTable_FixtureWithPaginationByZeroIndex_GetTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryDataTable_FixtureWithPaginationByZeroIndex_GetTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1621,7 +1675,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 7,
             index: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
@@ -1650,8 +1704,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public void QueryDataTable_FixtureWithPaginationByIndex_GetTestModelsWithIdFrom5To8()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryDataTable_FixtureWithPaginationByIndex_GetTestModelsWithIdFrom5To8(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1659,7 +1716,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 4,
             index: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
@@ -1685,8 +1742,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public void QueryDataTable_FixtureWithPaginationByOffset_GetTestModelsWithIdFrom2To7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public void QueryDataTable_FixtureWithPaginationByOffset_GetTestModelsWithIdFrom2To7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1694,7 +1754,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 6,
             offset: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
@@ -1926,8 +1986,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public async Task QueryDataTableAsync_FixtureWithPaginationByZeroOffset_GetTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryDataTableAsync_FixtureWithPaginationByZeroOffset_GetTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1935,7 +1998,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 7,
             offset: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
@@ -1960,8 +2023,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public async Task QueryDataTableAsync_FixtureWithPaginationByZeroIndex_GetTestModelsWithIdLessThan7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryDataTableAsync_FixtureWithPaginationByZeroIndex_GetTestModelsWithIdLessThan7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -1969,7 +2035,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 7,
             index: 0,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
@@ -1994,8 +2060,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public async Task QueryDataTableAsync_FixtureWithPaginationByIndex_GetTestModelsWithIdFrom5To8()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryDataTableAsync_FixtureWithPaginationByIndex_GetTestModelsWithIdFrom5To8(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -2003,7 +2072,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByIndex(
             limit: 4,
             index: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
@@ -2025,8 +2094,11 @@ public abstract class BaseDbConnectionTests
         DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
     }
 
-    [Fact]
-    public async Task QueryDataTableAsync_FixtureWithPaginationByOffset_GetTestModelsWithIdFrom2To7()
+    [Theory]
+    [InlineData(VelocipedePaginationType.LimitOffset)]
+    [InlineData(VelocipedePaginationType.KeysetById)]
+    public async Task QueryDataTableAsync_FixtureWithPaginationByOffset_GetTestModelsWithIdFrom2To7(
+        VelocipedePaginationType paginationType)
     {
         // Arrange.
         string orderingFieldName = "Id";
@@ -2034,7 +2106,7 @@ public abstract class BaseDbConnectionTests
         VelocipedePaginationInfo paginationInfo = VelocipedePaginationInfo.CreateByOffset(
             limit: 6,
             offset: 1,
-            paginationType: VelocipedePaginationType.LimitOffset,
+            paginationType: paginationType,
             orderingFieldName: orderingFieldName);
         DataTable expected = new List<TestModel>
         {
