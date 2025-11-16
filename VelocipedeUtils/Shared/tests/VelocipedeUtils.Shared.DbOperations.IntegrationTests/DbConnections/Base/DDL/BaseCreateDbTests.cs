@@ -106,4 +106,18 @@ public abstract class BaseCreateDbTests : BaseDbConnectionTests
             .Throw<VelocipedeDbConnectParamsException>()
             .WithInnerException(typeof(ArgumentException));
     }
+
+    [Fact]
+    public void CreateDb_ConnectionStringFromFixture_ThrowsInvalidOperationException()
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Action act = () => dbConnection.CreateDb();
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.DatabaseAlreadyExists);
+    }
 }
