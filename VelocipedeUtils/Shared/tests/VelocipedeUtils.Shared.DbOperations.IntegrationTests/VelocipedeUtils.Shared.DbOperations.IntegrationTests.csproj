@@ -37,8 +37,6 @@
     <Folder Include="DbConnections\Postgres\Connecting\" />
     <Folder Include="DbConnections\Postgres\DDL\" />
     <Folder Include="DbConnections\Postgres\Metadata\" />
-    <Folder Include="DbConnections\Sqlite\DDL\" />
-    <Folder Include="DbConnections\Sqlite\Metadata\" />
   </ItemGroup>
 
 </Project>
