@@ -13,10 +13,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 /// </summary>
 public class PgDatabaseFixture : IDatabaseFixture
 {
-    private readonly PostgreSqlContainer container =
-        new PostgreSqlBuilder()
-            .WithEnvironment("POSTGRES_HOST_AUTH_METHOD", "password")
-            .Build();
+    private readonly PostgreSqlContainer container;
 
     /// <inheritdoc/>
     public string? DatabaseName => PgDbConnection.GetDatabaseName(ConnectionString);
@@ -29,6 +26,16 @@ public class PgDatabaseFixture : IDatabaseFixture
 
     /// <inheritdoc/>
     public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public PgDatabaseFixture()
+    {
+        container = new PostgreSqlBuilder()
+            .WithEnvironment("POSTGRES_HOST_AUTH_METHOD", "password")
+            .Build();
+    }
 
     /// <inheritdoc/>
     public DbConnection GetDbConnection()

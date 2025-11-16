@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Me
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql.Metadata;
 
-public sealed class MssqlGetTablesInDbTests : BaseGetTablesInDbTests, IClassFixture<MssqlDatabaseFixture>
+[Collection("MssqlDatabaseFixtureCollection")]
+public sealed class MssqlGetTablesInDbTests : BaseGetTablesInDbTests
 {
     public MssqlGetTablesInDbTests(MssqlDatabaseFixture fixture)
         : base(fixture, MssqlTestConstants.CREATE_DATABASE_SQL)

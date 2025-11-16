@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Co
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql.Connecting;
 
-public sealed class MssqlSwitchDbTests : BaseSwitchDbTests, IClassFixture<MssqlDatabaseFixture>
+[Collection("MssqlDatabaseFixtureCollection")]
+public sealed class MssqlSwitchDbTests : BaseSwitchDbTests
 {
     public MssqlSwitchDbTests(MssqlDatabaseFixture fixture)
         : base(fixture, MssqlTestConstants.CREATE_DATABASE_SQL)

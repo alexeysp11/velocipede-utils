@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Qu
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql.Queries;
 
-public sealed class MssqlPaginationTests : BasePaginationTests, IClassFixture<MssqlDatabaseFixture>
+[Collection("MssqlDatabaseFixtureCollection")]
+public sealed class MssqlPaginationTests : BasePaginationTests
 {
     public MssqlPaginationTests(MssqlDatabaseFixture fixture)
         : base(fixture, MssqlTestConstants.CREATE_DATABASE_SQL)

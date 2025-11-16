@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.DD
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql.DDL;
 
-public sealed class MssqlCreateDbIfNotExistsTests : BaseCreateDbIfNotExistsTests, IClassFixture<MssqlDatabaseFixture>
+[Collection("MssqlDatabaseFixtureCollection")]
+public sealed class MssqlCreateDbIfNotExistsTests : BaseCreateDbIfNotExistsTests
 {
     public MssqlCreateDbIfNotExistsTests(MssqlDatabaseFixture fixture)
         : base(fixture, MssqlTestConstants.CREATE_DATABASE_SQL)

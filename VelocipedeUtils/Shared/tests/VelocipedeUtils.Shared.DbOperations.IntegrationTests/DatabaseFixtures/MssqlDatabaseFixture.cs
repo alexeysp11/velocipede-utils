@@ -13,9 +13,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 /// </summary>
 public sealed class MssqlDatabaseFixture : IDatabaseFixture
 {
-    private readonly MsSqlContainer container =
-        new MsSqlBuilder()
-            .Build();
+    private readonly MsSqlContainer container;
 
     /// <inheritdoc/>
     public string? DatabaseName => MssqlDbConnection.GetDatabaseName(ConnectionString);
@@ -32,6 +30,14 @@ public sealed class MssqlDatabaseFixture : IDatabaseFixture
 
     /// <inheritdoc/>
     public DatabaseType DatabaseType => DatabaseType.MSSQL;
+
+    /// <summary>
+    /// Default constructor.
+    /// </summary>
+    public MssqlDatabaseFixture()
+    {
+        container = new MsSqlBuilder().Build();
+    }
 
     /// <inheritdoc/>
     public DbConnection GetDbConnection()

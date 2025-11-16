@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Qu
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql.Queries;
 
-public sealed class MssqlQueryFirstOrDefaultTests : BaseQueryFirstOrDefaultTests, IClassFixture<MssqlDatabaseFixture>
+[Collection("MssqlDatabaseFixtureCollection")]
+public sealed class MssqlQueryFirstOrDefaultTests : BaseQueryFirstOrDefaultTests
 {
     public MssqlQueryFirstOrDefaultTests(MssqlDatabaseFixture fixture)
         : base(fixture, MssqlTestConstants.CREATE_DATABASE_SQL)
