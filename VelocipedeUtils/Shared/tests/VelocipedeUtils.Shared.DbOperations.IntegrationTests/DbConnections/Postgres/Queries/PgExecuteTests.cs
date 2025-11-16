@@ -4,7 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Qu
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres.Queries;
 
-public sealed class PgExecuteTests : BaseExecuteTests
+public sealed class PgExecuteTests : BaseExecuteTests, IClassFixture<PgDatabaseFixture>
 {
     public PgExecuteTests(PgDatabaseFixture fixture)
         : base(fixture, PgTestConstants.CREATE_DATABASE_SQL)

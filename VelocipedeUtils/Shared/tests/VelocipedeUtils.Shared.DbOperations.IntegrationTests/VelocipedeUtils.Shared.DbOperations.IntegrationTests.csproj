@@ -34,9 +34,6 @@
 
   <ItemGroup>
     <Folder Include="DbConnections\Mssql\Connecting\" />
-    <Folder Include="DbConnections\Postgres\Connecting\" />
-    <Folder Include="DbConnections\Postgres\DDL\" />
-    <Folder Include="DbConnections\Postgres\Metadata\" />
   </ItemGroup>
 
 </Project>
