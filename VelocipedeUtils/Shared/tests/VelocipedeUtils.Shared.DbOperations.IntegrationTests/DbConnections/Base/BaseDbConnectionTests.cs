@@ -17,8 +17,8 @@ public abstract class BaseDbConnectionTests
 
     protected readonly string _connectionString;
 
-    protected const string SELECT_FROM_TESTMODELS = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
-    protected const string SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
+    protected const string SelectFromTestModels = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
+    protected const string SelectFromTestModelsWhereIdBigger = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
 
     protected BaseDbConnectionTests(IDatabaseFixture fixture, string createDatabaseSql)
     {

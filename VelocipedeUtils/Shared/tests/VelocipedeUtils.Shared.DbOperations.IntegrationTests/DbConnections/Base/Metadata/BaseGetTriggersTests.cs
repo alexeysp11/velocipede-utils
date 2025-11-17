@@ -7,6 +7,9 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.GetTriggers(string, out List{VelocipedeTriggerInfo})"/>.
+/// </summary>
 public abstract class BaseGetTriggersTests : BaseDbConnectionTests
 {
     protected BaseGetTriggersTests(IDatabaseFixture fixture, string createDatabaseSql)

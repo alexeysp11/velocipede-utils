@@ -10,6 +10,9 @@ using VelocipedeUtils.Shared.Tests.Core.Compare;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Queries;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.QueryDataTable(string, out DataTable)"/>.
+/// </summary>
 public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
 {
     protected BaseQueryDataTableTests(IDatabaseFixture fixture, string createDatabaseSql)
@@ -38,7 +41,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .QueryDataTable(SELECT_FROM_TESTMODELS, out DataTable result)
+            .QueryDataTable(SelectFromTestModels, out DataTable result)
             .CloseDb();
 
         // Assert.
@@ -64,7 +67,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .QueryDataTable(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out DataTable result)
+            .QueryDataTable(SelectFromTestModelsWhereIdBigger, parameters, out DataTable result)
             .CloseDb();
 
         // Assert.
@@ -89,7 +92,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .QueryDataTable(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out DataTable result)
+            .QueryDataTable(SelectFromTestModelsWhereIdBigger, parameters, predicate, out DataTable result)
             .CloseDb();
 
         // Assert.
@@ -118,7 +121,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryDataTable(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: predicate,
                 dtResult: out DataTable result)
@@ -136,7 +139,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
+        Action act = () => dbConnection.QueryDataTable(SelectFromTestModels, out _);
 
         // Act & Assert.
         act
@@ -152,7 +155,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
+        Action act = () => dbConnection.QueryDataTable(SelectFromTestModels, out _);
 
         // Act & Assert.
         act
@@ -170,7 +173,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Action act = () => dbConnection.QueryDataTable(SELECT_FROM_TESTMODELS, out _);
+        Action act = () => dbConnection.QueryDataTable(SelectFromTestModels, out _);
 
         // Act & Assert.
         act
@@ -200,7 +203,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+            .QueryDataTableAsync(SelectFromTestModels);
         dbConnection
             .CloseDb();
 
@@ -227,7 +230,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters);
+            .QueryDataTableAsync(SelectFromTestModelsWhereIdBigger, parameters);
         dbConnection
             .CloseDb();
 
@@ -253,7 +256,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate);
+            .QueryDataTableAsync(SelectFromTestModelsWhereIdBigger, parameters, predicate);
         dbConnection
             .CloseDb();
 
@@ -282,7 +285,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+            .QueryDataTableAsync(SelectFromTestModels, parameters: null, predicate: predicate);
         dbConnection
             .CloseDb();
 
@@ -298,7 +301,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+        Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SelectFromTestModels);
 
         // Act & Assert.
         await act
@@ -314,7 +317,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+        Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SelectFromTestModels);
 
         // Act & Assert.
         await act
@@ -332,7 +335,7 @@ public abstract class BaseQueryDataTableTests : BaseDbConnectionTests
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SELECT_FROM_TESTMODELS);
+        Func<Task> act = async () => await dbConnection.QueryDataTableAsync(SelectFromTestModels);
 
         // Act & Assert.
         await act

@@ -7,6 +7,9 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.GetForeignKeys(string, out List{VelocipedeForeignKeyInfo})"/>.
+/// </summary>
 public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
 {
     protected BaseGetForeignKeysTests(IDatabaseFixture fixture, string createDatabaseSql)

@@ -8,6 +8,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Queries;
 
+/// <summary>
+/// Base class for testing transactions.
+/// </summary>
 public abstract class BaseTransactionsTests : BaseDbConnectionTests
 {
     protected BaseTransactionsTests(IDatabaseFixture fixture, string createDatabaseSql)

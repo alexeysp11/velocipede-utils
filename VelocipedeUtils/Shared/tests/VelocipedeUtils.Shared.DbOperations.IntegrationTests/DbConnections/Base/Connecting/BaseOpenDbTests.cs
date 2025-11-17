@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Connecting;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.OpenDb"/>.
+/// </summary>
 public abstract class BaseOpenDbTests : BaseDbConnectionTests
 {
     protected BaseOpenDbTests(IDatabaseFixture fixture, string createDatabaseSql)

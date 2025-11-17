@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.GetSqlDefinition(string, out string?)"/>.
+/// </summary>
 public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
 {
     private readonly string _createTestModelsSql;

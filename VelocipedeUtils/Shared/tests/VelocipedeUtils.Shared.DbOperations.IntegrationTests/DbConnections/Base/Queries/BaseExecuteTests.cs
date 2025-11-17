@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Queries;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.Execute(string)"/>.
+/// </summary>
 public abstract class BaseExecuteTests : BaseDbConnectionTests
 {
     protected string _createTableSqlForExecuteQuery;

@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Queries;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.Query{T}(string, out List{T})"/>.
+/// </summary>
 public abstract class BaseQueryTests : BaseDbConnectionTests
 {
     protected BaseQueryTests(IDatabaseFixture fixture, string createDatabaseSql)
@@ -34,7 +37,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .Query(SELECT_FROM_TESTMODELS, out List<TestModel> result)
+            .Query(SelectFromTestModels, out List<TestModel> result)
             .CloseDb();
 
         // Assert.
@@ -60,7 +63,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .Query(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out List<TestModel> result)
+            .Query(SelectFromTestModelsWhereIdBigger, parameters, out List<TestModel> result)
             .CloseDb();
 
         // Assert.
@@ -85,7 +88,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .Query(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out List<TestModel> result)
+            .Query(SelectFromTestModelsWhereIdBigger, parameters, predicate, out List<TestModel> result)
             .CloseDb();
 
         // Assert.
@@ -114,7 +117,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .Query(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: predicate,
                 result: out List<TestModel> result)
@@ -145,7 +148,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS);
+            .QueryAsync<TestModel>(SelectFromTestModels);
         dbConnection
             .CloseDb();
 
@@ -172,7 +175,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters);
+            .QueryAsync<TestModel>(SelectFromTestModelsWhereIdBigger, parameters);
         dbConnection
             .CloseDb();
 
@@ -198,7 +201,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate);
+            .QueryAsync(SelectFromTestModelsWhereIdBigger, parameters, predicate);
         dbConnection
             .CloseDb();
 
@@ -227,7 +230,7 @@ public abstract class BaseQueryTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+            .QueryAsync(SelectFromTestModels, parameters: null, predicate: predicate);
         dbConnection
             .CloseDb();
 

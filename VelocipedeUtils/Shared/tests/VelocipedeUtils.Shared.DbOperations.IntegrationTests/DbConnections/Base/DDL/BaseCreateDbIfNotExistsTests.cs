@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.DDL;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnectionExtensions.CreateDbIfNotExists(IVelocipedeDbConnection)"/>.
+/// </summary>
 public abstract class BaseCreateDbIfNotExistsTests : BaseDbConnectionTests
 {
     protected BaseCreateDbIfNotExistsTests(IDatabaseFixture fixture, string createDatabaseSql)

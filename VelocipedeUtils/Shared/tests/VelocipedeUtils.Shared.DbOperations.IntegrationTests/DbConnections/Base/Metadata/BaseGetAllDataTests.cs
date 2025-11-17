@@ -10,6 +10,23 @@ using VelocipedeUtils.Shared.Tests.Core.Compare;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
+/// <summary>
+/// Base class for testing the following methods:
+/// <list type="bullet">
+///     <item>
+///         <description><see cref="IVelocipedeDbConnectionExtensions.GetAllData(IVelocipedeDbConnection, string, out DataTable)"/>.</description>
+///     </item>
+///     <item>
+///         <description><see cref="IVelocipedeDbConnectionExtensions.GetAllData{T}(IVelocipedeDbConnection, string, out List{T})"/>.</description>
+///     </item>
+///     <item>
+///         <description><see cref="IVelocipedeDbConnectionExtensions.GetAllDataAsync(IVelocipedeDbConnection, string)"/>.</description>
+///     </item>
+///     <item>
+///         <description><see cref="IVelocipedeDbConnectionExtensions.GetAllDataAsync{T}(IVelocipedeDbConnection, string)"/>.</description>
+///     </item>
+/// </list>
+/// </summary>
 public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 {
     protected BaseGetAllDataTests(IDatabaseFixture fixture, string createDatabaseSql)

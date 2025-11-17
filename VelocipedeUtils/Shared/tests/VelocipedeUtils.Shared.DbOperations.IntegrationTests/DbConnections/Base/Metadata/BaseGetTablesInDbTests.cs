@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.GetTablesInDb(out List{string})"/>.
+/// </summary>
 public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
 {
     protected BaseGetTablesInDbTests(IDatabaseFixture fixture, string createDatabaseSql)

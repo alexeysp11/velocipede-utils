@@ -10,6 +10,9 @@ using VelocipedeUtils.Shared.Tests.Core.Compare;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Queries;
 
+/// <summary>
+/// Base class for testing pagination with queries.
+/// </summary>
 public abstract class BasePaginationTests : BaseDbConnectionTests
 {
     protected BasePaginationTests(IDatabaseFixture fixture, string createDatabaseSql)
@@ -38,7 +41,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryFirstOrDefault(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -74,7 +77,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryFirstOrDefault(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -110,7 +113,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryFirstOrDefault(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -146,7 +149,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryFirstOrDefault(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -186,7 +189,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection.OpenDb();
         Func<IVelocipedeDbConnection> act = () => dbConnection.QueryFirstOrDefault<TestModel>(
-            SELECT_FROM_TESTMODELS,
+            SelectFromTestModels,
             parameters: null,
             predicate: null,
             paginationInfo: paginationInfo,
@@ -223,7 +226,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryFirstOrDefaultAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -254,7 +257,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryFirstOrDefaultAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -285,7 +288,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryFirstOrDefaultAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -316,7 +319,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryFirstOrDefaultAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -352,7 +355,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection.OpenDb();
         Func<Task<TestModel?>> act = async () => await dbConnection.QueryFirstOrDefaultAsync<TestModel>(
-            SELECT_FROM_TESTMODELS,
+            SelectFromTestModels,
             parameters: null,
             predicate: null,
             paginationInfo: paginationInfo);
@@ -398,7 +401,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .Query(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -439,7 +442,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .Query(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -477,7 +480,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .Query(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -517,7 +520,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .Query(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -553,7 +556,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection.OpenDb();
         Func<IVelocipedeDbConnection> act = () => dbConnection.Query<TestModel>(
-            SELECT_FROM_TESTMODELS,
+            SelectFromTestModels,
             parameters: null,
             predicate: null,
             paginationInfo: paginationInfo,
@@ -599,7 +602,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -636,7 +639,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -670,7 +673,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -706,7 +709,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         List<TestModel> result = await dbConnection
             .OpenDb()
-            .QueryAsync<TestModel>(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryAsync<TestModel>(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -739,7 +742,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection.OpenDb();
         Func<Task<List<TestModel>>> act = async () => await dbConnection.QueryAsync<TestModel>(
-            SELECT_FROM_TESTMODELS,
+            SelectFromTestModels,
             parameters: null,
             predicate: null,
             paginationInfo: paginationInfo);
@@ -785,7 +788,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryDataTable(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -826,7 +829,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryDataTable(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -864,7 +867,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryDataTable(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -904,7 +907,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryDataTable(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: null,
                 paginationInfo: paginationInfo,
@@ -940,7 +943,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection.OpenDb();
         Func<IVelocipedeDbConnection> act = () => dbConnection.QueryDataTable(
-            SELECT_FROM_TESTMODELS,
+            SelectFromTestModels,
             parameters: null,
             predicate: null,
             paginationInfo: paginationInfo,
@@ -986,7 +989,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryDataTableAsync(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -1023,7 +1026,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryDataTableAsync(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -1057,7 +1060,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryDataTableAsync(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -1093,7 +1096,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         DataTable result = await dbConnection
             .OpenDb()
-            .QueryDataTableAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: null, paginationInfo: paginationInfo);
+            .QueryDataTableAsync(SelectFromTestModels, parameters: null, predicate: null, paginationInfo: paginationInfo);
         dbConnection
             .CloseDb();
 
@@ -1126,7 +1129,7 @@ public abstract class BasePaginationTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection.OpenDb();
         Func<Task<DataTable>> act = async () => await dbConnection.QueryDataTableAsync(
-            SELECT_FROM_TESTMODELS,
+            SelectFromTestModels,
             parameters: null,
             predicate: null,
             paginationInfo: paginationInfo);

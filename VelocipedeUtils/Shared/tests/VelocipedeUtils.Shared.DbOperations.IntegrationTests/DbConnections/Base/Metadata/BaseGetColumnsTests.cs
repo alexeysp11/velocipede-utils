@@ -7,6 +7,9 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.GetColumns(string, out List{VelocipedeColumnInfo})"/>.
+/// </summary>
 public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 {
     protected BaseGetColumnsTests(IDatabaseFixture fixture, string createDatabaseSql)

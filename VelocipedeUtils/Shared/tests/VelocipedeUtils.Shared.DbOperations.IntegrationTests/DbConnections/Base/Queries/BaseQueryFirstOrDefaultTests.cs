@@ -8,6 +8,9 @@ using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Queries;
 
+/// <summary>
+/// Base class for testing <see cref="IVelocipedeDbConnection.QueryFirstOrDefault{T}(string, out T?)"/>.
+/// </summary>
 public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
 {
     protected BaseQueryFirstOrDefaultTests(IDatabaseFixture fixture, string createDatabaseSql)
@@ -48,7 +51,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .QueryFirstOrDefault(SELECT_FROM_TESTMODELS, out TestModel? result);
+            .QueryFirstOrDefault(SelectFromTestModels, out TestModel? result);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -71,7 +74,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .QueryFirstOrDefault(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, out TestModel? result);
+            .QueryFirstOrDefault(SelectFromTestModelsWhereIdBigger, parameters, out TestModel? result);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -95,7 +98,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         dbConnection
             .OpenDb()
-            .QueryFirstOrDefault(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate, out TestModel? result);
+            .QueryFirstOrDefault(SelectFromTestModelsWhereIdBigger, parameters, predicate, out TestModel? result);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -119,7 +122,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .QueryFirstOrDefault(
-                SELECT_FROM_TESTMODELS,
+                SelectFromTestModels,
                 parameters: null,
                 predicate: predicate,
                 result: out TestModel? result);
@@ -235,7 +238,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS);
+            .QueryFirstOrDefaultAsync<TestModel>(SelectFromTestModels);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -258,7 +261,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync<TestModel>(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters);
+            .QueryFirstOrDefaultAsync<TestModel>(SelectFromTestModelsWhereIdBigger, parameters);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -282,7 +285,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync(SELECT_FROM_TESTMODELS_WHERE_ID_BIGGER, parameters, predicate);
+            .QueryFirstOrDefaultAsync(SelectFromTestModelsWhereIdBigger, parameters, predicate);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
@@ -305,7 +308,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
         TestModel? result = await dbConnection
             .OpenDb()
-            .QueryFirstOrDefaultAsync(SELECT_FROM_TESTMODELS, parameters: null, predicate: predicate);
+            .QueryFirstOrDefaultAsync(SelectFromTestModels, parameters: null, predicate: predicate);
         dbConnection.IsConnected.Should().BeTrue();
         dbConnection
             .CloseDb();
