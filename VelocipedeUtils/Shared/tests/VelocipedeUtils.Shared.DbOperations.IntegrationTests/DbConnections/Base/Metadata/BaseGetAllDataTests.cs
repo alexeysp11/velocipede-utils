@@ -29,13 +29,29 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 {
+    /// <summary>
+    /// Class to define case insensitive table.
+    /// </summary>
+    private class CaseInsensitiveModel
+    {
+        /// <summary>
+        /// Identifier of the record.
+        /// </summary>
+        public required int Id { get; init; }
+
+        /// <summary>
+        /// Value of the record.
+        /// </summary>
+        public required string Value { get; init; }
+    }
+
     protected BaseGetAllDataTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
     }
 
     [Fact]
-    public void GetAllData_FixtureGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+    public void GetAllData_FixtureGetAllTestModelsAsDataTable()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -64,7 +80,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void GetAllData_FixtureGetAllTestModelsAsList_QuantityEqualsToSpecified()
+    public void GetAllData_FixtureGetAllTestModelsAsList()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -89,6 +105,74 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 
         // Assert.
         result.Count.Should().Be(8);
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Fact(Skip = "Fails due to incorrect DataTable comparison")]
+    public void GetAllData_FixtureGetAllCaseInsesitiveModelsAsDataTable()
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        
+        // 2. Create table.
+        string tableName = nameof(GetAllData_FixtureGetAllCaseInsesitiveModelsAsDataTable);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Expected result.
+        DataTable expected = new List<CaseInsensitiveModel>
+        {
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        }.ToDataTable();
+
+        // Act.
+        dbConnection
+            .GetAllData(tableName, out DataTable result)
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+    }
+
+    [Fact]
+    public void GetAllData_FixtureGetAllCaseInsesitiveModelsAsList()
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = nameof(GetAllData_FixtureGetAllCaseInsesitiveModelsAsList);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Expected result.
+        List<CaseInsensitiveModel> expected =
+        [
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        ];
+
+        // Act.
+        dbConnection
+            .GetAllData(tableName, out List<CaseInsensitiveModel> result)
+            .CloseDb();
+
+        // Assert.
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
@@ -144,7 +228,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsDataTable()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -174,7 +258,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsList_QuantityEqualsToSpecified()
+    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsList()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
