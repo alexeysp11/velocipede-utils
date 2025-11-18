@@ -108,7 +108,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact(Skip = "Fails due to incorrect DataTable comparison")]
+    [Fact]
     public void GetAllData_FixtureGetAllCaseInsesitiveModelsAsDataTable()
     {
         // Arrange.
@@ -139,7 +139,9 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
             .CloseDb();
 
         // Assert.
-        DataTableCompareHelper.AreDataTablesEquivalent(result, expected).Should().BeTrue();
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected, caseSensitiveColumnNames: false)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]

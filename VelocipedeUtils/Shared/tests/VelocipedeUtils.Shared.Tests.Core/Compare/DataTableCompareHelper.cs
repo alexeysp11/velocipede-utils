@@ -4,14 +4,23 @@ namespace VelocipedeUtils.Shared.Tests.Core.Compare;
 
 public static class DataTableCompareHelper
 {
-    public static bool CompareDataTableSchema(DataTable dt1, DataTable dt2)
+    public static bool CompareDataTableSchema(DataTable dt1, DataTable dt2, bool caseSensitiveColumnNames = true)
     {
         if (dt1.Columns.Count != dt2.Columns.Count)
             return false;
 
         for (int i = 0; i < dt1.Columns.Count; i++)
         {
-            if (dt1.Columns[i].ColumnName != dt2.Columns[i].ColumnName ||
+            // Column names.
+            string columnName1 = caseSensitiveColumnNames
+                ? dt1.Columns[i].ColumnName
+                : dt1.Columns[i].ColumnName.ToLower();
+            string columnName2 = caseSensitiveColumnNames
+                ? dt2.Columns[i].ColumnName
+                : dt2.Columns[i].ColumnName.ToLower();
+            
+            // Compare column names.
+            if (columnName1 != columnName2 ||
                 dt1.Columns[i].DataType != dt2.Columns[i].DataType)
             {
                 return false;
@@ -39,12 +48,12 @@ public static class DataTableCompareHelper
         return true;
     }
 
-    public static bool AreDataTablesEquivalent(DataTable? dt1, DataTable? dt2)
+    public static bool AreDataTablesEquivalent(DataTable? dt1, DataTable? dt2, bool caseSensitiveColumnNames = true)
     {
         if (dt1 == null || dt2 == null)
             return dt1 == dt2; // Both null is equivalent, one null is not
 
-        if (!CompareDataTableSchema(dt1, dt2))
+        if (!CompareDataTableSchema(dt1, dt2, caseSensitiveColumnNames))
             return false;
 
         if (!CompareDataTableContent(dt1, dt2))
