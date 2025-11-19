@@ -289,6 +289,74 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
+    [Fact]
+    public async Task GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsDataTable()
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = nameof(GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsDataTable);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Expected result.
+        DataTable expected = new List<CaseInsensitiveModel>
+        {
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        }.ToDataTable();
+
+        // Act.
+        DataTable result = await dbConnection.GetAllDataAsync(tableName);
+        dbConnection.CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected, caseSensitiveColumnNames: false)
+            .Should()
+            .BeTrue();
+    }
+
+    [Fact]
+    public async Task GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList()
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = nameof(GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Expected result.
+        List<CaseInsensitiveModel> expected =
+        [
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        ];
+
+        // Act.
+        List<CaseInsensitiveModel> result = await dbConnection.GetAllDataAsync<CaseInsensitiveModel>(tableName);
+        dbConnection.CloseDb();
+
+        // Assert.
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
