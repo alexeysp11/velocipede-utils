@@ -30,21 +30,10 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 {
     /// <summary>
-    /// Class to define case insensitive table.
+    /// Default constructor for creating <see cref="BaseGetAllDataTests"/>.
     /// </summary>
-    private class CaseInsensitiveModel
-    {
-        /// <summary>
-        /// Identifier of the record.
-        /// </summary>
-        public required int Id { get; init; }
-
-        /// <summary>
-        /// Value of the record.
-        /// </summary>
-        public required string Value { get; init; }
-    }
-
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetAllDataTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {

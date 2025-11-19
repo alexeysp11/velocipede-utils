@@ -6,7 +6,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
 /// <summary>
 /// A test model representing a user.
 /// </summary>
-public class TestUser
+public sealed class TestUser
 {
     /// <summary>
     /// Identifier of the user.

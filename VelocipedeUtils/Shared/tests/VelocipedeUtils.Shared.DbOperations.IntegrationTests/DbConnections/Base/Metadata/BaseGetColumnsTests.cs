@@ -12,13 +12,25 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 {
+    public enum TableNameTransformationType
+    {
+        None = 0,
+        ToLower = 1,
+        ToUpper = 2,
+    }
+
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetColumnsTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetColumnsTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
     }
 
     [Fact]
-    public void GetColumns_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    public void GetColumns_FixtureNotConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -33,7 +45,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void GetColumns_FixtureConnected_ResultContainsAllExpectedStrings()
+    public void GetColumns_FixtureConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -48,6 +60,46 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().HaveCount(3);
+    }
+
+    [Theory]
+    [InlineData(TableNameTransformationType.None)]
+    [InlineData(TableNameTransformationType.ToLower)]
+    [InlineData(TableNameTransformationType.ToUpper)]
+    public void GetColumns_FixtureConnectedForCaseInsensitiveModel(TableNameTransformationType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = $"{nameof(GetColumns_FixtureConnectedForCaseInsensitiveModel)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            TableNameTransformationType.ToLower => tableName.ToLower(),
+            TableNameTransformationType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        int expectedQty = dbConnection.DatabaseType == Enums.DatabaseType.PostgreSQL && tableNameTransformationType != TableNameTransformationType.ToLower ? 0 : 2;
+
+        // Act.
+        dbConnection
+            .GetColumns(tableNameTransformed, out List<VelocipedeColumnInfo>? result)
+            .CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
     }
 
     [Fact]
@@ -108,7 +160,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetColumnsAsync_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    public async Task GetColumnsAsync_FixtureNotConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -123,7 +175,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetColumnsAsync_FixtureConnected_ResultContainsAllExpectedStrings()
+    public async Task GetColumnsAsync_FixtureConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -139,6 +191,45 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().HaveCount(3);
+    }
+
+    [Theory]
+    [InlineData(TableNameTransformationType.None)]
+    [InlineData(TableNameTransformationType.ToLower)]
+    [InlineData(TableNameTransformationType.ToUpper)]
+    public async Task GetColumnsAsync_FixtureConnectedForCaseInsensitiveModel(TableNameTransformationType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = $"{nameof(GetColumnsAsync_FixtureConnectedForCaseInsensitiveModel)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            TableNameTransformationType.ToLower => tableName.ToLower(),
+            TableNameTransformationType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        int expectedQty = dbConnection.DatabaseType == Enums.DatabaseType.PostgreSQL && tableNameTransformationType != TableNameTransformationType.ToLower ? 0 : 2;
+
+        // Act.
+        List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableNameTransformed);
+        dbConnection.CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
     }
 
     [Fact]
