@@ -15,7 +15,7 @@ public abstract class BaseCloseDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void CloseDb_ConnectionStringFromFixture_NotThrowAnyException()
+    public void CloseDb_ConnectionStringFromFixture()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -27,7 +27,7 @@ public abstract class BaseCloseDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void CloseDb_FixtureConnected_NotThrowAnyException()
+    public void CloseDb_FixtureConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -40,7 +40,7 @@ public abstract class BaseCloseDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void CloseDb_GuidInsteadOfConnectionString_NotThrowAnyException()
+    public void CloseDb_GuidInsteadOfConnectionString()
     {
         // Arrange.
         string connectionString = Guid.NewGuid().ToString();
@@ -56,7 +56,7 @@ public abstract class BaseCloseDbTests : BaseDbConnectionTests
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void CloseDb_NullOrEmptyConnectionString_NotThrowAnyException(string? connectionString)
+    public void CloseDb_NullOrEmptyConnectionString(string? connectionString)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -72,7 +72,7 @@ public abstract class BaseCloseDbTests : BaseDbConnectionTests
     [InlineData("INCORRECT CONNECTION STRING")]
     [InlineData("connect:localhost:0000;")]
     [InlineData("connect:localhost:0000;super-connection-string")]
-    public void CloseDb_IncorrectConnectionString_NotThrowAnyException(string connectionString)
+    public void CloseDb_IncorrectConnectionString(string connectionString)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();

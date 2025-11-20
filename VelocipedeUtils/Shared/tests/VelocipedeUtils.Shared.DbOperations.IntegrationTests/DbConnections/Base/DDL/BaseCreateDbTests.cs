@@ -18,7 +18,7 @@ public abstract class BaseCreateDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public virtual void CreateDb_ConnectAndSetNotExistingDbUsingSetters_DbExists()
+    public virtual void CreateDb_ConnectAndSetNotExistingDbUsingSetters()
     {
         // Arrange.
         string dbName = Guid.NewGuid().ToString();
@@ -41,7 +41,7 @@ public abstract class BaseCreateDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public virtual void CreateDb_CreateNotExistingDbUsingExtensionMethod_DbExists()
+    public virtual void CreateDb_CreateNotExistingDbUsingExtensionMethod()
     {
         // Arrange.
         string dbName = Guid.NewGuid().ToString();

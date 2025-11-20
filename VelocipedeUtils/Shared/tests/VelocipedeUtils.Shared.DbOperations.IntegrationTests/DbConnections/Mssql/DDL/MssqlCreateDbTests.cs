@@ -13,12 +13,12 @@ public sealed class MssqlCreateDbTests : BaseCreateDbTests
     }
 
     [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]
-    public override void CreateDb_ConnectAndSetNotExistingDbUsingSetters_DbExists()
+    public override void CreateDb_ConnectAndSetNotExistingDbUsingSetters()
     {
     }
 
     [Fact(Skip = "This test is unstable due to the login issue in MS SQL when reconnecting multiple times")]
-    public override void CreateDb_CreateNotExistingDbUsingExtensionMethod_DbExists()
+    public override void CreateDb_CreateNotExistingDbUsingExtensionMethod()
     {
     }
 }

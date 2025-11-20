@@ -17,7 +17,7 @@ public abstract class BaseCreateDbIfNotExistsTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void CreateDbIfNotExists_ConnectionStringFromFixture_NotThrowAnyException()
+    public void CreateDbIfNotExists_ConnectionStringFromFixture()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();

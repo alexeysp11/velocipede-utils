@@ -19,7 +19,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void QueryFirstOrDefault_OpenDbAndGetOneRecord_ResultEqualsToExpected()
+    public void QueryFirstOrDefault_OpenDbAndGetOneRecord()
     {
         // Arrange.
         const int expected = 1;
@@ -206,7 +206,7 @@ public abstract class BaseQueryFirstOrDefaultTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task QueryFirstOrDefaultAsync_OpenDbAndGetOneRecord_ResultEqualsToExpected()
+    public async Task QueryFirstOrDefaultAsync_OpenDbAndGetOneRecord()
     {
         // Arrange.
         const int expected = 1;

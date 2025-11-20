@@ -26,7 +26,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void Execute_CreateTestTableForExecute_TableExists()
+    public void Execute_CreateTestTableForExecute()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -53,7 +53,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void Execute_CreateTestTableForExecuteWithParams_TableExists()
+    public void Execute_CreateTestTableForExecuteWithParams()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -86,7 +86,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task ExecuteAsync_CreateTestTableForExecuteAsync_TableExists()
+    public async Task ExecuteAsync_CreateTestTableForExecuteAsync()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -113,7 +113,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task ExecuteAsync_CreateTestTableForExecuteWithParams_TableExists()
+    public async Task ExecuteAsync_CreateTestTableForExecuteWithParams()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
