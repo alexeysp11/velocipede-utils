@@ -20,7 +20,7 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 1)]
-    public void GetForeignKeys_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public void GetForeignKeys_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -36,7 +36,7 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 1)]
-    public void GetForeignKeys_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public void GetForeignKeys_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -112,7 +112,7 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 1)]
-    public async Task GetForeignKeysAsync_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public async Task GetForeignKeysAsync_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -128,7 +128,7 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 1)]
-    public async Task GetForeignKeysAsync_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public async Task GetForeignKeysAsync_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();

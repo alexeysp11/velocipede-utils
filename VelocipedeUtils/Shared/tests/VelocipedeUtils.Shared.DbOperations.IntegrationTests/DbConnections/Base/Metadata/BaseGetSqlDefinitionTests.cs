@@ -27,7 +27,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual void GetSqlDefinition_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+    public virtual void GetSqlDefinition_FixtureNotConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);
@@ -46,7 +46,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual void GetSqlDefinition_FixtureConnected_ResultEqualsToExpected(string tableName)
+    public virtual void GetSqlDefinition_FixtureConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);
@@ -125,7 +125,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual async Task GetSqlDefinitionAsync_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+    public virtual async Task GetSqlDefinitionAsync_FixtureNotConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);
@@ -144,7 +144,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual async Task GetSqlDefinitionAsync_FixtureConnected_ResultEqualsToExpected(string tableName)
+    public virtual async Task GetSqlDefinitionAsync_FixtureConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);

@@ -17,7 +17,7 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void GetTablesInDb_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    public void GetTablesInDb_FixtureNotConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -44,7 +44,7 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void GetTablesInDb_FixtureConnected_ResultContainsAllExpectedStrings()
+    public void GetTablesInDb_FixtureConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -128,7 +128,7 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetTablesInDbAsync_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    public async Task GetTablesInDbAsync_FixtureNotConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -155,7 +155,7 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetTablesInDbAsync_FixtureConnected_ResultContainsAllExpectedStrings()
+    public async Task GetTablesInDbAsync_FixtureConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();

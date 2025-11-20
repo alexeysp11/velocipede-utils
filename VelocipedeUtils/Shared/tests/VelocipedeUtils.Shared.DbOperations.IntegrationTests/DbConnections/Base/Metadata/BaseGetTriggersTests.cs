@@ -20,7 +20,7 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 2)]
-    public void GetTriggers_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public void GetTriggers_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -36,7 +36,7 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 2)]
-    public void GetTriggers_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public void GetTriggers_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -112,7 +112,7 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 2)]
-    public async Task GetTriggersAsync_FixtureNotConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public async Task GetTriggersAsync_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -128,7 +128,7 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"", 0)]
     [InlineData("\"TestUsers\"", 2)]
-    public async Task GetTriggersAsync_FixtureConnected_ForeignKeyQtyEqualsToExpected(string tableName, int expectedQty)
+    public async Task GetTriggersAsync_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
