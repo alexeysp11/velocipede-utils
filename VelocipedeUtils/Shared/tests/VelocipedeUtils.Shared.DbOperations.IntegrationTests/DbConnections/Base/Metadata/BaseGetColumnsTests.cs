@@ -85,7 +85,9 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         };
 
         // 4. Expected result.
-        int expectedQty = dbConnection.DatabaseType == DatabaseType.PostgreSQL && tableNameTransformationType != StringConversionType.ToLower ? 0 : 2;
+        bool isOnlyCaseSensitive = dbConnection.DatabaseType == DatabaseType.PostgreSQL
+            && tableNameTransformationType != StringConversionType.ToLower;
+        int expectedQty = isOnlyCaseSensitive ? 0 : 2;
 
         // Act.
         dbConnection
@@ -216,7 +218,9 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         };
 
         // 4. Expected result.
-        int expectedQty = dbConnection.DatabaseType == DatabaseType.PostgreSQL && tableNameTransformationType != StringConversionType.ToLower ? 0 : 2;
+        bool isOnlyCaseSensitive = dbConnection.DatabaseType == DatabaseType.PostgreSQL
+            && tableNameTransformationType != StringConversionType.ToLower;
+        int expectedQty = isOnlyCaseSensitive ? 0 : 2;
 
         // Act.
         List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableNameTransformed);
