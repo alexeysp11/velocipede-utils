@@ -98,15 +98,18 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public void GetAllData_FixtureGetAllCaseInsesitiveModelsAsDataTable()
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public void GetAllData_CaseInsesitiveAsDataTable(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         
         // 2. Create table.
-        string tableName = nameof(GetAllData_FixtureGetAllCaseInsesitiveModelsAsDataTable);
+        string tableName = $"{nameof(GetAllData_CaseInsesitiveAsDataTable)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -114,7 +117,15 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
             .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
             .CommitTransaction();
 
-        // 3. Expected result.
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
         DataTable expected = new List<CaseInsensitiveModel>
         {
             new() { Id = 1, Value = "value 1" },
@@ -125,7 +136,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 
         // Act.
         dbConnection
-            .GetAllData(tableName, out DataTable result)
+            .GetAllData(tableNameTransformed, out DataTable result)
             .CloseDb();
 
         // Assert.
@@ -138,14 +149,14 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     [InlineData(StringConversionType.None)]
     [InlineData(StringConversionType.ToLower)]
     [InlineData(StringConversionType.ToUpper)]
-    public void GetAllData_FixtureGetAllCaseInsesitiveModelsAsList(StringConversionType tableNameTransformationType)
+    public void GetAllData_CaseInsesitiveAsList(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = $"{nameof(GetAllData_FixtureGetAllCaseInsesitiveModelsAsList)}_{tableNameTransformationType}";
+        string tableName = $"{nameof(GetAllData_CaseInsesitiveAsList)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -290,15 +301,18 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
-    [Fact]
-    public async Task GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsDataTable()
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public async Task GetAllDataAsync_CaseInsesitiveAsDataTable(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = nameof(GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsDataTable);
+        string tableName = $"{nameof(GetAllDataAsync_CaseInsesitiveAsDataTable)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -306,7 +320,15 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
             .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
             .CommitTransaction();
 
-        // 3. Expected result.
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
         DataTable expected = new List<CaseInsensitiveModel>
         {
             new() { Id = 1, Value = "value 1" },
@@ -316,7 +338,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         }.ToDataTable();
 
         // Act.
-        DataTable result = await dbConnection.GetAllDataAsync(tableName);
+        DataTable result = await dbConnection.GetAllDataAsync(tableNameTransformed);
         dbConnection.CloseDb();
 
         // Assert.
@@ -329,14 +351,14 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     [InlineData(StringConversionType.None)]
     [InlineData(StringConversionType.ToLower)]
     [InlineData(StringConversionType.ToUpper)]
-    public async Task GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList(StringConversionType tableNameTransformationType)
+    public async Task GetAllDataAsync_CaseInsesitiveAsList(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = $"{nameof(GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList)}_{tableNameTransformationType}";
+        string tableName = $"{nameof(GetAllDataAsync_CaseInsesitiveAsList)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()

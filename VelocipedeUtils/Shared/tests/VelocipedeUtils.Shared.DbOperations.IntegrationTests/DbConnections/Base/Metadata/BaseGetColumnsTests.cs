@@ -61,14 +61,14 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     [InlineData(StringConversionType.None)]
     [InlineData(StringConversionType.ToLower)]
     [InlineData(StringConversionType.ToUpper)]
-    public void GetColumns_FixtureConnectedForCaseInsensitiveModel(StringConversionType tableNameTransformationType)
+    public void GetColumns_FixtureConnectedCaseInsensitive(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = $"{nameof(GetColumns_FixtureConnectedForCaseInsensitiveModel)}_{tableNameTransformationType}";
+        string tableName = $"{nameof(GetColumns_FixtureConnectedCaseInsensitive)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -194,14 +194,14 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     [InlineData(StringConversionType.None)]
     [InlineData(StringConversionType.ToLower)]
     [InlineData(StringConversionType.ToUpper)]
-    public async Task GetColumnsAsync_FixtureConnectedForCaseInsensitiveModel(StringConversionType tableNameTransformationType)
+    public async Task GetColumnsAsync_FixtureConnectedCaseInsensitive(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = $"{nameof(GetColumnsAsync_FixtureConnectedForCaseInsensitiveModel)}_{tableNameTransformationType}";
+        string tableName = $"{nameof(GetColumnsAsync_FixtureConnectedCaseInsensitive)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()

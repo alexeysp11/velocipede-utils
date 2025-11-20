@@ -30,6 +30,9 @@ dotnet_diagnostic.IDE0059.severity = error
 # IDE0060: Remove unused parameter
 dotnet_diagnostic.IDE0060.severity = error
 
+# IDE0072: Add missing cases
+dotnet_diagnostic.IDE0072.severity = suggestion
+
 # IDE0074: Use compound assignment
 dotnet_diagnostic.IDE0074.severity = warning
 
