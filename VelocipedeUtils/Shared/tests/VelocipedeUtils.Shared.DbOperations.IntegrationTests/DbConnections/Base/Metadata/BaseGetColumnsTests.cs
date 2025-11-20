@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
@@ -12,13 +14,6 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 {
-    public enum TableNameTransformationType
-    {
-        None = 0,
-        ToLower = 1,
-        ToUpper = 2,
-    }
-
     /// <summary>
     /// Default constructor for creating <see cref="BaseGetColumnsTests"/>.
     /// </summary>
@@ -63,10 +58,10 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(TableNameTransformationType.None)]
-    [InlineData(TableNameTransformationType.ToLower)]
-    [InlineData(TableNameTransformationType.ToUpper)]
-    public void GetColumns_FixtureConnectedForCaseInsensitiveModel(TableNameTransformationType tableNameTransformationType)
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public void GetColumns_FixtureConnectedForCaseInsensitiveModel(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
@@ -84,13 +79,13 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         // 3. Table name transformation.
         string tableNameTransformed = tableNameTransformationType switch
         {
-            TableNameTransformationType.ToLower => tableName.ToLower(),
-            TableNameTransformationType.ToUpper => tableName.ToUpper(),
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
             _ => tableName,
         };
 
         // 4. Expected result.
-        int expectedQty = dbConnection.DatabaseType == Enums.DatabaseType.PostgreSQL && tableNameTransformationType != TableNameTransformationType.ToLower ? 0 : 2;
+        int expectedQty = dbConnection.DatabaseType == DatabaseType.PostgreSQL && tableNameTransformationType != StringConversionType.ToLower ? 0 : 2;
 
         // Act.
         dbConnection
@@ -194,10 +189,10 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(TableNameTransformationType.None)]
-    [InlineData(TableNameTransformationType.ToLower)]
-    [InlineData(TableNameTransformationType.ToUpper)]
-    public async Task GetColumnsAsync_FixtureConnectedForCaseInsensitiveModel(TableNameTransformationType tableNameTransformationType)
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public async Task GetColumnsAsync_FixtureConnectedForCaseInsensitiveModel(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
@@ -215,13 +210,13 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         // 3. Table name transformation.
         string tableNameTransformed = tableNameTransformationType switch
         {
-            TableNameTransformationType.ToLower => tableName.ToLower(),
-            TableNameTransformationType.ToUpper => tableName.ToUpper(),
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
             _ => tableName,
         };
 
         // 4. Expected result.
-        int expectedQty = dbConnection.DatabaseType == Enums.DatabaseType.PostgreSQL && tableNameTransformationType != TableNameTransformationType.ToLower ? 0 : 2;
+        int expectedQty = dbConnection.DatabaseType == DatabaseType.PostgreSQL && tableNameTransformationType != StringConversionType.ToLower ? 0 : 2;
 
         // Act.
         List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableNameTransformed);
