@@ -4,6 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
 using VelocipedeUtils.Shared.DbOperations.Models;
 using VelocipedeUtils.Shared.Tests.Core.Compare;
@@ -133,15 +134,18 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
             .BeTrue();
     }
 
-    [Fact]
-    public void GetAllData_FixtureGetAllCaseInsesitiveModelsAsList()
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public void GetAllData_FixtureGetAllCaseInsesitiveModelsAsList(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = nameof(GetAllData_FixtureGetAllCaseInsesitiveModelsAsList);
+        string tableName = $"{nameof(GetAllData_FixtureGetAllCaseInsesitiveModelsAsList)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -149,7 +153,15 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
             .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
             .CommitTransaction();
 
-        // 3. Expected result.
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
         List<CaseInsensitiveModel> expected =
         [
             new() { Id = 1, Value = "value 1" },
@@ -160,7 +172,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 
         // Act.
         dbConnection
-            .GetAllData(tableName, out List<CaseInsensitiveModel> result)
+            .GetAllData(tableNameTransformed, out List<CaseInsensitiveModel> result)
             .CloseDb();
 
         // Assert.
@@ -313,15 +325,18 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
             .BeTrue();
     }
 
-    [Fact]
-    public async Task GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList()
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public async Task GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList(StringConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = nameof(GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList);
+        string tableName = $"{nameof(GetAllDataAsync_FixtureGetAllCaseInsesitiveModelsAsList)}_{tableNameTransformationType}";
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -329,7 +344,15 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
             .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
             .CommitTransaction();
 
-        // 3. Expected result.
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
         List<CaseInsensitiveModel> expected =
         [
             new() { Id = 1, Value = "value 1" },
@@ -339,7 +362,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         ];
 
         // Act.
-        List<CaseInsensitiveModel> result = await dbConnection.GetAllDataAsync<CaseInsensitiveModel>(tableName);
+        List<CaseInsensitiveModel> result = await dbConnection.GetAllDataAsync<CaseInsensitiveModel>(tableNameTransformed);
         dbConnection.CloseDb();
 
         // Assert.
