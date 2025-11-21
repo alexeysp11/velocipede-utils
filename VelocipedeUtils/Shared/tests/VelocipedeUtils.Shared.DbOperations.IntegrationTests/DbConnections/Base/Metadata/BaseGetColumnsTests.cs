@@ -4,6 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Helpers;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
@@ -70,14 +71,22 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     [InlineData(StringConversionType.None)]
     [InlineData(StringConversionType.ToLower)]
     [InlineData(StringConversionType.ToUpper)]
-    public void GetColumns_CaseInsensitive(StringConversionType tableNameTransformationType)
+    [InlineData(StringConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    public void GetColumns_CaseInsensitive(
+        StringConversionType conversionType,
+        DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = $"{nameof(GetColumns_CaseInsensitive)}_{tableNameTransformationType}";
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetColumns_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -85,20 +94,19 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
             .CommitTransaction();
 
-        // 3. Table name transformation.
-        string tableNameTransformed = tableNameTransformationType switch
-        {
-            StringConversionType.ToLower => tableName.ToLower(),
-            StringConversionType.ToUpper => tableName.ToUpper(),
-            _ => tableName,
-        };
+        // 3. Table name conversion.
+        string tableNameConverted = TableNameHelper.ConvertTableName(
+            tableName,
+            dbConnection.DatabaseType,
+            conversionType,
+            delimitIdentifierType);
 
         // 4. Expected result.
         int expectedQty = 2;
 
         // Act.
         dbConnection
-            .GetColumns(tableNameTransformed, out List<VelocipedeColumnInfo>? result)
+            .GetColumns(tableNameConverted, out List<VelocipedeColumnInfo>? result)
             .CloseDb();
 
         // Assert.
@@ -217,14 +225,22 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     [InlineData(StringConversionType.None)]
     [InlineData(StringConversionType.ToLower)]
     [InlineData(StringConversionType.ToUpper)]
-    public async Task GetColumnsAsync_CaseInsensitive(StringConversionType tableNameTransformationType)
+    [InlineData(StringConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    public async Task GetColumnsAsync_CaseInsensitive(
+        StringConversionType conversionType,
+        DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = $"{nameof(GetColumnsAsync_CaseInsensitive)}_{tableNameTransformationType}";
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetColumnsAsync_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
         dbConnection
             .OpenDb()
             .BeginTransaction()
@@ -233,18 +249,17 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .CommitTransaction();
 
         // 3. Table name transformation.
-        string tableNameTransformed = tableNameTransformationType switch
-        {
-            StringConversionType.ToLower => tableName.ToLower(),
-            StringConversionType.ToUpper => tableName.ToUpper(),
-            _ => tableName,
-        };
+        string tableNameConverted = TableNameHelper.ConvertTableName(
+            tableName,
+            dbConnection.DatabaseType,
+            conversionType,
+            delimitIdentifierType);
 
         // 4. Expected result.
         int expectedQty = 2;
 
         // Act.
-        List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableNameTransformed);
+        List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableNameConverted);
         dbConnection.CloseDb();
 
         // Assert.
