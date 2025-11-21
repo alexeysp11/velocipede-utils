@@ -3,6 +3,8 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Helpers;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
@@ -69,6 +71,53 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
         // Act.
         dbConnection
             .OpenDb()
+            .GetTriggers(tableName, out List<VelocipedeTriggerInfo>? result)
+            .CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    [InlineData(StringConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    public void GetTriggers_CaseInsensitive(
+        StringConversionType conversionType,
+        DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetTriggers_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameConverted = TableNameHelper.ConvertTableName(
+            tableName,
+            dbConnection.DatabaseType,
+            conversionType,
+            delimitIdentifierType);
+
+        // 4. Expected result.
+        int expectedQty = 0;
+
+        // Act.
+        dbConnection
             .GetTriggers(tableName, out List<VelocipedeTriggerInfo>? result)
             .CloseDb();
 
@@ -190,6 +239,52 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
             .GetTriggersAsync(tableName);
         dbConnection
             .CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    [InlineData(StringConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(StringConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    public async Task GetTriggersAsync_CaseInsensitive(
+        StringConversionType conversionType,
+        DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetTriggersAsync_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameConverted = TableNameHelper.ConvertTableName(
+            tableName,
+            dbConnection.DatabaseType,
+            conversionType,
+            delimitIdentifierType);
+
+        // 4. Expected result.
+        int expectedQty = 0;
+
+        // Act.
+        List<VelocipedeTriggerInfo>? result = await dbConnection.GetTriggersAsync(tableName);
+        dbConnection.CloseDb();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();

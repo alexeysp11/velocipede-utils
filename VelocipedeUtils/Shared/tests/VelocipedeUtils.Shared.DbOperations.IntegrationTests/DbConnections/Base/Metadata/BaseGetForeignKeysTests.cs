@@ -262,7 +262,7 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
 
         // 2. Create table.
         string tableName = TableNameHelper.GetTableNameByTestMethod(
-            methodName: nameof(GetForeignKeys_CaseInsensitive),
+            methodName: nameof(GetForeignKeysAsync_CaseInsensitive),
             conversionType: conversionType,
             delimitIdentifierType: delimitIdentifierType);
         dbConnection
