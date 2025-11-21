@@ -12,6 +12,11 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetTriggersTests : BaseDbConnectionTests
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetTriggersTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetTriggersTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
@@ -19,7 +24,17 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 2)]
+    [InlineData("TestUsers", 2)]
+    [InlineData("testUsers", 2)]
+    [InlineData("testusers", 2)]
+    [InlineData("Testusers", 2)]
+    [InlineData("TESTUSERS", 2)]
     public void GetTriggers_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -35,7 +50,17 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 2)]
+    [InlineData("TestUsers", 2)]
+    [InlineData("testUsers", 2)]
+    [InlineData("testusers", 2)]
+    [InlineData("Testusers", 2)]
+    [InlineData("TESTUSERS", 2)]
     public void GetTriggers_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -52,11 +77,17 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
         result.Should().HaveCount(expectedQty);
     }
 
-    [Fact]
-    public void GetTriggers_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    [InlineData("---")]
+    public void GetTriggers_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
@@ -111,7 +142,17 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 2)]
+    [InlineData("TestUsers", 2)]
+    [InlineData("testUsers", 2)]
+    [InlineData("testusers", 2)]
+    [InlineData("Testusers", 2)]
+    [InlineData("TESTUSERS", 2)]
     public async Task GetTriggersAsync_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -127,7 +168,17 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 2)]
+    [InlineData("TestUsers", 2)]
+    [InlineData("testUsers", 2)]
+    [InlineData("testusers", 2)]
+    [InlineData("Testusers", 2)]
+    [InlineData("TESTUSERS", 2)]
     public async Task GetTriggersAsync_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -145,11 +196,17 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
         result.Should().HaveCount(expectedQty);
     }
 
-    [Fact]
-    public async Task GetTriggersAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    [InlineData("---")]
+    public async Task GetTriggersAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);

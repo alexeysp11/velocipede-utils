@@ -74,7 +74,7 @@ SELECT
     rootpage AS RootPage,
     sql AS SqlDefinition
 FROM sqlite_master
-WHERE type = 'trigger' AND tbl_name = @TableName";
+WHERE type = 'trigger' AND lower(tbl_name) = lower(@TableName)";
 
         _getSqlDefinitionSql = "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = @TableName";
     }

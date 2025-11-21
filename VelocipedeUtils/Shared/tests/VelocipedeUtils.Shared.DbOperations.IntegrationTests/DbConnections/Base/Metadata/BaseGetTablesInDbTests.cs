@@ -11,6 +11,11 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetTablesInDbTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetTablesInDbTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {

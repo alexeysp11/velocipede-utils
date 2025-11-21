@@ -105,7 +105,7 @@ SELECT
     action_reference_old_table AS ActionReferenceOldTable,
     action_reference_new_table AS ActionReferenceNewTable
 FROM information_schema.triggers
-WHERE event_object_table = @TableName";
+WHERE lower(event_object_table) = lower(@TableName)";
 
         _getSqlDefinitionSql = @"
 CREATE OR REPLACE FUNCTION fGetSqlFromTable(aSchemaName VARCHAR(255), aTableName VARCHAR(255))

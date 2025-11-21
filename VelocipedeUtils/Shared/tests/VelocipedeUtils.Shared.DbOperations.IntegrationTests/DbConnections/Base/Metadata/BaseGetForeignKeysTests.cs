@@ -125,6 +125,7 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
     [InlineData("testmodels")]
     [InlineData("Testmodels")]
     [InlineData("TESTMODELS")]
+    [InlineData("---")]
     public void GetForeignKeys_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
@@ -282,6 +283,7 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
     [InlineData("testmodels")]
     [InlineData("Testmodels")]
     [InlineData("TESTMODELS")]
+    [InlineData("---")]
     public async Task GetForeignKeysAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.

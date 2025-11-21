@@ -14,6 +14,11 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     private readonly string _createTestModelsSql;
     private readonly string _createTestUsersSql;
 
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetSqlDefinitionTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetSqlDefinitionTests(
         IDatabaseFixture fixture,
         string createDatabaseSql,

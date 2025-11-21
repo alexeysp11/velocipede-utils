@@ -113,6 +113,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     [InlineData("testmodels")]
     [InlineData("Testmodels")]
     [InlineData("TESTMODELS")]
+    [InlineData("---")]
     public void GetColumns_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
@@ -258,6 +259,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     [InlineData("testmodels")]
     [InlineData("Testmodels")]
     [InlineData("TESTMODELS")]
+    [InlineData("---")]
     public async Task GetColumnsAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
