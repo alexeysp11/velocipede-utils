@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
-using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
@@ -24,13 +23,18 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     {
     }
 
-    [Fact]
-    public void GetColumns_FixtureNotConnected()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public void GetColumns_FixtureNotConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
-
+        
         // Act.
         dbConnection.GetColumns(tableName, out List<VelocipedeColumnInfo>? result);
 
@@ -39,12 +43,17 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(3);
     }
 
-    [Fact]
-    public void GetColumns_FixtureConnected()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public void GetColumns_FixtureConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
 
         // Act.
         dbConnection
@@ -97,11 +106,16 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(expectedQty);
     }
 
-    [Fact]
-    public void GetColumns_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public void GetColumns_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
@@ -154,12 +168,17 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
     }
 
-    [Fact]
-    public async Task GetColumnsAsync_FixtureNotConnected()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public async Task GetColumnsAsync_FixtureNotConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
 
         // Act.
         List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableName);
@@ -169,12 +188,17 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(3);
     }
 
-    [Fact]
-    public async Task GetColumnsAsync_FixtureConnected()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public async Task GetColumnsAsync_FixtureConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
 
         // Act.
         List<VelocipedeColumnInfo>? result = await dbConnection
@@ -227,11 +251,16 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(expectedQty);
     }
 
-    [Fact]
-    public async Task GetColumnsAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public async Task GetColumnsAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
