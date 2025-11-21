@@ -19,7 +19,17 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 1)]
+    [InlineData("TestUsers", 1)]
+    [InlineData("testUsers", 1)]
+    [InlineData("testusers", 1)]
+    [InlineData("Testusers", 1)]
+    [InlineData("TESTUSERS", 1)]
     public void GetForeignKeys_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -35,7 +45,17 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 1)]
+    [InlineData("TestUsers", 1)]
+    [InlineData("testUsers", 1)]
+    [InlineData("testusers", 1)]
+    [InlineData("Testusers", 1)]
+    [InlineData("TESTUSERS", 1)]
     public void GetForeignKeys_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -52,11 +72,16 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
         result.Should().HaveCount(expectedQty);
     }
 
-    [Fact]
-    public void GetForeignKeys_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public void GetForeignKeys_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
@@ -111,7 +136,17 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 1)]
+    [InlineData("TestUsers", 1)]
+    [InlineData("testUsers", 1)]
+    [InlineData("testusers", 1)]
+    [InlineData("Testusers", 1)]
+    [InlineData("TESTUSERS", 1)]
     public async Task GetForeignKeysAsync_FixtureNotConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -127,7 +162,17 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
 
     [Theory]
     [InlineData("\"TestModels\"", 0)]
+    [InlineData("TestModels", 0)]
+    [InlineData("testModels", 0)]
+    [InlineData("testmodels", 0)]
+    [InlineData("Testmodels", 0)]
+    [InlineData("TESTMODELS", 0)]
     [InlineData("\"TestUsers\"", 1)]
+    [InlineData("TestUsers", 1)]
+    [InlineData("testUsers", 1)]
+    [InlineData("testusers", 1)]
+    [InlineData("Testusers", 1)]
+    [InlineData("TESTUSERS", 1)]
     public async Task GetForeignKeysAsync_FixtureConnected(string tableName, int expectedQty)
     {
         // Arrange.
@@ -145,11 +190,16 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
         result.Should().HaveCount(expectedQty);
     }
 
-    [Fact]
-    public async Task GetForeignKeysAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public async Task GetForeignKeysAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
