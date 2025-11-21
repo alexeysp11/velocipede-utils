@@ -3,6 +3,7 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
@@ -12,6 +13,11 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetForeignKeysTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetForeignKeysTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
@@ -65,6 +71,46 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
         dbConnection
             .OpenDb()
             .GetForeignKeys(tableName, out List<VelocipedeForeignKeyInfo>? result)
+            .CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public void GetForeignKeys_CaseInsensitive(StringConversionType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = $"{nameof(GetForeignKeys_CaseInsensitive)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        int expectedQty = 0;
+
+        // Act.
+        dbConnection
+            .GetForeignKeys(tableNameTransformed, out List<VelocipedeForeignKeyInfo>? result)
             .CloseDb();
 
         // Assert.
@@ -184,6 +230,45 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
             .GetForeignKeysAsync(tableName);
         dbConnection
             .CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData(StringConversionType.None)]
+    [InlineData(StringConversionType.ToLower)]
+    [InlineData(StringConversionType.ToUpper)]
+    public async Task GetForeignKeysAsync_CaseInsensitive(StringConversionType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = $"{nameof(GetForeignKeysAsync_CaseInsensitive)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            StringConversionType.ToLower => tableName.ToLower(),
+            StringConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        int expectedQty = 0;
+
+        // Act.
+        List<VelocipedeForeignKeyInfo>? result = await dbConnection.GetForeignKeysAsync(tableNameTransformed);
+        dbConnection.CloseDb();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
