@@ -127,6 +127,7 @@ public interface IVelocipedeDbConnection : IDisposable
     /// <summary>
     /// Get columns of the specified table.
     /// </summary>
+    /// <remarks>Case-insensitive checking of the specified table name, <paramref name="tableName"/> parameter.</remarks>
     /// <param name="tableName">Table name.</param>
     /// <param name="columnInfo">Resulting <see cref="List{T}"/> of <see cref="VelocipedeColumnInfo"/> that contains info about table columns.</param>
     /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>

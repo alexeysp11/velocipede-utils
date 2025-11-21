@@ -69,7 +69,7 @@ SELECT
     case when is_generated = 'ALWAYS' then true else false end as IsGenerated,
     case when is_updatable = 'YES' then true else false end as IsUpdatable
 FROM information_schema.columns
-WHERE table_schema = @SchemaName AND table_name = @TableName";
+WHERE table_schema = @SchemaName AND lower(table_name) = lower(@TableName)";
 
         _getForeignKeysSql = @"
 SELECT
