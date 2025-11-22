@@ -1,10 +1,10 @@
 ﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
 
 /// <summary>
-/// Conversion type for a string.
+/// Case conversion type for a string.
 /// </summary>
 /// <remarks>Could be used for converting string for case sensitive/insensitive tests.</remarks>
-public enum StringConversionType
+public enum CaseConversionType
 {
     /// <summary>
     /// String is not converted.

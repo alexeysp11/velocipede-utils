@@ -80,14 +80,14 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(StringConversionType.None)]
-    [InlineData(StringConversionType.ToLower)]
-    [InlineData(StringConversionType.ToUpper)]
-    [InlineData(StringConversionType.None, DelimitIdentifierType.DoubleQuotes)]
-    [InlineData(StringConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
-    [InlineData(StringConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    [InlineData(CaseConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
     public void GetTriggers_CaseInsensitive(
-        StringConversionType conversionType,
+        CaseConversionType conversionType,
         DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         // Arrange.
@@ -246,14 +246,14 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(StringConversionType.None)]
-    [InlineData(StringConversionType.ToLower)]
-    [InlineData(StringConversionType.ToUpper)]
-    [InlineData(StringConversionType.None, DelimitIdentifierType.DoubleQuotes)]
-    [InlineData(StringConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
-    [InlineData(StringConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    [InlineData(CaseConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
     public async Task GetTriggersAsync_CaseInsensitive(
-        StringConversionType conversionType,
+        CaseConversionType conversionType,
         DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         // Arrange.

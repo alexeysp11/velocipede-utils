@@ -99,10 +99,10 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(StringConversionType.None)]
-    [InlineData(StringConversionType.ToLower)]
-    [InlineData(StringConversionType.ToUpper)]
-    public void GetAllData_CaseInsesitiveAsDataTable(StringConversionType tableNameTransformationType)
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public void GetAllData_CaseInsesitiveAsDataTable(CaseConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
@@ -120,8 +120,8 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         // 3. Table name transformation.
         string tableNameTransformed = tableNameTransformationType switch
         {
-            StringConversionType.ToLower => tableName.ToLower(),
-            StringConversionType.ToUpper => tableName.ToUpper(),
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
             _ => tableName,
         };
 
@@ -146,10 +146,10 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(StringConversionType.None)]
-    [InlineData(StringConversionType.ToLower)]
-    [InlineData(StringConversionType.ToUpper)]
-    public void GetAllData_CaseInsesitiveAsList(StringConversionType tableNameTransformationType)
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public void GetAllData_CaseInsesitiveAsList(CaseConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
@@ -167,8 +167,8 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         // 3. Table name transformation.
         string tableNameTransformed = tableNameTransformationType switch
         {
-            StringConversionType.ToLower => tableName.ToLower(),
-            StringConversionType.ToUpper => tableName.ToUpper(),
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
             _ => tableName,
         };
 
@@ -302,10 +302,10 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(StringConversionType.None)]
-    [InlineData(StringConversionType.ToLower)]
-    [InlineData(StringConversionType.ToUpper)]
-    public async Task GetAllDataAsync_CaseInsesitiveAsDataTable(StringConversionType tableNameTransformationType)
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public async Task GetAllDataAsync_CaseInsesitiveAsDataTable(CaseConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
@@ -323,8 +323,8 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         // 3. Table name transformation.
         string tableNameTransformed = tableNameTransformationType switch
         {
-            StringConversionType.ToLower => tableName.ToLower(),
-            StringConversionType.ToUpper => tableName.ToUpper(),
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
             _ => tableName,
         };
 
@@ -348,10 +348,10 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData(StringConversionType.None)]
-    [InlineData(StringConversionType.ToLower)]
-    [InlineData(StringConversionType.ToUpper)]
-    public async Task GetAllDataAsync_CaseInsesitiveAsList(StringConversionType tableNameTransformationType)
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public async Task GetAllDataAsync_CaseInsesitiveAsList(CaseConversionType tableNameTransformationType)
     {
         // Arrange.
         // 1. Database connection.
@@ -369,8 +369,8 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         // 3. Table name transformation.
         string tableNameTransformed = tableNameTransformationType switch
         {
-            StringConversionType.ToLower => tableName.ToLower(),
-            StringConversionType.ToUpper => tableName.ToUpper(),
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
             _ => tableName,
         };
 

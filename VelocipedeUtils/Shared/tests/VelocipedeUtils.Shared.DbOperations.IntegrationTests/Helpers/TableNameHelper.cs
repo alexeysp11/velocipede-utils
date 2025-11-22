@@ -12,7 +12,7 @@ public static class TableNameHelper
     /// Using the name of the test method, get the name with which the table will be created in the database.
     /// </summary>
     /// <remarks>
-    /// If test method name is <c>MethodName</c>, conversion type is <see cref="StringConversionType.ToLower"/>,
+    /// If test method name is <c>MethodName</c>, conversion type is <see cref="CaseConversionType.ToLower"/>,
     /// and delimit identifier is <see cref="DelimitIdentifierType.DoubleQuotes"/>,
     /// then this method could return <c>MethodName_1_2</c> as a result.</remarks>
     /// <param name="methodName">Method name.</param>
@@ -21,7 +21,7 @@ public static class TableNameHelper
     /// <returns>The name with which the table will be created in the database.</returns>
     public static string GetTableNameByTestMethod(
         string methodName,
-        StringConversionType conversionType,
+        CaseConversionType conversionType,
         DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         return $"{methodName}_{(int)conversionType}_{(int)delimitIdentifierType}";
@@ -38,13 +38,13 @@ public static class TableNameHelper
     public static string ConvertTableName(
         string tableName,
         DatabaseType databaseType,
-        StringConversionType conversionType,
+        CaseConversionType conversionType,
         DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         string result = conversionType switch
         {
-            StringConversionType.ToLower => tableName.ToLower(),
-            StringConversionType.ToUpper => tableName.ToUpper(),
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
             _ => tableName,
         };
         result = delimitIdentifierType switch
