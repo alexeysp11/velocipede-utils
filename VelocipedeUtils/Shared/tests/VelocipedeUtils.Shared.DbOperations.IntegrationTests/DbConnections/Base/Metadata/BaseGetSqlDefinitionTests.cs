@@ -70,6 +70,22 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
         result.Should().Be(expected);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetSqlDefinition_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetSqlDefinition(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
     [Fact]
     public void GetSqlDefinition_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
     {
@@ -167,6 +183,22 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetSqlDefinitionAsync_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<string?>> act = async () => await dbConnection.GetSqlDefinitionAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
     }
 
     [Fact]

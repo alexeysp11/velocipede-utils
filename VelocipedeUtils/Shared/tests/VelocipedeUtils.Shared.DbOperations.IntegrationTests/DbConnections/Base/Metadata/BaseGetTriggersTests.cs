@@ -80,6 +80,22 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
     }
 
     [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetTriggers_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetTriggers(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
     [InlineData(CaseConversionType.None)]
     [InlineData(CaseConversionType.ToLower)]
     [InlineData(CaseConversionType.ToUpper)]
@@ -243,6 +259,22 @@ public abstract class BaseGetTriggersTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetTriggersAsync_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<List<VelocipedeTriggerInfo>>> act = async () => await dbConnection.GetTriggersAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
     }
 
     [Theory]

@@ -101,7 +101,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void GetAllData_AsDataTableAndNullOrEmptyTable(string tableName)
+    public void GetAllData_AsDataTableAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -117,7 +117,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public void GetAllData_AsListAndNullOrEmptyTable(string tableName)
+    public void GetAllData_AsListAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -336,7 +336,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task GetAllDataAsync_AsDataTableAndNullOrEmptyTable(string tableName)
+    public async Task GetAllDataAsync_AsDataTableAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -352,7 +352,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     [Theory]
     [InlineData(null)]
     [InlineData("")]
-    public async Task GetAllDataAsync_AsListAndNullOrEmptyTable(string tableName)
+    public async Task GetAllDataAsync_AsListAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();

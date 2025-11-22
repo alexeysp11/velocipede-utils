@@ -331,6 +331,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         string tableName,
         out List<VelocipedeColumnInfo> columnInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters =
         [
@@ -343,6 +348,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters =
         [
@@ -357,6 +367,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         string tableName,
         out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
         return Query(_getForeignKeysSql, parameters, out foreignKeyInfo);
@@ -365,6 +380,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
         return QueryAsync<VelocipedeForeignKeyInfo>(_getForeignKeysSql, parameters);
@@ -375,6 +395,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         string tableName,
         out List<VelocipedeTriggerInfo> triggerInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
         return Query(_getTriggersSql, parameters, out triggerInfo);
@@ -383,6 +408,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableAndSchemaInfo.TableName }];
         return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
@@ -393,6 +423,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         string tableName,
         out string? sqlDefinition)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters =
         [
@@ -405,6 +440,11 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public Task<string?> GetSqlDefinitionAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         TableAndSchemaInfo tableAndSchemaInfo = GetTableAndSchemaName(tableName);
         List<VelocipedeCommandParameter> parameters =
         [

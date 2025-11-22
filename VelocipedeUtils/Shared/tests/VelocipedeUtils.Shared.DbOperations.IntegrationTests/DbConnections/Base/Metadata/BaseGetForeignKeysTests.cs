@@ -80,6 +80,22 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
     }
 
     [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetForeignKeys_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetForeignKeys(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
     [InlineData(CaseConversionType.None)]
     [InlineData(CaseConversionType.ToLower)]
     [InlineData(CaseConversionType.ToUpper)]
@@ -243,6 +259,22 @@ public abstract class BaseGetForeignKeysTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetForeignKeysAsync_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<List<VelocipedeForeignKeyInfo>>> act = async () => await dbConnection.GetForeignKeysAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
     }
 
     [Theory]

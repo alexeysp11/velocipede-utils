@@ -68,6 +68,22 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetColumns_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetColumns(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
     [InlineData(CaseConversionType.None)]
     [InlineData(CaseConversionType.ToLower)]
     [InlineData(CaseConversionType.ToUpper)]
@@ -219,6 +235,22 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().HaveCount(3);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetColumnsAsync_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<List<VelocipedeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
     }
 
     [Theory]
