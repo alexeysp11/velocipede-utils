@@ -99,6 +99,38 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetAllData_AsDataTableAndNullOrEmptyTable(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetAllData(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetAllData_AsListAndNullOrEmptyTable(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetAllData<TestModel>(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
     [InlineData(CaseConversionType.None)]
     [InlineData(CaseConversionType.ToLower)]
     [InlineData(CaseConversionType.ToUpper)]
@@ -299,6 +331,38 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
         // Assert.
         result.Count.Should().Be(8);
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetAllDataAsync_AsDataTableAndNullOrEmptyTable(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<DataTable>> act = async () => await dbConnection.GetAllDataAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetAllDataAsync_AsListAndNullOrEmptyTable(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<object>> act = async () => await dbConnection.GetAllDataAsync<TestModel>(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
     }
 
     [Theory]

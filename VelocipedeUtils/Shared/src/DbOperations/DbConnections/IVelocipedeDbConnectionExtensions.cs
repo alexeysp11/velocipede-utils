@@ -150,6 +150,11 @@ public static class IVelocipedeDbConnectionExtensions
         string tableName,
         out DataTable dtResult)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         string sql = $"SELECT * FROM {tableName}";
         return connection.QueryDataTable(sql, out dtResult);
     }
@@ -166,6 +171,11 @@ public static class IVelocipedeDbConnectionExtensions
         string tableName,
         out List<T> result)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         string sql = $"SELECT * FROM {tableName}";
         return connection.Query(sql, out result);
     }
@@ -183,6 +193,11 @@ public static class IVelocipedeDbConnectionExtensions
         this IVelocipedeDbConnection connection,
         string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         string sql = $"SELECT * FROM {tableName}";
         return connection.QueryDataTableAsync(sql);
     }
@@ -201,6 +216,11 @@ public static class IVelocipedeDbConnectionExtensions
         this IVelocipedeDbConnection connection,
         string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         string sql = $"SELECT * FROM {tableName}";
         return connection.QueryAsync<T>(sql);
     }
