@@ -3,6 +3,8 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Helpers;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
@@ -11,13 +13,18 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetTablesInDbTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetTablesInDbTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
     }
 
     [Fact]
-    public void GetTablesInDb_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    public void GetTablesInDb_FixtureNotConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -44,7 +51,7 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void GetTablesInDb_FixtureConnected_ResultContainsAllExpectedStrings()
+    public void GetTablesInDb_FixtureConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -70,6 +77,47 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
         {
             result.Should().Contain(expectedString);
         }
+        dbConnection.IsConnected.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(DelimitIdentifierType.None)]
+    [InlineData(DelimitIdentifierType.DoubleQuotes)]
+    public void GetTablesInDb_CaseInsensitive(
+        DelimitIdentifierType delimitIdentifierType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        CaseConversionType conversionType = CaseConversionType.None;
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetTablesInDb_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Expected result.
+        string expectedTableName = tableName.ToLower();
+
+        // Act.
+        dbConnection
+            .OpenDb()
+            .GetTablesInDb(out List<string> result)
+            .CloseDb();
+        result = result
+            .Select(x => x.Replace("public.", "").ToLower())
+            .ToList();
+
+        // Assert.
+        result.Should().HaveCountGreaterThanOrEqualTo(1);
+        result.Should().Contain(expectedTableName);
         dbConnection.IsConnected.Should().BeFalse();
     }
 
@@ -128,7 +176,7 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetTablesInDbAsync_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    public async Task GetTablesInDbAsync_FixtureNotConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -155,7 +203,7 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetTablesInDbAsync_FixtureConnected_ResultContainsAllExpectedStrings()
+    public async Task GetTablesInDbAsync_FixtureConnected()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -182,6 +230,46 @@ public abstract class BaseGetTablesInDbTests : BaseDbConnectionTests
         {
             result.Should().Contain(expectedString);
         }
+        dbConnection.IsConnected.Should().BeFalse();
+    }
+
+    [Theory]
+    [InlineData(DelimitIdentifierType.None)]
+    [InlineData(DelimitIdentifierType.DoubleQuotes)]
+    public async Task GetTablesInDbAsync_CaseInsensitive(
+        DelimitIdentifierType delimitIdentifierType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        CaseConversionType conversionType = CaseConversionType.None;
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetTablesInDbAsync_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Expected result.
+        string expectedTableName = tableName.ToLower();
+
+        // Act.
+        dbConnection.OpenDb();
+        List<string> result = await dbConnection.GetTablesInDbAsync();
+        dbConnection.CloseDb();
+        result = result
+            .Select(x => x.Replace("public.", "").ToLower())
+            .ToList();
+
+        // Assert.
+        result.Should().HaveCountGreaterThanOrEqualTo(1);
+        result.Should().Contain(expectedTableName);
         dbConnection.IsConnected.Should().BeFalse();
     }
 

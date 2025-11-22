@@ -5,7 +5,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
 /// <summary>
 /// A simple test model.
 /// </summary>
-public class TestModel
+public sealed class TestModel
 {
     /// <summary>
     /// The identifier of the test model instance.

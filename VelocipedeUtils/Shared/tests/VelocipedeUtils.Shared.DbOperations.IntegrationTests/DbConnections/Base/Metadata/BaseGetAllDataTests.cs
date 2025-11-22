@@ -4,6 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
 using VelocipedeUtils.Shared.DbOperations.Models;
 using VelocipedeUtils.Shared.Tests.Core.Compare;
@@ -29,13 +30,18 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetAllDataTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetAllDataTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
     }
 
     [Fact]
-    public void GetAllData_FixtureGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+    public void GetAllData_FixtureGetAllTestModelsAsDataTable()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -64,7 +70,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void GetAllData_FixtureGetAllTestModelsAsList_QuantityEqualsToSpecified()
+    public void GetAllData_FixtureGetAllTestModelsAsList()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -89,6 +95,130 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 
         // Assert.
         result.Count.Should().Be(8);
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetAllData_AsDataTableAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetAllData(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetAllData_AsListAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetAllData<TestModel>(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public void GetAllData_CaseInsesitiveAsDataTable(CaseConversionType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        
+        // 2. Create table.
+        string tableName = $"{nameof(GetAllData_CaseInsesitiveAsDataTable)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        DataTable expected = new List<CaseInsensitiveModel>
+        {
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        }.ToDataTable();
+
+        // Act.
+        dbConnection
+            .GetAllData(tableNameTransformed, out DataTable result)
+            .CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected, caseSensitiveColumnNames: false)
+            .Should()
+            .BeTrue();
+    }
+
+    [Theory]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public void GetAllData_CaseInsesitiveAsList(CaseConversionType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = $"{nameof(GetAllData_CaseInsesitiveAsList)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        List<CaseInsensitiveModel> expected =
+        [
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        ];
+
+        // Act.
+        dbConnection
+            .GetAllData(tableNameTransformed, out List<CaseInsensitiveModel> result)
+            .CloseDb();
+
+        // Assert.
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 
@@ -144,7 +274,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsDataTable_QuantityEqualsToSpecified()
+    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsDataTable()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -174,7 +304,7 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsList_QuantityEqualsToSpecified()
+    public async Task GetAllDataAsync_FixtureGetAllTestModelsAsList()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
@@ -200,6 +330,128 @@ public abstract class BaseGetAllDataTests : BaseDbConnectionTests
 
         // Assert.
         result.Count.Should().Be(8);
+        result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetAllDataAsync_AsDataTableAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<DataTable>> act = async () => await dbConnection.GetAllDataAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetAllDataAsync_AsListAndNullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<object>> act = async () => await dbConnection.GetAllDataAsync<TestModel>(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public async Task GetAllDataAsync_CaseInsesitiveAsDataTable(CaseConversionType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = $"{nameof(GetAllDataAsync_CaseInsesitiveAsDataTable)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        DataTable expected = new List<CaseInsensitiveModel>
+        {
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        }.ToDataTable();
+
+        // Act.
+        DataTable result = await dbConnection.GetAllDataAsync(tableNameTransformed);
+        dbConnection.CloseDb();
+
+        // Assert.
+        DataTableCompareHelper.AreDataTablesEquivalent(result, expected, caseSensitiveColumnNames: false)
+            .Should()
+            .BeTrue();
+    }
+
+    [Theory]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    public async Task GetAllDataAsync_CaseInsesitiveAsList(CaseConversionType tableNameTransformationType)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = $"{nameof(GetAllDataAsync_CaseInsesitiveAsList)}_{tableNameTransformationType}";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameTransformed = tableNameTransformationType switch
+        {
+            CaseConversionType.ToLower => tableName.ToLower(),
+            CaseConversionType.ToUpper => tableName.ToUpper(),
+            _ => tableName,
+        };
+
+        // 4. Expected result.
+        List<CaseInsensitiveModel> expected =
+        [
+            new() { Id = 1, Value = "value 1" },
+            new() { Id = 2, Value = "value 2" },
+            new() { Id = 3, Value = "value 3" },
+            new() { Id = 4, Value = "value 4" },
+        ];
+
+        // Act.
+        List<CaseInsensitiveModel> result = await dbConnection.GetAllDataAsync<CaseInsensitiveModel>(tableNameTransformed);
+        dbConnection.CloseDb();
+
+        // Assert.
         result.Should().BeEquivalentTo(expected, options => options.WithStrictOrdering());
     }
 

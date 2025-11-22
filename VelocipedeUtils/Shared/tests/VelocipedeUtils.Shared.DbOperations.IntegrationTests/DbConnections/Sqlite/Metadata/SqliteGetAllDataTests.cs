@@ -6,6 +6,10 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Sql
 
 public sealed class SqliteGetAllDataTests : BaseGetAllDataTests, IClassFixture<SqliteDatabaseFixture>
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="SqliteGetAllDataTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
     public SqliteGetAllDataTests(SqliteDatabaseFixture fixture)
         : base(fixture, SqliteTestConstants.CREATE_DATABASE_SQL)
     {

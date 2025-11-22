@@ -16,7 +16,7 @@ public sealed class MssqlGetSqlDefinitionTests : BaseGetSqlDefinitionTests
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-    public override void GetSqlDefinition_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+    public override void GetSqlDefinition_FixtureNotConnected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
     {
     }
@@ -25,7 +25,7 @@ public sealed class MssqlGetSqlDefinitionTests : BaseGetSqlDefinitionTests
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-    public override void GetSqlDefinition_FixtureConnected_ResultEqualsToExpected(string tableName)
+    public override void GetSqlDefinition_FixtureConnected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
     {
     }
@@ -34,7 +34,7 @@ public sealed class MssqlGetSqlDefinitionTests : BaseGetSqlDefinitionTests
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-    public override Task GetSqlDefinitionAsync_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+    public override Task GetSqlDefinitionAsync_FixtureNotConnected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
     {
         return Task.CompletedTask;
@@ -44,7 +44,7 @@ public sealed class MssqlGetSqlDefinitionTests : BaseGetSqlDefinitionTests
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
 #pragma warning disable xUnit1026 // Theory methods should use all of their parameters
-    public override Task GetSqlDefinitionAsync_FixtureConnected_ResultEqualsToExpected(string tableName)
+    public override Task GetSqlDefinitionAsync_FixtureConnected(string tableName)
 #pragma warning restore xUnit1026 // Theory methods should use all of their parameters
     {
         return Task.CompletedTask;

@@ -3,6 +3,8 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Helpers;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
@@ -12,18 +14,28 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 /// </summary>
 public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetColumnsTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetColumnsTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
     }
 
-    [Fact]
-    public void GetColumns_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public void GetColumns_FixtureNotConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
-
+        
         // Act.
         dbConnection.GetColumns(tableName, out List<VelocipedeColumnInfo>? result);
 
@@ -32,12 +44,17 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(3);
     }
 
-    [Fact]
-    public void GetColumns_FixtureConnected_ResultContainsAllExpectedStrings()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public void GetColumns_FixtureConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
 
         // Act.
         dbConnection
@@ -50,11 +67,80 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(3);
     }
 
-    [Fact]
-    public void GetColumns_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetColumns_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetColumns(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    [InlineData(CaseConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    public void GetColumns_CaseInsensitive(
+        CaseConversionType conversionType,
+        DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetColumns_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name conversion.
+        string tableNameConverted = TableNameHelper.ConvertTableName(
+            tableName,
+            dbConnection.DatabaseType,
+            conversionType,
+            delimitIdentifierType);
+
+        // 4. Expected result.
+        int expectedQty = 2;
+
+        // Act.
+        dbConnection
+            .GetColumns(tableNameConverted, out List<VelocipedeColumnInfo>? result)
+            .CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    [InlineData("---")]
+    public void GetColumns_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
+    {
+        // Arrange.
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
@@ -107,12 +193,17 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         dbConnection.IsConnected.Should().BeFalse();
     }
 
-    [Fact]
-    public async Task GetColumnsAsync_FixtureNotConnected_ResultContainsAllExpectedStrings()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public async Task GetColumnsAsync_FixtureNotConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
 
         // Act.
         List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableName);
@@ -122,12 +213,17 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(3);
     }
 
-    [Fact]
-    public async Task GetColumnsAsync_FixtureConnected_ResultContainsAllExpectedStrings()
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    public async Task GetColumnsAsync_FixtureConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        string tableName = "\"TestModels\"";
 
         // Act.
         List<VelocipedeColumnInfo>? result = await dbConnection
@@ -141,11 +237,79 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         result.Should().HaveCount(3);
     }
 
-    [Fact]
-    public async Task GetColumnsAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException()
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetColumnsAsync_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
     {
         // Arrange.
-        string tableName = "\"TestModels\"";
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<List<VelocipedeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+    }
+
+    [Theory]
+    [InlineData(CaseConversionType.None)]
+    [InlineData(CaseConversionType.ToLower)]
+    [InlineData(CaseConversionType.ToUpper)]
+    [InlineData(CaseConversionType.None, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToLower, DelimitIdentifierType.DoubleQuotes)]
+    [InlineData(CaseConversionType.ToUpper, DelimitIdentifierType.DoubleQuotes)]
+    public async Task GetColumnsAsync_CaseInsensitive(
+        CaseConversionType conversionType,
+        DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
+    {
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = TableNameHelper.GetTableNameByTestMethod(
+            methodName: nameof(GetColumnsAsync_CaseInsensitive),
+            conversionType: conversionType,
+            delimitIdentifierType: delimitIdentifierType);
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute($"create table {tableName} (id int, value varchar(50))")
+            .Execute($"insert into {tableName} values (1, 'value 1'), (2, 'value 2'), (3, 'value 3'), (4, 'value 4')")
+            .CommitTransaction();
+
+        // 3. Table name transformation.
+        string tableNameConverted = TableNameHelper.ConvertTableName(
+            tableName,
+            dbConnection.DatabaseType,
+            conversionType,
+            delimitIdentifierType);
+
+        // 4. Expected result.
+        int expectedQty = 2;
+
+        // Act.
+        List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableNameConverted);
+        dbConnection.CloseDb();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().HaveCount(expectedQty);
+    }
+
+    [Theory]
+    [InlineData("\"TestModels\"")]
+    [InlineData("TestModels")]
+    [InlineData("testModels")]
+    [InlineData("testmodels")]
+    [InlineData("Testmodels")]
+    [InlineData("TESTMODELS")]
+    [InlineData("---")]
+    public async Task GetColumnsAsync_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
+    {
+        // Arrange.
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);

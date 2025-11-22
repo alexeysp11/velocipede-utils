@@ -7,6 +7,10 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mss
 [Collection("MssqlDatabaseFixtureCollection")]
 public sealed class MssqlGetAllDataTests : BaseGetAllDataTests
 {
+    /// <summary>
+    /// Default constructor for creating <see cref="MssqlGetAllDataTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
     public MssqlGetAllDataTests(MssqlDatabaseFixture fixture)
         : base(fixture, MssqlTestConstants.CREATE_DATABASE_SQL)
     {

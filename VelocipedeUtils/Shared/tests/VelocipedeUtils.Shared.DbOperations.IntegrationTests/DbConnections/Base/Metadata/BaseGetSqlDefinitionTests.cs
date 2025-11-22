@@ -14,6 +14,11 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     private readonly string _createTestModelsSql;
     private readonly string _createTestUsersSql;
 
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseGetSqlDefinitionTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseGetSqlDefinitionTests(
         IDatabaseFixture fixture,
         string createDatabaseSql,
@@ -27,7 +32,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual void GetSqlDefinition_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+    public virtual void GetSqlDefinition_FixtureNotConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);
@@ -46,7 +51,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual void GetSqlDefinition_FixtureConnected_ResultEqualsToExpected(string tableName)
+    public virtual void GetSqlDefinition_FixtureConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);
@@ -63,6 +68,22 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void GetSqlDefinition_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<IVelocipedeDbConnection> act = () => dbConnection.GetSqlDefinition(tableName, out _);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
     }
 
     [Fact]
@@ -125,7 +146,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual async Task GetSqlDefinitionAsync_FixtureNotConnected_ResultEqualsToExpected(string tableName)
+    public virtual async Task GetSqlDefinitionAsync_FixtureNotConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);
@@ -144,7 +165,7 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
     [Theory]
     [InlineData("\"TestModels\"")]
     [InlineData("\"TestUsers\"")]
-    public virtual async Task GetSqlDefinitionAsync_FixtureConnected_ResultEqualsToExpected(string tableName)
+    public virtual async Task GetSqlDefinitionAsync_FixtureConnected(string tableName)
     {
         // Arrange.
         string expected = GetExpectedSqlDefinition(tableName);
@@ -162,6 +183,22 @@ public abstract class BaseGetSqlDefinitionTests : BaseDbConnectionTests
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
         result.Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public async Task GetSqlDefinitionAsync_NullOrEmptyTable_ThrowsArgumentNullException(string tableName)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        Func<Task<string?>> act = async () => await dbConnection.GetSqlDefinitionAsync(tableName);
+
+        // Act & Assert.
+        await act
+            .Should()
+            .ThrowAsync<ArgumentNullException>()
+            .WithMessage(ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
     }
 
     [Fact]

@@ -74,7 +74,7 @@ SELECT
     rootpage AS RootPage,
     sql AS SqlDefinition
 FROM sqlite_master
-WHERE type = 'trigger' AND tbl_name = @TableName";
+WHERE type = 'trigger' AND lower(tbl_name) = lower(@TableName)";
 
         _getSqlDefinitionSql = "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = @TableName";
     }
@@ -254,6 +254,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
         string tableName,
         out List<VelocipedeColumnInfo> columnInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return Query(_getColumnsSql, parameters, out columnInfo);
@@ -262,6 +267,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
@@ -272,6 +282,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
         string tableName,
         out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
 
         // Get list of dynamic objects.
@@ -288,6 +303,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public async Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
 
         // Get list of dynamic objects.
@@ -302,6 +322,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection GetTriggers(string tableName, out List<VelocipedeTriggerInfo> triggerInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return Query(_getTriggersSql, parameters, out triggerInfo);
@@ -310,6 +335,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
@@ -318,6 +348,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection GetSqlDefinition(string tableName, out string? sqlDefinition)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryFirstOrDefault(_getSqlDefinitionSql, parameters, out sqlDefinition);
@@ -326,6 +361,11 @@ WHERE type = 'trigger' AND tbl_name = @TableName";
     /// <inheritdoc/>
     public Task<string?> GetSqlDefinitionAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryFirstOrDefaultAsync<string>(_getSqlDefinitionSql, parameters);

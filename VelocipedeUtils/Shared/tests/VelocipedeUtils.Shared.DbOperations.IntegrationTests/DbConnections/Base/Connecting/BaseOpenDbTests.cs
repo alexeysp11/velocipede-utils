@@ -17,7 +17,7 @@ public abstract class BaseOpenDbTests : BaseDbConnectionTests
     }
 
     [Fact]
-    public void OpenDb_ConnectionStringFromFixture_NotThrowAnyException()
+    public void OpenDb_ConnectionStringFromFixture()
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();

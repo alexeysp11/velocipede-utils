@@ -312,6 +312,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         string tableName,
         out List<VelocipedeColumnInfo> columnInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return Query(_getColumnsSql, parameters, out columnInfo);
@@ -320,6 +325,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
@@ -330,6 +340,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         string tableName,
         out List<VelocipedeForeignKeyInfo> foreignKeyInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return Query(_getForeignKeysSql, parameters, out foreignKeyInfo);
@@ -338,6 +353,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public Task<List<VelocipedeForeignKeyInfo>> GetForeignKeysAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryAsync<VelocipedeForeignKeyInfo>(_getForeignKeysSql, parameters);
@@ -348,6 +368,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         string tableName,
         out List<VelocipedeTriggerInfo> triggerInfo)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return Query(_getTriggersSql, parameters, out triggerInfo);
@@ -356,6 +381,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public Task<List<VelocipedeTriggerInfo>> GetTriggersAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryAsync<VelocipedeTriggerInfo>(_getTriggersSql, parameters);
@@ -366,6 +396,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
         string tableName,
         out string? sqlDefinition)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryFirstOrDefault(_getSqlDefinitionSql, parameters, out sqlDefinition);
@@ -374,6 +409,11 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public Task<string?> GetSqlDefinitionAsync(string tableName)
     {
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new ArgumentNullException(tableName, ErrorMessageConstants.TableNameCouldNotBeNullOrEmpty);
+        }
+
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
         return QueryFirstOrDefaultAsync<string>(_getSqlDefinitionSql, parameters);

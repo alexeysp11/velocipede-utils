@@ -20,6 +20,11 @@ public abstract class BaseDbConnectionTests
     protected const string SelectFromTestModels = @"SELECT ""Id"", ""Name"" FROM ""TestModels""";
     protected const string SelectFromTestModelsWhereIdBigger = @"SELECT ""Id"", ""Name"" FROM ""TestModels"" WHERE ""Id"" >= @TestModelsId";
 
+    /// <summary>
+    /// Default constructor for creating <see cref="BaseDbConnectionTests"/>.
+    /// </summary>
+    /// <param name="fixture">Database fixture.</param>
+    /// <param name="createDatabaseSql">SQL query to create database.</param>
     protected BaseDbConnectionTests(IDatabaseFixture fixture, string createDatabaseSql)
     {
         _fixture = fixture;

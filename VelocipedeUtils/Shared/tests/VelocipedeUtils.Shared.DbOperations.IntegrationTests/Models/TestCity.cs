@@ -5,7 +5,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
 /// <summary>
 /// A test model representing a city.
 /// </summary>
-public class TestCity
+public sealed class TestCity
 {
     /// <summary>
     /// The identifier of the city.
