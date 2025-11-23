@@ -14,7 +14,7 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Thrown if <see cref="VelocipedeColumnInfo.DatabaseType"/> is not supported.</exception>
-    public static string GetNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string? GetNativeType(this VelocipedeColumnInfo columnInfo)
     {
         return columnInfo.DatabaseType switch
         {
@@ -36,15 +36,21 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for SQLite.</exception>
-    public static string GetSqliteNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string? GetSqliteNativeType(this VelocipedeColumnInfo columnInfo)
     {
+        if (!columnInfo.DbType.HasValue)
+            return null;
+
         return columnInfo.DbType switch
         {
-            DbType.Int32 => "INTEGER",
-            DbType.String => "TEXT",
-            DbType.DateTime => "DATETIME",
-            DbType.Boolean => "INTEGER",
-            DbType.Decimal => "REAL",
+            DbType.Int32 => "integer",
+            DbType.String or DbType.AnsiString => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
+                ? $"varchar({columnInfo.CharMaxLength})"
+                : "text",
+            DbType.DateTime => "datetime",
+            DbType.Boolean => "integer",
+            DbType.Double => "real",
+            DbType.VarNumeric or DbType.Decimal => "numeric",
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.DbType}")
         };
     }
@@ -55,19 +61,22 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for PostgreSQL.</exception>
-    public static string GetPostgresNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string? GetPostgresNativeType(this VelocipedeColumnInfo columnInfo)
     {
+        if (!columnInfo.DbType.HasValue)
+            return null;
+
         return columnInfo.DbType switch
         {
-            DbType.Int32 => "INTEGER",
-            DbType.String => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
-                ? $"VARCHAR({columnInfo.CharMaxLength})"
-                : "TEXT",
-            DbType.DateTime => "TIMESTAMP",
-            DbType.Boolean => "BOOLEAN",
+            DbType.Int32 => "integer",
+            DbType.String or DbType.AnsiString => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
+                ? $"varchar({columnInfo.CharMaxLength})"
+                : "text",
+            DbType.DateTime => "timestamp",
+            DbType.Boolean => "boolean",
             DbType.Decimal => (columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue)
-                ? $"DECIMAL({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
-                : "DECIMAL(18, 4)",
+                ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
+                : "decimal(18, 4)",
             _ => throw new NotSupportedException($"Unsupported DbType for PostgreSQL: {columnInfo.DbType}")
         };
     }
@@ -78,20 +87,103 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for SQL Server.</exception>
-    public static string GetMssqlNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string? GetMssqlNativeType(this VelocipedeColumnInfo columnInfo)
     {
+        if (!columnInfo.DbType.HasValue)
+            return null;
+
         return columnInfo.DbType switch
         {
-            DbType.Int32 => "INT",
+            DbType.Int32 => "int",
             DbType.String => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
-                ? $"NVARCHAR({columnInfo.CharMaxLength})"
-                : "NVARCHAR(MAX)",
-            DbType.DateTime => "DATETIME2",
-            DbType.Boolean => "BIT",
+                ? $"nvarchar({columnInfo.CharMaxLength})"
+                : "nvarchar(max)",
+            DbType.AnsiString => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
+                ? $"varchar({columnInfo.CharMaxLength})"
+                : "varchar(max)",
+            DbType.DateTime => "datetime2",
+            DbType.Boolean => "bit",
             DbType.Decimal => (columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue)
-                ? $"DECIMAL({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
-                : "DECIMAL(18, 4)",
+                ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
+                : "decimal(18, 4)",
             _ => throw new NotSupportedException($"Unsupported DbType for SQL Server: {columnInfo.DbType}")
+        };
+    }
+
+    /// <summary>
+    /// Get <see cref="DbType"/> by native type.
+    /// </summary>
+    /// <param name="columnInfo">Column metadata.</param>
+    /// <returns></returns>
+    /// <exception cref="NotSupportedException">Thrown if <see cref="VelocipedeColumnInfo.DatabaseType"/> is not supported.</exception>
+    public static DbType? GetDbType(this VelocipedeColumnInfo columnInfo)
+    {
+        return columnInfo.DatabaseType switch
+        {
+            DatabaseType.SQLite => columnInfo.GetSqliteDbType(),
+            DatabaseType.PostgreSQL => columnInfo.GetPostgresDbType(),
+            DatabaseType.MSSQL => columnInfo.GetMssqlDbType(),
+            _ => throw new NotSupportedException($"Unsupported database type: {columnInfo.DatabaseType}")
+        };
+    }
+
+    /// <summary>
+    /// Get <see cref="DbType"/> by native type for SQLite.
+    /// </summary>
+    /// <param name="columnInfo">Column metadata.</param>
+    /// <returns></returns>
+    public static DbType? GetSqliteDbType(this VelocipedeColumnInfo columnInfo)
+    {
+        if (string.IsNullOrEmpty(columnInfo.NativeColumnType))
+            return null;
+
+        return columnInfo.NativeColumnType.ToLower() switch
+        {
+            "int" or "integer" => DbType.Int32,
+            "text" => DbType.String,
+            "numeric" => DbType.Decimal,
+            "real" => DbType.Double,
+            _ => DbType.Object
+        };
+    }
+
+    /// <summary>
+    /// Get <see cref="DbType"/> by native type for PostgreSQL.
+    /// </summary>
+    /// <param name="columnInfo">Column metadata.</param>
+    /// <returns></returns>
+    public static DbType? GetPostgresDbType(this VelocipedeColumnInfo columnInfo)
+    {
+        if (string.IsNullOrEmpty(columnInfo.NativeColumnType))
+            return null;
+
+        return columnInfo.NativeColumnType.ToLower() switch
+        {
+            "int" or "integer" => DbType.Int32,
+            "text" or "varchar" or "character varying" => DbType.String,
+            "decimal" or "numeric" => DbType.Decimal,
+            "boolean" => DbType.Boolean,
+            _ => DbType.Object
+        };
+    }
+
+    /// <summary>
+    /// Get <see cref="DbType"/> by native type for SQL Server.
+    /// </summary>
+    /// <param name="columnInfo">Column metadata.</param>
+    /// <returns></returns>
+    public static DbType? GetMssqlDbType(this VelocipedeColumnInfo columnInfo)
+    {
+        if (string.IsNullOrEmpty(columnInfo.NativeColumnType))
+            return null;
+
+        return columnInfo.NativeColumnType.ToLower() switch
+        {
+            "int" => DbType.Int32,
+            "nvarchar" or "varchar" => DbType.String,
+            "decimal" or "numeric" => DbType.Decimal,
+            "bit" => DbType.Boolean,
+            _ => DbType.Object
         };
     }
 }

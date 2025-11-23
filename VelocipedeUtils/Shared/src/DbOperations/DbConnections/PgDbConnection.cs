@@ -60,14 +60,14 @@ public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbCo
 
         _getColumnsSql = @"
 SELECT
+    3 as DatabaseType,
     column_name as ColumnName,
-    ordinal_position as OrdinalPosition,
+    data_type as NativeColumnType,
+    character_maximum_length as CharMaxLength,
+    numeric_precision as NumericPrecision,
+    numeric_scale as NumericScale,
     column_default as DefaultValue,
-    case when is_nullable = 'YES' then true else false end as IsNullable,
-    data_type as ColumnType,
-    case when is_self_referencing = 'YES' then true else false end as IsSelfReferencing,
-    case when is_generated = 'ALWAYS' then true else false end as IsGenerated,
-    case when is_updatable = 'YES' then true else false end as IsUpdatable
+    case when is_nullable = 'YES' then true else false end as IsNullable
 FROM information_schema.columns
 WHERE table_schema = @SchemaName AND lower(table_name) = lower(@TableName)";
 

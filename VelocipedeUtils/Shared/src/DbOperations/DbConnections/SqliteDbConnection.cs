@@ -58,9 +58,9 @@ ORDER BY 1";
 
         _getColumnsSql = @"
 SELECT
-    cid as ColumnId,
+    2 as DatabaseType,
     name as ColumnName,
-    type as ColumnType,
+    type as NativeColumnType,
     dflt_value as DefaultValue,
     pk as IsPrimaryKey,
     not ""notnull"" as IsNullable

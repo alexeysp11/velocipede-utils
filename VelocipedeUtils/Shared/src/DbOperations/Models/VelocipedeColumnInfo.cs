@@ -19,17 +19,27 @@ public sealed class VelocipedeColumnInfo
     public string? ColumnName { get; set; }
 
     /// <summary>
-    /// Column type represented as a string value.
+    /// Column native type represented as a string.
     /// </summary>
-    public string? ColumnType { get; set; }
+    public string? NativeColumnType { get; set; }
 
     /// <summary>
-    /// The type of the parameter.
+    /// Calculated native column type represented as a string.
+    /// </summary>
+    public string? CalculatedNativeColumnType => this.GetNativeType();
+
+    /// <summary>
+    /// The type of the column.
     /// </summary>
     public DbType? DbType { get; set; }
 
     /// <summary>
-    /// If <see cref="ColumnType"/> identifies a character or bit string type, the declared maximum length;
+    /// The calculated type of the column.
+    /// </summary>
+    public DbType? CalculatedDbType => this.GetDbType();
+
+    /// <summary>
+    /// If <see cref="NativeColumnType"/> identifies a character or bit string type, the declared maximum length;
     /// <c>null</c> for all other data types or if no maximum length was declared.
     /// </summary>
     public int? CharMaxLength { get; set; }

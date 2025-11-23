@@ -53,12 +53,16 @@ public sealed class MssqlDbConnection : BaseVelocipedeDbConnection, IVelocipedeD
 
         _getColumnsSql = @"
 SELECT
-    COLUMN_NAME as ColumnName,
-    DATA_TYPE as ColumnType,
-    COLUMN_DEFAULT as DefaultValue,
-    case when IS_NULLABLE = 'YES' then 1 else 0 end as IsNullable
-FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = @TableName";
+    4 as DatabaseType,
+    column_name as ColumnName,
+    data_type as NativeColumnType,
+    character_maximum_length as CharMaxLength,
+    numeric_precision as NumericPrecision,
+    numeric_scale as NumericScale,
+    column_default as DefaultValue,
+    case when is_nullable = 'YES' then 1 else 0 end as IsNullable
+FROM information_schema.columns
+WHERE table_name = @TableName";
 
         _getForeignKeysSql = @"
 SELECT
