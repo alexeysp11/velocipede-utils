@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Data;
+using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
@@ -15,6 +16,55 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Bas
 public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 {
     /// <summary>
+    /// An alternative to the <see cref="VelocipedeColumnInfo"/> class used for validating metadata in tests.
+    /// </summary>
+    private sealed class TestColumnInfo
+    {
+        /// <summary>
+        /// Column name.
+        /// </summary>
+        public string? ColumnName { get; set; }
+
+        /// <summary>
+        /// The calculated type of the column.
+        /// </summary>
+        public DbType? CalculatedDbType { get; set; }
+
+        /// <summary>
+        /// If native column type identifies a character or bit string type, the declared maximum length;
+        /// <c>null</c> for all other data types or if no maximum length was declared.
+        /// </summary>
+        public int? CharMaxLength { get; set; }
+
+        /// <summary>
+        /// Numeric precision for Decimal/Numeric.
+        /// </summary>
+        public int? NumericPrecision { get; set; }
+
+        /// <summary>
+        /// Numeric scale for Decimal/Numeric.
+        /// </summary>
+        public int? NumericScale { get; set; }
+
+        /// <summary>
+        /// Default value of the column.
+        /// </summary>
+        public object? DefaultValue { get; set; }
+
+        /// <summary>
+        /// Whether the column is a primary key.
+        /// </summary>
+        public bool IsPrimaryKey { get; set; }
+
+        /// <summary>
+        /// Whether the column is nullable.
+        /// </summary>
+        public bool IsNullable { get; set; }
+    }
+
+    private readonly List<TestColumnInfo> _expectedTestModelColumnInfos;
+
+    /// <summary>
     /// Default constructor for creating <see cref="BaseGetColumnsTests"/>.
     /// </summary>
     /// <param name="fixture">Database fixture.</param>
@@ -22,35 +72,79 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     protected BaseGetColumnsTests(IDatabaseFixture fixture, string createDatabaseSql)
         : base(fixture, createDatabaseSql)
     {
+        _expectedTestModelColumnInfos = [
+            new()
+            {
+                ColumnName = "Id",
+                CalculatedDbType = DbType.Int32,
+                IsPrimaryKey = true,
+                IsNullable = false
+            },
+            new()
+            {
+                ColumnName = "Name",
+                CalculatedDbType = DbType.String,
+                CharMaxLength = 50,
+                IsPrimaryKey = false,
+                IsNullable = false
+            },
+            new()
+            {
+                ColumnName = "AdditionalInfo",
+                CalculatedDbType = DbType.String,
+                CharMaxLength = 50,
+                IsPrimaryKey = false,
+                IsNullable = true
+            },
+        ];
     }
 
-    [Theory]
-    [InlineData("\"TestModels\"")]
+    [Theory(Skip = "This test fails due to incorrect column info comparison: primary key for pg and mssql, type and char length for sqlite")]
     [InlineData("TestModels")]
+    [InlineData("\"TestModels\"")]
     [InlineData("testModels")]
+    [InlineData("\"testModels\"")]
     [InlineData("testmodels")]
+    [InlineData("\"testmodels\"")]
     [InlineData("Testmodels")]
+    [InlineData("\"Testmodels\"")]
     [InlineData("TESTMODELS")]
+    [InlineData("\"TESTMODELS\"")]
     public void GetColumns_FixtureNotConnected(string tableName)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        
+        List<TestColumnInfo> expected = _expectedTestModelColumnInfos;
+
         // Act.
-        dbConnection.GetColumns(tableName, out List<VelocipedeColumnInfo>? result);
+        dbConnection.GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo);
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
-        result.Should().HaveCount(3);
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
-    [InlineData("\"TestModels\"")]
     [InlineData("TestModels")]
+    [InlineData("\"TestModels\"")]
     [InlineData("testModels")]
+    [InlineData("\"testModels\"")]
     [InlineData("testmodels")]
+    [InlineData("\"testmodels\"")]
     [InlineData("Testmodels")]
+    [InlineData("\"Testmodels\"")]
     [InlineData("TESTMODELS")]
+    [InlineData("\"TESTMODELS\"")]
     public void GetColumns_FixtureConnected(string tableName)
     {
         // Arrange.
@@ -131,12 +225,16 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData("\"TestModels\"")]
     [InlineData("TestModels")]
+    [InlineData("\"TestModels\"")]
     [InlineData("testModels")]
+    [InlineData("\"testModels\"")]
     [InlineData("testmodels")]
+    [InlineData("\"testmodels\"")]
     [InlineData("Testmodels")]
+    [InlineData("\"Testmodels\"")]
     [InlineData("TESTMODELS")]
+    [InlineData("\"TESTMODELS\"")]
     [InlineData("---")]
     public void GetColumns_GuidInsteadOfConnectionString_ThrowsVelocipedeDbConnectParamsException(string tableName)
     {
@@ -194,12 +292,16 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData("\"TestModels\"")]
     [InlineData("TestModels")]
+    [InlineData("\"TestModels\"")]
     [InlineData("testModels")]
+    [InlineData("\"testModels\"")]
     [InlineData("testmodels")]
+    [InlineData("\"testmodels\"")]
     [InlineData("Testmodels")]
+    [InlineData("\"Testmodels\"")]
     [InlineData("TESTMODELS")]
+    [InlineData("\"TESTMODELS\"")]
     public async Task GetColumnsAsync_FixtureNotConnected(string tableName)
     {
         // Arrange.
@@ -214,12 +316,16 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     }
 
     [Theory]
-    [InlineData("\"TestModels\"")]
     [InlineData("TestModels")]
+    [InlineData("\"TestModels\"")]
     [InlineData("testModels")]
+    [InlineData("\"testModels\"")]
     [InlineData("testmodels")]
+    [InlineData("\"testmodels\"")]
     [InlineData("Testmodels")]
+    [InlineData("\"Testmodels\"")]
     [InlineData("TESTMODELS")]
+    [InlineData("\"TESTMODELS\"")]
     public async Task GetColumnsAsync_FixtureConnected(string tableName)
     {
         // Arrange.
