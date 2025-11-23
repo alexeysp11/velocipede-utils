@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Text.RegularExpressions;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.Models;
@@ -137,12 +138,27 @@ public static class VelocipedeColumnInfoExtensions
         if (string.IsNullOrEmpty(columnInfo.NativeColumnType))
             return null;
 
-        return columnInfo.NativeColumnType.ToLower() switch
+        string nativeTypeLower = columnInfo.NativeColumnType.ToLower();
+
+        // 1. Using Regex to find string types with a specified size.
+        var match = Regex.Match(nativeTypeLower, @"(varchar|char|character|nvarchar|nchar)\s*\((\d+)\)");
+        if (match.Success)
+        {
+            if (int.TryParse(match.Groups[2].Value, out int length))
+            {
+                columnInfo.CharMaxLength = length;
+            }
+            return DbType.String;
+        }
+
+        // 2. Processing standard types (without specifying the length).
+        return nativeTypeLower switch
         {
             "int" or "integer" => DbType.Int32,
-            "text" => DbType.String,
+            "text" or "varchar" => DbType.String,
             "numeric" => DbType.Decimal,
-            "real" => DbType.Double,
+            "real" or "double" => DbType.Double,
+            "blob" => DbType.Binary,
             _ => DbType.Object
         };
     }

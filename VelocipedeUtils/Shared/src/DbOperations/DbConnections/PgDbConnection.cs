@@ -61,15 +61,24 @@ public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbCo
         _getColumnsSql = @"
 SELECT
     3 as DatabaseType,
-    column_name as ColumnName,
-    data_type as NativeColumnType,
-    character_maximum_length as CharMaxLength,
-    numeric_precision as NumericPrecision,
-    numeric_scale as NumericScale,
-    column_default as DefaultValue,
-    case when is_nullable = 'YES' then true else false end as IsNullable
-FROM information_schema.columns
-WHERE table_schema = @SchemaName AND lower(table_name) = lower(@TableName)";
+    c.column_name as ColumnName,
+    c.data_type as NativeColumnType,
+    c.character_maximum_length as CharMaxLength,
+    c.numeric_precision as NumericPrecision,
+    c.numeric_scale as NumericScale,
+    c.column_default as DefaultValue,
+    case when c.is_nullable = 'YES' then true else false end as IsNullable,
+    case when kcu.column_name is not null then true else false end as IsPrimaryKey
+FROM information_schema.columns c
+LEFT JOIN  information_schema.key_column_usage kcu ON c.table_schema = kcu.table_schema
+    AND c.table_name = kcu.table_name
+    AND c.column_name = kcu.column_name
+LEFT JOIN information_schema.table_constraints tc ON kcu.table_schema = tc.table_schema
+    AND kcu.table_name = tc.table_name
+    AND kcu.constraint_name = tc.constraint_name
+    AND tc.constraint_type = 'PRIMARY KEY'
+WHERE c.table_schema = @SchemaName AND lower(c.table_name) = lower(@TableName)
+ORDER BY c.ordinal_position";
 
         _getForeignKeysSql = @"
 SELECT

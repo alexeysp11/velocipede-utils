@@ -99,7 +99,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         ];
     }
 
-    [Theory(Skip = "This test fails due to incorrect column info comparison: primary key for pg and mssql, type and char length for sqlite")]
+    [Theory]
     [InlineData("TestModels")]
     [InlineData("\"TestModels\"")]
     [InlineData("testModels")]
@@ -149,16 +149,27 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        List<TestColumnInfo> expected = _expectedTestModelColumnInfos;
 
         // Act.
         dbConnection
             .OpenDb()
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? result)
+            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
             .CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
-        result.Should().HaveCount(3);
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
@@ -306,13 +317,24 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        List<TestColumnInfo> expected = _expectedTestModelColumnInfos;
 
         // Act.
-        List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableName);
+        List<VelocipedeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableName);
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
-        result.Should().HaveCount(3);
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
@@ -330,17 +352,26 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        List<TestColumnInfo> expected = _expectedTestModelColumnInfos;
 
         // Act.
-        List<VelocipedeColumnInfo>? result = await dbConnection
-            .OpenDb()
-            .GetColumnsAsync(tableName);
-        dbConnection
-            .CloseDb();
+        dbConnection.OpenDb();
+        List<VelocipedeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableName);
+        dbConnection.CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
-        result.Should().HaveCount(3);
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
