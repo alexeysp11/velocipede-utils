@@ -19,4 +19,29 @@ public sealed class PgGetColumnsTests : BaseGetColumnsTests, IClassFixture<PgDat
         : base(fixture, PgTestConstants.CREATE_DATABASE_SQL)
     {
     }
+
+    public override void GetColumns_BlobAffinity()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GetColumns_IntegerAffinity()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GetColumns_NumericAffinity()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GetColumns_RealAffinity()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GetColumns_TextAffinity()
+    {
+        throw new NotImplementedException();
+    }
 }

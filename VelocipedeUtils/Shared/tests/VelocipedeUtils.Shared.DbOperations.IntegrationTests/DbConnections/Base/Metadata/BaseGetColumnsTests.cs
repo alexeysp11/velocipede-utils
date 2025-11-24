@@ -23,7 +23,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     /// (for example, <see cref="VelocipedeColumnInfo.NativeColumnType"/>), 
     /// which can lead to incorrect comparison of results.
     /// </remarks>
-    private sealed class TestColumnInfo
+    protected sealed class TestColumnInfo
     {
         /// <summary>
         /// Column name.
@@ -129,6 +129,12 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             },
         ];
     }
+
+    public abstract void GetColumns_IntegerAffinity();
+    public abstract void GetColumns_TextAffinity();
+    public abstract void GetColumns_BlobAffinity();
+    public abstract void GetColumns_RealAffinity();
+    public abstract void GetColumns_NumericAffinity();
 
     [Theory]
     [InlineData("TestModels")]

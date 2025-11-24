@@ -154,7 +154,11 @@ public static class VelocipedeColumnInfoExtensions
         // 2. Processing standard types (without specifying the length).
         return nativeTypeLower switch
         {
-            "int" or "integer" => DbType.Int32,
+            "tinyint" => DbType.SByte,
+            "smallint" or "int2" => DbType.Int16,
+            "int" or "integer" or "int4" or "mediumint" => DbType.Int32,
+            "bigint" or "int8" => DbType.Int64,
+            "unsigned big int" => DbType.UInt64,
             "text" or "varchar" => DbType.String,
             "numeric" => DbType.Decimal,
             "real" or "double" => DbType.Double,
