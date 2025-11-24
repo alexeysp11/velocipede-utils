@@ -62,7 +62,15 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         public bool IsNullable { get; set; }
     }
 
+    /// <summary>
+    /// Expected list of <see cref="TestColumnInfo"/> objects for table <c>"TestModels"</c>.
+    /// </summary>
     private readonly List<TestColumnInfo> _expectedTestModelColumnInfos;
+
+    /// <summary>
+    /// Expected list of <see cref="TestColumnInfo"/> objects for case insensitive tests.
+    /// </summary>
+    private readonly List<TestColumnInfo> _expectedCaseInsensitiveColumnInfos;
 
     /// <summary>
     /// Default constructor for creating <see cref="BaseGetColumnsTests"/>.
@@ -91,6 +99,24 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             new()
             {
                 ColumnName = "AdditionalInfo",
+                CalculatedDbType = DbType.String,
+                CharMaxLength = 50,
+                IsPrimaryKey = false,
+                IsNullable = true
+            },
+        ];
+
+        _expectedCaseInsensitiveColumnInfos = [
+            new()
+            {
+                ColumnName = "id",
+                CalculatedDbType = DbType.Int32,
+                IsPrimaryKey = false,
+                IsNullable = true
+            },
+            new()
+            {
+                ColumnName = "value",
                 CalculatedDbType = DbType.String,
                 CharMaxLength = 50,
                 IsPrimaryKey = false,
@@ -223,16 +249,26 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             delimitIdentifierType);
 
         // 4. Expected result.
-        int expectedQty = 2;
+        List<TestColumnInfo> expected = _expectedCaseInsensitiveColumnInfos;
 
         // Act.
         dbConnection
-            .GetColumns(tableNameConverted, out List<VelocipedeColumnInfo>? result)
+            .GetColumns(tableNameConverted, out List<VelocipedeColumnInfo>? columnInfo)
             .CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
-        result.Should().HaveCount(expectedQty);
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
@@ -425,15 +461,25 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             delimitIdentifierType);
 
         // 4. Expected result.
-        int expectedQty = 2;
+        List<TestColumnInfo> expected = _expectedCaseInsensitiveColumnInfos;
 
         // Act.
-        List<VelocipedeColumnInfo>? result = await dbConnection.GetColumnsAsync(tableNameConverted);
+        List<VelocipedeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableNameConverted);
         dbConnection.CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
-        result.Should().HaveCount(expectedQty);
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Theory]
