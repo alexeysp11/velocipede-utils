@@ -18,6 +18,11 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     /// <summary>
     /// An alternative to the <see cref="VelocipedeColumnInfo"/> class used for validating metadata in tests.
     /// </summary>
+    /// <remarks>
+    /// This class is used because the some values ​​will differ for different databases
+    /// (for example, <see cref="VelocipedeColumnInfo.NativeColumnType"/>), 
+    /// which can lead to incorrect comparison of results.
+    /// </remarks>
     private sealed class TestColumnInfo
     {
         /// <summary>
