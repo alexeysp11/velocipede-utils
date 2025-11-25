@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Data;
+using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Constants;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
@@ -62,7 +63,16 @@ create table {tableName} (
     value22 Int2,
     value23 int8,
     value24 INT8,
-    value25 Int8
+    value25 Int8,
+    value26 int4,
+    value27 INT4,
+    value28 Int4,
+    value29 unsigned bigint,
+    value30 UNSIGNED BIGINT,
+    value31 UNSIGNED Bigint,
+    value32 unsigned integer,
+    value33 UNSIGNED INTEGER,
+    value34 UNSIGNED Integer
 )";
         dbConnection
             .OpenDb()
@@ -71,12 +81,47 @@ create table {tableName} (
             .CommitTransaction();
 
         // 3. Expected result.
-        //List<TestColumnInfo> expected = _expectedCaseInsensitiveColumnInfos;
-        int expectedQty = 26;
+        List<TestColumnInfo> expected =
+        [
+            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, IsPrimaryKey = true, IsNullable = true },
+            new() { ColumnName = "value1", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value2", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value3", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value4", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value5", CalculatedDbType = DbType.SByte, IsNullable = true },
+            new() { ColumnName = "value6", CalculatedDbType = DbType.SByte, IsNullable = true },
+            new() { ColumnName = "value7", CalculatedDbType = DbType.SByte, IsNullable = true },
+            new() { ColumnName = "value8", CalculatedDbType = DbType.Int16, IsNullable = true },
+            new() { ColumnName = "value9", CalculatedDbType = DbType.Int16, IsNullable = true },
+            new() { ColumnName = "value10", CalculatedDbType = DbType.Int16, IsNullable = true },
+            new() { ColumnName = "value11", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value12", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value13", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value14", CalculatedDbType = DbType.Int64, IsNullable = true },
+            new() { ColumnName = "value15", CalculatedDbType = DbType.Int64, IsNullable = true },
+            new() { ColumnName = "value16", CalculatedDbType = DbType.Int64, IsNullable = true },
+            new() { ColumnName = "value17", CalculatedDbType = DbType.UInt64, IsNullable = true },
+            new() { ColumnName = "value18", CalculatedDbType = DbType.UInt64, IsNullable = true },
+            new() { ColumnName = "value19", CalculatedDbType = DbType.UInt64, IsNullable = true },
+            new() { ColumnName = "value20", CalculatedDbType = DbType.Int16, IsNullable = true },
+            new() { ColumnName = "value21", CalculatedDbType = DbType.Int16, IsNullable = true },
+            new() { ColumnName = "value22", CalculatedDbType = DbType.Int16, IsNullable = true },
+            new() { ColumnName = "value23", CalculatedDbType = DbType.Int64, IsNullable = true },
+            new() { ColumnName = "value24", CalculatedDbType = DbType.Int64, IsNullable = true },
+            new() { ColumnName = "value25", CalculatedDbType = DbType.Int64, IsNullable = true },
+            new() { ColumnName = "value26", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value27", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value28", CalculatedDbType = DbType.Int32, IsNullable = true },
+            new() { ColumnName = "value29", CalculatedDbType = DbType.UInt64, IsNullable = true },
+            new() { ColumnName = "value30", CalculatedDbType = DbType.UInt64, IsNullable = true },
+            new() { ColumnName = "value31", CalculatedDbType = DbType.UInt64, IsNullable = true },
+            new() { ColumnName = "value32", CalculatedDbType = DbType.UInt32, IsNullable = true },
+            new() { ColumnName = "value33", CalculatedDbType = DbType.UInt32, IsNullable = true },
+            new() { ColumnName = "value34", CalculatedDbType = DbType.UInt32, IsNullable = true },
+        ];
 
         // Act.
         dbConnection
-        .OpenDb()
             .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
             .CloseDb();
         List<TestColumnInfo> result = columnInfo
@@ -92,8 +137,7 @@ create table {tableName} (
 
         // Assert.
         dbConnection.IsConnected.Should().BeFalse();
-        //result.Should().BeEquivalentTo(expected);
-        result.Should().HaveCount(expectedQty);
+        result.Should().BeEquivalentTo(expected);
     }
 
     public override void GetColumns_NumericAffinity()
