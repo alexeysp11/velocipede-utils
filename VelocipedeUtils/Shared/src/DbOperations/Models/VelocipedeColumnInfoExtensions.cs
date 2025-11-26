@@ -159,7 +159,7 @@ public static class VelocipedeColumnInfoExtensions
         string nativeTypeLower = columnInfo.NativeColumnType.ToLower();
 
         // 1. Using Regex to find string types with a specified size.
-        var match = Regex.Match(nativeTypeLower, @"(varchar|char|character|nvarchar|nchar)\s*\((\d+)\)");
+        var match = Regex.Match(nativeTypeLower, @"(varchar|char|character|character varying|nvarchar|nchar)\s*\((\d+)\)");
         if (match.Success)
         {
             if (int.TryParse(match.Groups[2].Value, out int length))
@@ -170,7 +170,7 @@ public static class VelocipedeColumnInfoExtensions
         }
 
         // 2. Processing standard types (without specifying the length).
-        return nativeTypeLower switch
+        DbType result = nativeTypeLower switch
         {
             "tinyint" => DbType.SByte,
             "smallint" or "int2" => DbType.Int16,
@@ -178,12 +178,17 @@ public static class VelocipedeColumnInfoExtensions
             "bigint" or "int8" => DbType.Int64,
             "unsigned integer" => DbType.UInt32,
             "unsigned big int" or "unsigned bigint" => DbType.UInt64,
-            "text" or "varchar" => DbType.String,
+            "text" or "varchar" or "char" or "character" or "varying character" or "character varying" or "native character" or "nvarchar" or "nchar" or "clob" => DbType.String,
             "numeric" => DbType.Decimal,
             "real" or "double" => DbType.Double,
             "blob" => DbType.Binary,
             _ => DbType.Object
         };
+        if (result == DbType.String)
+        {
+            columnInfo.CharMaxLength = -1;
+        }
+        return result;
     }
 
     /// <summary>

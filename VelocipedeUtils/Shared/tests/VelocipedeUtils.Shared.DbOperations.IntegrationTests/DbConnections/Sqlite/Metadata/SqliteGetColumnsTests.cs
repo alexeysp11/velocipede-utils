@@ -150,8 +150,86 @@ create table {tableName} (
         throw new NotImplementedException();
     }
 
+    [Fact]
     public override void GetColumns_TextAffinity()
     {
-        throw new NotImplementedException();
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = nameof(GetColumns_IntegerAffinity);
+        string sql = $@"
+create table {tableName} (
+    id integer primary key,
+    value1 CLOB,
+    value2 TEXT,
+    value3 text,
+    value4 CHARACTER(55),
+    value5 VARCHAR(55),
+    value6 VARYING CHARACTER(55),
+    value7 CHARACTER VARYING(55),
+    value8 NATIVE CHARACTER(55),
+    value9 NCHAR(55),
+    value10 NVARCHAR(55),
+    value11 CHAR(55),
+    value12 CHARACTER,
+    value13 VARCHAR,
+    value14 VARYING CHARACTER,
+    value15 CHARACTER VARYING,
+    value16 NATIVE CHARACTER,
+    value17 NCHAR,
+    value18 NVARCHAR,
+    value19 CHAR
+)";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .CommitTransaction();
+
+        // 3. Expected result.
+        List<TestColumnInfo> expected =
+        [
+            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, IsPrimaryKey = true, IsNullable = true },
+            new() { ColumnName = "value1", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value2", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value3", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value4", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value5", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value6", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value7", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value8", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value9", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value10", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value11", CalculatedDbType = DbType.String, CharMaxLength = 55, IsNullable = true },
+            new() { ColumnName = "value12", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value13", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value14", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value15", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value16", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value17", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value18", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+            new() { ColumnName = "value19", CalculatedDbType = DbType.String, CharMaxLength = -1, IsNullable = true },
+        ];
+
+        // Act.
+        dbConnection
+            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
+            .CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
     }
 }
