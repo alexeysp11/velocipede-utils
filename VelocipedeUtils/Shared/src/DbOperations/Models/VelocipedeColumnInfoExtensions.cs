@@ -180,7 +180,7 @@ public static class VelocipedeColumnInfoExtensions
             "unsigned big int" or "unsigned bigint" => DbType.UInt64,
             "text" or "varchar" or "char" or "character" or "varying character" or "character varying" or "native character" or "nvarchar" or "nchar" or "clob" => DbType.String,
             "numeric" => DbType.Decimal,
-            "real" or "double" => DbType.Double,
+            "real" or "double" or "double precision" or "float" => DbType.Double,
             "blob" => DbType.Binary,
             _ => DbType.Object
         };
