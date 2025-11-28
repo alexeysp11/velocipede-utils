@@ -22,20 +22,20 @@ public sealed class SqliteGetColumnsTests : BaseGetColumnsTests, IClassFixture<S
     {
     }
 
-    public override void GetColumns_BlobAffinity()
+    public override void GetColumns_Blob()
     {
         throw new NotImplementedException();
     }
 
     [Fact]
-    public override void GetColumns_IntegerAffinity()
+    public override void GetColumns_Integer()
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = nameof(GetColumns_IntegerAffinity);
+        string tableName = nameof(GetColumns_Integer);
         string sql = $@"
 create table {tableName} (
     id integer primary key,
@@ -143,14 +143,14 @@ create table {tableName} (
     }
 
     [Fact]
-    public override void GetColumns_NumericAffinity()
+    public override void GetColumns_Numeric()
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = nameof(GetColumns_NumericAffinity);
+        string tableName = nameof(GetColumns_Numeric);
         string sql = $@"
 create table {tableName} (
     id integer primary key,
@@ -204,14 +204,14 @@ create table {tableName} (
     }
 
     [Fact]
-    public override void GetColumns_RealAffinity()
+    public override void GetColumns_Real()
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = nameof(GetColumns_RealAffinity);
+        string tableName = nameof(GetColumns_Real);
         string sql = $@"
 create table {tableName} (
     id integer primary key,
@@ -259,14 +259,14 @@ create table {tableName} (
     }
 
     [Fact]
-    public override void GetColumns_TextAffinity()
+    public override void GetColumns_Text()
     {
         // Arrange.
         // 1. Database connection.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
 
         // 2. Create table.
-        string tableName = nameof(GetColumns_TextAffinity);
+        string tableName = nameof(GetColumns_Text);
         string sql = $@"
 create table {tableName} (
     id integer primary key,

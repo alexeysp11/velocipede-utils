@@ -130,11 +130,11 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         ];
     }
 
-    public abstract void GetColumns_IntegerAffinity();
-    public abstract void GetColumns_TextAffinity();
-    public abstract void GetColumns_BlobAffinity();
-    public abstract void GetColumns_RealAffinity();
-    public abstract void GetColumns_NumericAffinity();
+    public abstract void GetColumns_Integer();
+    public abstract void GetColumns_Text();
+    public abstract void GetColumns_Blob();
+    public abstract void GetColumns_Real();
+    public abstract void GetColumns_Numeric();
 
     [Theory]
     [InlineData("TestModels")]

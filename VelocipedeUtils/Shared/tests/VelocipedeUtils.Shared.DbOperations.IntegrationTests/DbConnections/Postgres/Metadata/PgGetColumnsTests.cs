@@ -20,27 +20,27 @@ public sealed class PgGetColumnsTests : BaseGetColumnsTests, IClassFixture<PgDat
     {
     }
 
-    public override void GetColumns_BlobAffinity()
+    public override void GetColumns_Blob()
     {
         throw new NotImplementedException();
     }
 
-    public override void GetColumns_IntegerAffinity()
+    public override void GetColumns_Integer()
     {
         throw new NotImplementedException();
     }
 
-    public override void GetColumns_NumericAffinity()
+    public override void GetColumns_Numeric()
     {
         throw new NotImplementedException();
     }
 
-    public override void GetColumns_RealAffinity()
+    public override void GetColumns_Real()
     {
         throw new NotImplementedException();
     }
 
-    public override void GetColumns_TextAffinity()
+    public override void GetColumns_Text()
     {
         throw new NotImplementedException();
     }
