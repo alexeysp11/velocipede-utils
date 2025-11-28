@@ -10,6 +10,32 @@ namespace VelocipedeUtils.Shared.DbOperations.Models;
 public static class VelocipedeColumnInfoExtensions
 {
     /// <summary>
+    /// Result of converting native database type into <see cref="DbType"/> with length, precision and scale.
+    /// </summary>
+    private readonly record struct DbTypeConvertResult
+    {
+        /// <summary>
+        /// Database type.
+        /// </summary>
+        internal DbType DbType { get; init; }
+
+        /// <summary>
+        /// Length.
+        /// </summary>
+        internal int? Length { get; init; }
+
+        /// <summary>
+        /// Precision.
+        /// </summary>
+        internal int? Precision { get; init; }
+
+        /// <summary>
+        /// Scale.
+        /// </summary>
+        internal int? Scale { get; init; }
+    }
+
+    /// <summary>
     /// Get native type of the column.
     /// </summary>
     /// <param name="columnInfo">Column metadata.</param>
@@ -153,23 +179,79 @@ public static class VelocipedeColumnInfoExtensions
     /// <returns>Column data type used in .NET environment.</returns>
     public static DbType? GetSqliteDbType(this VelocipedeColumnInfo columnInfo)
     {
+        static DbTypeConvertResult? ParseDbType(string nativeTypeLower, string pattern, DbType expectedType)
+        {
+            Match matchNumeric = Regex.Match(nativeTypeLower, pattern);
+            if (matchNumeric.Success)
+            {
+                if (matchNumeric.Groups.Count == 3)
+                {
+                    if (int.TryParse(matchNumeric.Groups[2].Value, out int length))
+                    {
+                        return new DbTypeConvertResult { DbType = expectedType, Length = length };
+                    }
+                }
+                if (matchNumeric.Groups.Count == 4)
+                {
+                    int? precision = null;
+                    int? scale = null;
+                    if (int.TryParse(matchNumeric.Groups[2].Value, out int precisionConverted))
+                    {
+                        precision = precisionConverted;
+                    }
+                    if (int.TryParse(matchNumeric.Groups[3].Value, out int scaleConverted))
+                    {
+                        scale = scaleConverted;
+                    }
+                    return new DbTypeConvertResult { DbType = expectedType, Precision = precision, Scale = scale };
+                }
+            }
+            return null;
+        }
+
         if (string.IsNullOrEmpty(columnInfo.NativeColumnType))
             return null;
 
+        DbTypeConvertResult? dbTypeConvertResult;
         string nativeTypeLower = columnInfo.NativeColumnType.ToLower();
 
         // 1. Using Regex to find string types with a specified size.
-        var match = Regex.Match(nativeTypeLower, @"(varchar|char|character|character varying|nvarchar|nchar)\s*\((\d+)\)");
-        if (match.Success)
+        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(varchar|char|character|character varying|nvarchar|nchar)\s*\((\d+)\)", DbType.String);
+        if (dbTypeConvertResult.HasValue)
         {
-            if (int.TryParse(match.Groups[2].Value, out int length))
-            {
-                columnInfo.CharMaxLength = length;
-            }
-            return DbType.String;
+            columnInfo.CharMaxLength = dbTypeConvertResult.Value.Length;
+            return dbTypeConvertResult.Value.DbType;
         }
 
-        // 2. Processing standard types (without specifying the length).
+        // 2. Using Regex to find numeric types with a specified size.
+        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(numeric)\s*\((\d+)\)", DbType.VarNumeric);
+        if (dbTypeConvertResult.HasValue)
+        {
+            columnInfo.NumericPrecision = dbTypeConvertResult.Value.Length;
+            return dbTypeConvertResult.Value.DbType;
+        }
+        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(numeric)\s*\((\d+),(\d+)\)", DbType.VarNumeric);
+        if (dbTypeConvertResult.HasValue)
+        {
+            columnInfo.NumericPrecision = dbTypeConvertResult.Value.Precision;
+            columnInfo.NumericScale = dbTypeConvertResult.Value.Scale;
+            return dbTypeConvertResult.Value.DbType;
+        }
+        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(decimal)\s*\((\d+)\)", DbType.Decimal);
+        if (dbTypeConvertResult.HasValue)
+        {
+            columnInfo.NumericPrecision = dbTypeConvertResult.Value.Length;
+            return dbTypeConvertResult.Value.DbType;
+        }
+        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(decimal)\s*\((\d+),(\d+)\)", DbType.Decimal);
+        if (dbTypeConvertResult.HasValue)
+        {
+            columnInfo.NumericPrecision = dbTypeConvertResult.Value.Precision;
+            columnInfo.NumericScale = dbTypeConvertResult.Value.Scale;
+            return dbTypeConvertResult.Value.DbType;
+        }
+
+        // 3. Processing standard types (without specifying the length).
         DbType result = nativeTypeLower switch
         {
             "tinyint" => DbType.SByte,
@@ -179,7 +261,8 @@ public static class VelocipedeColumnInfoExtensions
             "unsigned integer" => DbType.UInt32,
             "unsigned big int" or "unsigned bigint" => DbType.UInt64,
             "text" or "varchar" or "char" or "character" or "varying character" or "character varying" or "native character" or "nvarchar" or "nchar" or "clob" => DbType.String,
-            "numeric" => DbType.Decimal,
+            "numeric" => DbType.VarNumeric,
+            "decimal" => DbType.Decimal,
             "real" or "double" or "double precision" or "float" => DbType.Double,
             "blob" => DbType.Binary,
             _ => DbType.Object
