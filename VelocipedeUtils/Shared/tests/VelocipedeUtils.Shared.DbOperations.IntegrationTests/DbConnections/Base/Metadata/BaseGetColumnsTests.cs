@@ -135,6 +135,8 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     public abstract void GetColumns_Blob();
     public abstract void GetColumns_Real();
     public abstract void GetColumns_Numeric();
+    public abstract void GetColumns_Boolean();
+    public abstract void GetColumns_Datetime();
 
     [Theory]
     [InlineData("TestModels")]

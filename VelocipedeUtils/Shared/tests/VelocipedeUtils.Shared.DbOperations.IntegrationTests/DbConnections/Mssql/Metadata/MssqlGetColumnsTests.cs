@@ -26,6 +26,16 @@ public sealed class MssqlGetColumnsTests : BaseGetColumnsTests
         throw new NotImplementedException();
     }
 
+    public override void GetColumns_Boolean()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void GetColumns_Datetime()
+    {
+        throw new NotImplementedException();
+    }
+
     public override void GetColumns_Integer()
     {
         throw new NotImplementedException();

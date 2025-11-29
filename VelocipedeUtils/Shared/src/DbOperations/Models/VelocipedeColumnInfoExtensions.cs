@@ -93,7 +93,7 @@ public static class VelocipedeColumnInfoExtensions
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "text",
             DbType.DateTime => "datetime",
-            DbType.Boolean => "integer",
+            DbType.Boolean => "boolean",
             DbType.Double => "real",
             DbType.VarNumeric or DbType.Decimal => "numeric",
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.DbType}")
@@ -264,6 +264,7 @@ public static class VelocipedeColumnInfoExtensions
             "numeric" => DbType.VarNumeric,
             "decimal" => DbType.Decimal,
             "real" or "double" or "double precision" or "float" => DbType.Double,
+            "boolean" or "bool" or "bit" => DbType.Boolean,
             "blob" => DbType.Binary,
             _ => DbType.Object
         };
