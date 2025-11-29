@@ -3,7 +3,7 @@
 /// <summary>
 /// Used to share a single instance of <see cref="MssqlDatabaseFixture"/> between tests in multiple test classes.
 /// </summary>
-[CollectionDefinition("MssqlDatabaseFixtureCollection")]
+[CollectionDefinition(nameof(MssqlDatabaseFixtureCollection))]
 public class MssqlDatabaseFixtureCollection : ICollectionFixture<MssqlDatabaseFixture>
 {
 }

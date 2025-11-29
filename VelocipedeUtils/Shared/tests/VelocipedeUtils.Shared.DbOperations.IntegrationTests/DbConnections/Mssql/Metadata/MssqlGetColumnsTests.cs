@@ -9,7 +9,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mss
 /// <summary>
 /// Class for testing <see cref="MssqlDbConnection.GetColumns(string, out List{VelocipedeColumnInfo})"/>.
 /// </summary>
-[Collection("MssqlDatabaseFixtureCollection")]
+[Collection(nameof(MssqlDatabaseFixtureCollection))]
 public sealed class MssqlGetColumnsTests : BaseGetColumnsTests
 {
     /// <summary>
