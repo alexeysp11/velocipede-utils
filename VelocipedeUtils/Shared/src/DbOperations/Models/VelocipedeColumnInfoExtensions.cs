@@ -266,6 +266,10 @@ public static class VelocipedeColumnInfoExtensions
             "real" or "double" or "double precision" or "float" => DbType.Double,
             "boolean" or "bool" or "bit" => DbType.Boolean,
             "blob" => DbType.Binary,
+            "datetime" or "timestamp" => DbType.DateTime,
+            "datetime2" => DbType.DateTime2,
+            "time" => DbType.Time,
+            "date" => DbType.Date,
             _ => DbType.Object
         };
         if (result == DbType.String)
