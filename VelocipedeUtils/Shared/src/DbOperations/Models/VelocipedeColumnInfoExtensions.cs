@@ -411,7 +411,7 @@ public static class VelocipedeColumnInfoExtensions
             return null;
 
         string nativeColumnType = columnInfo.NativeColumnType.ToLower();
-        return nativeColumnType switch
+        DbType result = nativeColumnType switch
         {
             "smallint" or "smallserial" or "int2" => DbType.Int16,
             "int" or "integer" or "serial" or "int4" => DbType.Int32,
@@ -419,9 +419,16 @@ public static class VelocipedeColumnInfoExtensions
             "text" or "varchar" or "character varying" => DbType.String,
             "decimal" => DbType.Decimal,
             "numeric" => DbType.VarNumeric,
+            "real" or "double precision" or "float4" or "float8" => DbType.Double,
             "boolean" => DbType.Boolean,
             _ => DbType.Object
         };
+        if (result == DbType.Double)
+        {
+            columnInfo.NumericPrecision = null;
+            columnInfo.NumericScale = null;
+        }
+        return result;
     }
 
     /// <summary>
