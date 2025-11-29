@@ -289,9 +289,12 @@ public static class VelocipedeColumnInfoExtensions
         if (string.IsNullOrEmpty(columnInfo.NativeColumnType))
             return null;
 
-        return columnInfo.NativeColumnType.ToLower() switch
+        string nativeColumnType = columnInfo.NativeColumnType.ToLower();
+        return nativeColumnType switch
         {
-            "int" or "integer" => DbType.Int32,
+            "smallint" or "smallserial" or "int2" => DbType.Int16,
+            "int" or "integer" or "serial" or "int4" => DbType.Int32,
+            "bigint" or "bigserial" or "int8" => DbType.Int64,
             "text" or "varchar" or "character varying" => DbType.String,
             "decimal" or "numeric" => DbType.Decimal,
             "boolean" => DbType.Boolean,
