@@ -36,7 +36,7 @@ public static class VelocipedeColumnInfoExtensions
     }
 
     /// <summary>
-    /// Get native type of the column.
+    /// Get native type of the column, getting <see cref="VelocipedeColumnInfo.NativeColumnType"/> by <see cref="VelocipedeColumnInfo.DbType"/>.
     /// </summary>
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
@@ -252,29 +252,148 @@ public static class VelocipedeColumnInfoExtensions
         }
 
         // 3. Processing standard types (without specifying the length).
-        DbType result = nativeTypeLower switch
+        DbType result;
+        switch (nativeTypeLower)
         {
-            "tinyint" => DbType.SByte,
-            "smallint" or "int2" => DbType.Int16,
-            "int" or "integer" or "int4" or "mediumint" => DbType.Int32,
-            "bigint" or "int8" => DbType.Int64,
-            "unsigned integer" => DbType.UInt32,
-            "unsigned big int" or "unsigned bigint" => DbType.UInt64,
-            "text" or "varchar" or "char" or "character" or "varying character" or "character varying" or "native character" or "nvarchar" or "nchar" or "clob" => DbType.String,
-            "numeric" => DbType.VarNumeric,
-            "decimal" => DbType.Decimal,
-            "real" or "double" or "double precision" or "float" => DbType.Double,
-            "boolean" or "bool" or "bit" => DbType.Boolean,
-            "blob" => DbType.Binary,
-            "datetime" or "timestamp" => DbType.DateTime,
-            "datetime2" => DbType.DateTime2,
-            "time" => DbType.Time,
-            "date" => DbType.Date,
-            _ => DbType.Object
-        };
-        if (result == DbType.String)
-        {
-            columnInfo.CharMaxLength = -1;
+            case "tinyint":
+                result = DbType.SByte;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 8;
+                columnInfo.NumericScale = 0;
+                break;
+
+            case "smallint":
+            case "int2":
+                result = DbType.Int16;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 16;
+                columnInfo.NumericScale = 0;
+                break;
+
+            case "int":
+            case "integer":
+            case "int4":
+            case "mediumint":
+                result = DbType.Int32;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 32;
+                columnInfo.NumericScale = 0;
+                break;
+
+            case "bigint":
+            case "int8":
+                result = DbType.Int64;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 64;
+                columnInfo.NumericScale = 0;
+                break;
+
+            case "unsigned integer":
+                result = DbType.UInt32;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 32;
+                columnInfo.NumericScale = 0;
+                break;
+
+            case "unsigned big int":
+            case "unsigned bigint":
+                result = DbType.UInt64;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 64;
+                columnInfo.NumericScale = 0;
+                break;
+
+            case "text":
+            case "varchar":
+            case "char":
+            case "character":
+            case "varying character":
+            case "character varying":
+            case "native character":
+            case "nvarchar":
+            case "nchar":
+            case "clob":
+                result = DbType.String;
+                columnInfo.CharMaxLength = -1;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "numeric":
+                result = DbType.VarNumeric;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "decimal":
+                result = DbType.Decimal;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "real":
+            case "double":
+            case "double precision":
+            case "float":
+                result = DbType.Double;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "boolean":
+            case "bool":
+            case "bit":
+                result = DbType.Boolean;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "blob":
+                result = DbType.Binary;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "datetime":
+            case "timestamp":
+                result = DbType.DateTime;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "datetime2":
+                result = DbType.DateTime2;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "time":
+                result = DbType.Time;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "date":
+                result = DbType.Date;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            default:
+                result = DbType.Object;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
         }
         return result;
     }
