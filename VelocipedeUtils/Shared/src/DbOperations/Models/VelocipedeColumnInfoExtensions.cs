@@ -228,6 +228,7 @@ public static class VelocipedeColumnInfoExtensions
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Length;
+            columnInfo.NumericScale = 0;
             return dbTypeConvertResult.Value.DbType;
         }
         dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(numeric)\s*\((\d+),(\d+)\)", DbType.VarNumeric);
@@ -241,6 +242,7 @@ public static class VelocipedeColumnInfoExtensions
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Length;
+            columnInfo.NumericScale = 0;
             return dbTypeConvertResult.Value.DbType;
         }
         dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(decimal)\s*\((\d+),(\d+)\)", DbType.Decimal);
@@ -415,7 +417,8 @@ public static class VelocipedeColumnInfoExtensions
             "int" or "integer" or "serial" or "int4" => DbType.Int32,
             "bigint" or "bigserial" or "int8" => DbType.Int64,
             "text" or "varchar" or "character varying" => DbType.String,
-            "decimal" or "numeric" => DbType.Decimal,
+            "decimal" => DbType.Decimal,
+            "numeric" => DbType.VarNumeric,
             "boolean" => DbType.Boolean,
             _ => DbType.Object
         };
