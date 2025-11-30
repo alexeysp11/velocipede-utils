@@ -166,19 +166,19 @@ public abstract class BaseVelocipedeIteratorTests
         // Table columns.
         _tableColumns1 =
         [
-            new() { ColumnName = "Id", ColumnType = "int" },
-            new() { ColumnName = "Name", ColumnType = "varchar(50)" },
+            new() { ColumnName = "Id", NativeColumnType = "int" },
+            new() { ColumnName = "Name", NativeColumnType = "varchar(50)" },
         ];
         _tableColumns2 =
         [
-            new() { ColumnName = "Name", ColumnType = "varchar(50)" },
-            new() { ColumnName = "Value", ColumnType = "varchar(50)" },
+            new() { ColumnName = "Name", NativeColumnType = "varchar(50)" },
+            new() { ColumnName = "Value", NativeColumnType = "varchar(50)" },
         ];
         _tableColumns3 =
         [
-            new() { ColumnName = "Id", ColumnType = "int" },
-            new() { ColumnName = "Name", ColumnType = "varchar(50)" },
-            new() { ColumnName = "Value", ColumnType = "varchar(50)" },
+            new() { ColumnName = "Id", NativeColumnType = "int" },
+            new() { ColumnName = "Name", NativeColumnType = "varchar(50)" },
+            new() { ColumnName = "Value", NativeColumnType = "varchar(50)" },
         ];
 
         // Foreign keys.

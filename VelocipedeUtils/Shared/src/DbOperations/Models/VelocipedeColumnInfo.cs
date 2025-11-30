@@ -1,4 +1,7 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.Models;
+﻿using System.Data;
+using VelocipedeUtils.Shared.DbOperations.Enums;
+
+namespace VelocipedeUtils.Shared.DbOperations.Models;
 
 /// <summary>
 /// Metadata about table columns.
@@ -8,7 +11,7 @@ public sealed class VelocipedeColumnInfo
     /// <summary>
     /// Column identifier.
     /// </summary>
-    public int ColumnId { get; set; }
+    public DatabaseType DatabaseType { get; set; }
 
     /// <summary>
     /// Column name.
@@ -16,9 +19,40 @@ public sealed class VelocipedeColumnInfo
     public string? ColumnName { get; set; }
 
     /// <summary>
-    /// Column type represented as a string value.
+    /// Column native type represented as a string.
     /// </summary>
-    public string? ColumnType { get; set; }
+    public string? NativeColumnType { get; set; }
+
+    /// <summary>
+    /// Calculated native column type represented as a string.
+    /// </summary>
+    public string? CalculatedNativeColumnType => this.GetNativeType();
+
+    /// <summary>
+    /// The type of the column.
+    /// </summary>
+    public DbType? DbType { get; set; }
+
+    /// <summary>
+    /// The calculated type of the column.
+    /// </summary>
+    public DbType? CalculatedDbType => this.GetDbType();
+
+    /// <summary>
+    /// If <see cref="NativeColumnType"/> identifies a character or bit string type, the declared maximum length;
+    /// <c>null</c> for all other data types or if no maximum length was declared.
+    /// </summary>
+    public int? CharMaxLength { get; set; }
+
+    /// <summary>
+    /// Numeric precision for Decimal/Numeric.
+    /// </summary>
+    public int? NumericPrecision { get; set; }
+
+    /// <summary>
+    /// Numeric scale for Decimal/Numeric.
+    /// </summary>
+    public int? NumericScale { get; set; }
 
     /// <summary>
     /// Default value of the column.
@@ -34,19 +68,4 @@ public sealed class VelocipedeColumnInfo
     /// Whether the column is nullable.
     /// </summary>
     public bool IsNullable { get; set; }
-
-    /// <summary>
-    /// Whether the column is self-referencing.
-    /// </summary>
-    public bool? IsSelfReferencing { get; set; }
-
-    /// <summary>
-    /// Whether the column is generated.
-    /// </summary>
-    public bool? IsGenerated { get; set; }
-
-    /// <summary>
-    /// Whether the column is updatable.
-    /// </summary>
-    public bool? IsUpdatable { get; set; }
 }

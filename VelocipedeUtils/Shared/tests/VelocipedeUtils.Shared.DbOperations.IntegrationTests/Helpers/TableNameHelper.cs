@@ -21,7 +21,7 @@ public static class TableNameHelper
     /// <returns>The name with which the table will be created in the database.</returns>
     public static string GetTableNameByTestMethod(
         string methodName,
-        CaseConversionType conversionType,
+        CaseConversionType conversionType = CaseConversionType.None,
         DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         return $"{methodName}_{(int)conversionType}_{(int)delimitIdentifierType}";
@@ -38,7 +38,7 @@ public static class TableNameHelper
     public static string ConvertTableName(
         string tableName,
         DatabaseType databaseType,
-        CaseConversionType conversionType,
+        CaseConversionType conversionType = CaseConversionType.None,
         DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
         string result = conversionType switch

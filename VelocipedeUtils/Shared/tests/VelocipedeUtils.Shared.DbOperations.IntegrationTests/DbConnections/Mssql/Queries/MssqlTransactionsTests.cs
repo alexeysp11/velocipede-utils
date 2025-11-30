@@ -8,7 +8,7 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Qu
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql.Queries;
 
-[Collection("MssqlDatabaseFixtureCollection")]
+[Collection(nameof(MssqlDatabaseFixtureCollection))]
 public sealed class MssqlTransactionsTests : BaseTransactionsTests
 {
     public MssqlTransactionsTests(MssqlDatabaseFixture fixture)
