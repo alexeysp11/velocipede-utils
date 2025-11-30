@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using System.Data;
+﻿using System.Data;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Constants;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
@@ -26,59 +25,30 @@ public sealed class PgGetColumnsTests : BaseGetColumnsTests, IClassFixture<PgDat
     public override void GetColumns_Blob()
     {
         // Arrange.
-        // 1. Database connection.
-        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-
-        // 2. Create table.
+        // 1. Table.
         string tableName = nameof(GetColumns_Blob);
         string sql = $@"
 create table {tableName} (
     id integer primary key,
     value1 bytea
 )";
-        dbConnection
-            .OpenDb()
-            .BeginTransaction()
-            .Execute(sql)
-            .CommitTransaction();
 
-        // 3. Expected result.
+        // 2. Expected result.
         List<TestColumnInfo> expected =
         [
             new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
             new() { ColumnName = "value1", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
-        // Act.
-        dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
-            .CloseDb();
-        List<TestColumnInfo> result = columnInfo
-            .Select(x => new TestColumnInfo
-            {
-                ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
-                CharMaxLength = x.CharMaxLength,
-                NumericPrecision = x.NumericPrecision,
-                NumericScale = x.NumericScale,
-                IsPrimaryKey = x.IsPrimaryKey,
-                IsNullable = x.IsNullable,
-            })
-            .ToList();
-
-        // Assert.
-        dbConnection.IsConnected.Should().BeFalse();
-        result.Should().BeEquivalentTo(expected);
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
     }
 
     [Fact]
     public override void GetColumns_Boolean()
     {
         // Arrange.
-        // 1. Database connection.
-        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-
-        // 2. Create table.
+        // 1. Table.
         string tableName = nameof(GetColumns_Boolean);
         string sql = $@"
 create table {tableName} (
@@ -86,13 +56,8 @@ create table {tableName} (
     value1 boolean,
     value2 bool
 )";
-        dbConnection
-            .OpenDb()
-            .BeginTransaction()
-            .Execute(sql)
-            .CommitTransaction();
 
-        // 3. Expected result.
+        // 2. Expected result.
         List<TestColumnInfo> expected =
         [
             new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
@@ -100,36 +65,15 @@ create table {tableName} (
             new() { ColumnName = "value2", CalculatedDbType = DbType.Boolean, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
-        // Act.
-        dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
-            .CloseDb();
-        List<TestColumnInfo> result = columnInfo
-            .Select(x => new TestColumnInfo
-            {
-                ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
-                CharMaxLength = x.CharMaxLength,
-                NumericPrecision = x.NumericPrecision,
-                NumericScale = x.NumericScale,
-                IsPrimaryKey = x.IsPrimaryKey,
-                IsNullable = x.IsNullable,
-            })
-            .ToList();
-
-        // Assert.
-        dbConnection.IsConnected.Should().BeFalse();
-        result.Should().BeEquivalentTo(expected);
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
     }
 
     [Fact]
     public override void GetColumns_Datetime()
     {
         // Arrange.
-        // 1. Database connection.
-        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-
-        // 2. Create table.
+        // 1. Table.
         string tableName = nameof(GetColumns_Datetime);
         string sql = $@"
 create table {tableName} (
@@ -146,13 +90,8 @@ create table {tableName} (
     value10 interval (3),
     value11 interval hour to minute
 )";
-        dbConnection
-            .OpenDb()
-            .BeginTransaction()
-            .Execute(sql)
-            .CommitTransaction();
 
-        // 3. Expected result.
+        // 2. Expected result.
         List<TestColumnInfo> expected =
         [
             new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
@@ -169,36 +108,15 @@ create table {tableName} (
             new() { ColumnName = "value11", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
-        // Act.
-        dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
-            .CloseDb();
-        List<TestColumnInfo> result = columnInfo
-            .Select(x => new TestColumnInfo
-            {
-                ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
-                CharMaxLength = x.CharMaxLength,
-                NumericPrecision = x.NumericPrecision,
-                NumericScale = x.NumericScale,
-                IsPrimaryKey = x.IsPrimaryKey,
-                IsNullable = x.IsNullable,
-            })
-            .ToList();
-
-        // Assert.
-        dbConnection.IsConnected.Should().BeFalse();
-        result.Should().BeEquivalentTo(expected);
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
     }
 
     [Fact]
     public override void GetColumns_Integer()
     {
         // Arrange.
-        // 1. Database connection.
-        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-
-        // 2. Create table.
+        // 1. Table.
         string tableName = nameof(GetColumns_Integer);
         string sql = $@"
 create table {tableName} (
@@ -214,13 +132,8 @@ create table {tableName} (
     value9 int8,
     value10 int4
 )";
-        dbConnection
-            .OpenDb()
-            .BeginTransaction()
-            .Execute(sql)
-            .CommitTransaction();
 
-        // 3. Expected result.
+        // 2. Expected result.
         // In PostgreSQL, a primary key cannot be nullable because of its fundamental purpose in relational databases:
         // to uniquely identify each row in a table.
         // A SERIAL column in PostgreSQL is implicitly NOT NULL because its primary purpose is to provide a unique identifier
@@ -240,36 +153,15 @@ create table {tableName} (
             new() { ColumnName = "value10", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsNullable = true },
         ];
 
-        // Act.
-        dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
-            .CloseDb();
-        List<TestColumnInfo> result = columnInfo
-            .Select(x => new TestColumnInfo
-            {
-                ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
-                CharMaxLength = x.CharMaxLength,
-                NumericPrecision = x.NumericPrecision,
-                NumericScale = x.NumericScale,
-                IsPrimaryKey = x.IsPrimaryKey,
-                IsNullable = x.IsNullable,
-            })
-            .ToList();
-
-        // Assert.
-        dbConnection.IsConnected.Should().BeFalse();
-        result.Should().BeEquivalentTo(expected);
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
     }
 
     [Fact]
     public override void GetColumns_Numeric()
     {
         // Arrange.
-        // 1. Database connection.
-        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-
-        // 2. Create table.
+        // 1. Table.
         string tableName = nameof(GetColumns_Numeric);
         string sql = $@"
 create table {tableName} (
@@ -281,13 +173,8 @@ create table {tableName} (
     value5 decimal(10),
     value6 decimal(10,5)
 )";
-        dbConnection
-            .OpenDb()
-            .BeginTransaction()
-            .Execute(sql)
-            .CommitTransaction();
 
-        // 3. Expected result.
+        // 2. Expected result.
         // If you specify the decimal type when creating a column, PostgreSQL for some reason returns a native datatype of numeric.
         List<TestColumnInfo> expected =
         [
@@ -300,36 +187,15 @@ create table {tableName} (
             new() { ColumnName = "value6", CalculatedDbType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 5, IsNullable = true },
         ];
 
-        // Act.
-        dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
-            .CloseDb();
-        List<TestColumnInfo> result = columnInfo
-            .Select(x => new TestColumnInfo
-            {
-                ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
-                CharMaxLength = x.CharMaxLength,
-                NumericPrecision = x.NumericPrecision,
-                NumericScale = x.NumericScale,
-                IsPrimaryKey = x.IsPrimaryKey,
-                IsNullable = x.IsNullable,
-            })
-            .ToList();
-
-        // Assert.
-        dbConnection.IsConnected.Should().BeFalse();
-        result.Should().BeEquivalentTo(expected);
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
     }
 
     [Fact]
     public override void GetColumns_Real()
     {
         // Arrange.
-        // 1. Database connection.
-        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-
-        // 2. Create table.
+        // 1. Table.
         string tableName = nameof(GetColumns_Real);
         string sql = $@"
 create table {tableName} (
@@ -339,13 +205,8 @@ create table {tableName} (
     value3 float4,
     value4 float8
 )";
-        dbConnection
-            .OpenDb()
-            .BeginTransaction()
-            .Execute(sql)
-            .CommitTransaction();
 
-        // 3. Expected result.
+        // 2. Expected result.
         List<TestColumnInfo> expected =
         [
             new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
@@ -355,36 +216,15 @@ create table {tableName} (
             new() { ColumnName = "value4", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
-        // Act.
-        dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
-            .CloseDb();
-        List<TestColumnInfo> result = columnInfo
-            .Select(x => new TestColumnInfo
-            {
-                ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
-                CharMaxLength = x.CharMaxLength,
-                NumericPrecision = x.NumericPrecision,
-                NumericScale = x.NumericScale,
-                IsPrimaryKey = x.IsPrimaryKey,
-                IsNullable = x.IsNullable,
-            })
-            .ToList();
-
-        // Assert.
-        dbConnection.IsConnected.Should().BeFalse();
-        result.Should().BeEquivalentTo(expected);
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
     }
 
     [Fact]
     public override void GetColumns_Text()
     {
         // Arrange.
-        // 1. Database connection.
-        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-
-        // 2. Create table.
+        // 1. Table.
         string tableName = nameof(GetColumns_Text);
         string sql = $@"
 create table {tableName} (
@@ -397,13 +237,8 @@ create table {tableName} (
     value6 bpchar,
     value7 text
 )";
-        dbConnection
-            .OpenDb()
-            .BeginTransaction()
-            .Execute(sql)
-            .CommitTransaction();
 
-        // 3. Expected result.
+        // 2. Expected result.
         List<TestColumnInfo> expected =
         [
             new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
@@ -416,25 +251,7 @@ create table {tableName} (
             new() { ColumnName = "value7", CalculatedDbType = DbType.String, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
-        // Act.
-        dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
-            .CloseDb();
-        List<TestColumnInfo> result = columnInfo
-            .Select(x => new TestColumnInfo
-            {
-                ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
-                CharMaxLength = x.CharMaxLength,
-                NumericPrecision = x.NumericPrecision,
-                NumericScale = x.NumericScale,
-                IsPrimaryKey = x.IsPrimaryKey,
-                IsNullable = x.IsNullable,
-            })
-            .ToList();
-
-        // Assert.
-        dbConnection.IsConnected.Should().BeFalse();
-        result.Should().BeEquivalentTo(expected);
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
     }
 }

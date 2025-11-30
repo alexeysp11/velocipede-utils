@@ -557,4 +557,36 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .WithInnerException(typeof(ArgumentException));
         dbConnection.IsConnected.Should().BeFalse();
     }
+
+    protected void ValidateGetColumnsTest(string sql, string tableName, List<TestColumnInfo> expected)
+    {
+        // Arrange.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .CommitTransaction();
+
+        // Act.
+        dbConnection
+            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
+            .CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                NumericPrecision = x.NumericPrecision,
+                NumericScale = x.NumericScale,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
+    }
 }
