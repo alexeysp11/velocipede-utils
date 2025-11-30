@@ -403,6 +403,21 @@ public static class VelocipedeColumnInfoExtensions
     /// <summary>
     /// Get <see cref="DbType"/> by native type for PostgreSQL.
     /// </summary>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item>
+    /// <description>
+    /// In PostgreSQL, a primary key cannot be nullable because of its fundamental purpose in relational databases:
+    /// to uniquely identify each row in a table.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <description>
+    /// A <c>SERIAL</c> column is implicitly <c>NOT NULL</c> as well because its primary purpose is to provide a unique identifier for each row.
+    /// </description>
+    /// </item>
+    /// </list>
+    /// </remarks>
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns></returns>
     public static DbType? GetPostgresDbType(this VelocipedeColumnInfo columnInfo)
@@ -422,6 +437,11 @@ public static class VelocipedeColumnInfoExtensions
             "real" or "double precision" or "float4" or "float8" => DbType.Double,
             "boolean" or "bool" => DbType.Boolean,
             "bytea" => DbType.Binary,
+            "timestamp" or "timestamp without time zone" => DbType.DateTime,
+            "timestamp with time zone" or "timestamptz" => DbType.DateTimeOffset,
+            "date" => DbType.Date,
+            "time" or "time without time zone" or "time with time zone" => DbType.Time,
+            "interval" => DbType.DateTime,
             _ => DbType.Object
         };
         if (result == DbType.Double)

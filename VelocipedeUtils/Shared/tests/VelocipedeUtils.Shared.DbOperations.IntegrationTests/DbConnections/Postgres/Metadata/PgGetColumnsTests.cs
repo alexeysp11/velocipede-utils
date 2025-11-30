@@ -122,9 +122,73 @@ create table {tableName} (
         result.Should().BeEquivalentTo(expected);
     }
 
+    [Fact]
     public override void GetColumns_Datetime()
     {
-        throw new NotImplementedException();
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = nameof(GetColumns_Datetime);
+        string sql = $@"
+create table {tableName} (
+    id integer primary key,
+    value1 timestamp,
+    value2 timestamp without time zone,
+    value3 timestamp with time zone,
+    value4 timestamptz,
+    value5 date,
+    value6 time,
+    value7 time without time zone,
+    value8 time with time zone,
+    value9 interval,
+    value10 interval (3),
+    value11 interval hour to minute
+)";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .CommitTransaction();
+
+        // 3. Expected result.
+        List<TestColumnInfo> expected =
+        [
+            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", CalculatedDbType = DbType.DateTimeOffset, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", CalculatedDbType = DbType.DateTimeOffset, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", CalculatedDbType = DbType.Date, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value6", CalculatedDbType = DbType.Time, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value7", CalculatedDbType = DbType.Time, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value8", CalculatedDbType = DbType.Time, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value9", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value10", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value11", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+        ];
+
+        // Act.
+        dbConnection
+            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
+            .CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                NumericPrecision = x.NumericPrecision,
+                NumericScale = x.NumericScale,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Fact]
@@ -157,6 +221,10 @@ create table {tableName} (
             .CommitTransaction();
 
         // 3. Expected result.
+        // In PostgreSQL, a primary key cannot be nullable because of its fundamental purpose in relational databases:
+        // to uniquely identify each row in a table.
+        // A SERIAL column in PostgreSQL is implicitly NOT NULL because its primary purpose is to provide a unique identifier
+        // for each row.
         List<TestColumnInfo> expected =
         [
             new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
