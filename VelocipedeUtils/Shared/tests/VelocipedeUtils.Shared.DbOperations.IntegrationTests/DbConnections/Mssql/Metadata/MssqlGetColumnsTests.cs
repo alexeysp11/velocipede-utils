@@ -377,8 +377,86 @@ create table {tableName} (
         result.Should().BeEquivalentTo(expected);
     }
 
+    [Fact]
     public override void GetColumns_Text()
     {
-        throw new NotImplementedException();
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = nameof(GetColumns_Text);
+        string sql = $@"
+create table {tableName} (
+    id integer primary key,
+    value1 text,
+    value2 char(55),
+    value3 varchar(55),
+    value4 varchar(max),
+    value5 char varying,
+    value6 character,
+    value7 character(55),
+    value8 character varying(55),
+    value9 ntext,
+    value10 nchar(55),
+    value11 nvarchar(55),
+    value12 nvarchar(max),
+    value13 national character(55),
+    value14 national char(55),
+    value15 national character varying(55),
+    value16 national char varying(55),
+    value17 national text
+)";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .CommitTransaction();
+
+        // 3. Expected result.
+        int textColumnSize = int.MaxValue;
+        int nationalTextColumnSize = 1073741823;
+        List<TestColumnInfo> expected =
+        [
+            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", CalculatedDbType = DbType.String, CharMaxLength = textColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", CalculatedDbType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", CalculatedDbType = DbType.String, CharMaxLength = 1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value6", CalculatedDbType = DbType.String, CharMaxLength = 1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value7", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value8", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value9", CalculatedDbType = DbType.String, CharMaxLength = nationalTextColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value10", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value11", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value12", CalculatedDbType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value13", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value14", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value15", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value16", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value17", CalculatedDbType = DbType.String, CharMaxLength = nationalTextColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
+        ];
+
+        // Act.
+        dbConnection
+            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
+            .CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                NumericPrecision = x.NumericPrecision,
+                NumericScale = x.NumericScale,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
     }
 }

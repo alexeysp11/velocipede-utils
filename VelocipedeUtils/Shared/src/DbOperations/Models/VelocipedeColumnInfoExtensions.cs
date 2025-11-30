@@ -487,8 +487,9 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericPrecision = 64;
                 columnInfo.NumericScale = 0;
                 break;
-            
-            case "nvarchar" or "varchar":
+
+            case "text" or "char" or "character" or "varchar" or "char varying" or "character varying": 
+            case "ntext" or "national text" or "nchar" or "national char" or "national character" or "nvarchar" or "national char varying" or "national character varying":
                 result = DbType.String;
                 columnInfo.NumericPrecision = null;
                 columnInfo.NumericScale = null;
