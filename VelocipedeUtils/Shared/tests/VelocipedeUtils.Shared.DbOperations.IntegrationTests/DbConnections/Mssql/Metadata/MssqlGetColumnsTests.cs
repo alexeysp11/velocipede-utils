@@ -77,9 +77,63 @@ create table {tableName} (
         result.Should().BeEquivalentTo(expected);
     }
 
+    [Fact]
     public override void GetColumns_Datetime()
     {
-        throw new NotImplementedException();
+        // Arrange.
+        // 1. Database connection.
+        using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
+
+        // 2. Create table.
+        string tableName = nameof(GetColumns_Datetime);
+        string sql = $@"
+create table {tableName} (
+    id integer primary key,
+    value1 datetime,
+    value2 datetime2,
+    value3 datetimeoffset,
+    value4 smalldatetime,
+    value5 date,
+    value6 time
+)";
+        dbConnection
+            .OpenDb()
+            .BeginTransaction()
+            .Execute(sql)
+            .CommitTransaction();
+
+        // 3. Expected result.
+        List<TestColumnInfo> expected =
+        [
+            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", CalculatedDbType = DbType.DateTime2, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", CalculatedDbType = DbType.DateTimeOffset, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", CalculatedDbType = DbType.Date, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value6", CalculatedDbType = DbType.Time, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+        ];
+
+        // Act.
+        dbConnection
+            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
+            .CloseDb();
+        List<TestColumnInfo> result = columnInfo
+            .Select(x => new TestColumnInfo
+            {
+                ColumnName = x.ColumnName,
+                CalculatedDbType = x.CalculatedDbType,
+                CharMaxLength = x.CharMaxLength,
+                NumericPrecision = x.NumericPrecision,
+                NumericScale = x.NumericScale,
+                IsPrimaryKey = x.IsPrimaryKey,
+                IsNullable = x.IsNullable,
+            })
+            .ToList();
+
+        // Assert.
+        dbConnection.IsConnected.Should().BeFalse();
+        result.Should().BeEquivalentTo(expected);
     }
 
     [Fact]

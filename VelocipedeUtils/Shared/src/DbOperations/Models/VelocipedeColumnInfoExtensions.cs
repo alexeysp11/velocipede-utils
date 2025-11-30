@@ -511,6 +511,41 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericScale = null;
                 break;
             
+            case "datetime" or "smalldatetime":
+                result = DbType.DateTime;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+            
+            case "datetime2":
+                result = DbType.DateTime2;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+                
+            case "datetimeoffset":
+                result = DbType.DateTimeOffset;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+                
+            case "date":
+                result = DbType.Date;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+                
+            case "time":
+                result = DbType.Time;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
             default:
                 result = DbType.Object;
                 break;
