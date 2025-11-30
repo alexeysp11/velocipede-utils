@@ -434,6 +434,21 @@ public static class VelocipedeColumnInfoExtensions
     /// <summary>
     /// Get <see cref="DbType"/> by native type for SQL Server.
     /// </summary>
+    /// <remarks>
+    /// <list type="bullet">
+    /// <item>
+    /// <para>
+    /// If you specify the decimal type when creating a column, MS SQL for some reason returns a native datatype of <c>DECIMAL</c>.
+    /// </para>
+    /// </item>
+    /// <item>
+    /// <para>
+    /// If you declare a <c>DECIMAL</c> without specifying precision and scale (e.g., just <c>DECIMAL</c>), 
+    /// SQL Server defaults to <c>DECIMAL(18,0)</c>.
+    /// </para>
+    /// </item>
+    /// </list>
+    /// </remarks>
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns></returns>
     public static DbType? GetMssqlDbType(this VelocipedeColumnInfo columnInfo)
@@ -478,9 +493,14 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericPrecision = null;
                 columnInfo.NumericScale = null;
                 break;
-            
-            case "decimal" or "numeric":
+
+            case "decimal":
                 result = DbType.Decimal;
+                columnInfo.CharMaxLength = null;
+                break;
+
+            case "numeric":
+                result = DbType.VarNumeric;
                 columnInfo.CharMaxLength = null;
                 break;
 
