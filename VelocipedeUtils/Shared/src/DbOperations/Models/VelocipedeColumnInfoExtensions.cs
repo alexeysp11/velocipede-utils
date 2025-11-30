@@ -431,7 +431,7 @@ public static class VelocipedeColumnInfoExtensions
             "smallint" or "smallserial" or "int2" => DbType.Int16,
             "int" or "integer" or "serial" or "int4" => DbType.Int32,
             "bigint" or "bigserial" or "int8" => DbType.Int64,
-            "text" or "varchar" or "character varying" => DbType.String,
+            "text" or "varchar" or "character varying" or "character" or "char" or "bpchar" => DbType.String,
             "decimal" => DbType.Decimal,
             "numeric" => DbType.VarNumeric,
             "real" or "double precision" or "float4" or "float8" => DbType.Double,
