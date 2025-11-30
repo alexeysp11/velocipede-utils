@@ -264,26 +264,21 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericScale = 0;
                 break;
 
-            case "smallint":
-            case "int2":
+            case "smallint" or "int2":
                 result = DbType.Int16;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = 16;
                 columnInfo.NumericScale = 0;
                 break;
 
-            case "int":
-            case "integer":
-            case "int4":
-            case "mediumint":
+            case "int" or "integer" or "int4" or "mediumint":
                 result = DbType.Int32;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = 32;
                 columnInfo.NumericScale = 0;
                 break;
 
-            case "bigint":
-            case "int8":
+            case "bigint" or "int8":
                 result = DbType.Int64;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = 64;
@@ -297,24 +292,14 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericScale = 0;
                 break;
 
-            case "unsigned big int":
-            case "unsigned bigint":
+            case "unsigned big int" or "unsigned bigint":
                 result = DbType.UInt64;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = 64;
                 columnInfo.NumericScale = 0;
                 break;
 
-            case "text":
-            case "varchar":
-            case "char":
-            case "character":
-            case "varying character":
-            case "character varying":
-            case "native character":
-            case "nvarchar":
-            case "nchar":
-            case "clob":
+            case "text" or "varchar" or "char" or "character" or "varying character" or "character varying" or "native character" or "nvarchar" or "nchar" or "clob":
                 result = DbType.String;
                 columnInfo.CharMaxLength = -1;
                 columnInfo.NumericPrecision = null;
@@ -335,19 +320,14 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericScale = null;
                 break;
 
-            case "real":
-            case "double":
-            case "double precision":
-            case "float":
+            case "real" or "double" or "double precision" or "float":
                 result = DbType.Double;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = null;
                 columnInfo.NumericScale = null;
                 break;
 
-            case "boolean":
-            case "bool":
-            case "bit":
+            case "boolean" or "bool" or "bit":
                 result = DbType.Boolean;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = null;
@@ -361,8 +341,7 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericScale = null;
                 break;
 
-            case "datetime":
-            case "timestamp":
+            case "datetime" or "timestamp":
                 result = DbType.DateTime;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = null;
@@ -462,13 +441,60 @@ public static class VelocipedeColumnInfoExtensions
         if (string.IsNullOrEmpty(columnInfo.NativeColumnType))
             return null;
 
-        return columnInfo.NativeColumnType.ToLower() switch
+        string nativeColumnType = columnInfo.NativeColumnType.ToLower();
+        DbType result;
+        switch (nativeColumnType)
         {
-            "int" => DbType.Int32,
-            "nvarchar" or "varchar" => DbType.String,
-            "decimal" or "numeric" => DbType.Decimal,
-            "bit" => DbType.Boolean,
-            _ => DbType.Object
-        };
+            case "tinyint":
+                result = DbType.SByte;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 8;
+                columnInfo.NumericScale = 0;
+                break;
+
+            case "smallint":
+                result = DbType.Int16;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 16;
+                columnInfo.NumericScale = 0;
+                break;
+            
+            case "int" or "integer":
+                result = DbType.Int32;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 32;
+                columnInfo.NumericScale = 0;
+                break;
+            
+            case "bigint":
+                result = DbType.Int64;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = 64;
+                columnInfo.NumericScale = 0;
+                break;
+            
+            case "nvarchar" or "varchar":
+                result = DbType.String;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+            
+            case "decimal" or "numeric":
+                result = DbType.Decimal;
+                columnInfo.CharMaxLength = null;
+                break;
+
+            case "bit":
+                result = DbType.Boolean;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+            
+            default:
+                result = DbType.Object;
+                break;
+        }
+        return result;
     }
 }
