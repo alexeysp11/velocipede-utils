@@ -546,11 +546,18 @@ public static class VelocipedeColumnInfoExtensions
                 columnInfo.NumericScale = null;
                 break;
                 
+            case "real" or "float" or "double precision":
+                result = DbType.Double;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+                
             case "binary" or "varbinary" or "binary varying":
                 result = DbType.Binary;
                 columnInfo.CharMaxLength = null;
-                //columnInfo.NumericPrecision = null;
-                //columnInfo.NumericScale = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
                 break;
 
             default:
