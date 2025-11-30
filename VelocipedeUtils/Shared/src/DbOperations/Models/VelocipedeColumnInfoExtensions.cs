@@ -420,7 +420,7 @@ public static class VelocipedeColumnInfoExtensions
             "decimal" => DbType.Decimal,
             "numeric" => DbType.VarNumeric,
             "real" or "double precision" or "float4" or "float8" => DbType.Double,
-            "boolean" => DbType.Boolean,
+            "boolean" or "bool" => DbType.Boolean,
             "bytea" => DbType.Binary,
             _ => DbType.Object
         };
