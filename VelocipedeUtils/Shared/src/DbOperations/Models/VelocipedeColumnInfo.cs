@@ -9,7 +9,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Models;
 public sealed class VelocipedeColumnInfo
 {
     /// <summary>
-    /// Column identifier.
+    /// Database type.
     /// </summary>
     public DatabaseType DatabaseType { get; set; }
 
@@ -45,12 +45,12 @@ public sealed class VelocipedeColumnInfo
     public int? CharMaxLength { get; set; }
 
     /// <summary>
-    /// Numeric precision for Decimal/Numeric.
+    /// Numeric precision for integer/decimal/numeric.
     /// </summary>
     public int? NumericPrecision { get; set; }
 
     /// <summary>
-    /// Numeric scale for Decimal/Numeric.
+    /// Numeric scale for integer/decimal/numeric.
     /// </summary>
     public int? NumericScale { get; set; }
 
