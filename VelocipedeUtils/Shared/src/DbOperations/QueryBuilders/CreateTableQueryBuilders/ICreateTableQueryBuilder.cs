@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
@@ -8,6 +9,32 @@ namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuil
 /// </summary>
 public interface ICreateTableQueryBuilder
 {
+    /// <summary>
+    /// Database type.
+    /// </summary>
+    DatabaseType DatabaseType { get; }
+
+    /// <summary>
+    /// Name of the created table.
+    /// </summary>
+    string TableName { get; }
+
+    /// <summary>
+    /// Collection of metadata objects about table columns.
+    /// </summary>
+    IEnumerable<VelocipedeColumnInfo> ColumnInfos { get; }
+
+    /// <summary>
+    /// Collection of metadata objects about table FK.
+    /// </summary>
+    IEnumerable<VelocipedeForeignKeyInfo> ForeignKeyInfos { get; }
+
+    /// <summary>
+    /// Build the query.
+    /// </summary>
+    /// <returns>Instance of <see cref="ICreateTableQueryBuilder"/>.</returns>
+    ICreateTableQueryBuilder Build();
+
     /// <summary>
     /// Specify column that should be created.
     /// </summary>
@@ -54,7 +81,7 @@ public interface ICreateTableQueryBuilder
     /// <summary>
     /// Specify a list foreign keys that should be created.
     /// </summary>
-    /// <param name="foreignKeyInfo">List that contains info about foreign key constraints.</param>
+    /// <param name="foreignKeyInfoList">List that contains info about foreign key constraints.</param>
     /// <returns>Instance of <see cref="ICreateTableQueryBuilder"/>.</returns>
-    ICreateTableQueryBuilder WithForeignKeys(IEnumerable<VelocipedeForeignKeyInfo> foreignKeyInfo);
+    ICreateTableQueryBuilder WithForeignKeys(IEnumerable<VelocipedeForeignKeyInfo> foreignKeyInfoList);
 }

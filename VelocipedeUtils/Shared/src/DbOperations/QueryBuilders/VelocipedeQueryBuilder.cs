@@ -1,4 +1,5 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Enums;
+using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders;
@@ -17,12 +18,14 @@ public sealed class VelocipedeQueryBuilder : IVelocipedeQueryBuilder
     /// <param name="databaseType">Database type.</param>
     public VelocipedeQueryBuilder(DatabaseType databaseType)
     {
+        VelocipedeQueryBuilderException.ThrowIfIncorrectDatabaseType(databaseType);
+
         DatabaseType = databaseType;
     }
 
     /// <inheritdoc/>
     public ICreateTableQueryBuilder CreateTable(string tableName)
     {
-        throw new NotImplementedException();
+        return new CreateTableQueryBuilder(DatabaseType, tableName);
     }
 }

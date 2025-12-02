@@ -22,5 +22,9 @@ public static class ErrorMessageConstants
     public const string UnableToRollbackNotOpenTransaction = "Unable to rollback transaction: either connection or transactin was not open";
     public const string OrderingFieldNameCouldNotBeNullOrEmpty = "Ordering field name could not be null or empty";
     public const string TableNameCouldNotBeNullOrEmpty = "Table name cannot be null or empty";
+    public const string ErrorInQueryBuilder = "Error in query builder";
+    public const string UnableToCreateQueryBuilderForDbType = "Unable to create query builder for the specified database type";
+    public const string QueryBuilderIsBuilt = "Query builder is already built";
+    public const string IncorrectQueryBuilderResult = "Incorrect query builder result";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
