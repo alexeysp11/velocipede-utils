@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Models;
 
 /// <summary>
 /// A simple test model.

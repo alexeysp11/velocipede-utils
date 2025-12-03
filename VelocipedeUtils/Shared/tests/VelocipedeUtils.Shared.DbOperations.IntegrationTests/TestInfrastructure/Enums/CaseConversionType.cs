@@ -1,4 +1,4 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
+﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Enums;
 
 /// <summary>
 /// Case conversion type for a string.

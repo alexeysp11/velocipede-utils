@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Models;
 
 /// <summary>
 /// A test model representing a user.

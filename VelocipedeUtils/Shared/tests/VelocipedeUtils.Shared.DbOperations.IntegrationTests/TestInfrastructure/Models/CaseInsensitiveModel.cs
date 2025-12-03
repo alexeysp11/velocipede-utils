@@ -1,4 +1,4 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
+﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Models;
 
 /// <summary>
 /// Class used to define case insensitive table.

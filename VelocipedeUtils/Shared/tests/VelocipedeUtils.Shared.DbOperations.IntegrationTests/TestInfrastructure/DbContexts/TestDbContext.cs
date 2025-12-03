@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Models;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DbContexts;
 
 /// <summary>
 /// Database context that contains test models.

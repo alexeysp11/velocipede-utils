@@ -1,4 +1,4 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Constants;
+﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Constants;
 
 public static class PgTestConstants
 {

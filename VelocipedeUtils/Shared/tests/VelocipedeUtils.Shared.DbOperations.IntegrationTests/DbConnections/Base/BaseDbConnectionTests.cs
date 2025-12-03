@@ -2,9 +2,9 @@
 using Dapper;
 using Microsoft.EntityFrameworkCore;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Models;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DbContexts;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base;
 

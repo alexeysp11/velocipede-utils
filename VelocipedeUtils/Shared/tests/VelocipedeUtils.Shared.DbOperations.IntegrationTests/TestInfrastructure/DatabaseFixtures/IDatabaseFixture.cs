@@ -1,8 +1,8 @@
 ﻿using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Enums;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbContexts;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DbContexts;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
 
 /// <summary>
 /// Interface for database fixture.

@@ -1,7 +1,7 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Factories;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
 
 /// <summary>
 /// Extensions for working with <see cref="IDatabaseFixture"/>.

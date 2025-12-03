@@ -1,7 +1,7 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Enums;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Enums;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.Helpers;
+namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Helpers;
 
 /// <summary>
 /// Table name helper.
