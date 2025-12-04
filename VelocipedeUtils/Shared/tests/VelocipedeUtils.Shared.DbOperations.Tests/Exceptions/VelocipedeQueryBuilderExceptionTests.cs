@@ -8,93 +8,23 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Exceptions;
 /// <summary>
 /// Unit tests for <see cref="VelocipedeQueryBuilderException"/>.
 /// </summary>
-public sealed class VelocipedeQueryBuilderExceptionTests
+public sealed class VelocipedeQueryBuilderExceptionTests : BaseVelocipedeExceptionTests
 {
-    [Fact]
-    public void CreateByConstructor_Parameterless()
-    {
-        // Arrange & Act.
-        VelocipedeQueryBuilderException exception = new();
+    /// <inheritdoc/>
+    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase()
+        => new(new VelocipedeQueryBuilderException(), typeof(VelocipedeQueryBuilderException), ErrorMessageConstants.ErrorInQueryBuilder);
 
-        // Assert.
-        exception
-            .Should()
-            .NotBeNull();
-        exception.Message
-            .Should()
-            .Be(ErrorMessageConstants.ErrorInQueryBuilder);
-        exception.InnerException
-            .Should()
-            .BeNull();
-    }
+    /// <inheritdoc/>
+    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(Exception innerException)
+        => new(new VelocipedeQueryBuilderException(innerException), typeof(VelocipedeQueryBuilderException), ErrorMessageConstants.ErrorInQueryBuilder);
 
-    [Fact]
-    public void CreateByConstructor_InnerException()
-    {
-        // Arrange.
-        IndexOutOfRangeException innerException = new();
+    /// <inheritdoc/>
+    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(string message)
+        => new(new VelocipedeQueryBuilderException(message), typeof(VelocipedeQueryBuilderException), message);
 
-        // Act.
-        VelocipedeQueryBuilderException exception = new(innerException);
-
-        // Assert.
-        exception
-            .Should()
-            .NotBeNull();
-        exception.Message
-            .Should()
-            .Be(ErrorMessageConstants.ErrorInQueryBuilder);
-        exception.InnerException
-            .Should()
-            .NotBeNull()
-            .And
-            .BeOfType<IndexOutOfRangeException>();
-    }
-
-    [Fact]
-    public void CreateByConstructor_Message()
-    {
-        // Arrange.
-        string errorMessage = "Test error message";
-
-        // Act.
-        VelocipedeQueryBuilderException exception = new(errorMessage);
-
-        // Assert.
-        exception
-            .Should()
-            .NotBeNull();
-        exception.Message
-            .Should()
-            .Be(errorMessage);
-        exception.InnerException
-            .Should()
-            .BeNull();
-    }
-
-    [Fact]
-    public void CreateByConstructor_MessageAndInnerException()
-    {
-        // Arrange.
-        string errorMessage = "Test error message";
-        IndexOutOfRangeException innerException = new();
-
-        // Act.
-        VelocipedeQueryBuilderException exception = new(errorMessage, innerException);
-
-        // Assert.
-        exception
-            .Should()
-            .NotBeNull();
-        exception.Message
-            .Should()
-            .Be(errorMessage);
-        exception.InnerException
-            .Should()
-            .NotBeNull()
-            .And
-            .BeOfType<IndexOutOfRangeException>();
-    }
+    /// <inheritdoc/>
+    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(string message, Exception innerException)
+        => new(new VelocipedeQueryBuilderException(message, innerException), typeof(VelocipedeQueryBuilderException), message);
 
     [Theory]
     [InlineData(DatabaseType.SQLite)]
