@@ -30,7 +30,7 @@ public class VelocipedeDbNameException : VelocipedeDbConnectParamsException
     /// Constructor that sets the <see cref="Exception.Message"/> field to specified value.
     /// </summary>
     public VelocipedeDbNameException(string message)
-        : base(message)
+        : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeDbNameException)))
     {
     }
 
@@ -38,7 +38,7 @@ public class VelocipedeDbNameException : VelocipedeDbConnectParamsException
     /// Constructor that includes info about inner exception, and sets the <see cref="Exception.Message"/> field to specified value.
     /// </summary>
     public VelocipedeDbNameException(string message, Exception innerException)
-        : base(message, innerException)
+        : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeDbNameException)), innerException)
     {
     }
 }
