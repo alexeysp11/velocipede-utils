@@ -12,19 +12,55 @@ public sealed class VelocipedeQueryBuilderExceptionTests : BaseVelocipedeExcepti
 {
     /// <inheritdoc/>
     protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase()
-        => new(new VelocipedeQueryBuilderException(), typeof(VelocipedeQueryBuilderException), ErrorMessageConstants.ErrorInQueryBuilder);
+    {
+        return new()
+        {
+            Exception = new VelocipedeQueryBuilderException(),
+            ExceptionType = typeof(VelocipedeQueryBuilderException),
+            ErrorMessage = ErrorMessageConstants.ErrorInQueryBuilder,
+        };
+    }
 
     /// <inheritdoc/>
-    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(Exception innerException)
-        => new(new VelocipedeQueryBuilderException(innerException), typeof(VelocipedeQueryBuilderException), ErrorMessageConstants.ErrorInQueryBuilder);
+    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(
+        Exception innerException,
+        Type innerExceptionType)
+    {
+        return new()
+        {
+            Exception = new VelocipedeQueryBuilderException(innerException),
+            ExceptionType = typeof(VelocipedeQueryBuilderException),
+            ErrorMessage = ErrorMessageConstants.ErrorInQueryBuilder,
+            InnerException = innerException,
+            InnerExceptionType = innerExceptionType,
+        };
+    }
 
     /// <inheritdoc/>
     protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(string message)
-        => new(new VelocipedeQueryBuilderException(message), typeof(VelocipedeQueryBuilderException), message);
+    {
+        return new()
+        {
+            Exception = new VelocipedeQueryBuilderException(message),
+            ExceptionType = typeof(VelocipedeQueryBuilderException),
+            ErrorMessage = ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeQueryBuilderException)),
+        };
+    }
 
     /// <inheritdoc/>
-    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(string message, Exception innerException)
-        => new(new VelocipedeQueryBuilderException(message, innerException), typeof(VelocipedeQueryBuilderException), message);
+    protected override TestCaseCreateByConstructor GetCreateByConstructorTestCase(
+        string message,
+        Exception innerException,
+        Type innerExceptionType)
+    {
+        return new()
+        {
+            Exception = new VelocipedeQueryBuilderException(message, innerException),
+            ExceptionType = typeof(VelocipedeQueryBuilderException),
+            ErrorMessage = ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeQueryBuilderException)),
+            InnerException = innerException,
+        };
+    }
 
     [Theory]
     [InlineData(DatabaseType.SQLite)]
