@@ -113,6 +113,7 @@ public abstract class BaseVelocipedeExceptionTests
     [InlineData(null)]
     [InlineData("")]
     [InlineData("Test error message")]
+    [InlineData("----")]
     public void CreateByConstructor_Message(string? errorMessage)
     {
 #nullable disable
