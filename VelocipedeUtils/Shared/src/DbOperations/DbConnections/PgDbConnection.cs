@@ -6,6 +6,7 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections;
 
@@ -823,6 +824,12 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         return paginationInfo.PaginationType == VelocipedePaginationType.KeysetById
             ? $@"SELECT t.* FROM ({sqlRequest}) t WHERE ""{paginationInfo.OrderingFieldName}"" > {paginationInfo.Offset} ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit}"
             : $@"SELECT t.* FROM ({sqlRequest}) t ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeQueryBuilder GetQueryBuilder()
+    {
+        return new VelocipedeQueryBuilder(DatabaseType, this);
     }
 
     /// <inheritdoc/>

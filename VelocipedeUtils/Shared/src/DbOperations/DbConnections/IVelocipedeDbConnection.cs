@@ -3,6 +3,7 @@ using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections;
 
@@ -622,4 +623,10 @@ public interface IVelocipedeDbConnection : IDisposable
     string GetPaginatedSql(
         string sqlRequest,
         VelocipedePaginationInfo paginationInfo);
+
+    /// <summary>
+    /// Get query builder for the database connection.
+    /// </summary>
+    /// <returns>Instance of <see cref="IVelocipedeQueryBuilder"/>.</returns>
+    IVelocipedeQueryBuilder GetQueryBuilder();
 }
