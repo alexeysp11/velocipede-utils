@@ -26,17 +26,13 @@ public class VelocipedeDbCreateException : Exception
     {
     }
 
-    /// <summary>
-    /// Constructor that sets the <see cref="Exception.Message"/> field to specified value.
-    /// </summary>
+    /// <inheritdoc/>
     public VelocipedeDbCreateException(string message)
         : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeDbCreateException)))
     {
     }
 
-    /// <summary>
-    /// Constructor that includes info about inner exception, and sets the <see cref="Exception.Message"/> field to specified value.
-    /// </summary>
+    /// <inheritdoc/>
     public VelocipedeDbCreateException(string message, Exception innerException)
         : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeDbCreateException)), innerException)
     {

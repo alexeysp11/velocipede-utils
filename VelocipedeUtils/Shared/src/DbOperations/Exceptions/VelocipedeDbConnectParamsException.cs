@@ -26,17 +26,13 @@ public class VelocipedeDbConnectParamsException : Exception
     {
     }
 
-    /// <summary>
-    /// Constructor that sets the <see cref="Exception.Message"/> field to specified value.
-    /// </summary>
+    /// <inheritdoc/>
     public VelocipedeDbConnectParamsException(string message)
         : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeDbConnectParamsException)))
     {
     }
 
-    /// <summary>
-    /// Constructor that includes info about inner exception, and sets the <see cref="Exception.Message"/> field to specified value.
-    /// </summary>
+    /// <inheritdoc/>
     public VelocipedeDbConnectParamsException(string message, Exception innerException)
         : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeDbConnectParamsException)), innerException)
     {
