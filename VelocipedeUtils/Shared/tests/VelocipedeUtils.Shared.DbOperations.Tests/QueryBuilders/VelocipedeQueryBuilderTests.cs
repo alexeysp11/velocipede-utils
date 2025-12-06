@@ -6,6 +6,7 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Factories;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders;
 
@@ -105,5 +106,43 @@ public sealed class VelocipedeQueryBuilderTests
             .NotBeNull()
             .And
             .BeOfType(expectedDbConnectionType);
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void CreateTable_NullTableName_ThrowsArgumentNullException(DatabaseType databaseType)
+    {
+        // Arrange.
+        string? tableName = null;
+        VelocipedeQueryBuilder queryBuilder = new(databaseType);
+#nullable disable
+        Func<ICreateTableQueryBuilder> act = () => queryBuilder.CreateTable(tableName);
+#nullable restore
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>();
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void CreateTable_EmptyTableName_ThrowsArgumentException(DatabaseType databaseType)
+    {
+        // Arrange.
+        string? tableName = null;
+        VelocipedeQueryBuilder queryBuilder = new(databaseType);
+#nullable disable
+        Func<ICreateTableQueryBuilder> act = () => queryBuilder.CreateTable(tableName);
+#nullable restore
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentException>();
     }
 }
