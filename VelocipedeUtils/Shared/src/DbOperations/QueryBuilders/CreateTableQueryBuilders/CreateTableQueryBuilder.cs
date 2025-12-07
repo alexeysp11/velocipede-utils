@@ -124,6 +124,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
         ArgumentNullException.ThrowIfNull(foreignKeyInfoList);
+        if (!foreignKeyInfoList.Any())
+        {
+            throw new InvalidOperationException(ErrorMessageConstants.EmptyForeignKeyInfoList);
+        }
 
         ForeignKeyInfos.AddRange(foreignKeyInfoList);
 

@@ -1,10 +1,17 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.Models;
+﻿using VelocipedeUtils.Shared.DbOperations.Enums;
+
+namespace VelocipedeUtils.Shared.DbOperations.Models;
 
 /// <summary>
 /// Info about foreign key constraints.
 /// </summary>
 public sealed class VelocipedeForeignKeyInfo
 {
+    /// <summary>
+    /// Database type.
+    /// </summary>
+    public DatabaseType DatabaseType { get; set; }
+
     /// <summary>
     /// A unique identifier for the foreign key within the table.
     /// </summary>

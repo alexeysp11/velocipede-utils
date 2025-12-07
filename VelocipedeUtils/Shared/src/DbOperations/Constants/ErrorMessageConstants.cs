@@ -28,5 +28,6 @@ public static class ErrorMessageConstants
     public const string QueryBuilderIsBuilt = "Query builder is already built";
     public const string IncorrectQueryBuilderResult = "Incorrect query builder result";
     public const string EmptyColumnInfoList = "Column info list could not be empty";
+    public const string EmptyForeignKeyInfoList = "Foreign key info list could not be empty";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
