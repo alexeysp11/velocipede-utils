@@ -35,7 +35,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     public CreateTableQueryBuilder(DatabaseType databaseType, string tableName)
     {
         VelocipedeQueryBuilderException.ThrowIfIncorrectDatabaseType(databaseType);
-        ArgumentException.ThrowIfNullOrEmpty(tableName);
+        if (string.IsNullOrEmpty(tableName))
+        {
+            throw new VelocipedeTableNameException();
+        }
 
         DatabaseType = databaseType;
         TableName = tableName;

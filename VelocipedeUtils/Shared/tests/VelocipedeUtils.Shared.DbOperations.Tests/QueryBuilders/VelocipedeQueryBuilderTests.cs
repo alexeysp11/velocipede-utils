@@ -125,6 +125,12 @@ public sealed class VelocipedeQueryBuilderTests
             .NotBeNull()
             .And
             .BeOfType<CreateTableQueryBuilder>();
+        createQueryBuilder.DatabaseType
+            .Should()
+            .Be(databaseType);
+        createQueryBuilder.TableName
+            .Should()
+            .Be(tableName);
     }
 
     [Theory]
@@ -143,7 +149,8 @@ public sealed class VelocipedeQueryBuilderTests
         // Act & Assert.
         act
             .Should()
-            .Throw<ArgumentNullException>();
+            .Throw<VelocipedeTableNameException>()
+            .WithMessage(ErrorMessageConstants.IncorrectTableName);
     }
 
     [Theory]
@@ -160,6 +167,7 @@ public sealed class VelocipedeQueryBuilderTests
         // Act & Assert.
         act
             .Should()
-            .Throw<ArgumentException>();
+            .Throw<VelocipedeTableNameException>()
+            .WithMessage(ErrorMessageConstants.IncorrectTableName);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
+using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
+using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQueryBuilders;
@@ -23,6 +25,12 @@ public sealed class CreateTableQueryBuilderTests
         createQueryBuilder
             .Should()
             .NotBeNull();
+        createQueryBuilder.DatabaseType
+            .Should()
+            .Be(databaseType);
+        createQueryBuilder.TableName
+            .Should()
+            .Be(tableName);
     }
 
     [Theory]
@@ -34,13 +42,14 @@ public sealed class CreateTableQueryBuilderTests
         // Arrange.
         string? tableName = null;
 #nullable disable
-        Func<ICreateTableQueryBuilder> act = () => new CreateTableQueryBuilder(databaseType, tableName);
+        Func<CreateTableQueryBuilder> act = () => new CreateTableQueryBuilder(databaseType, tableName);
 #nullable restore
 
         // Act & Assert.
         act
             .Should()
-            .Throw<ArgumentNullException>();
+            .Throw<VelocipedeTableNameException>()
+            .WithMessage(ErrorMessageConstants.IncorrectTableName);
     }
 
     [Theory]
@@ -51,11 +60,12 @@ public sealed class CreateTableQueryBuilderTests
     {
         // Arrange.
         string tableName = "";
-        Func<ICreateTableQueryBuilder> act = () => new CreateTableQueryBuilder(databaseType, tableName);
+        Func<CreateTableQueryBuilder> act = () => new CreateTableQueryBuilder(databaseType, tableName);
 
         // Act & Assert.
         act
             .Should()
-            .Throw<ArgumentException>();
+            .Throw<VelocipedeTableNameException>()
+            .WithMessage(ErrorMessageConstants.IncorrectTableName);
     }
 }
