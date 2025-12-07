@@ -30,6 +30,11 @@ public interface ICreateTableQueryBuilder
     List<VelocipedeForeignKeyInfo> ForeignKeyInfos { get; }
 
     /// <summary>
+    /// Whether the query builder is already built.
+    /// </summary>
+    bool IsBuilt { get; }
+
+    /// <summary>
     /// Build the query.
     /// </summary>
     /// <returns>Instance of <see cref="ICreateTableQueryBuilder"/>.</returns>

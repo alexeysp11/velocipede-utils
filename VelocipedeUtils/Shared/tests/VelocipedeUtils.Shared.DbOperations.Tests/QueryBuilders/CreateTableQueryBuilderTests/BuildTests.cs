@@ -15,17 +15,19 @@ public sealed class BuildTests
     [InlineData(DatabaseType.SQLite)]
     [InlineData(DatabaseType.PostgreSQL)]
     [InlineData(DatabaseType.MSSQL)]
-    public void BuildOnce_NoException(DatabaseType databaseType)
+    public void BuildOnce_QuryBuilderIsBuilt(DatabaseType databaseType)
     {
         // Arrange.
         string tableName = "TableName";
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
-        Func<ICreateTableQueryBuilder> act = createQueryBuilder.Build;
 
-        // Act & Assert.
-        act
+        // Act.
+        createQueryBuilder.Build();
+
+        // Assert.
+        createQueryBuilder.IsBuilt
             .Should()
-            .NotThrow();
+            .BeTrue();
     }
 
     [Theory]

@@ -24,7 +24,9 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     /// <inheritdoc/>
     public List<VelocipedeForeignKeyInfo> ForeignKeyInfos { get; private set; }
 
-    private bool _built;
+    /// <inheritdoc/>
+    public bool IsBuilt {  get; private set; }
+
     private StringBuilder? _query;
 
     /// <summary>
@@ -45,16 +47,16 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
         ColumnInfos = [];
         ForeignKeyInfos = [];
 
-        _built = false;
+        IsBuilt = false;
     }
 
     /// <inheritdoc/>
     public ICreateTableQueryBuilder Build()
     {
-        VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
 
         _query = new StringBuilder();
-        _built = true;
+        IsBuilt = true;
 
         return this;
     }
@@ -70,7 +72,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
         bool isPrimaryKey = false,
         bool isNullable = true)
     {
-        VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
 
         // Validate arguments.
         ArgumentException.ThrowIfNullOrEmpty(columnName);
@@ -83,7 +85,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     /// <inheritdoc/>
     public ICreateTableQueryBuilder WithColumn(VelocipedeColumnInfo columnInfo)
     {
-        VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
         ArgumentNullException.ThrowIfNull(columnInfo);
 
         ColumnInfos.Add(columnInfo);
@@ -94,7 +96,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     /// <inheritdoc/>
     public ICreateTableQueryBuilder WithColumns(IEnumerable<VelocipedeColumnInfo> columnInfoList)
     {
-        VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
         ArgumentNullException.ThrowIfNull(columnInfoList);
         if (!columnInfoList.Any())
         {
@@ -109,7 +111,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     /// <inheritdoc/>
     public ICreateTableQueryBuilder WithForeignKey(VelocipedeForeignKeyInfo foreignKeyInfo)
     {
-        VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
         ArgumentNullException.ThrowIfNull(foreignKeyInfo);
 
         ForeignKeyInfos.Add(foreignKeyInfo);
@@ -120,7 +122,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     /// <inheritdoc/>
     public ICreateTableQueryBuilder WithForeignKeys(IEnumerable<VelocipedeForeignKeyInfo> foreignKeyInfoList)
     {
-        VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
         ArgumentNullException.ThrowIfNull(foreignKeyInfoList);
 
         ForeignKeyInfos.AddRange(foreignKeyInfoList);
@@ -131,7 +133,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     /// <inheritdoc/>
     public override string ToString()
     {
-        if (!_built)
+        if (!IsBuilt)
         {
             Build();
         }
