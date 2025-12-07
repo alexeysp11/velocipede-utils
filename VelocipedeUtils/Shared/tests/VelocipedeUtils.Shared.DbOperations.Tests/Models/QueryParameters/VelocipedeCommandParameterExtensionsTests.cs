@@ -3,7 +3,7 @@ using Dapper;
 using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Tests.Models.QueryParameters;
 
 /// <summary>
 /// Class for unit testing <see cref="VelocipedeCommandParameterExtensions"/>.

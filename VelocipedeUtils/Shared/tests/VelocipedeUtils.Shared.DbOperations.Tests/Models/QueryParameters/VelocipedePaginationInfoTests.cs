@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Tests.Models.QueryParameters;
 
 /// <summary>
 /// Unit tests for <see cref="VelocipedePaginationInfo"/>

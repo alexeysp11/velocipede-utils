@@ -11,22 +11,22 @@ public sealed class VelocipedeColumnInfo
     /// <summary>
     /// Database type.
     /// </summary>
-    public VelocipedeDatabaseType DatabaseType { get; set; }
+    public required VelocipedeDatabaseType DatabaseType { get; set; }
 
     /// <summary>
     /// Column name.
     /// </summary>
-    public string? ColumnName { get; set; }
+    public required string ColumnName { get; set; }
 
     /// <summary>
     /// Calculated native column type represented as a string.
     /// </summary>
-    public string? NativeColumnType => this.GetNativeType();
+    public string NativeColumnType => this.GetNativeType();
 
     /// <summary>
     /// The type of the column.
     /// </summary>
-    public DbType? DbType { get; set; }
+    public required DbType DbType { get; set; }
 
     /// <summary>
     /// If native column type identifies a character or bit string type, the declared maximum length;

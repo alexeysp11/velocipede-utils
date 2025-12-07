@@ -14,7 +14,7 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Thrown if <see cref="VelocipedeColumnInfo.DatabaseType"/> is not supported.</exception>
-    public static string? GetNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string GetNativeType(this VelocipedeColumnInfo columnInfo)
     {
         return columnInfo.DatabaseType switch
         {
@@ -51,20 +51,18 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for SQLite.</exception>
-    public static string? GetSqliteNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string GetSqliteNativeType(this VelocipedeColumnInfo columnInfo)
     {
-        if (!columnInfo.DbType.HasValue)
-            return null;
-
         return columnInfo.DbType switch
         {
             DbType.SByte or DbType.Byte => "tinyint",
             DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "integer",
             DbType.Int64 or DbType.UInt64 => "bigint",
-            DbType.String or DbType.AnsiString => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
-                ? $"varchar({columnInfo.CharMaxLength})"
-                : "text",
+            DbType.String or DbType.AnsiString or DbType.AnsiStringFixedLength
+                => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
+                    ? $"varchar({columnInfo.CharMaxLength})"
+                    : "text",
             DbType.DateTime => "datetime",
             DbType.Boolean => "boolean",
             DbType.Double => "real",
@@ -79,11 +77,8 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for PostgreSQL.</exception>
-    public static string? GetPostgresNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string GetPostgresNativeType(this VelocipedeColumnInfo columnInfo)
     {
-        if (!columnInfo.DbType.HasValue)
-            return null;
-
         return columnInfo.DbType switch
         {
             DbType.Int32 => "integer",
@@ -105,11 +100,8 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns>String representation of the column type.</returns>
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for SQL Server.</exception>
-    public static string? GetMssqlNativeType(this VelocipedeColumnInfo columnInfo)
+    public static string GetMssqlNativeType(this VelocipedeColumnInfo columnInfo)
     {
-        if (!columnInfo.DbType.HasValue)
-            return null;
-
         return columnInfo.DbType switch
         {
             DbType.Int32 => "int",
