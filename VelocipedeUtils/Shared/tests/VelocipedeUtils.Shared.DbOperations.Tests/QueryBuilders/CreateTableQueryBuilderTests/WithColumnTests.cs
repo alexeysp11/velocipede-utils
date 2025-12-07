@@ -74,6 +74,46 @@ public sealed class WithColumnTests
     [InlineData(DatabaseType.SQLite)]
     [InlineData(DatabaseType.PostgreSQL)]
     [InlineData(DatabaseType.MSSQL)]
+    public void WithColumnByObject_TwoNotNullColumns(DatabaseType databaseType)
+    {
+        // Arrange.
+        // 1. Database object info.
+        string tableName = "TableName";
+        VelocipedeColumnInfo columnInfo1 = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ColumnName1",
+            DbType = DbType.Int32,
+        };
+        VelocipedeColumnInfo columnInfo2 = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ColumnName2",
+            DbType = DbType.String,
+        };
+
+        // 2. Query builder.
+        CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+
+        // Act.
+        createQueryBuilder
+            .WithColumn(columnInfo1)
+            .WithColumn(columnInfo2);
+
+        // Assert.
+        createQueryBuilder.ColumnInfos
+            .Should()
+            .HaveCount(2)
+            .And
+            .Contain(columnInfo1)
+            .And
+            .Contain(columnInfo2);
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
     public void WithColumnByObject_BuildFirstAndNullColumn(DatabaseType databaseType)
     {
         // Arrange.

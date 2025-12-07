@@ -73,6 +73,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
         VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
 
         // Validate arguments.
+        ArgumentException.ThrowIfNullOrEmpty(columnName);
 
         // Add new column.
 
