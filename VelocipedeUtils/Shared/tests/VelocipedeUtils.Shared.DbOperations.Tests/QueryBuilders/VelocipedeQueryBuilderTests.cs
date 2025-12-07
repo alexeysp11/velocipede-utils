@@ -112,6 +112,25 @@ public sealed class VelocipedeQueryBuilderTests
     [InlineData(DatabaseType.SQLite)]
     [InlineData(DatabaseType.PostgreSQL)]
     [InlineData(DatabaseType.MSSQL)]
+    public void CreateTable_ValidTableName(DatabaseType databaseType)
+    {
+        // Arrange.
+        string tableName = "TableName";
+        VelocipedeQueryBuilder queryBuilder = new(databaseType);
+        ICreateTableQueryBuilder createQueryBuilder = queryBuilder.CreateTable(tableName);
+
+        // Act & Assert.
+        createQueryBuilder
+            .Should()
+            .NotBeNull()
+            .And
+            .BeOfType<CreateTableQueryBuilder>();
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
     public void CreateTable_NullTableName_ThrowsArgumentNullException(DatabaseType databaseType)
     {
         // Arrange.
@@ -134,11 +153,9 @@ public sealed class VelocipedeQueryBuilderTests
     public void CreateTable_EmptyTableName_ThrowsArgumentException(DatabaseType databaseType)
     {
         // Arrange.
-        string? tableName = null;
+        string tableName = "";
         VelocipedeQueryBuilder queryBuilder = new(databaseType);
-#nullable disable
         Func<ICreateTableQueryBuilder> act = () => queryBuilder.CreateTable(tableName);
-#nullable restore
 
         // Act & Assert.
         act
