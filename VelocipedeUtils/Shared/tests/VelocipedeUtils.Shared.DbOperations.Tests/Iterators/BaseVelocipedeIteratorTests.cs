@@ -3,6 +3,7 @@ using Moq;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators;
 

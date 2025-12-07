@@ -1,7 +1,8 @@
 ﻿using System.Data;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
-namespace VelocipedeUtils.Shared.DbOperations.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Models.Loops;
 
 /// <summary>
 /// The result of executing the <c>foreach</c> operation for a specific database table.

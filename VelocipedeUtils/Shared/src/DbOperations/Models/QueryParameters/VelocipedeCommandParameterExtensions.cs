@@ -1,6 +1,7 @@
 ﻿using Dapper;
+using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
-namespace VelocipedeUtils.Shared.DbOperations.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
 /// <summary>
 /// Extensions for working with <see cref="VelocipedeCommandParameter"/> objects.

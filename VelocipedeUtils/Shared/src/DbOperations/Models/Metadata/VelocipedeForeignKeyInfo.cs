@@ -1,6 +1,6 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 /// <summary>
 /// Info about foreign key constraints.

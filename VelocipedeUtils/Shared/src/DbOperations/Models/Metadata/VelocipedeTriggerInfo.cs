@@ -1,4 +1,4 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.Models;
+﻿namespace VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 /// <summary>
 /// Info about trigger.

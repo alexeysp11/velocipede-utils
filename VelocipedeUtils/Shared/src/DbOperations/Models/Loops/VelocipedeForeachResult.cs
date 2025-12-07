@@ -1,4 +1,4 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.Models;
+﻿namespace VelocipedeUtils.Shared.DbOperations.Models.Loops;
 
 /// <summary>
 /// The result of executing the <c>foreach</c> operation for the specified database entities.

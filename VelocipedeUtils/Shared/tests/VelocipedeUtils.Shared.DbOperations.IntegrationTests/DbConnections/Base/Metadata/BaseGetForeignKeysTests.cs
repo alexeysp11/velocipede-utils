@@ -5,7 +5,7 @@ using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Enums;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Helpers;
-using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 

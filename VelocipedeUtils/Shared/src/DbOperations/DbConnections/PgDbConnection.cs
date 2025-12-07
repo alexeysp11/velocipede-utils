@@ -6,6 +6,8 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
+using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections;

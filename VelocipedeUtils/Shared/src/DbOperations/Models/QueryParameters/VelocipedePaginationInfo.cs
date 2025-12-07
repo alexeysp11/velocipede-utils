@@ -1,6 +1,6 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
 /// <summary>
 /// Contains the information needed for pagination.

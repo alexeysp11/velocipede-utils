@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Enums;
-using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 

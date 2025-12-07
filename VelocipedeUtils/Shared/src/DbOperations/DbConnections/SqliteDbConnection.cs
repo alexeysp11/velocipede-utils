@@ -3,10 +3,12 @@ using Microsoft.Data.Sqlite;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
-using VelocipedeUtils.Shared.DbOperations.Models;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
+using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
+using VelocipedeUtils.Shared.DbOperations.Models;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections;
 

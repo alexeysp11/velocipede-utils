@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 /// <summary>
 /// Metadata about table columns.

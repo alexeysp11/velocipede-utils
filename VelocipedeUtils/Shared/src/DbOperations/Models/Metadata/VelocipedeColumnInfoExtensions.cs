@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
-namespace VelocipedeUtils.Shared.DbOperations.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 /// <summary>
 /// Extension methods for <see cref="VelocipedeColumnInfo"/>.
@@ -89,7 +89,7 @@ public static class VelocipedeColumnInfoExtensions
             DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "integer",
             DbType.Int64 or DbType.UInt64 => "bigint",
-            DbType.String or DbType.AnsiString => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
+            DbType.String or DbType.AnsiString => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "text",
             DbType.DateTime => "datetime",
@@ -114,12 +114,12 @@ public static class VelocipedeColumnInfoExtensions
         return columnInfo.DbType switch
         {
             DbType.Int32 => "integer",
-            DbType.String or DbType.AnsiString => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
+            DbType.String or DbType.AnsiString => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "text",
             DbType.DateTime => "timestamp",
             DbType.Boolean => "boolean",
-            DbType.Decimal => (columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue)
+            DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
                 ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
                 : "decimal(18, 4)",
             _ => throw new NotSupportedException($"Unsupported DbType for PostgreSQL: {columnInfo.DbType}")
@@ -140,15 +140,15 @@ public static class VelocipedeColumnInfoExtensions
         return columnInfo.DbType switch
         {
             DbType.Int32 => "int",
-            DbType.String => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
+            DbType.String => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"nvarchar({columnInfo.CharMaxLength})"
                 : "nvarchar(max)",
-            DbType.AnsiString => (columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0)
+            DbType.AnsiString => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "varchar(max)",
             DbType.DateTime => "datetime2",
             DbType.Boolean => "bit",
-            DbType.Decimal => (columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue)
+            DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
                 ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
                 : "decimal(18, 4)",
             _ => throw new NotSupportedException($"Unsupported DbType for SQL Server: {columnInfo.DbType}")

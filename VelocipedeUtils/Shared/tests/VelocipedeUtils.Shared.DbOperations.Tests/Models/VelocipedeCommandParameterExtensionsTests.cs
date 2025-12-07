@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using Dapper;
 using FluentAssertions;
-using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Models;
 

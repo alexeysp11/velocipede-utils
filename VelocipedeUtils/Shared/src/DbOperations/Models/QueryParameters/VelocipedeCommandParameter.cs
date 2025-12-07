@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace VelocipedeUtils.Shared.DbOperations.Models;
+namespace VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
 /// <summary>
 /// Parameter used within a SQL command.
