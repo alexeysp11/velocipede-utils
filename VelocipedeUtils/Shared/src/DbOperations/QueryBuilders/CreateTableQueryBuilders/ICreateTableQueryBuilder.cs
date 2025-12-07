@@ -22,12 +22,12 @@ public interface ICreateTableQueryBuilder
     /// <summary>
     /// Collection of metadata objects about table columns.
     /// </summary>
-    IEnumerable<VelocipedeColumnInfo> ColumnInfos { get; }
+    List<VelocipedeColumnInfo> ColumnInfos { get; }
 
     /// <summary>
     /// Collection of metadata objects about table FK.
     /// </summary>
-    IEnumerable<VelocipedeForeignKeyInfo> ForeignKeyInfos { get; }
+    List<VelocipedeForeignKeyInfo> ForeignKeyInfos { get; }
 
     /// <summary>
     /// Build the query.

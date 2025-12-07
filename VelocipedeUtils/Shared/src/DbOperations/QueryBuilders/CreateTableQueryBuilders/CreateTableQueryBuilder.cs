@@ -19,10 +19,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     public string TableName { get; }
 
     /// <inheritdoc/>
-    public IEnumerable<VelocipedeColumnInfo> ColumnInfos {  get; private set; }
+    public List<VelocipedeColumnInfo> ColumnInfos {  get; private set; }
 
     /// <inheritdoc/>
-    public IEnumerable<VelocipedeForeignKeyInfo> ForeignKeyInfos { get; private set; }
+    public List<VelocipedeForeignKeyInfo> ForeignKeyInfos { get; private set; }
 
     private bool _built;
     private StringBuilder? _query;
@@ -71,6 +71,11 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
         bool isNullable = true)
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+
+        // Validate arguments.
+
+        // Add new column.
+
         return this;
     }
 
@@ -78,6 +83,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     public ICreateTableQueryBuilder WithColumn(VelocipedeColumnInfo columnInfo)
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        ArgumentNullException.ThrowIfNull(columnInfo);
+
+        ColumnInfos.Add(columnInfo);
+
         return this;
     }
 
@@ -85,6 +94,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     public ICreateTableQueryBuilder WithColumns(IEnumerable<VelocipedeColumnInfo> columnInfoList)
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        ArgumentNullException.ThrowIfNull(columnInfoList);
+
+        ColumnInfos.AddRange(columnInfoList);
+
         return this;
     }
 
@@ -92,6 +105,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     public ICreateTableQueryBuilder WithForeignKey(VelocipedeForeignKeyInfo foreignKeyInfo)
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        ArgumentNullException.ThrowIfNull(foreignKeyInfo);
+
+        ForeignKeyInfos.Add(foreignKeyInfo);
+
         return this;
     }
 
@@ -99,6 +116,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     public ICreateTableQueryBuilder WithForeignKeys(IEnumerable<VelocipedeForeignKeyInfo> foreignKeyInfoList)
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
+        ArgumentNullException.ThrowIfNull(foreignKeyInfoList);
+
+        ForeignKeyInfos.AddRange(foreignKeyInfoList);
+
         return this;
     }
 

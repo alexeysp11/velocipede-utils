@@ -133,9 +133,13 @@ public sealed class VelocipedeQueryBuilderTests
             .Be(tableName);
         createQueryBuilder.ColumnInfos
             .Should()
+            .NotBeNull()
+            .And
             .BeEmpty();
         createQueryBuilder.ForeignKeyInfos
             .Should()
+            .NotBeNull()
+            .And
             .BeEmpty();
     }
 

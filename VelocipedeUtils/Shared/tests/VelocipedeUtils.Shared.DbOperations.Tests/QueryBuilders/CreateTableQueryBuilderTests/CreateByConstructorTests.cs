@@ -33,9 +33,13 @@ public sealed class CreateByConstructorTests
             .Be(tableName);
         createQueryBuilder.ColumnInfos
             .Should()
+            .NotBeNull()
+            .And
             .BeEmpty();
         createQueryBuilder.ForeignKeyInfos
             .Should()
+            .NotBeNull()
+            .And
             .BeEmpty();
     }
 
