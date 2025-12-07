@@ -4,12 +4,12 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQueryBuilders;
+namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQueryBuilderTests;
 
 /// <summary>
-/// Unit tests for <see cref="CreateTableQueryBuilder"/>.
+/// Unit tests for creating instance of <see cref="CreateTableQueryBuilder"/>.
 /// </summary>
-public sealed class CreateTableQueryBuilderTests
+public sealed class CreateByConstructorTests
 {
     [Theory]
     [InlineData(DatabaseType.SQLite)]
@@ -17,11 +17,11 @@ public sealed class CreateTableQueryBuilderTests
     [InlineData(DatabaseType.MSSQL)]
     public void CreateByConstructor_ValidTableName(DatabaseType databaseType)
     {
-        // Arrange.
+        // Arrange & Act.
         string tableName = "TableName";
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
 
-        // Act & Assert.
+        // Assert.
         createQueryBuilder
             .Should()
             .NotBeNull();
@@ -31,6 +31,12 @@ public sealed class CreateTableQueryBuilderTests
         createQueryBuilder.TableName
             .Should()
             .Be(tableName);
+        createQueryBuilder.ColumnInfos
+            .Should()
+            .BeEmpty();
+        createQueryBuilder.ForeignKeyInfos
+            .Should()
+            .BeEmpty();
     }
 
     [Theory]

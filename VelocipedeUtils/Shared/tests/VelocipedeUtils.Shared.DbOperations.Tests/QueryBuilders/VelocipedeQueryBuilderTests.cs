@@ -114,12 +114,12 @@ public sealed class VelocipedeQueryBuilderTests
     [InlineData(DatabaseType.MSSQL)]
     public void CreateTable_ValidTableName(DatabaseType databaseType)
     {
-        // Arrange.
+        // Arrange & Act.
         string tableName = "TableName";
         VelocipedeQueryBuilder queryBuilder = new(databaseType);
         ICreateTableQueryBuilder createQueryBuilder = queryBuilder.CreateTable(tableName);
 
-        // Act & Assert.
+        // Assert.
         createQueryBuilder
             .Should()
             .NotBeNull()
@@ -131,6 +131,12 @@ public sealed class VelocipedeQueryBuilderTests
         createQueryBuilder.TableName
             .Should()
             .Be(tableName);
+        createQueryBuilder.ColumnInfos
+            .Should()
+            .BeEmpty();
+        createQueryBuilder.ForeignKeyInfos
+            .Should()
+            .BeEmpty();
     }
 
     [Theory]
