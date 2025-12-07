@@ -13,6 +13,7 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQue
 /// <list type="bullet">
 /// <item><description>By parameters: <see cref="CreateTableQueryBuilder.WithColumn(string, DbType, int?, int?, int?, object?, bool, bool)"/></description></item>
 /// <item><description>By object: <see cref="CreateTableQueryBuilder.WithColumn(VelocipedeColumnInfo)"/></description></item>
+/// <item><description>By list: <see cref="CreateTableQueryBuilder.WithColumns"/></description></item>
 /// </list>
 /// </summary>
 public sealed class WithColumnTests
@@ -155,6 +156,153 @@ public sealed class WithColumnTests
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
         createQueryBuilder.Build();
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumn(columnInfo);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<VelocipedeQueryBuilderException>()
+            .WithMessage(ErrorMessageConstants.QueryBuilderIsBuilt);
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void WithColumns_NullList(DatabaseType databaseType)
+    {
+        // Arrange.
+        // 1. Database object info.
+        string tableName = "TableName";
+        List<VelocipedeColumnInfo>? columnInfos = null;
+
+        // 2. Query builder.
+        CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+#nullable disable
+        Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
+#nullable restore
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<ArgumentNullException>();
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void WithColumns_EmptyList(DatabaseType databaseType)
+    {
+        // Arrange.
+        // 1. Database object info.
+        string tableName = "TableName";
+        List<VelocipedeColumnInfo> columnInfos = [];
+
+        // 2. Query builder.
+        CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage(ErrorMessageConstants.EmptyColumnInfoList);
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void WithColumns_ValidList(DatabaseType databaseType)
+    {
+        // Arrange.
+        // 1. Database object info.
+        string tableName = "TableName";
+        List<VelocipedeColumnInfo> columnInfos =
+        [
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName1", DbType = DbType.Int32, },
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName2", DbType = DbType.String, },
+        ];
+
+        // 2. Query builder.
+        CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+
+        // Act.
+        createQueryBuilder.WithColumns(columnInfos);
+
+        // Assert.
+        createQueryBuilder.ColumnInfos
+            .Should()
+            .BeEquivalentTo(columnInfos);
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void WithColumns_BuildFirstAndNullList(DatabaseType databaseType)
+    {
+        // Arrange.
+        // 1. Database object info.
+        string tableName = "TableName";
+        List<VelocipedeColumnInfo>? columnInfos = null;
+
+        // 2. Query builder.
+        CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.Build();
+#nullable disable
+        Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
+#nullable restore
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<VelocipedeQueryBuilderException>()
+            .WithMessage(ErrorMessageConstants.QueryBuilderIsBuilt);
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void WithColumns_BuildFirstAndEmptyList(DatabaseType databaseType)
+    {
+        // Arrange.
+        // 1. Database object info.
+        string tableName = "TableName";
+        List<VelocipedeColumnInfo> columnInfos = [];
+
+        // 2. Query builder.
+        CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.Build();
+        Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
+
+        // Act & Assert.
+        act
+            .Should()
+            .Throw<VelocipedeQueryBuilderException>()
+            .WithMessage(ErrorMessageConstants.QueryBuilderIsBuilt);
+    }
+
+    [Theory]
+    [InlineData(DatabaseType.SQLite)]
+    [InlineData(DatabaseType.PostgreSQL)]
+    [InlineData(DatabaseType.MSSQL)]
+    public void WithColumns_BuildFirstAndValidList(DatabaseType databaseType)
+    {
+        // Arrange.
+        // 1. Database object info.
+        string tableName = "TableName";
+        List<VelocipedeColumnInfo> columnInfos =
+        [
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName1", DbType = DbType.Int32, },
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName2", DbType = DbType.String, },
+        ];
+
+        // 2. Query builder.
+        CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.Build();
+        Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
 
         // Act & Assert.
         act

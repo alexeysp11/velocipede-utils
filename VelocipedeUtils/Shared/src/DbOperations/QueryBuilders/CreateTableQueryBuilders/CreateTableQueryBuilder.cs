@@ -96,6 +96,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(_built);
         ArgumentNullException.ThrowIfNull(columnInfoList);
+        if (!columnInfoList.Any())
+        {
+            throw new InvalidOperationException(ErrorMessageConstants.EmptyColumnInfoList);
+        }
 
         ColumnInfos.AddRange(columnInfoList);
 
