@@ -32,7 +32,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         string expected = dbConnection.DatabaseType switch
         {
-            DatabaseType.PostgreSQL => "public.TestTableForExecute",
+            VelocipedeDatabaseType.PostgreSQL => "public.TestTableForExecute",
             _ => "TestTableForExecute",
         };
 
@@ -59,7 +59,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         string expectedTable = dbConnection.DatabaseType switch
         {
-            DatabaseType.PostgreSQL => "public.TestTableForExecuteWithParams",
+            VelocipedeDatabaseType.PostgreSQL => "public.TestTableForExecuteWithParams",
             _ => "TestTableForExecuteWithParams",
         };
         const string expectedName = "Name_1";
@@ -92,7 +92,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         string expected = dbConnection.DatabaseType switch
         {
-            DatabaseType.PostgreSQL => "public.TestTableForExecuteAsync",
+            VelocipedeDatabaseType.PostgreSQL => "public.TestTableForExecuteAsync",
             _ => "TestTableForExecuteAsync",
         };
 
@@ -119,7 +119,7 @@ public abstract class BaseExecuteTests : BaseDbConnectionTests
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         string expectedTable = dbConnection.DatabaseType switch
         {
-            DatabaseType.PostgreSQL => "public.TestTableForExecuteAsyncWithParams",
+            VelocipedeDatabaseType.PostgreSQL => "public.TestTableForExecuteAsyncWithParams",
             _ => "TestTableForExecuteAsyncWithParams",
         };
         const string expectedName = "Name_1";

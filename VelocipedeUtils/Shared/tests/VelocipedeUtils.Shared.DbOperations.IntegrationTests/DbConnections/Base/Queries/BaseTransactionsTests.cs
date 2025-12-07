@@ -143,7 +143,7 @@ public abstract class BaseTransactionsTests : BaseDbConnectionTests
             .CommitTransaction()
             .GetTablesInDb(out List<string>? tables)
             .CloseDb();
-        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        if (dbConnection.DatabaseType == VelocipedeDatabaseType.PostgreSQL)
         {
             tableName = $"public.{tableName}";
         }
@@ -205,7 +205,7 @@ public abstract class BaseTransactionsTests : BaseDbConnectionTests
             .RollbackTransaction()
             .GetTablesInDb(out List<string>? tables)
             .CloseDb();
-        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        if (dbConnection.DatabaseType == VelocipedeDatabaseType.PostgreSQL)
         {
             tableName = $"public.{tableName}";
         }
@@ -233,7 +233,7 @@ public abstract class BaseTransactionsTests : BaseDbConnectionTests
             .OpenDb()
             .GetTablesInDb(out List<string>? tables)
             .CloseDb();
-        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        if (dbConnection.DatabaseType == VelocipedeDatabaseType.PostgreSQL)
         {
             tableName = $"public.{tableName}";
         }

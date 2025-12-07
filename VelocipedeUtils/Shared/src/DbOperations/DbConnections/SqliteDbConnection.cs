@@ -19,7 +19,7 @@ public sealed class SqliteDbConnection : BaseVelocipedeDbConnection, IVelocipede
     public string? ConnectionString { get; set; }
 
     /// <inheritdoc/>
-    public DatabaseType DatabaseType => DatabaseType.SQLite;
+    public VelocipedeDatabaseType DatabaseType => VelocipedeDatabaseType.SQLite;
 
     /// <inheritdoc/>
     public string DatabaseName => GetDatabaseName(ConnectionString);

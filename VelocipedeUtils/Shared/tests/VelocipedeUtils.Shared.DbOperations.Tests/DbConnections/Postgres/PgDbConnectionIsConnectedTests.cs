@@ -8,7 +8,7 @@ public sealed class PgDbConnectionIsConnectedTests : BaseDbConnectionIsConnected
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public PgDbConnectionIsConnectedTests() : base(DatabaseType.PostgreSQL)
+    public PgDbConnectionIsConnectedTests() : base(VelocipedeDatabaseType.PostgreSQL)
     {
         _connectionString = "Host=localhost;Port=5432;Username=myuser;Password=mypassword;Database=mydatabase;";
     }

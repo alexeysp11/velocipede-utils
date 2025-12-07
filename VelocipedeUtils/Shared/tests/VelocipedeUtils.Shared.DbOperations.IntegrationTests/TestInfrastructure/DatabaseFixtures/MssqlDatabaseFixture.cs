@@ -29,7 +29,7 @@ public sealed class MssqlDatabaseFixture : IDatabaseFixture
     public string ContainerId => $"{container.Id}";
 
     /// <inheritdoc/>
-    public DatabaseType DatabaseType => DatabaseType.MSSQL;
+    public VelocipedeDatabaseType DatabaseType => VelocipedeDatabaseType.MSSQL;
 
     /// <summary>
     /// Default constructor.

@@ -21,8 +21,8 @@ public interface IVelocipedeDbConnection : IDisposable
     /// <summary>
     /// Database type.
     /// </summary>
-    /// <remarks>By default, equals to <see cref="DatabaseType.None"/>.</remarks>
-    DatabaseType DatabaseType { get; }
+    /// <remarks>By default, equals to <see cref="VelocipedeDatabaseType.None"/>.</remarks>
+    VelocipedeDatabaseType DatabaseType { get; }
 
     /// <summary>
     /// Database name.

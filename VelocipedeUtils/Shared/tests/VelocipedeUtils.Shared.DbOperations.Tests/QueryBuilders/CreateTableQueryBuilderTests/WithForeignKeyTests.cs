@@ -1,9 +1,9 @@
-﻿using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
-using VelocipedeUtils.Shared.DbOperations.Models;
+﻿using VelocipedeUtils.Shared.DbOperations.Models;
 using FluentAssertions;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQueryBuilderTests;
 
@@ -17,10 +17,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQue
 public sealed class WithForeignKeyTests
 {
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeyByObject_NullForeignKey(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeyByObject_NullForeignKey(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -40,10 +40,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeyByObject_NotNullForeignKey(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeyByObject_NotNullForeignKey(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -70,10 +70,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeyByObject_TwoNotNullForeignKeys(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeyByObject_TwoNotNullForeignKeys(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -110,10 +110,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeyByObject_BuildFirstAndNullForeignKey(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeyByObject_BuildFirstAndNullForeignKey(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -135,10 +135,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeyByObject_BuildFirstAndNotNullForeignKey(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeyByObject_BuildFirstAndNotNullForeignKey(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -163,10 +163,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeys_NullList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeys_NullList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -186,10 +186,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeys_EmptyList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeys_EmptyList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -208,10 +208,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeys_ValidList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeys_ValidList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -235,10 +235,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeys_BuildFirstAndNullList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeys_BuildFirstAndNullList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -260,10 +260,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeys_BuildFirstAndEmptyList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeys_BuildFirstAndEmptyList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -283,10 +283,10 @@ public sealed class WithForeignKeyTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithForeignKeys_BuildFirstAndValidList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithForeignKeys_BuildFirstAndValidList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.

@@ -10,7 +10,7 @@ public sealed class VelocipedeForeignKeyInfo
     /// <summary>
     /// Database type.
     /// </summary>
-    public DatabaseType DatabaseType { get; set; }
+    public VelocipedeDatabaseType DatabaseType { get; set; }
 
     /// <summary>
     /// A unique identifier for the foreign key within the table.

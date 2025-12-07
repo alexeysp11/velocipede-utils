@@ -26,7 +26,7 @@ public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbCo
     public string? ConnectionString { get; set; }
 
     /// <inheritdoc/>
-    public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+    public VelocipedeDatabaseType DatabaseType => VelocipedeDatabaseType.PostgreSQL;
 
     /// <inheritdoc/>
     public string? DatabaseName => GetDatabaseName(ConnectionString);

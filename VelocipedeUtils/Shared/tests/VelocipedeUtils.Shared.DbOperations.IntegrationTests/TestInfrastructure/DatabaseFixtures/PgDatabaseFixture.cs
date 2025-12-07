@@ -25,7 +25,7 @@ public class PgDatabaseFixture : IDatabaseFixture
     public string ContainerId => $"{container.Id}";
 
     /// <inheritdoc/>
-    public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+    public VelocipedeDatabaseType DatabaseType => VelocipedeDatabaseType.PostgreSQL;
 
     /// <summary>
     /// Default constructor.

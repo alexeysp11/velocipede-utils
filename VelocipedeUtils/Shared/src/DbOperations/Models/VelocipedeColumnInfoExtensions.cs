@@ -45,9 +45,9 @@ public static class VelocipedeColumnInfoExtensions
     {
         return columnInfo.DatabaseType switch
         {
-            DatabaseType.SQLite => columnInfo.GetSqliteNativeType(),
-            DatabaseType.PostgreSQL => columnInfo.GetPostgresNativeType(),
-            DatabaseType.MSSQL => columnInfo.GetMssqlNativeType(),
+            VelocipedeDatabaseType.SQLite => columnInfo.GetSqliteNativeType(),
+            VelocipedeDatabaseType.PostgreSQL => columnInfo.GetPostgresNativeType(),
+            VelocipedeDatabaseType.MSSQL => columnInfo.GetMssqlNativeType(),
             _ => throw new NotSupportedException($"Unsupported database type: {columnInfo.DatabaseType}")
         };
     }
@@ -165,9 +165,9 @@ public static class VelocipedeColumnInfoExtensions
     {
         return columnInfo.DatabaseType switch
         {
-            DatabaseType.SQLite => columnInfo.GetSqliteDbType(),
-            DatabaseType.PostgreSQL => columnInfo.GetPostgresDbType(),
-            DatabaseType.MSSQL => columnInfo.GetMssqlDbType(),
+            VelocipedeDatabaseType.SQLite => columnInfo.GetSqliteDbType(),
+            VelocipedeDatabaseType.PostgreSQL => columnInfo.GetPostgresDbType(),
+            VelocipedeDatabaseType.MSSQL => columnInfo.GetMssqlDbType(),
             _ => throw new NotSupportedException($"Unsupported database type: {columnInfo.DatabaseType}")
         };
     }

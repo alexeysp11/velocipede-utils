@@ -63,12 +63,12 @@ public sealed class VelocipedeQueryBuilderExceptionTests : BaseVelocipedeExcepti
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    [InlineData(DatabaseType.MySQL)]
-    [InlineData(DatabaseType.MariaDB)]
-    public void ThrowIfIncorrectDatabaseType_NoException(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    [InlineData(VelocipedeDatabaseType.MySQL)]
+    [InlineData(VelocipedeDatabaseType.MariaDB)]
+    public void ThrowIfIncorrectDatabaseType_NoException(VelocipedeDatabaseType databaseType)
     {
         Action act = () => VelocipedeQueryBuilderException.ThrowIfIncorrectDatabaseType(databaseType);
         act
@@ -77,9 +77,9 @@ public sealed class VelocipedeQueryBuilderExceptionTests : BaseVelocipedeExcepti
     }
 
     [Theory]
-    [InlineData(DatabaseType.None)]
-    [InlineData(DatabaseType.InMemory)]
-    public void ThrowIfIncorrectDatabaseType_ThrowsVelocipedeQueryBuilderException(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.None)]
+    [InlineData(VelocipedeDatabaseType.InMemory)]
+    public void ThrowIfIncorrectDatabaseType_ThrowsVelocipedeQueryBuilderException(VelocipedeDatabaseType databaseType)
     {
         Action act = () => VelocipedeQueryBuilderException.ThrowIfIncorrectDatabaseType(databaseType);
         act

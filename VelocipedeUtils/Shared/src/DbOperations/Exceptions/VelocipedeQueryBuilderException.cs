@@ -42,15 +42,15 @@ public class VelocipedeQueryBuilderException : Exception
     /// <summary>
     /// Throws <see cref="VelocipedeQueryBuilderException"/> if <paramref name="databaseType"/> has an incorrect database type value:
     /// <list type="bullet">
-    /// <item><description><see cref="DatabaseType.None"/></description></item>
-    /// <item><description><see cref="DatabaseType.InMemory"/></description></item>
+    /// <item><description><see cref="VelocipedeDatabaseType.None"/></description></item>
+    /// <item><description><see cref="VelocipedeDatabaseType.InMemory"/></description></item>
     /// </list>
     /// </summary>
     /// <param name="databaseType">Database type.</param>
     /// <exception cref="VelocipedeQueryBuilderException"><paramref name="databaseType"/> has incorrect database type value.</exception>
-    public static void ThrowIfIncorrectDatabaseType(DatabaseType databaseType)
+    public static void ThrowIfIncorrectDatabaseType(VelocipedeDatabaseType databaseType)
     {
-        if (databaseType is DatabaseType.None or DatabaseType.InMemory)
+        if (databaseType is VelocipedeDatabaseType.None or VelocipedeDatabaseType.InMemory)
         {
             throw new VelocipedeQueryBuilderException(ErrorMessageConstants.UnableToCreateQueryBuilderForDbType);
         }

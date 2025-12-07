@@ -2,7 +2,7 @@
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
-using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQueryBuilderTests;
 
@@ -12,10 +12,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQue
 public sealed class CreateByConstructorTests
 {
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void CreateByConstructor_ValidTableName(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void CreateByConstructor_ValidTableName(VelocipedeDatabaseType databaseType)
     {
         // Arrange & Act.
         string tableName = "TableName";
@@ -44,10 +44,10 @@ public sealed class CreateByConstructorTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void CreateByConstructor_NullTableName_ThrowsArgumentNullException(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void CreateByConstructor_NullTableName_ThrowsArgumentNullException(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         string? tableName = null;
@@ -63,10 +63,10 @@ public sealed class CreateByConstructorTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void CreateByConstructor_EmptyTableName_ThrowsArgumentException(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void CreateByConstructor_EmptyTableName_ThrowsArgumentException(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         string tableName = "";

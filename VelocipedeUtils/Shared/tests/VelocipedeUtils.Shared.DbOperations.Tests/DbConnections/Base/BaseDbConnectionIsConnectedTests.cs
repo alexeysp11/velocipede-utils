@@ -10,14 +10,14 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.DbConnections.Base;
 /// </summary>
 public abstract class BaseDbConnectionIsConnectedTests
 {
-    private readonly DatabaseType _databaseType;
+    private readonly VelocipedeDatabaseType _databaseType;
     protected string _connectionString;
 
     /// <summary>
     /// Default constructor.
     /// </summary>
     /// <param name="databaseType">Database type.</param>
-    protected BaseDbConnectionIsConnectedTests(DatabaseType databaseType)
+    protected BaseDbConnectionIsConnectedTests(VelocipedeDatabaseType databaseType)
     {
         _databaseType = databaseType;
         _connectionString = string.Empty;

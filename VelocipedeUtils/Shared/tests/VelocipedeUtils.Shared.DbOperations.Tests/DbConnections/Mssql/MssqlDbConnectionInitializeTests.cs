@@ -8,7 +8,7 @@ public sealed class MssqlDbConnectionInitializeTests : BaseDbConnectionInitializ
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public MssqlDbConnectionInitializeTests() : base(DatabaseType.MSSQL)
+    public MssqlDbConnectionInitializeTests() : base(VelocipedeDatabaseType.MSSQL)
     {
         _connectionString = "Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;";
     }

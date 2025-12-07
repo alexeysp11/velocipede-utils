@@ -221,7 +221,7 @@ public abstract class BaseVelocipedeIteratorTests
 
         // Properties.
         mockConnection.Setup(x => x.IsConnected).Returns(isConnected);
-        mockConnection.Setup(x => x.DatabaseType).Returns(Enums.DatabaseType.InMemory);
+        mockConnection.Setup(x => x.DatabaseType).Returns(Enums.VelocipedeDatabaseType.InMemory);
 
         // Data.
         DataTable table1 = _tableList1.ToDataTable();

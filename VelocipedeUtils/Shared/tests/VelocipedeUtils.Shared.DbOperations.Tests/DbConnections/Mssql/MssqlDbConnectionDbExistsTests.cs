@@ -7,7 +7,7 @@ public sealed class MssqlDbConnectionDbExistsTests : BaseDbConnectionDbExistsTes
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public MssqlDbConnectionDbExistsTests() : base(Enums.DatabaseType.MSSQL)
+    public MssqlDbConnectionDbExistsTests() : base(Enums.VelocipedeDatabaseType.MSSQL)
     {
     }
 }

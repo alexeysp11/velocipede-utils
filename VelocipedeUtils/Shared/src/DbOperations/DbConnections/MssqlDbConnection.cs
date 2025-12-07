@@ -19,7 +19,7 @@ public sealed class MssqlDbConnection : BaseVelocipedeDbConnection, IVelocipedeD
     public string? ConnectionString { get; set; }
 
     /// <inheritdoc/>
-    public DatabaseType DatabaseType => DatabaseType.MSSQL;
+    public VelocipedeDatabaseType DatabaseType => VelocipedeDatabaseType.MSSQL;
 
     /// <inheritdoc/>
     public string DatabaseName => GetDatabaseName(ConnectionString);

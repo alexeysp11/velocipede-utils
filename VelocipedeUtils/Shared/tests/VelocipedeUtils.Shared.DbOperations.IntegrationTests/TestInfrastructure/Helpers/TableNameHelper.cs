@@ -37,7 +37,7 @@ public static class TableNameHelper
     /// <returns>New table name.</returns>
     public static string ConvertTableName(
         string tableName,
-        DatabaseType databaseType,
+        VelocipedeDatabaseType databaseType,
         CaseConversionType conversionType = CaseConversionType.None,
         DelimitIdentifierType delimitIdentifierType = DelimitIdentifierType.None)
     {
@@ -49,7 +49,7 @@ public static class TableNameHelper
         };
         result = delimitIdentifierType switch
         {
-            DelimitIdentifierType.SquareBrackets => databaseType == DatabaseType.PostgreSQL ? result : $"[{result}]",
+            DelimitIdentifierType.SquareBrackets => databaseType == VelocipedeDatabaseType.PostgreSQL ? result : $"[{result}]",
             DelimitIdentifierType.DoubleQuotes => $@"""{result}""",
             _ => result,
         };

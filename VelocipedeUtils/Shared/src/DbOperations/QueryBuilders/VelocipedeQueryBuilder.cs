@@ -1,7 +1,6 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
-using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
@@ -11,7 +10,7 @@ namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 public sealed class VelocipedeQueryBuilder : IVelocipedeQueryBuilder
 {
     /// <inheritdoc/>
-    public DatabaseType DatabaseType { get; }
+    public VelocipedeDatabaseType DatabaseType { get; }
 
     /// <inheritdoc/>
     public IVelocipedeDbConnection? DbConnection { get; }
@@ -20,7 +19,7 @@ public sealed class VelocipedeQueryBuilder : IVelocipedeQueryBuilder
     /// Default constructor for creating instance of <see cref="VelocipedeQueryBuilder"/>.
     /// </summary>
     /// <param name="databaseType">Database type.</param>
-    public VelocipedeQueryBuilder(DatabaseType databaseType)
+    public VelocipedeQueryBuilder(VelocipedeDatabaseType databaseType)
     {
         VelocipedeQueryBuilderException.ThrowIfIncorrectDatabaseType(databaseType);
 
@@ -32,7 +31,7 @@ public sealed class VelocipedeQueryBuilder : IVelocipedeQueryBuilder
     /// </summary>
     /// <param name="databaseType">Database type.</param>
     /// <param name="dbConnection">Instance of <see cref="IVelocipedeDbConnection"/>.</param>
-    public VelocipedeQueryBuilder(DatabaseType databaseType, IVelocipedeDbConnection dbConnection)
+    public VelocipedeQueryBuilder(VelocipedeDatabaseType databaseType, IVelocipedeDbConnection dbConnection)
         : this(databaseType)
     {
         DbConnection = dbConnection;

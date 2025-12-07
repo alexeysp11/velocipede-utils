@@ -11,7 +11,7 @@ public sealed class SqliteDbConnectionInitializeTests : BaseDbConnectionInitiali
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public SqliteDbConnectionInitializeTests() : base(DatabaseType.SQLite)
+    public SqliteDbConnectionInitializeTests() : base(VelocipedeDatabaseType.SQLite)
     {
         _connectionString = "Data Source=mydatabase.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;";
     }
@@ -49,7 +49,7 @@ public sealed class SqliteDbConnectionInitializeTests : BaseDbConnectionInitiali
     public void GetDatabaseFilePath_InstanceAndDatabaseFilePathField_PathEqualsToExpected(string connectionString, string expectedPath)
     {
         // Arrange.
-        using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(DatabaseType.SQLite, connectionString);
+        using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(VelocipedeDatabaseType.SQLite, connectionString);
 
         // Act.
         string? instancePath = dbConnection.DatabaseName;

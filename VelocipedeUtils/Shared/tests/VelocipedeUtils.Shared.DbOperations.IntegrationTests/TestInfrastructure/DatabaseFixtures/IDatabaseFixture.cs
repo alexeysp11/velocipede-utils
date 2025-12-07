@@ -27,7 +27,7 @@ public interface IDatabaseFixture : IAsyncLifetime
     /// <summary>
     /// Database type.
     /// </summary>
-    DatabaseType DatabaseType { get; }
+    VelocipedeDatabaseType DatabaseType { get; }
 
     /// <summary>
     /// Initialize and get .NET <see cref="DbConnection"/>.

@@ -23,7 +23,7 @@ public abstract class BaseCreateDbTests : BaseDbConnectionTests
         // Arrange.
         string dbName = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        if (_fixture.DatabaseType == DatabaseType.SQLite)
+        if (_fixture.DatabaseType == VelocipedeDatabaseType.SQLite)
             dbName = $"{dbName}.db";
 
         // Act.

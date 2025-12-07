@@ -6,7 +6,6 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Factories;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
-using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders;
 
@@ -16,12 +15,12 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders;
 public sealed class VelocipedeQueryBuilderTests
 {
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    [InlineData(DatabaseType.MySQL)]
-    [InlineData(DatabaseType.MariaDB)]
-    public void CreateByDefaultConstructor(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    [InlineData(VelocipedeDatabaseType.MySQL)]
+    [InlineData(VelocipedeDatabaseType.MariaDB)]
+    public void CreateByDefaultConstructor(VelocipedeDatabaseType databaseType)
     {
         VelocipedeQueryBuilder queryBuilder = new(databaseType);
         queryBuilder
@@ -36,9 +35,9 @@ public sealed class VelocipedeQueryBuilderTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.None)]
-    [InlineData(DatabaseType.InMemory)]
-    public void CreateByDefaultConstructor_IncorrectDatabaseType(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.None)]
+    [InlineData(VelocipedeDatabaseType.InMemory)]
+    public void CreateByDefaultConstructor_IncorrectDatabaseType(VelocipedeDatabaseType databaseType)
     {
         Func<VelocipedeQueryBuilder> act = () => new VelocipedeQueryBuilder(databaseType);
         act
@@ -48,10 +47,10 @@ public sealed class VelocipedeQueryBuilderTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite, typeof(SqliteDbConnection))]
-    [InlineData(DatabaseType.PostgreSQL, typeof(PgDbConnection))]
-    [InlineData(DatabaseType.MSSQL, typeof(MssqlDbConnection))]
-    public void CreateByConstructor_SpecifyDbConnection(DatabaseType databaseType, Type expectedDbConnectionType)
+    [InlineData(VelocipedeDatabaseType.SQLite, typeof(SqliteDbConnection))]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL, typeof(PgDbConnection))]
+    [InlineData(VelocipedeDatabaseType.MSSQL, typeof(MssqlDbConnection))]
+    public void CreateByConstructor_SpecifyDbConnection(VelocipedeDatabaseType databaseType, Type expectedDbConnectionType)
     {
         // Arrange & Act.
         using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
@@ -72,9 +71,9 @@ public sealed class VelocipedeQueryBuilderTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.None)]
-    [InlineData(DatabaseType.InMemory)]
-    public void CreateByConstructor_SpecifyDbConnectionAndIncorrectDatabaseType(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.None)]
+    [InlineData(VelocipedeDatabaseType.InMemory)]
+    public void CreateByConstructor_SpecifyDbConnectionAndIncorrectDatabaseType(VelocipedeDatabaseType databaseType)
     {
         using IVelocipedeDbConnection dbConnection = Mock.Of<IVelocipedeDbConnection>();
         Func<VelocipedeQueryBuilder> act = () => new VelocipedeQueryBuilder(databaseType, dbConnection);
@@ -85,10 +84,10 @@ public sealed class VelocipedeQueryBuilderTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite, typeof(SqliteDbConnection))]
-    [InlineData(DatabaseType.PostgreSQL, typeof(PgDbConnection))]
-    [InlineData(DatabaseType.MSSQL, typeof(MssqlDbConnection))]
-    public void CreateByDbConnection_UseDbConnectionMethod(DatabaseType databaseType, Type expectedDbConnectionType)
+    [InlineData(VelocipedeDatabaseType.SQLite, typeof(SqliteDbConnection))]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL, typeof(PgDbConnection))]
+    [InlineData(VelocipedeDatabaseType.MSSQL, typeof(MssqlDbConnection))]
+    public void CreateByDbConnection_UseDbConnectionMethod(VelocipedeDatabaseType databaseType, Type expectedDbConnectionType)
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(databaseType);
@@ -109,10 +108,10 @@ public sealed class VelocipedeQueryBuilderTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void CreateTable_ValidTableName(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void CreateTable_ValidTableName(VelocipedeDatabaseType databaseType)
     {
         // Arrange & Act.
         string tableName = "TableName";
@@ -144,10 +143,10 @@ public sealed class VelocipedeQueryBuilderTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void CreateTable_NullTableName_ThrowsArgumentNullException(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void CreateTable_NullTableName_ThrowsArgumentNullException(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         string? tableName = null;
@@ -164,10 +163,10 @@ public sealed class VelocipedeQueryBuilderTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void CreateTable_EmptyTableName_ThrowsArgumentException(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void CreateTable_EmptyTableName_ThrowsArgumentException(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         string tableName = "";

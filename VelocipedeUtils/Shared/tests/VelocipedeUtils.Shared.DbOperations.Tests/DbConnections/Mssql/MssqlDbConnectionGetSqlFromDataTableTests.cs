@@ -7,7 +7,7 @@ public sealed class MssqlDbConnectionGetSqlFromDataTableTests : BaseDbConnection
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public MssqlDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.MSSQL)
+    public MssqlDbConnectionGetSqlFromDataTableTests() : base(Enums.VelocipedeDatabaseType.MSSQL)
     {
     }
 }

@@ -11,7 +11,7 @@ public sealed class VelocipedeColumnInfo
     /// <summary>
     /// Database type.
     /// </summary>
-    public DatabaseType DatabaseType { get; set; }
+    public VelocipedeDatabaseType DatabaseType { get; set; }
 
     /// <summary>
     /// Column name.

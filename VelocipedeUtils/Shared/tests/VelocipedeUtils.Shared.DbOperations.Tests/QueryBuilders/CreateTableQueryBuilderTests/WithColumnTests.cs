@@ -4,7 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Models;
-using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQueryBuilderTests;
 
@@ -19,10 +19,10 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQue
 public sealed class WithColumnTests
 {
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumnByObject_NullColumn(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumnByObject_NullColumn(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -42,10 +42,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumnByObject_NotNullColumn(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumnByObject_NotNullColumn(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -72,10 +72,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumnByObject_TwoNotNullColumns(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumnByObject_TwoNotNullColumns(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -112,10 +112,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumnByObject_BuildFirstAndNullColumn(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumnByObject_BuildFirstAndNullColumn(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -137,10 +137,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumnByObject_BuildFirstAndNotNullColumn(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumnByObject_BuildFirstAndNotNullColumn(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -165,10 +165,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumns_NullList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumns_NullList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -188,10 +188,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumns_EmptyList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumns_EmptyList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -210,10 +210,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumns_ValidList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumns_ValidList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -237,10 +237,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumns_BuildFirstAndNullList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumns_BuildFirstAndNullList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -262,10 +262,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumns_BuildFirstAndEmptyList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumns_BuildFirstAndEmptyList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.
@@ -285,10 +285,10 @@ public sealed class WithColumnTests
     }
 
     [Theory]
-    [InlineData(DatabaseType.SQLite)]
-    [InlineData(DatabaseType.PostgreSQL)]
-    [InlineData(DatabaseType.MSSQL)]
-    public void WithColumns_BuildFirstAndValidList(DatabaseType databaseType)
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void WithColumns_BuildFirstAndValidList(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Database object info.

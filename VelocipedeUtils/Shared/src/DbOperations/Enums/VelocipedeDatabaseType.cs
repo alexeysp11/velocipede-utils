@@ -3,7 +3,7 @@
 /// <summary>
 /// Database type.
 /// </summary>
-public enum DatabaseType
+public enum VelocipedeDatabaseType
 {
     /// <summary>
     /// Undefined database.

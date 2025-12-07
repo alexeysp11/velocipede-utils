@@ -1,6 +1,5 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
-using VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
@@ -12,7 +11,7 @@ public interface IVelocipedeQueryBuilder
     /// <summary>
     /// Database type.
     /// </summary>
-    DatabaseType DatabaseType { get; }
+    VelocipedeDatabaseType DatabaseType { get; }
 
     /// <summary>
     /// Instance of <see cref="IVelocipedeDbConnection"/>.

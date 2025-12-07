@@ -7,7 +7,7 @@ public sealed class PgDbConnectionGetSqlFromDataTableTests : BaseDbConnectionGet
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public PgDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.PostgreSQL)
+    public PgDbConnectionGetSqlFromDataTableTests() : base(Enums.VelocipedeDatabaseType.PostgreSQL)
     {
     }
 }

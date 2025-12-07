@@ -22,7 +22,7 @@ public class SqliteDatabaseFixture : IDatabaseFixture
     public string ContainerId { get; private set; }
 
     /// <inheritdoc/>
-    public DatabaseType DatabaseType => DatabaseType.SQLite;
+    public VelocipedeDatabaseType DatabaseType => VelocipedeDatabaseType.SQLite;
 
     /// <summary>
     /// Default constructor.

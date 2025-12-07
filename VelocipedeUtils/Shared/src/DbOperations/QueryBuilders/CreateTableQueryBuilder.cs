@@ -5,7 +5,7 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
-namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
+namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 /// <summary>
 /// Query builder for <c>CREATE TABLE</c> statement.
@@ -13,7 +13,7 @@ namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuil
 public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
 {
     /// <inheritdoc/>
-    public DatabaseType DatabaseType { get; }
+    public VelocipedeDatabaseType DatabaseType { get; }
 
     /// <inheritdoc/>
     public string TableName { get; }
@@ -34,7 +34,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     /// </summary>
     /// <param name="databaseType">Database type.</param>
     /// <param name="tableName">Name of the created table.</param>
-    public CreateTableQueryBuilder(DatabaseType databaseType, string tableName)
+    public CreateTableQueryBuilder(VelocipedeDatabaseType databaseType, string tableName)
     {
         VelocipedeQueryBuilderException.ThrowIfIncorrectDatabaseType(databaseType);
         if (string.IsNullOrEmpty(tableName))

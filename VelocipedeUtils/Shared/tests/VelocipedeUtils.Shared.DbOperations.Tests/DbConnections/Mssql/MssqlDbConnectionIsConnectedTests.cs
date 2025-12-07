@@ -10,7 +10,7 @@ public sealed class MssqlDbConnectionIsConnectedTests : BaseDbConnectionIsConnec
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public MssqlDbConnectionIsConnectedTests() : base(DatabaseType.MSSQL)
+    public MssqlDbConnectionIsConnectedTests() : base(VelocipedeDatabaseType.MSSQL)
     {
         _connectionString = "Data Source=YourServerName;Initial Catalog=YourDatabaseName;User ID=YourUsername;Password=YourPassword;";
     }

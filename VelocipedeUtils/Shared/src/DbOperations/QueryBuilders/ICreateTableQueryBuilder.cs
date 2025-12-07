@@ -2,7 +2,7 @@
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Models;
 
-namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders.CreateTableQueryBuilders;
+namespace VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 /// <summary>
 /// Query builder interface for <c>CREATE TABLE</c> statement.
@@ -12,7 +12,7 @@ public interface ICreateTableQueryBuilder
     /// <summary>
     /// Database type.
     /// </summary>
-    DatabaseType DatabaseType { get; }
+    VelocipedeDatabaseType DatabaseType { get; }
 
     /// <summary>
     /// Name of the created table.
