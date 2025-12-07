@@ -12,66 +12,66 @@ public sealed class VelocipedeColumnInfoTests
 {
     private const string COLUMN_NAME = "ColumnName";
 
-    public static TheoryData<VelocipedeDatabaseType, DbType, string> GetColumnInfoInteger()
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoInteger()
     {
-        return new TheoryData<VelocipedeDatabaseType, DbType, string>
+        return new TheoryData<TestCaseNativeColumnType>
         {
-            { VelocipedeDatabaseType.SQLite, DbType.SByte, "tinyint" },
-            { VelocipedeDatabaseType.SQLite, DbType.Byte, "tinyint" },
-            { VelocipedeDatabaseType.SQLite, DbType.Int16, "smallint" },
-            { VelocipedeDatabaseType.SQLite, DbType.UInt16, "smallint" },
-            { VelocipedeDatabaseType.SQLite, DbType.Int32, "integer" },
-            { VelocipedeDatabaseType.SQLite, DbType.UInt32, "integer" },
-            { VelocipedeDatabaseType.SQLite, DbType.Int64, "bigint" },
-            { VelocipedeDatabaseType.SQLite, DbType.UInt64, "bigint" },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Byte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Int16 }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.UInt16 }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Int32 }, ExpectedNativeType = "integer" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.UInt32 }, ExpectedNativeType = "integer" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Int64 }, ExpectedNativeType = "bigint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.UInt64 }, ExpectedNativeType = "bigint" } },
         };
     }
 
-    public static TheoryData<VelocipedeDatabaseType, DbType, string> GetColumnInfoText()
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoText()
     {
-        return new TheoryData<VelocipedeDatabaseType, DbType, string>
+        return new TheoryData<TestCaseNativeColumnType>
         {
-            { VelocipedeDatabaseType.SQLite, DbType.SByte, "tinyint" },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
         };
     }
 
-    public static TheoryData<VelocipedeDatabaseType, DbType, string> GetColumnInfoBlob()
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoBlob()
     {
-        return new TheoryData<VelocipedeDatabaseType, DbType, string>
+        return new TheoryData<TestCaseNativeColumnType>
         {
-            { VelocipedeDatabaseType.SQLite, DbType.SByte, "tinyint" },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
         };
     }
 
-    public static TheoryData<VelocipedeDatabaseType, DbType, string> GetColumnInfoReal()
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoReal()
     {
-        return new TheoryData<VelocipedeDatabaseType, DbType, string>
+        return new TheoryData<TestCaseNativeColumnType>
         {
-            { VelocipedeDatabaseType.SQLite, DbType.SByte, "tinyint" },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
         };
     }
 
-    public static TheoryData<VelocipedeDatabaseType, DbType, string> GetColumnInfoNumeric()
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoNumeric()
     {
-        return new TheoryData<VelocipedeDatabaseType, DbType, string>
+        return new TheoryData<TestCaseNativeColumnType>
         {
-            { VelocipedeDatabaseType.SQLite, DbType.SByte, "tinyint" },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
         };
     }
 
-    public static TheoryData<VelocipedeDatabaseType, DbType, string> GetColumnInfoBoolean()
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoBoolean()
     {
-        return new TheoryData<VelocipedeDatabaseType, DbType, string>
+        return new TheoryData<TestCaseNativeColumnType>
         {
-            { VelocipedeDatabaseType.SQLite, DbType.SByte, "tinyint" },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
         };
     }
 
-    public static TheoryData<VelocipedeDatabaseType, DbType, string> GetColumnInfoDatetime()
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoDatetime()
     {
-        return new TheoryData<VelocipedeDatabaseType, DbType, string>
+        return new TheoryData<TestCaseNativeColumnType>
         {
-            { VelocipedeDatabaseType.SQLite, DbType.SByte, "tinyint" },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
         };
     }
 
@@ -83,14 +83,11 @@ public sealed class VelocipedeColumnInfoTests
     [MemberData(nameof(GetColumnInfoNumeric), Skip = "Test is not implemented yet")]
     [MemberData(nameof(GetColumnInfoBoolean), Skip = "Test is not implemented yet")]
     [MemberData(nameof(GetColumnInfoDatetime), Skip = "Test is not implemented yet")]
-    public void GetNativeColumnType(VelocipedeDatabaseType databaseType, DbType columnType, string expectedNativeType)
+    public void GetNativeColumnType(TestCaseNativeColumnType testCase)
     {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            ColumnName = COLUMN_NAME,
-            DatabaseType = databaseType,
-            DbType = columnType,
-        };
-        columnInfo.NativeColumnType.Should().Be(expectedNativeType);
+        VelocipedeColumnInfo columnInfo = testCase.ColumnInfo;
+        columnInfo.NativeColumnType
+            .Should()
+            .Be(testCase.ExpectedNativeType);
     }
 }
