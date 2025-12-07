@@ -255,7 +255,7 @@ WHERE type = 'trigger' AND lower(tbl_name) = lower(@TableName)";
     /// <inheritdoc/>
     public IVelocipedeDbConnection GetColumns(
         string tableName,
-        out List<VelocipedeColumnInfo> columnInfo)
+        out List<VelocipedeNativeColumnInfo> columnInfo)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -268,7 +268,7 @@ WHERE type = 'trigger' AND lower(tbl_name) = lower(@TableName)";
     }
 
     /// <inheritdoc/>
-    public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+    public Task<List<VelocipedeNativeColumnInfo>> GetColumnsAsync(string tableName)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -277,7 +277,7 @@ WHERE type = 'trigger' AND lower(tbl_name) = lower(@TableName)";
 
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-        return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
+        return QueryAsync<VelocipedeNativeColumnInfo>(_getColumnsSql, parameters);
     }
 
     /// <inheritdoc/>

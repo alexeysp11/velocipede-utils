@@ -341,7 +341,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public IVelocipedeDbConnection GetColumns(
         string tableName,
-        out List<VelocipedeColumnInfo> columnInfo)
+        out List<VelocipedeNativeColumnInfo> columnInfo)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -358,7 +358,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     }
 
     /// <inheritdoc/>
-    public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+    public Task<List<VelocipedeNativeColumnInfo>> GetColumnsAsync(string tableName)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -371,7 +371,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             new() { Name = "TableName", Value = tableAndSchemaInfo.TableName },
             new() { Name = "SchemaName", Value = tableAndSchemaInfo.SchemaName }
         ];
-        return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
+        return QueryAsync<VelocipedeNativeColumnInfo>(_getColumnsSql, parameters);
     }
 
     /// <inheritdoc/>

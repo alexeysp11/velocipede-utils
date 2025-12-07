@@ -118,7 +118,7 @@ public sealed class VelocipedeForeachTableIterator : IVelocipedeForeachTableIter
                         break;
 
                     case ForeachTableOperationType.GetColumns:
-                        _connection.GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo);
+                        _connection.GetColumns(tableName, out List<VelocipedeNativeColumnInfo>? columnInfo);
                         tableInfo.ColumnInfo = columnInfo;
                         break;
 

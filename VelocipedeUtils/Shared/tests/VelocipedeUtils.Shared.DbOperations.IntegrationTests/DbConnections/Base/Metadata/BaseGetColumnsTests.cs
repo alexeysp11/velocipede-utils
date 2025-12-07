@@ -11,16 +11,16 @@ using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Metadata;
 
 /// <summary>
-/// Base class for testing <see cref="IVelocipedeDbConnection.GetColumns(string, out List{VelocipedeColumnInfo})"/>.
+/// Base class for testing <see cref="IVelocipedeDbConnection.GetColumns(string, out List{VelocipedeNativeColumnInfo})"/>.
 /// </summary>
 public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 {
     /// <summary>
-    /// An alternative to the <see cref="VelocipedeColumnInfo"/> class used for validating metadata in tests.
+    /// An alternative to the <see cref="VelocipedeNativeColumnInfo"/> class used for validating metadata in tests.
     /// </summary>
     /// <remarks>
     /// This class is used because the some values ​​will differ for different databases
-    /// (for example, <see cref="VelocipedeColumnInfo.NativeColumnType"/>), 
+    /// (for example, <see cref="VelocipedeNativeColumnInfo.NativeColumnType"/>), 
     /// which can lead to incorrect comparison of results.
     /// </remarks>
     protected sealed class TestColumnInfo
@@ -33,7 +33,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         /// <summary>
         /// The calculated type of the column.
         /// </summary>
-        public DbType? CalculatedDbType { get; set; }
+        public DbType? DbType { get; set; }
 
         /// <summary>
         /// If native column type identifies a character or bit string type, the declared maximum length;
@@ -89,14 +89,14 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             new()
             {
                 ColumnName = "Id",
-                CalculatedDbType = DbType.Int32,
+                DbType = DbType.Int32,
                 IsPrimaryKey = true,
                 IsNullable = false
             },
             new()
             {
                 ColumnName = "Name",
-                CalculatedDbType = DbType.String,
+                DbType = DbType.String,
                 CharMaxLength = 50,
                 IsPrimaryKey = false,
                 IsNullable = false
@@ -104,7 +104,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             new()
             {
                 ColumnName = "AdditionalInfo",
-                CalculatedDbType = DbType.String,
+                DbType = DbType.String,
                 CharMaxLength = 50,
                 IsPrimaryKey = false,
                 IsNullable = true
@@ -115,14 +115,14 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             new()
             {
                 ColumnName = "id",
-                CalculatedDbType = DbType.Int32,
+                DbType = DbType.Int32,
                 IsPrimaryKey = false,
                 IsNullable = true
             },
             new()
             {
                 ColumnName = "value",
-                CalculatedDbType = DbType.String,
+                DbType = DbType.String,
                 CharMaxLength = 50,
                 IsPrimaryKey = false,
                 IsNullable = true
@@ -156,12 +156,12 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         List<TestColumnInfo> expected = _expectedTestModelColumnInfos;
 
         // Act.
-        dbConnection.GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo);
+        dbConnection.GetColumns(tableName, out List<VelocipedeNativeColumnInfo>? columnInfo);
         List<TestColumnInfo> result = columnInfo
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
+                DbType = x.DbType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -193,13 +193,13 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         // Act.
         dbConnection
             .OpenDb()
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
+            .GetColumns(tableName, out List<VelocipedeNativeColumnInfo>? columnInfo)
             .CloseDb();
         List<TestColumnInfo> result = columnInfo
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
+                DbType = x.DbType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -266,13 +266,13 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 
         // Act.
         dbConnection
-            .GetColumns(tableNameConverted, out List<VelocipedeColumnInfo>? columnInfo)
+            .GetColumns(tableNameConverted, out List<VelocipedeNativeColumnInfo>? columnInfo)
             .CloseDb();
         List<TestColumnInfo> result = columnInfo
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
+                DbType = x.DbType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -369,12 +369,12 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         List<TestColumnInfo> expected = _expectedTestModelColumnInfos;
 
         // Act.
-        List<VelocipedeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableName);
+        List<VelocipedeNativeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableName);
         List<TestColumnInfo> result = columnInfo
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
+                DbType = x.DbType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -405,13 +405,13 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 
         // Act.
         dbConnection.OpenDb();
-        List<VelocipedeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableName);
+        List<VelocipedeNativeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableName);
         dbConnection.CloseDb();
         List<TestColumnInfo> result = columnInfo
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
+                DbType = x.DbType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -430,7 +430,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     {
         // Arrange.
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
-        Func<Task<List<VelocipedeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+        Func<Task<List<VelocipedeNativeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
 
         // Act & Assert.
         await act
@@ -477,13 +477,13 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         List<TestColumnInfo> expected = _expectedCaseInsensitiveColumnInfos;
 
         // Act.
-        List<VelocipedeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableNameConverted);
+        List<VelocipedeNativeColumnInfo>? columnInfo = await dbConnection.GetColumnsAsync(tableNameConverted);
         dbConnection.CloseDb();
         List<TestColumnInfo> result = columnInfo
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
+                DbType = x.DbType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -509,7 +509,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         string connectionString = Guid.NewGuid().ToString();
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Func<Task<List<VelocipedeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+        Func<Task<List<VelocipedeNativeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
 
         // Act & Assert.
         await act
@@ -528,7 +528,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         string tableName = "\"TestModels\"";
         using IVelocipedeDbConnection dbConnection = _fixture.GetVelocipedeDbConnection();
         dbConnection.SetConnectionString(connectionString);
-        Func<Task<List<VelocipedeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
+        Func<Task<List<VelocipedeNativeColumnInfo>>> act = async () => await dbConnection.GetColumnsAsync(tableName);
 
         // Act & Assert.
         await act
@@ -570,13 +570,13 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
 
         // Act.
         dbConnection
-            .GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo)
+            .GetColumns(tableName, out List<VelocipedeNativeColumnInfo>? columnInfo)
             .CloseDb();
         List<TestColumnInfo> result = columnInfo
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                CalculatedDbType = x.CalculatedDbType,
+                DbType = x.DbType,
                 CharMaxLength = x.CharMaxLength,
                 NumericPrecision = x.NumericPrecision,
                 NumericScale = x.NumericScale,

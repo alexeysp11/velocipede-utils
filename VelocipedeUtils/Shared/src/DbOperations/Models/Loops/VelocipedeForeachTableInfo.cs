@@ -23,7 +23,7 @@ public sealed class VelocipedeForeachTableInfo
     /// <summary>
     /// Column info.
     /// </summary>
-    public List<VelocipedeColumnInfo>? ColumnInfo { get; set; }
+    public List<VelocipedeNativeColumnInfo>? ColumnInfo { get; set; }
 
     /// <summary>
     /// Foreign key info.

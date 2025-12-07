@@ -4,9 +4,9 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 namespace VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 /// <summary>
-/// Metadata about table columns from managed code.
+/// Metadata about table columns from database.
 /// </summary>
-public sealed class VelocipedeColumnInfo
+public sealed class VelocipedeNativeColumnInfo
 {
     /// <summary>
     /// Database type.
@@ -19,14 +19,14 @@ public sealed class VelocipedeColumnInfo
     public string? ColumnName { get; set; }
 
     /// <summary>
-    /// Calculated native column type represented as a string.
+    /// Column native type represented as a string.
     /// </summary>
-    public string? NativeColumnType => this.GetNativeType();
+    public string? NativeColumnType { get; set; }
 
     /// <summary>
-    /// The type of the column.
+    /// The calculated type of the column.
     /// </summary>
-    public DbType? DbType { get; set; }
+    public DbType? DbType => this.GetDbType();
 
     /// <summary>
     /// If native column type identifies a character or bit string type, the declared maximum length;

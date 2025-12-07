@@ -8,7 +8,7 @@ using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Mssql.Metadata;
 
 /// <summary>
-/// Class for testing <see cref="MssqlDbConnection.GetColumns(string, out List{VelocipedeColumnInfo})"/>.
+/// Class for testing <see cref="MssqlDbConnection.GetColumns(string, out List{VelocipedeNativeColumnInfo})"/>.
 /// </summary>
 [Collection(nameof(MssqlDatabaseFixtureCollection))]
 public sealed class MssqlGetColumnsTests : BaseGetColumnsTests
@@ -44,15 +44,15 @@ create table {tableName} (
         // 2. Expected result.
         List<TestColumnInfo> expected =
         [
-            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
-            new() { ColumnName = "value1", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value2", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value3", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value4", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value5", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value6", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value7", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value8", CalculatedDbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "id", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value6", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value7", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value8", DbType = DbType.Binary, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
         // Act & Assert.
@@ -73,8 +73,8 @@ create table {tableName} (
         // 2. Expected result.
         List<TestColumnInfo> expected =
         [
-            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
-            new() { ColumnName = "value1", CalculatedDbType = DbType.Boolean, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "id", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", DbType = DbType.Boolean, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
         // Act & Assert.
@@ -100,13 +100,13 @@ create table {tableName} (
         // 2. Expected result.
         List<TestColumnInfo> expected =
         [
-            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
-            new() { ColumnName = "value1", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value2", CalculatedDbType = DbType.DateTime2, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value3", CalculatedDbType = DbType.DateTimeOffset, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value4", CalculatedDbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value5", CalculatedDbType = DbType.Date, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value6", CalculatedDbType = DbType.Time, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "id", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", DbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", DbType = DbType.DateTime2, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", DbType = DbType.DateTimeOffset, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", DbType = DbType.DateTime, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", DbType = DbType.Date, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value6", DbType = DbType.Time, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
         // Act & Assert.
@@ -134,12 +134,12 @@ create table {tableName} (
         // to uniquely identify each row in a table.
         List<TestColumnInfo> expected =
         [
-            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
-            new() { ColumnName = "value1", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value2", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value3", CalculatedDbType = DbType.SByte, CharMaxLength = null, NumericPrecision = 8, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value4", CalculatedDbType = DbType.Int16, CharMaxLength = null, NumericPrecision = 16, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value5", CalculatedDbType = DbType.Int64, CharMaxLength = null, NumericPrecision = 64, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "id", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value2", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value3", DbType = DbType.SByte, CharMaxLength = null, NumericPrecision = 8, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value4", DbType = DbType.Int16, CharMaxLength = null, NumericPrecision = 16, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value5", DbType = DbType.Int64, CharMaxLength = null, NumericPrecision = 64, NumericScale = 0, IsNullable = true },
         ];
 
         // Act & Assert.
@@ -169,14 +169,14 @@ create table {tableName} (
         // If you declare a DECIMAL without specifying precision and scale (e.g., just DECIMAL), SQL Server defaults to DECIMAL(18,0).
         List<TestColumnInfo> expected =
         [
-            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
-            new() { ColumnName = "value1", CalculatedDbType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 18, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value2", CalculatedDbType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value3", CalculatedDbType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 5, IsNullable = true },
-            new() { ColumnName = "value4", CalculatedDbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 18, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value5", CalculatedDbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 10, NumericScale = 0, IsNullable = true },
-            new() { ColumnName = "value6", CalculatedDbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 10, NumericScale = 5, IsNullable = true },
-            new() { ColumnName = "value7", CalculatedDbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 18, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "id", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", DbType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 18, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value2", DbType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value3", DbType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 5, IsNullable = true },
+            new() { ColumnName = "value4", DbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 18, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value5", DbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 10, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value6", DbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 10, NumericScale = 5, IsNullable = true },
+            new() { ColumnName = "value7", DbType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 18, NumericScale = 0, IsNullable = true },
         ];
 
         // Act & Assert.
@@ -204,14 +204,14 @@ create table {tableName} (
         // 2. Expected result.
         List<TestColumnInfo> expected =
         [
-            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
-            new() { ColumnName = "value1", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value2", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value3", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value4", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value5", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value6", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value7", CalculatedDbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "id", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", DbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", DbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", DbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", DbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", DbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value6", DbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value7", DbType = DbType.Double, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
         // Act & Assert.
@@ -251,24 +251,24 @@ create table {tableName} (
         int nationalTextColumnSize = 1073741823;
         List<TestColumnInfo> expected =
         [
-            new() { ColumnName = "id", CalculatedDbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
-            new() { ColumnName = "value1", CalculatedDbType = DbType.String, CharMaxLength = textColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value2", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value3", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value4", CalculatedDbType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value5", CalculatedDbType = DbType.String, CharMaxLength = 1, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value6", CalculatedDbType = DbType.String, CharMaxLength = 1, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value7", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value8", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value9", CalculatedDbType = DbType.String, CharMaxLength = nationalTextColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value10", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value11", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value12", CalculatedDbType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value13", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value14", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value15", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value16", CalculatedDbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
-            new() { ColumnName = "value17", CalculatedDbType = DbType.String, CharMaxLength = nationalTextColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "id", DbType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", DbType = DbType.String, CharMaxLength = textColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", DbType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", DbType = DbType.String, CharMaxLength = 1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value6", DbType = DbType.String, CharMaxLength = 1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value7", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value8", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value9", DbType = DbType.String, CharMaxLength = nationalTextColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value10", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value11", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value12", DbType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value13", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value14", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value15", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value16", DbType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value17", DbType = DbType.String, CharMaxLength = nationalTextColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
         // Act & Assert.

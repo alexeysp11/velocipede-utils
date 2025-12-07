@@ -325,7 +325,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     /// <inheritdoc/>
     public IVelocipedeDbConnection GetColumns(
         string tableName,
-        out List<VelocipedeColumnInfo> columnInfo)
+        out List<VelocipedeNativeColumnInfo> columnInfo)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -338,7 +338,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
     }
 
     /// <inheritdoc/>
-    public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+    public Task<List<VelocipedeNativeColumnInfo>> GetColumnsAsync(string tableName)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -347,7 +347,7 @@ WHERE s.type = 'TR' and object_name(parent_obj) = @TableName";
 
         tableName = tableName.Trim('"');
         List<VelocipedeCommandParameter> parameters = [new() { Name = "TableName", Value = tableName }];
-        return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
+        return QueryAsync<VelocipedeNativeColumnInfo>(_getColumnsSql, parameters);
     }
 
     /// <inheritdoc/>
