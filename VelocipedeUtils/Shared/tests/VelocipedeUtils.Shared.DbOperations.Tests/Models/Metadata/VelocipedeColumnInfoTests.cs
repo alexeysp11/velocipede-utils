@@ -116,7 +116,14 @@ public sealed class VelocipedeColumnInfoTests
     {
         return new TheoryData<TestCaseNativeColumnType>
         {
-            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Double }, ExpectedNativeType = "double precision" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Single }, ExpectedNativeType = "double precision" } },
+
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Double }, ExpectedNativeType = "double precision" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Single }, ExpectedNativeType = "double precision" } },
+
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Double }, ExpectedNativeType = "double precision" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Single }, ExpectedNativeType = "double precision" } },
         };
     }
 
@@ -166,7 +173,7 @@ public sealed class VelocipedeColumnInfoTests
     [MemberData(nameof(GetColumnInfoInteger))]
     [MemberData(nameof(GetColumnInfoText))]
     [MemberData(nameof(GetColumnInfoBlob))]
-    [MemberData(nameof(GetColumnInfoReal), Skip = "Test is not implemented yet")]
+    [MemberData(nameof(GetColumnInfoReal))]
     [MemberData(nameof(GetColumnInfoNumeric), Skip = "Test is not implemented yet")]
     [MemberData(nameof(GetColumnInfoBoolean))]
     [MemberData(nameof(GetColumnInfoDatetime))]

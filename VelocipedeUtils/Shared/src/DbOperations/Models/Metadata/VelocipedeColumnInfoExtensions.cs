@@ -73,9 +73,9 @@ public static class VelocipedeColumnInfoExtensions
             DbType.DateTime2 => "datetime2",
             
             DbType.Boolean => "boolean",
-            
-            DbType.Double => "real",
-            
+
+            DbType.Double or DbType.Single => "double precision",
+
             DbType.VarNumeric or DbType.Decimal => "numeric",
             
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.DbType}")
@@ -109,6 +109,8 @@ public static class VelocipedeColumnInfoExtensions
             DbType.DateTimeOffset => "timestamp with time zone",
             
             DbType.Boolean => "boolean",
+
+            DbType.Double or DbType.Single => "double precision",
             
             DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
                 ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
@@ -149,7 +151,9 @@ public static class VelocipedeColumnInfoExtensions
             DbType.DateTimeOffset => "datetimeoffset",
 
             DbType.Boolean => "bit",
-            
+
+            DbType.Double or DbType.Single => "double precision",
+
             DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
                 ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
                 : "decimal(18, 4)",
