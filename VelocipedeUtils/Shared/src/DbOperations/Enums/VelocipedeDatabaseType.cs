@@ -16,47 +16,47 @@ public enum VelocipedeDatabaseType
     InMemory = 1,
 
     /// <summary>
-    /// SQLite database.
+    /// SQLite.
     /// </summary>
     SQLite = 2,
 
     /// <summary>
-    /// PostgreSQL database.
+    /// PostgreSQL.
     /// </summary>
     PostgreSQL = 3,
 
     /// <summary>
-    /// MS SQL database.
+    /// MS SQL Server.
     /// </summary>
     MSSQL = 4,
 
     /// <summary>
-    /// MySQL database.
+    /// MySQL.
     /// </summary>
     MySQL = 5,
 
     /// <summary>
-    /// MariaDB database.
+    /// MariaDB.
     /// </summary>
     MariaDB = 6,
 
     /// <summary>
-    /// HSQLDB database.
+    /// HSQLDB.
     /// </summary>
     HSQLDB = 7,
 
     /// <summary>
-    /// Oracle database.
+    /// Oracle.
     /// </summary>
     Oracle = 8,
 
     /// <summary>
-    /// Clickhouse database.
+    /// Clickhouse.
     /// </summary>
     Clickhouse = 9,
 
     /// <summary>
-    /// Firebird database.
+    /// Firebird.
     /// </summary>
     Firebird = 10,
 }

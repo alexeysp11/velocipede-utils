@@ -81,7 +81,9 @@ public static class VelocipedeColumnInfoExtensions
     {
         return columnInfo.DbType switch
         {
-            DbType.Int32 => "integer",
+            DbType.SByte or DbType.Byte or DbType.Int16 or DbType.UInt16 => "smallint",
+            DbType.Int32 or DbType.UInt32 => "integer",
+            DbType.Int64 or DbType.UInt64 => "bigint",
             DbType.String or DbType.AnsiString => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "text",
@@ -104,7 +106,10 @@ public static class VelocipedeColumnInfoExtensions
     {
         return columnInfo.DbType switch
         {
-            DbType.Int32 => "int",
+            DbType.SByte or DbType.Byte => "tinyint",
+            DbType.Int16 or DbType.UInt16 => "smallint",
+            DbType.Int32 or DbType.UInt32 => "int",
+            DbType.Int64 or DbType.UInt64 => "bigint",
             DbType.String => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"nvarchar({columnInfo.CharMaxLength})"
                 : "nvarchar(max)",

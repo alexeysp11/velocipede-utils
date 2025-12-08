@@ -24,6 +24,22 @@ public sealed class VelocipedeColumnInfoTests
             { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.UInt32 }, ExpectedNativeType = "integer" } },
             { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Int64 }, ExpectedNativeType = "bigint" } },
             { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.UInt64 }, ExpectedNativeType = "bigint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.SByte }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Byte }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Int16 }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.UInt16 }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Int32 }, ExpectedNativeType = "integer" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.UInt32 }, ExpectedNativeType = "integer" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Int64 }, ExpectedNativeType = "bigint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.UInt64 }, ExpectedNativeType = "bigint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Byte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Int16 }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.UInt16 }, ExpectedNativeType = "smallint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Int32 }, ExpectedNativeType = "int" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.UInt32 }, ExpectedNativeType = "int" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Int64 }, ExpectedNativeType = "bigint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.UInt64 }, ExpectedNativeType = "bigint" } },
         };
     }
 
