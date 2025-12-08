@@ -63,6 +63,7 @@ public static class VelocipedeColumnInfoExtensions
                 => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                     ? $"varchar({columnInfo.CharMaxLength})"
                     : "text",
+            DbType.Binary => "blob",
             DbType.DateTime => "datetime",
             DbType.Boolean => "boolean",
             DbType.Double => "real",
@@ -88,6 +89,7 @@ public static class VelocipedeColumnInfoExtensions
                 => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                     ? $"varchar({columnInfo.CharMaxLength})"
                     : "text",
+            DbType.Binary => "bytea",
             DbType.DateTime => "timestamp",
             DbType.Boolean => "boolean",
             DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
@@ -117,6 +119,7 @@ public static class VelocipedeColumnInfoExtensions
             DbType.AnsiString or DbType.AnsiStringFixedLength => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "varchar(max)",
+            DbType.Binary => "binary",
             DbType.DateTime => "datetime2",
             DbType.Boolean => "bit",
             DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue

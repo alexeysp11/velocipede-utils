@@ -106,7 +106,9 @@ public sealed class VelocipedeColumnInfoTests
     {
         return new TheoryData<TestCaseNativeColumnType>
         {
-            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Binary }, ExpectedNativeType = "blob" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Binary }, ExpectedNativeType = "bytea" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Binary }, ExpectedNativeType = "binary" } },
         };
     }
 
@@ -145,7 +147,7 @@ public sealed class VelocipedeColumnInfoTests
     [Theory]
     [MemberData(nameof(GetColumnInfoInteger))]
     [MemberData(nameof(GetColumnInfoText))]
-    [MemberData(nameof(GetColumnInfoBlob), Skip = "Test is not implemented yet")]
+    [MemberData(nameof(GetColumnInfoBlob))]
     [MemberData(nameof(GetColumnInfoReal), Skip = "Test is not implemented yet")]
     [MemberData(nameof(GetColumnInfoNumeric), Skip = "Test is not implemented yet")]
     [MemberData(nameof(GetColumnInfoBoolean), Skip = "Test is not implemented yet")]
