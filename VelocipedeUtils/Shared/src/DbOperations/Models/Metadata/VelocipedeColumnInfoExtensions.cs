@@ -53,7 +53,7 @@ public static class VelocipedeColumnInfoExtensions
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for SQLite.</exception>
     public static string GetSqliteNativeType(this VelocipedeColumnInfo columnInfo)
     {
-        return columnInfo.DbType switch
+        string baseType = columnInfo.DbType switch
         {
             DbType.SByte or DbType.Byte => "tinyint",
             DbType.Int16 or DbType.UInt16 => "smallint",
@@ -76,10 +76,32 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.Double or DbType.Single => "double precision",
 
-            DbType.VarNumeric or DbType.Decimal => "numeric",
+            DbType.VarNumeric => "numeric",
+            DbType.Decimal => "decimal",
             
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.DbType}")
         };
+
+        // Numeric or decimal.
+        if (columnInfo.DbType is (DbType.VarNumeric or DbType.Decimal))
+        {
+            bool hasValidPrecision = columnInfo.NumericPrecision.HasValue && columnInfo.NumericPrecision > 0;
+            bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
+            if (hasValidPrecision && hasValidScale)
+            {
+                return $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
+            }
+            else if (hasValidPrecision)
+            {
+                return $"{baseType}({columnInfo.NumericPrecision})";
+            }
+            else
+            {
+                return baseType;
+            }
+        }
+
+        return baseType;
     }
 
     /// <summary>
@@ -90,7 +112,7 @@ public static class VelocipedeColumnInfoExtensions
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for PostgreSQL.</exception>
     public static string GetPostgresNativeType(this VelocipedeColumnInfo columnInfo)
     {
-        return columnInfo.DbType switch
+        string baseType = columnInfo.DbType switch
         {
             DbType.SByte or DbType.Byte or DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "integer",
@@ -111,13 +133,33 @@ public static class VelocipedeColumnInfoExtensions
             DbType.Boolean => "boolean",
 
             DbType.Double or DbType.Single => "double precision",
-            
-            DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
-                ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
-                : "decimal(18, 4)",
-            
+
+            DbType.VarNumeric => "numeric",
+            DbType.Decimal => "decimal",
+
             _ => throw new NotSupportedException($"Unsupported DbType for PostgreSQL: {columnInfo.DbType}")
         };
+
+        // Numeric or decimal.
+        if (columnInfo.DbType is (DbType.VarNumeric or DbType.Decimal))
+        {
+            bool hasValidPrecision = columnInfo.NumericPrecision.HasValue && columnInfo.NumericPrecision > 0;
+            bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
+            if (hasValidPrecision && hasValidScale)
+            {
+                return $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
+            }
+            else if (hasValidPrecision)
+            {
+                return $"{baseType}({columnInfo.NumericPrecision})";
+            }
+            else
+            {
+                return baseType;
+            }
+        }
+
+        return baseType;
     }
 
     /// <summary>
@@ -128,7 +170,7 @@ public static class VelocipedeColumnInfoExtensions
     /// <exception cref="NotSupportedException">Unsupported <see cref="DbType"/> for SQL Server.</exception>
     public static string GetMssqlNativeType(this VelocipedeColumnInfo columnInfo)
     {
-        return columnInfo.DbType switch
+        string baseType = columnInfo.DbType switch
         {
             DbType.SByte or DbType.Byte => "tinyint",
             DbType.Int16 or DbType.UInt16 => "smallint",
@@ -154,11 +196,31 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.Double or DbType.Single => "double precision",
 
-            DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
-                ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
-                : "decimal(18, 4)",
-            
+            DbType.VarNumeric => "numeric",
+            DbType.Decimal => "decimal",
+
             _ => throw new NotSupportedException($"Unsupported DbType for SQL Server: {columnInfo.DbType}")
         };
+
+        // Numeric or decimal.
+        if (columnInfo.DbType is (DbType.VarNumeric or DbType.Decimal))
+        {
+            bool hasValidPrecision = columnInfo.NumericPrecision.HasValue && columnInfo.NumericPrecision > 0;
+            bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
+            if (hasValidPrecision && hasValidScale)
+            {
+                return $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
+            }
+            else if (hasValidPrecision)
+            {
+                return $"{baseType}({columnInfo.NumericPrecision})";
+            }
+            else
+            {
+                return baseType;
+            }
+        }
+
+        return baseType;
     }
 }

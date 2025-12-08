@@ -131,7 +131,62 @@ public sealed class VelocipedeColumnInfoTests
     {
         return new TheoryData<TestCaseNativeColumnType>
         {
-            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = -1, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = 0, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null }, ExpectedNativeType = "numeric(10)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = 10, NumericScale = null }, ExpectedNativeType = "decimal(10)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 }, ExpectedNativeType = "numeric(10, 5)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 }, ExpectedNativeType = "decimal(10, 5)" } },
+
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = -1, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = 0, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null }, ExpectedNativeType = "numeric(10)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = 10, NumericScale = null }, ExpectedNativeType = "decimal(10)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 }, ExpectedNativeType = "numeric(10, 5)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 }, ExpectedNativeType = "decimal(10, 5)" } },
+
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = -1, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = 0, NumericScale = null }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 }, ExpectedNativeType = "numeric" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 }, ExpectedNativeType = "decimal" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null }, ExpectedNativeType = "numeric(10)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = 10, NumericScale = null }, ExpectedNativeType = "decimal(10)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 }, ExpectedNativeType = "numeric(10, 5)" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 }, ExpectedNativeType = "decimal(10, 5)" } },
         };
     }
 
@@ -174,7 +229,7 @@ public sealed class VelocipedeColumnInfoTests
     [MemberData(nameof(GetColumnInfoText))]
     [MemberData(nameof(GetColumnInfoBlob))]
     [MemberData(nameof(GetColumnInfoReal))]
-    [MemberData(nameof(GetColumnInfoNumeric), Skip = "Test is not implemented yet")]
+    [MemberData(nameof(GetColumnInfoNumeric))]
     [MemberData(nameof(GetColumnInfoBoolean))]
     [MemberData(nameof(GetColumnInfoDatetime))]
     public void GetNativeColumnType(TestCaseNativeColumnType testCase)
