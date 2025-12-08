@@ -142,7 +142,23 @@ public sealed class VelocipedeColumnInfoTests
     {
         return new TheoryData<TestCaseNativeColumnType>
         {
-            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.SByte }, ExpectedNativeType = "tinyint" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Time }, ExpectedNativeType = "time" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.Date }, ExpectedNativeType = "date" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.DateTime }, ExpectedNativeType = "datetime" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.DateTime2 }, ExpectedNativeType = "datetime2" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, DbType = DbType.DateTimeOffset }, ExpectedNativeType = "datetime" } },
+
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Time }, ExpectedNativeType = "time" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.Date }, ExpectedNativeType = "date" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.DateTime }, ExpectedNativeType = "timestamp" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.DateTime2 }, ExpectedNativeType = "timestamp" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, DbType = DbType.DateTimeOffset }, ExpectedNativeType = "timestamp with time zone" } },
+
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Time }, ExpectedNativeType = "time" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.Date }, ExpectedNativeType = "date" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.DateTime }, ExpectedNativeType = "datetime" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.DateTime2 }, ExpectedNativeType = "datetime2" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, DbType = DbType.DateTimeOffset }, ExpectedNativeType = "datetimeoffset" } },
         };
     }
 
@@ -153,7 +169,7 @@ public sealed class VelocipedeColumnInfoTests
     [MemberData(nameof(GetColumnInfoReal), Skip = "Test is not implemented yet")]
     [MemberData(nameof(GetColumnInfoNumeric), Skip = "Test is not implemented yet")]
     [MemberData(nameof(GetColumnInfoBoolean))]
-    [MemberData(nameof(GetColumnInfoDatetime), Skip = "Test is not implemented yet")]
+    [MemberData(nameof(GetColumnInfoDatetime))]
     public void GetNativeColumnType(TestCaseNativeColumnType testCase)
     {
         VelocipedeColumnInfo columnInfo = testCase.ColumnInfo;

@@ -59,15 +59,25 @@ public static class VelocipedeColumnInfoExtensions
             DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "integer",
             DbType.Int64 or DbType.UInt64 => "bigint",
+            
             DbType.String or DbType.StringFixedLength or DbType.AnsiString or DbType.AnsiStringFixedLength
                 => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                     ? $"varchar({columnInfo.CharMaxLength})"
                     : "text",
+            
             DbType.Binary => "blob",
-            DbType.DateTime => "datetime",
+            
+            DbType.Time => "time",
+            DbType.Date => "date",
+            DbType.DateTime or DbType.DateTimeOffset => "datetime",
+            DbType.DateTime2 => "datetime2",
+            
             DbType.Boolean => "boolean",
+            
             DbType.Double => "real",
+            
             DbType.VarNumeric or DbType.Decimal => "numeric",
+            
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.DbType}")
         };
     }
@@ -85,16 +95,25 @@ public static class VelocipedeColumnInfoExtensions
             DbType.SByte or DbType.Byte or DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "integer",
             DbType.Int64 or DbType.UInt64 => "bigint",
+            
             DbType.String or DbType.StringFixedLength or DbType.AnsiString or DbType.AnsiStringFixedLength
                 => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                     ? $"varchar({columnInfo.CharMaxLength})"
                     : "text",
+            
             DbType.Binary => "bytea",
-            DbType.DateTime => "timestamp",
+
+            DbType.Time => "time",
+            DbType.Date => "date",
+            DbType.DateTime or DbType.DateTime2 => "timestamp",
+            DbType.DateTimeOffset => "timestamp with time zone",
+            
             DbType.Boolean => "boolean",
+            
             DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
                 ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
                 : "decimal(18, 4)",
+            
             _ => throw new NotSupportedException($"Unsupported DbType for PostgreSQL: {columnInfo.DbType}")
         };
     }
@@ -113,18 +132,28 @@ public static class VelocipedeColumnInfoExtensions
             DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "int",
             DbType.Int64 or DbType.UInt64 => "bigint",
+
             DbType.String or DbType.StringFixedLength => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"nvarchar({columnInfo.CharMaxLength})"
                 : "nvarchar(max)",
             DbType.AnsiString or DbType.AnsiStringFixedLength => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "varchar(max)",
+            
             DbType.Binary => "binary",
-            DbType.DateTime => "datetime2",
+            
+            DbType.Time => "time",
+            DbType.Date => "date",
+            DbType.DateTime => "datetime",
+            DbType.DateTime2 => "datetime2",
+            DbType.DateTimeOffset => "datetimeoffset",
+
             DbType.Boolean => "bit",
+            
             DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
                 ? $"decimal({columnInfo.NumericPrecision.Value}, {columnInfo.NumericScale.Value})"
                 : "decimal(18, 4)",
+            
             _ => throw new NotSupportedException($"Unsupported DbType for SQL Server: {columnInfo.DbType}")
         };
     }

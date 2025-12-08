@@ -179,7 +179,9 @@ public static class VelocipedeNativeColumnInfoExtensions
                 columnInfo.NumericScale = 0;
                 break;
 
-            case "text" or "varchar" or "char" or "character" or "varying character" or "character varying" or "native character" or "nvarchar" or "nchar" or "clob":
+            case "text" or "clob":
+            case "varchar" or "char" or "character" or "varying character" or "character varying":
+            case "nvarchar" or "nchar" or "native character":
                 result = DbType.String;
                 columnInfo.CharMaxLength = -1;
                 columnInfo.NumericPrecision = null;
@@ -290,17 +292,24 @@ public static class VelocipedeNativeColumnInfoExtensions
             "smallint" or "smallserial" or "int2" => DbType.Int16,
             "int" or "integer" or "serial" or "int4" => DbType.Int32,
             "bigint" or "bigserial" or "int8" => DbType.Int64,
+            
             "text" or "varchar" or "character varying" or "character" or "char" or "bpchar" => DbType.String,
+            
             "decimal" => DbType.Decimal,
             "numeric" => DbType.VarNumeric,
+            
             "real" or "double precision" or "float4" or "float8" => DbType.Double,
+            
             "boolean" or "bool" => DbType.Boolean,
+            
             "bytea" => DbType.Binary,
+            
             "timestamp" or "timestamp without time zone" => DbType.DateTime,
             "timestamp with time zone" or "timestamptz" => DbType.DateTimeOffset,
             "date" => DbType.Date,
             "time" or "time without time zone" or "time with time zone" => DbType.Time,
             "interval" => DbType.DateTime,
+            
             _ => DbType.Object
         };
         if (result == DbType.Double)
