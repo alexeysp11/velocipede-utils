@@ -59,7 +59,7 @@ public static class VelocipedeColumnInfoExtensions
             DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "integer",
             DbType.Int64 or DbType.UInt64 => "bigint",
-            DbType.String or DbType.AnsiString or DbType.AnsiStringFixedLength
+            DbType.String or DbType.StringFixedLength or DbType.AnsiString or DbType.AnsiStringFixedLength
                 => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                     ? $"varchar({columnInfo.CharMaxLength})"
                     : "text",
@@ -84,9 +84,10 @@ public static class VelocipedeColumnInfoExtensions
             DbType.SByte or DbType.Byte or DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "integer",
             DbType.Int64 or DbType.UInt64 => "bigint",
-            DbType.String or DbType.AnsiString => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
-                ? $"varchar({columnInfo.CharMaxLength})"
-                : "text",
+            DbType.String or DbType.StringFixedLength or DbType.AnsiString or DbType.AnsiStringFixedLength
+                => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
+                    ? $"varchar({columnInfo.CharMaxLength})"
+                    : "text",
             DbType.DateTime => "timestamp",
             DbType.Boolean => "boolean",
             DbType.Decimal => columnInfo.NumericPrecision.HasValue && columnInfo.NumericScale.HasValue
@@ -110,10 +111,10 @@ public static class VelocipedeColumnInfoExtensions
             DbType.Int16 or DbType.UInt16 => "smallint",
             DbType.Int32 or DbType.UInt32 => "int",
             DbType.Int64 or DbType.UInt64 => "bigint",
-            DbType.String => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
+            DbType.String or DbType.StringFixedLength => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"nvarchar({columnInfo.CharMaxLength})"
                 : "nvarchar(max)",
-            DbType.AnsiString => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
+            DbType.AnsiString or DbType.AnsiStringFixedLength => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "varchar(max)",
             DbType.DateTime => "datetime2",
