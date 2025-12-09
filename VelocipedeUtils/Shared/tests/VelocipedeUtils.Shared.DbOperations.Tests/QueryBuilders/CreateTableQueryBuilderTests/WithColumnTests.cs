@@ -120,10 +120,17 @@ public sealed class WithColumnTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         VelocipedeColumnInfo? columnInfo = null;
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
 #nullable disable
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumn(columnInfo);
@@ -145,6 +152,12 @@ public sealed class WithColumnTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         VelocipedeColumnInfo columnInfo = new()
         {
             DatabaseType = databaseType,
@@ -154,6 +167,7 @@ public sealed class WithColumnTests
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumn(columnInfo);
 
@@ -245,10 +259,17 @@ public sealed class WithColumnTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         List<VelocipedeColumnInfo>? columnInfos = null;
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
 #nullable disable
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
@@ -270,10 +291,17 @@ public sealed class WithColumnTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         List<VelocipedeColumnInfo> columnInfos = [];
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
 
@@ -293,6 +321,12 @@ public sealed class WithColumnTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         List<VelocipedeColumnInfo> columnInfos =
         [
             new() { DatabaseType = databaseType, ColumnName = "ColumnName1", ColumnType = DbType.Int32, },
@@ -301,6 +335,7 @@ public sealed class WithColumnTests
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithColumns(columnInfos);
 

@@ -4,6 +4,7 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
+using System.Data;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.QueryBuilders.CreateTableQueryBuilderTests;
 
@@ -118,10 +119,17 @@ public sealed class WithForeignKeyTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         VelocipedeForeignKeyInfo? foreignKeyInfo = null;
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
 #nullable disable
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithForeignKey(foreignKeyInfo);
@@ -143,6 +151,12 @@ public sealed class WithForeignKeyTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         VelocipedeForeignKeyInfo foreignKeyInfo = new()
         {
             DatabaseType = databaseType,
@@ -152,6 +166,7 @@ public sealed class WithForeignKeyTests
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithForeignKey(foreignKeyInfo);
 
@@ -243,10 +258,17 @@ public sealed class WithForeignKeyTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         List<VelocipedeForeignKeyInfo>? columnInfos = null;
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
 #nullable disable
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithForeignKeys(columnInfos);
@@ -268,10 +290,17 @@ public sealed class WithForeignKeyTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         List<VelocipedeForeignKeyInfo> columnInfos = [];
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithForeignKeys(columnInfos);
 
@@ -291,6 +320,12 @@ public sealed class WithForeignKeyTests
         // Arrange.
         // 1. Database object info.
         string tableName = "TableName";
+        VelocipedeColumnInfo existingColumnInfo = new()
+        {
+            DatabaseType = databaseType,
+            ColumnName = "ExistingColumnName",
+            ColumnType = DbType.String,
+        };
         List<VelocipedeForeignKeyInfo> foreignKeyInfo =
         [
             new() { DatabaseType = databaseType, FromColumn = "FromColumnName1", ToColumn = "ToColumnName1", },
@@ -299,6 +334,7 @@ public sealed class WithForeignKeyTests
 
         // 2. Query builder.
         CreateTableQueryBuilder createQueryBuilder = new(databaseType, tableName);
+        createQueryBuilder.WithColumn(existingColumnInfo);
         createQueryBuilder.Build();
         Func<ICreateTableQueryBuilder> act = () => createQueryBuilder.WithForeignKeys(foreignKeyInfo);
 

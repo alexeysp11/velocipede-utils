@@ -54,6 +54,10 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
     public ICreateTableQueryBuilder Build()
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
+        if (ColumnInfos.Count == 0)
+        {
+            throw new VelocipedeQueryBuilderException(ErrorMessageConstants.QueryBuilderRequiresColumn);
+        }
 
         _query = new StringBuilder();
         _query.AppendLine($"CREATE TABLE {TableName} (");

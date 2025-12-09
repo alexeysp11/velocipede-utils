@@ -26,6 +26,7 @@ public static class ErrorMessageConstants
     public const string ErrorInQueryBuilder = "Error in query builder";
     public const string UnableToCreateQueryBuilderForDbType = "Unable to create query builder for the specified database type";
     public const string QueryBuilderIsBuilt = "Query builder is already built";
+    public const string QueryBuilderRequiresColumn = "Query builder requires at least one column for creating table";
     public const string IncorrectQueryBuilderResult = "Incorrect query builder result";
     public const string EmptyColumnInfoList = "Column info list could not be empty";
     public const string EmptyForeignKeyInfoList = "Foreign key info list could not be empty";
