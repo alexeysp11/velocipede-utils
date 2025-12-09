@@ -37,7 +37,7 @@ dbConnection
 Данная библиотека предоставляет функционал для коммуникации с реляционными базами данных с использованием ADO.NET и Dapper под капотом. Информация о типах БД, которые поддерживаются на текущий момент:
 - [x] [SQLite](https://sqlite.org/)
 - [x] [PostgreSQL](https://www.postgresql.org/)
-- [x] [MS SQL](https://www.microsoft.com/en-us/sql-server)
+- [x] [SQL Server](https://www.microsoft.com/en-us/sql-server)
 - [ ] [MySQL](https://www.mysql.com/)
 - [ ] [Oracle](https://www.oracle.com/database/)
 - [ ] [Clickhouse](https://clickhouse.com/)

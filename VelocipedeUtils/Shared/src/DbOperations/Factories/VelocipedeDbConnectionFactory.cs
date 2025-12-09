@@ -20,7 +20,7 @@ public static class VelocipedeDbConnectionFactory
         {
             VelocipedeDatabaseType.SQLite => new SqliteDbConnection(connectionString),
             VelocipedeDatabaseType.PostgreSQL => new PgDbConnection(connectionString),
-            VelocipedeDatabaseType.MSSQL => new MssqlDbConnection(connectionString),
+            VelocipedeDatabaseType.MSSQL => new SqlServerDbConnection(connectionString),
             VelocipedeDatabaseType.MySQL => throw new NotImplementedException("This class is corrently excluded due to .NET MySQL errors \"The given key was not present in the dictionary\""),
             VelocipedeDatabaseType.Oracle => throw new NotImplementedException("The Oracle provider is not implemented yet"),
             _ => throw new ArgumentException("Specified database type is not valid", nameof(databaseType))

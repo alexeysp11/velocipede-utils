@@ -37,7 +37,7 @@ dbConnection
 This library provides functionality for communicating with relational databases using ADO.NET and Dapper under the hood. Information on currently supported database types:
 - [x] [SQLite](https://sqlite.org/)
 - [x] [PostgreSQL](https://www.postgresql.org/)
-- [x] [MS SQL](https://www.microsoft.com/en-us/sql-server)
+- [x] [SQL Server](https://www.microsoft.com/en-us/sql-server)
 - [ ] [MySQL](https://www.mysql.com/)
 - [ ] [Oracle](https://www.oracle.com/database/)
 - [ ] [Clickhouse](https://clickhouse.com/)

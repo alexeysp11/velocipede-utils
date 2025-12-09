@@ -49,7 +49,7 @@ public sealed class VelocipedeQueryBuilderTests
     [Theory]
     [InlineData(VelocipedeDatabaseType.SQLite, typeof(SqliteDbConnection))]
     [InlineData(VelocipedeDatabaseType.PostgreSQL, typeof(PgDbConnection))]
-    [InlineData(VelocipedeDatabaseType.MSSQL, typeof(MssqlDbConnection))]
+    [InlineData(VelocipedeDatabaseType.MSSQL, typeof(SqlServerDbConnection))]
     public void CreateByConstructor_SpecifyDbConnection(VelocipedeDatabaseType databaseType, Type expectedDbConnectionType)
     {
         // Arrange & Act.
@@ -86,7 +86,7 @@ public sealed class VelocipedeQueryBuilderTests
     [Theory]
     [InlineData(VelocipedeDatabaseType.SQLite, typeof(SqliteDbConnection))]
     [InlineData(VelocipedeDatabaseType.PostgreSQL, typeof(PgDbConnection))]
-    [InlineData(VelocipedeDatabaseType.MSSQL, typeof(MssqlDbConnection))]
+    [InlineData(VelocipedeDatabaseType.MSSQL, typeof(SqlServerDbConnection))]
     public void CreateByDbConnection_UseDbConnectionMethod(VelocipedeDatabaseType databaseType, Type expectedDbConnectionType)
     {
         // Arrange.

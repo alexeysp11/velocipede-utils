@@ -26,7 +26,7 @@ public static class IVelocipedeDbConnectionExtensions
         {
             VelocipedeDatabaseType.SQLite => SqliteDbConnection.GetConnectionString(databaseName),
             VelocipedeDatabaseType.PostgreSQL => PgDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
-            VelocipedeDatabaseType.MSSQL => MssqlDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
+            VelocipedeDatabaseType.MSSQL => SqlServerDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
             VelocipedeDatabaseType.MySQL or VelocipedeDatabaseType.MariaDB or VelocipedeDatabaseType.HSQLDB or VelocipedeDatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
             _ => throw new InvalidOperationException(ErrorMessageConstants.IncorrectDatabaseType),
         };
@@ -73,7 +73,7 @@ public static class IVelocipedeDbConnectionExtensions
         {
             VelocipedeDatabaseType.SQLite => SqliteDbConnection.GetDatabaseName(connection.ConnectionString),
             VelocipedeDatabaseType.PostgreSQL => PgDbConnection.GetDatabaseName(connection.ConnectionString),
-            VelocipedeDatabaseType.MSSQL => MssqlDbConnection.GetDatabaseName(connection.ConnectionString),
+            VelocipedeDatabaseType.MSSQL => SqlServerDbConnection.GetDatabaseName(connection.ConnectionString),
             VelocipedeDatabaseType.MySQL or VelocipedeDatabaseType.MariaDB or VelocipedeDatabaseType.HSQLDB or VelocipedeDatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
             _ => throw new InvalidOperationException(ErrorMessageConstants.IncorrectDatabaseType),
         };
