@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Da
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres.Metadata;
 
-public sealed class PgGetAllDataTests : BaseGetAllDataTests, IClassFixture<PgDatabaseFixture>
+[Collection(nameof(PgDatabaseFixtureCollection))]
+public sealed class PgGetAllDataTests : BaseGetAllDataTests
 {
     /// <summary>
     /// Default constructor for creating <see cref="PgGetAllDataTests"/>.

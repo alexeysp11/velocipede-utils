@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Da
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres.Queries;
 
-public sealed class PgTransactionsTests : BaseTransactionsTests, IClassFixture<PgDatabaseFixture>
+[Collection(nameof(PgDatabaseFixtureCollection))]
+public sealed class PgTransactionsTests : BaseTransactionsTests
 {
     public PgTransactionsTests(PgDatabaseFixture fixture)
         : base(fixture, PgTestConstants.CREATE_DATABASE_SQL)

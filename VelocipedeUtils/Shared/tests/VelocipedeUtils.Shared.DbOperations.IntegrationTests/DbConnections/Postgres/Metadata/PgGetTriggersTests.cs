@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Da
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres.Metadata;
 
-public sealed class PgGetTriggersTests : BaseGetTriggersTests, IClassFixture<PgDatabaseFixture>
+[Collection(nameof(PgDatabaseFixtureCollection))]
+public sealed class PgGetTriggersTests : BaseGetTriggersTests
 {
     public PgGetTriggersTests(PgDatabaseFixture fixture)
         : base(fixture, PgTestConstants.CREATE_DATABASE_SQL)

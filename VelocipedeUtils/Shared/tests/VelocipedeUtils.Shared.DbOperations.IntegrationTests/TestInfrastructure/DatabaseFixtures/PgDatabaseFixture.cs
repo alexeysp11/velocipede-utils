@@ -11,7 +11,7 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructur
 /// <summary>
 /// PostgreSQL fixture.
 /// </summary>
-public class PgDatabaseFixture : IDatabaseFixture
+public sealed class PgDatabaseFixture : IDatabaseFixture
 {
     private readonly PostgreSqlContainer container;
 

@@ -10,7 +10,8 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Pos
 /// <summary>
 /// Class for testing <see cref="PgDbConnection.GetColumns(string, out List{VelocipedeNativeColumnInfo})"/>.
 /// </summary>
-public sealed class PgGetColumnsTests : BaseGetColumnsTests, IClassFixture<PgDatabaseFixture>
+[Collection(nameof(PgDatabaseFixtureCollection))]
+public sealed class PgGetColumnsTests : BaseGetColumnsTests
 {
     /// <summary>
     /// Default constructor for creating <see cref="PgGetColumnsTests"/>.

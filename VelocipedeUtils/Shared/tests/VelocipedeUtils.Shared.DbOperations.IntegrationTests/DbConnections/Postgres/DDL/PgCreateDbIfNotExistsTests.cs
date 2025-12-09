@@ -4,7 +4,8 @@ using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Da
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres.DDL;
 
-public sealed class PgCreateDbIfNotExistsTests : BaseCreateDbIfNotExistsTests, IClassFixture<PgDatabaseFixture>
+[Collection(nameof(PgDatabaseFixtureCollection))]
+public sealed class PgCreateDbIfNotExistsTests : BaseCreateDbIfNotExistsTests
 {
     public PgCreateDbIfNotExistsTests(PgDatabaseFixture fixture)
         : base(fixture, PgTestConstants.CREATE_DATABASE_SQL)
