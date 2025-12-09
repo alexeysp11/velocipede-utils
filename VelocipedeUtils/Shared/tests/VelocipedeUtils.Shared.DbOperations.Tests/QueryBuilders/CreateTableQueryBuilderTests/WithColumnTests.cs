@@ -54,7 +54,7 @@ public sealed class WithColumnTests
         {
             DatabaseType = databaseType,
             ColumnName = "ColumnName",
-            DbType = DbType.String,
+            ColumnType = DbType.String,
         };
 
         // 2. Query builder.
@@ -84,13 +84,13 @@ public sealed class WithColumnTests
         {
             DatabaseType = databaseType,
             ColumnName = "ColumnName1",
-            DbType = DbType.Int32,
+            ColumnType = DbType.Int32,
         };
         VelocipedeColumnInfo columnInfo2 = new()
         {
             DatabaseType = databaseType,
             ColumnName = "ColumnName2",
-            DbType = DbType.String,
+            ColumnType = DbType.String,
         };
 
         // 2. Query builder.
@@ -149,7 +149,7 @@ public sealed class WithColumnTests
         {
             DatabaseType = databaseType,
             ColumnName = "ColumnName",
-            DbType = DbType.String,
+            ColumnType = DbType.String,
         };
 
         // 2. Query builder.
@@ -220,8 +220,8 @@ public sealed class WithColumnTests
         string tableName = "TableName";
         List<VelocipedeColumnInfo> columnInfos =
         [
-            new() { DatabaseType = databaseType, ColumnName = "ColumnName1", DbType = DbType.Int32, },
-            new() { DatabaseType = databaseType, ColumnName = "ColumnName2", DbType = DbType.String, },
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName1", ColumnType = DbType.Int32, },
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName2", ColumnType = DbType.String, },
         ];
 
         // 2. Query builder.
@@ -295,8 +295,8 @@ public sealed class WithColumnTests
         string tableName = "TableName";
         List<VelocipedeColumnInfo> columnInfos =
         [
-            new() { DatabaseType = databaseType, ColumnName = "ColumnName1", DbType = DbType.Int32, },
-            new() { DatabaseType = databaseType, ColumnName = "ColumnName2", DbType = DbType.String, },
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName1", ColumnType = DbType.Int32, },
+            new() { DatabaseType = databaseType, ColumnName = "ColumnName2", ColumnType = DbType.String, },
         ];
 
         // 2. Query builder.

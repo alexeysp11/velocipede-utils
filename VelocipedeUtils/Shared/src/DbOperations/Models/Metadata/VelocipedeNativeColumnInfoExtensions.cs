@@ -15,9 +15,9 @@ public static class VelocipedeNativeColumnInfoExtensions
     private readonly record struct DbTypeConvertResult
     {
         /// <summary>
-        /// Database type.
+        /// Column type.
         /// </summary>
-        internal DbType DbType { get; init; }
+        internal DbType ColumnType { get; init; }
 
         /// <summary>
         /// Length.
@@ -68,7 +68,7 @@ public static class VelocipedeNativeColumnInfoExtensions
                 {
                     if (int.TryParse(matchNumeric.Groups[2].Value, out int length))
                     {
-                        return new DbTypeConvertResult { DbType = expectedType, Length = length };
+                        return new DbTypeConvertResult { ColumnType = expectedType, Length = length };
                     }
                 }
                 if (matchNumeric.Groups.Count == 4)
@@ -83,7 +83,7 @@ public static class VelocipedeNativeColumnInfoExtensions
                     {
                         scale = scaleConverted;
                     }
-                    return new DbTypeConvertResult { DbType = expectedType, Precision = precision, Scale = scale };
+                    return new DbTypeConvertResult { ColumnType = expectedType, Precision = precision, Scale = scale };
                 }
             }
             return null;
@@ -100,7 +100,7 @@ public static class VelocipedeNativeColumnInfoExtensions
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.CharMaxLength = dbTypeConvertResult.Value.Length;
-            return dbTypeConvertResult.Value.DbType;
+            return dbTypeConvertResult.Value.ColumnType;
         }
 
         // 2. Using Regex to find numeric types with a specified size.
@@ -109,28 +109,28 @@ public static class VelocipedeNativeColumnInfoExtensions
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Length;
             columnInfo.NumericScale = 0;
-            return dbTypeConvertResult.Value.DbType;
+            return dbTypeConvertResult.Value.ColumnType;
         }
         dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(numeric)\s*\((\d+),(\d+)\)", DbType.VarNumeric);
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Precision;
             columnInfo.NumericScale = dbTypeConvertResult.Value.Scale;
-            return dbTypeConvertResult.Value.DbType;
+            return dbTypeConvertResult.Value.ColumnType;
         }
         dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(decimal)\s*\((\d+)\)", DbType.Decimal);
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Length;
             columnInfo.NumericScale = 0;
-            return dbTypeConvertResult.Value.DbType;
+            return dbTypeConvertResult.Value.ColumnType;
         }
         dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(decimal)\s*\((\d+),(\d+)\)", DbType.Decimal);
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Precision;
             columnInfo.NumericScale = dbTypeConvertResult.Value.Scale;
-            return dbTypeConvertResult.Value.DbType;
+            return dbTypeConvertResult.Value.ColumnType;
         }
 
         // 3. Processing standard types (without specifying the length).

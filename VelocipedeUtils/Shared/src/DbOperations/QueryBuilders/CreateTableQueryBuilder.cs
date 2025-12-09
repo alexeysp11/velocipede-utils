@@ -56,8 +56,78 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
         VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
 
         _query = new StringBuilder();
-        IsBuilt = true;
+        _query.AppendLine($"CREATE TABLE {TableName} (");
+        for (int i = 0; i < ColumnInfos.Count; i++)
+        {
+            VelocipedeColumnInfo col = ColumnInfos[i];
 
+            // Format a column: "ColumnName DBType NULL/NOT NULL DEFAULT Value".
+            _query.Append($"    {col.ColumnName} {col.NativeColumnType}");
+
+            if (!col.IsNullable)
+            {
+                _query.Append(" NOT NULL");
+            }
+
+            if (col.DefaultValue != null)
+            {
+                string formattedDefault = col.FormatDefaultValue();
+                _query.Append($" DEFAULT {formattedDefault}");
+            }
+
+            // Separator.
+            if (i < ColumnInfos.Count - 1 || ForeignKeyInfos.Count != 0)
+            {
+                _query.AppendLine(",");
+            }
+            else
+            {
+                _query.AppendLine();
+            }
+        }
+
+        // 4. Adding primary key constraints (including if there are several of them).
+        List<VelocipedeColumnInfo> primaryKeys = ColumnInfos.Where(c => c.IsPrimaryKey).ToList();
+        if (primaryKeys.Count != 0)
+        {
+            string pkColumnNames = string.Join(", ", primaryKeys.Select(c => c.ColumnName));
+
+            // CONSTRAINT PK_TableName PRIMARY KEY (Col1, Col2)
+            _query.Append($"    CONSTRAINT PK_{TableName} PRIMARY KEY ({pkColumnNames})");
+
+            // Separator if FK follows.
+            if (ForeignKeyInfos.Count != 0)
+            {
+                _query.AppendLine(",");
+            }
+            else
+            {
+                _query.AppendLine();
+            }
+        }
+
+        // 3. Add foreign key constraints.
+        for (int i = 0; i < ForeignKeyInfos.Count; i++)
+        {
+            VelocipedeForeignKeyInfo fk = ForeignKeyInfos[i];
+
+            // CONSTRAINT FK_TableName_ColumnName FOREIGN KEY (ColumnName) REFERENCES RefTable(RefColumn)
+            _query.Append($"    CONSTRAINT FK_{TableName}_{fk.FromColumn} FOREIGN KEY ({fk.FromColumn}) REFERENCES {fk.ToTableName}({fk.ToColumn})");
+
+            if (i < ForeignKeyInfos.Count - 1)
+            {
+                _query.AppendLine(",");
+            }
+            else
+            {
+                _query.AppendLine();
+            }
+        }
+
+        // 5. Completing the request.
+        _query.AppendLine(");");
+
+        IsBuilt = true;
         return this;
     }
 
@@ -73,11 +143,20 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
         bool isNullable = true)
     {
         VelocipedeQueryBuilderException.ThrowIfBuilt(IsBuilt);
-
-        // Validate arguments.
         ArgumentException.ThrowIfNullOrEmpty(columnName);
 
-        // Add new column.
+        ColumnInfos.Add(new VelocipedeColumnInfo
+        {
+            DatabaseType = DatabaseType,
+            ColumnName = columnName,
+            ColumnType = columnType,
+            CharMaxLength = charMaxLength,
+            NumericPrecision = numericPrecision,
+            NumericScale = numericScale,
+            DefaultValue = defaultValue,
+            IsPrimaryKey = isPrimaryKey,
+            IsNullable = isNullable
+        });
 
         return this;
     }

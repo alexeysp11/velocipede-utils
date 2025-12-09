@@ -26,7 +26,7 @@ public sealed class VelocipedeColumnInfo
     /// <summary>
     /// The type of the column.
     /// </summary>
-    public required DbType DbType { get; set; }
+    public required DbType ColumnType { get; set; }
 
     /// <summary>
     /// If native column type identifies a character or bit string type, the declared maximum length;
