@@ -1,4 +1,4 @@
-﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
+﻿namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures.ReusableCollections;
 
 /// <summary>
 /// Used to share a single instance of <see cref="PgDatabaseFixture"/> between tests in multiple test classes.
