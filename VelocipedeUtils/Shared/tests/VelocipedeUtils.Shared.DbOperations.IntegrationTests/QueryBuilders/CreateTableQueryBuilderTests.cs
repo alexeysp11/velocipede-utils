@@ -1,7 +1,9 @@
 ﻿using System.Data;
 using FluentAssertions;
+using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.QueryBuilders;
@@ -20,13 +22,13 @@ namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.QueryBuilders;
 /// </list>
 /// </remarks>
 [Collection("DatabaseFixtureResolverCollection")]
-public sealed class QueryBuilderTests
+public sealed class CreateTableQueryBuilderTests
 {
     private const string COLUMN_NAME = "ColumnName1";
 
     private readonly DatabaseFixtureResolver _fixtureResolver;
 
-    public QueryBuilderTests(DatabaseFixtureResolver fixtureResolver)
+    public CreateTableQueryBuilderTests(DatabaseFixtureResolver fixtureResolver)
     {
         _fixtureResolver = fixtureResolver;
     }
@@ -48,16 +50,34 @@ public sealed class QueryBuilderTests
 
     [Theory]
     [MemberData(nameof(GetColumnInfoReal))]
-    public void Builder_GeneratesCorrectNativeType(TestCaseNativeColumnType testCase)
+    public async Task Builder_GeneratesCorrectNativeType(TestCaseNativeColumnType testCase)
     {
-        // 1. Determine which container is needed for this specific test case
-        var dbType = testCase.ColumnInfo.DatabaseType;
+        // Assert.
+        string tableName = Guid.NewGuid().ToString();
+        VelocipedeDatabaseType databaseType = testCase.ColumnInfo.DatabaseType;
+        IDatabaseFixture fixture = _fixtureResolver.GetFixture(databaseType);
 
-        // 2. Get the required fixture from the aggregator
-        IDatabaseFixture fixture = _fixtureResolver.GetFixture(dbType);
+        // Act.
+        // 1. Get create table statement using query builder.
+        CreateTableQueryBuilder queryBuilder = new(databaseType, tableName);
+        string? createSql = queryBuilder
+            .WithColumn(testCase.ColumnInfo)
+            .Build()
+            .ToString();
 
-        string connectionString = fixture.ConnectionString;
+        // 2. Use database connection to create table and get the metadata.
+        IVelocipedeDbConnection dbConnection = fixture.GetVelocipedeDbConnection();
+#nullable disable
+        await dbConnection.ExecuteAsync(createSql);
+#nullable restore
+        List<VelocipedeNativeColumnInfo> resultColumns = await dbConnection.GetColumnsAsync(tableName);
 
-        connectionString.Should().NotBeNullOrEmpty();
+        // Assert.
+        createSql
+            .Should()
+            .NotBeNullOrEmpty();
+        resultColumns
+            .Should()
+            .NotBeNull();
     }
 }

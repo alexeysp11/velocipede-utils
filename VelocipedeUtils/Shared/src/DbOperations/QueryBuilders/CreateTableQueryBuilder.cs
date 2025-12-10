@@ -60,7 +60,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
         }
 
         _query = new StringBuilder();
-        _query.AppendLine($"CREATE TABLE {TableName} (");
+        _query.AppendLine($@"CREATE TABLE ""{TableName}"" (");
         for (int i = 0; i < ColumnInfos.Count; i++)
         {
             VelocipedeColumnInfo col = ColumnInfos[i];
