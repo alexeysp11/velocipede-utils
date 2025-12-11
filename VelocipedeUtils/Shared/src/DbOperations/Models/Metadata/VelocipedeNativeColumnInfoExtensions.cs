@@ -41,7 +41,7 @@ public static class VelocipedeNativeColumnInfoExtensions
     /// <param name="columnInfo">Column metadata.</param>
     /// <returns></returns>
     /// <exception cref="NotSupportedException">Thrown if <see cref="VelocipedeNativeColumnInfo.DatabaseType"/> is not supported.</exception>
-    public static DbType? GetDbType(this VelocipedeNativeColumnInfo columnInfo)
+    public static DbType? GetCalculatedColumnType(this VelocipedeNativeColumnInfo columnInfo)
     {
         return columnInfo.DatabaseType switch
         {

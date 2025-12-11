@@ -33,7 +33,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
         /// <summary>
         /// The calculated type of the column.
         /// </summary>
-        public DbType? DbType { get; set; }
+        public DbType? ColumnType { get; set; }
 
         /// <summary>
         /// If native column type identifies a character or bit string type, the declared maximum length;
@@ -89,14 +89,14 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             new()
             {
                 ColumnName = "Id",
-                DbType = DbType.Int32,
+                ColumnType = DbType.Int32,
                 IsPrimaryKey = true,
                 IsNullable = false
             },
             new()
             {
                 ColumnName = "Name",
-                DbType = DbType.String,
+                ColumnType = DbType.String,
                 CharMaxLength = 50,
                 IsPrimaryKey = false,
                 IsNullable = false
@@ -104,7 +104,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             new()
             {
                 ColumnName = "AdditionalInfo",
-                DbType = DbType.String,
+                ColumnType = DbType.String,
                 CharMaxLength = 50,
                 IsPrimaryKey = false,
                 IsNullable = true
@@ -115,14 +115,14 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             new()
             {
                 ColumnName = "id",
-                DbType = DbType.Int32,
+                ColumnType = DbType.Int32,
                 IsPrimaryKey = false,
                 IsNullable = true
             },
             new()
             {
                 ColumnName = "value",
-                DbType = DbType.String,
+                ColumnType = DbType.String,
                 CharMaxLength = 50,
                 IsPrimaryKey = false,
                 IsNullable = true
@@ -161,7 +161,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                DbType = x.DbType,
+                ColumnType = x.CalculatedColumnType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -199,7 +199,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                DbType = x.DbType,
+                ColumnType = x.CalculatedColumnType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -272,7 +272,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                DbType = x.DbType,
+                ColumnType = x.CalculatedColumnType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -374,7 +374,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                DbType = x.DbType,
+                ColumnType = x.CalculatedColumnType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -411,7 +411,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                DbType = x.DbType,
+                ColumnType = x.CalculatedColumnType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -483,7 +483,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                DbType = x.DbType,
+                ColumnType = x.CalculatedColumnType,
                 CharMaxLength = x.CharMaxLength,
                 IsPrimaryKey = x.IsPrimaryKey,
                 IsNullable = x.IsNullable,
@@ -576,7 +576,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
             .Select(x => new TestColumnInfo
             {
                 ColumnName = x.ColumnName,
-                DbType = x.DbType,
+                ColumnType = x.CalculatedColumnType,
                 CharMaxLength = x.CharMaxLength,
                 NumericPrecision = x.NumericPrecision,
                 NumericScale = x.NumericScale,

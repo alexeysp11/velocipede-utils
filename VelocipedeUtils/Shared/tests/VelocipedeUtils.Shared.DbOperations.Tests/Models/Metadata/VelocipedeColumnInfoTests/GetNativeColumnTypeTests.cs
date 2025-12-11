@@ -12,6 +12,7 @@ public sealed class GetNativeColumnTypeTests
 {
     private const string COLUMN_NAME = "ColumnName";
 
+    #region Test cases
     public static TheoryData<TestCaseNativeColumnType> GetColumnInfoInteger()
     {
         return new TheoryData<TestCaseNativeColumnType>
@@ -223,6 +224,7 @@ public sealed class GetNativeColumnTypeTests
             { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.DateTimeOffset }, ExpectedNativeType = "datetimeoffset" } },
         };
     }
+    #endregion  // Test cases
 
     [Theory]
     [MemberData(nameof(GetColumnInfoInteger))]

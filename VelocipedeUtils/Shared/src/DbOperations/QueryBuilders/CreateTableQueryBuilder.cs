@@ -66,7 +66,7 @@ public sealed class CreateTableQueryBuilder : ICreateTableQueryBuilder
             VelocipedeColumnInfo col = ColumnInfos[i];
 
             // Format a column: "ColumnName DBType NULL/NOT NULL DEFAULT Value".
-            _query.Append($"    {col.ColumnName} {col.NativeColumnType}");
+            _query.Append($@"    ""{col.ColumnName}"" {col.NativeColumnType}");
 
             if (!col.IsNullable)
             {

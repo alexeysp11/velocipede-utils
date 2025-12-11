@@ -26,7 +26,7 @@ public sealed class VelocipedeNativeColumnInfo
     /// <summary>
     /// The calculated type of the column.
     /// </summary>
-    public DbType? DbType => this.GetDbType();
+    public DbType? CalculatedColumnType => this.GetCalculatedColumnType();
 
     /// <summary>
     /// If native column type identifies a character or bit string type, the declared maximum length;
