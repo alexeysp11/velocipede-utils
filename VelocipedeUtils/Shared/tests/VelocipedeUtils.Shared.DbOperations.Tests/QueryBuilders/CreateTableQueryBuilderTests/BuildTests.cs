@@ -16,7 +16,7 @@ public sealed class BuildTests
     [InlineData(VelocipedeDatabaseType.SQLite)]
     [InlineData(VelocipedeDatabaseType.PostgreSQL)]
     [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void BuildOnce_WithColumnByParameters_QuryBuilderIsBuilt(VelocipedeDatabaseType databaseType)
+    public void BuildOnce_WithColumnByParameters_QueryBuilderIsBuilt(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Initialize query builder.
@@ -39,7 +39,7 @@ public sealed class BuildTests
     [InlineData(VelocipedeDatabaseType.SQLite)]
     [InlineData(VelocipedeDatabaseType.PostgreSQL)]
     [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void BuildOnce_WithColumnByObject_QuryBuilderIsBuilt(VelocipedeDatabaseType databaseType)
+    public void BuildOnce_WithColumnByObject_QueryBuilderIsBuilt(VelocipedeDatabaseType databaseType)
     {
         // Arrange.
         // 1. Initialize query builder.
