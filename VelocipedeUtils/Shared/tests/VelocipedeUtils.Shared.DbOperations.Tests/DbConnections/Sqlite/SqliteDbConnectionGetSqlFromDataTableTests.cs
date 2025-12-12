@@ -7,7 +7,7 @@ public sealed class SqliteDbConnectionGetSqlFromDataTableTests : BaseDbConnectio
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public SqliteDbConnectionGetSqlFromDataTableTests() : base(Enums.DatabaseType.SQLite)
+    public SqliteDbConnectionGetSqlFromDataTableTests() : base(Enums.VelocipedeDatabaseType.SQLite)
     {
     }
 }

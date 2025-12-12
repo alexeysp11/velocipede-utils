@@ -2,7 +2,9 @@ using System.Data;
 using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
-using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
+using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections;
 
@@ -20,8 +22,8 @@ public interface IVelocipedeDbConnection : IDisposable
     /// <summary>
     /// Database type.
     /// </summary>
-    /// <remarks>By default, equals to <see cref="DatabaseType.None"/>.</remarks>
-    DatabaseType DatabaseType { get; }
+    /// <remarks>By default, equals to <see cref="VelocipedeDatabaseType.None"/>.</remarks>
+    VelocipedeDatabaseType DatabaseType { get; }
 
     /// <summary>
     /// Database name.
@@ -129,11 +131,11 @@ public interface IVelocipedeDbConnection : IDisposable
     /// </summary>
     /// <remarks>Case-insensitive checking of the specified table name, <paramref name="tableName"/> parameter.</remarks>
     /// <param name="tableName">Table name.</param>
-    /// <param name="columnInfo">Resulting <see cref="List{T}"/> of <see cref="VelocipedeColumnInfo"/> that contains info about table columns.</param>
+    /// <param name="columnInfo">Resulting <see cref="List{T}"/> of <see cref="VelocipedeNativeColumnInfo"/> that contains info about table columns.</param>
     /// <returns>The current <see cref="IVelocipedeDbConnection"/> instance, allowing for further configuration.</returns>
     IVelocipedeDbConnection GetColumns(
         string tableName,
-        out List<VelocipedeColumnInfo> columnInfo);
+        out List<VelocipedeNativeColumnInfo> columnInfo);
 
     /// <summary>
     /// Asynchronously get columns of the specified table.
@@ -141,9 +143,9 @@ public interface IVelocipedeDbConnection : IDisposable
     /// <param name="tableName">Table name.</param>
     /// <returns>
     /// A <see cref="Task{TResult}"/> that represents the asynchronous operation.
-    /// The task result is a <see cref="List{T}"/> of <see cref="VelocipedeColumnInfo"/> that contains info about table columns.
+    /// The task result is a <see cref="List{T}"/> of <see cref="VelocipedeNativeColumnInfo"/> that contains info about table columns.
     /// </returns>
-    Task<List<VelocipedeColumnInfo>> GetColumnsAsync(
+    Task<List<VelocipedeNativeColumnInfo>> GetColumnsAsync(
         string tableName);
 
     /// <summary>
@@ -622,4 +624,10 @@ public interface IVelocipedeDbConnection : IDisposable
     string GetPaginatedSql(
         string sqlRequest,
         VelocipedePaginationInfo paginationInfo);
+
+    /// <summary>
+    /// Get query builder for the database connection.
+    /// </summary>
+    /// <returns>Instance of <see cref="IVelocipedeQueryBuilder"/>.</returns>
+    IVelocipedeQueryBuilder GetQueryBuilder();
 }

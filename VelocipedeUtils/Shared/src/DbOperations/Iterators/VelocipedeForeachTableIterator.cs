@@ -1,7 +1,8 @@
 ﻿using System.Data;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
-using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Loops;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 namespace VelocipedeUtils.Shared.DbOperations.Iterators;
 
@@ -117,7 +118,7 @@ public sealed class VelocipedeForeachTableIterator : IVelocipedeForeachTableIter
                         break;
 
                     case ForeachTableOperationType.GetColumns:
-                        _connection.GetColumns(tableName, out List<VelocipedeColumnInfo>? columnInfo);
+                        _connection.GetColumns(tableName, out List<VelocipedeNativeColumnInfo>? columnInfo);
                         tableInfo.ColumnInfo = columnInfo;
                         break;
 

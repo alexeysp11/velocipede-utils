@@ -6,6 +6,9 @@ using VelocipedeUtils.Shared.DbOperations.Enums;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
+using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
+using VelocipedeUtils.Shared.DbOperations.QueryBuilders;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections;
 
@@ -25,7 +28,7 @@ public sealed class PgDbConnection : BaseVelocipedeDbConnection, IVelocipedeDbCo
     public string? ConnectionString { get; set; }
 
     /// <inheritdoc/>
-    public DatabaseType DatabaseType => DatabaseType.PostgreSQL;
+    public VelocipedeDatabaseType DatabaseType => VelocipedeDatabaseType.PostgreSQL;
 
     /// <inheritdoc/>
     public string? DatabaseName => GetDatabaseName(ConnectionString);
@@ -338,7 +341,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     /// <inheritdoc/>
     public IVelocipedeDbConnection GetColumns(
         string tableName,
-        out List<VelocipedeColumnInfo> columnInfo)
+        out List<VelocipedeNativeColumnInfo> columnInfo)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -355,7 +358,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
     }
 
     /// <inheritdoc/>
-    public Task<List<VelocipedeColumnInfo>> GetColumnsAsync(string tableName)
+    public Task<List<VelocipedeNativeColumnInfo>> GetColumnsAsync(string tableName)
     {
         if (string.IsNullOrEmpty(tableName))
         {
@@ -368,7 +371,7 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
             new() { Name = "TableName", Value = tableAndSchemaInfo.TableName },
             new() { Name = "SchemaName", Value = tableAndSchemaInfo.SchemaName }
         ];
-        return QueryAsync<VelocipedeColumnInfo>(_getColumnsSql, parameters);
+        return QueryAsync<VelocipedeNativeColumnInfo>(_getColumnsSql, parameters);
     }
 
     /// <inheritdoc/>
@@ -823,6 +826,12 @@ SELECT fGetSqlFromTable(@SchemaName, @TableName) AS sql;";
         return paginationInfo.PaginationType == VelocipedePaginationType.KeysetById
             ? $@"SELECT t.* FROM ({sqlRequest}) t WHERE ""{paginationInfo.OrderingFieldName}"" > {paginationInfo.Offset} ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit}"
             : $@"SELECT t.* FROM ({sqlRequest}) t ORDER BY ""{paginationInfo.OrderingFieldName}"" LIMIT {paginationInfo.Limit} OFFSET {paginationInfo.Offset}";
+    }
+
+    /// <inheritdoc/>
+    public IVelocipedeQueryBuilder GetQueryBuilder()
+    {
+        return new VelocipedeQueryBuilder(DatabaseType, this);
     }
 
     /// <inheritdoc/>

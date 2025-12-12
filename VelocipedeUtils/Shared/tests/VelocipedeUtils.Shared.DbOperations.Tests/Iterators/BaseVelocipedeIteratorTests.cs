@@ -3,6 +3,7 @@ using Moq;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Iterators;
 using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
 namespace VelocipedeUtils.Shared.DbOperations.Tests.Iterators;
 
@@ -59,17 +60,17 @@ public abstract class BaseVelocipedeIteratorTests
     /// <summary>
     /// Columns that the table 1 contains.
     /// </summary>
-    protected readonly List<VelocipedeColumnInfo> _tableColumns1;
+    protected readonly List<VelocipedeNativeColumnInfo> _tableColumns1;
 
     /// <summary>
     /// Columns that the table 2 contains.
     /// </summary>
-    protected readonly List<VelocipedeColumnInfo> _tableColumns2;
+    protected readonly List<VelocipedeNativeColumnInfo> _tableColumns2;
 
     /// <summary>
     /// Columns that the table 3 contains.
     /// </summary>
-    protected readonly List<VelocipedeColumnInfo> _tableColumns3;
+    protected readonly List<VelocipedeNativeColumnInfo> _tableColumns3;
 
     /// <summary>
     /// Foreign keys that the table 3 contains.
@@ -221,7 +222,7 @@ public abstract class BaseVelocipedeIteratorTests
 
         // Properties.
         mockConnection.Setup(x => x.IsConnected).Returns(isConnected);
-        mockConnection.Setup(x => x.DatabaseType).Returns(Enums.DatabaseType.InMemory);
+        mockConnection.Setup(x => x.DatabaseType).Returns(Enums.VelocipedeDatabaseType.InMemory);
 
         // Data.
         DataTable table1 = _tableList1.ToDataTable();
@@ -247,9 +248,9 @@ public abstract class BaseVelocipedeIteratorTests
             .ReturnsAsync(table3);
 
         // Columns.
-        List<VelocipedeColumnInfo> columns1 = _tableColumns1;
-        List<VelocipedeColumnInfo> columns2 = _tableColumns2;
-        List<VelocipedeColumnInfo> columns3 = _tableColumns3;
+        List<VelocipedeNativeColumnInfo> columns1 = _tableColumns1;
+        List<VelocipedeNativeColumnInfo> columns2 = _tableColumns2;
+        List<VelocipedeNativeColumnInfo> columns3 = _tableColumns3;
         mockConnection
             .Setup(x => x.GetColumns(TABLE_NAME_1, out columns1))
             .Returns(mockConnection.Object);

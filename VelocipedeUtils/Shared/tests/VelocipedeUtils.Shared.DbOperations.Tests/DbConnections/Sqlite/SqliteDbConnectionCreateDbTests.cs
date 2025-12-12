@@ -7,7 +7,7 @@ public sealed class SqliteDbConnectionCreateDbTests : BaseDbConnectionCreateDbTe
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public SqliteDbConnectionCreateDbTests() : base(Enums.DatabaseType.SQLite)
+    public SqliteDbConnectionCreateDbTests() : base(Enums.VelocipedeDatabaseType.SQLite)
     {
     }
 }

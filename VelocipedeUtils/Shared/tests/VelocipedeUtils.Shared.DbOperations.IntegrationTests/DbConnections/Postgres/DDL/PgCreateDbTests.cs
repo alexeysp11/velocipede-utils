@@ -1,10 +1,12 @@
-﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.Constants;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.DDL;
+﻿using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.DDL;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.Constants;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures.ReusableCollections;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Postgres.DDL;
 
-public sealed class PgCreateDbTests : BaseCreateDbTests, IClassFixture<PgDatabaseFixture>
+[Collection(nameof(PgDatabaseFixtureCollection))]
+public sealed class PgCreateDbTests : BaseCreateDbTests
 {
     public PgCreateDbTests(PgDatabaseFixture fixture)
         : base(fixture, PgTestConstants.CREATE_DATABASE_SQL)

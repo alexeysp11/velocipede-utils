@@ -12,7 +12,7 @@ public sealed class SqliteDbConnectionDbExistsTests : BaseDbConnectionDbExistsTe
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public SqliteDbConnectionDbExistsTests() : base(Enums.DatabaseType.SQLite)
+    public SqliteDbConnectionDbExistsTests() : base(Enums.VelocipedeDatabaseType.SQLite)
     {
         _folderName = nameof(SqliteDbConnectionDbExistsTests);
 
@@ -27,7 +27,7 @@ public sealed class SqliteDbConnectionDbExistsTests : BaseDbConnectionDbExistsTe
         // Arrange.
         string connectionString = $"Data Source={_folderName}/{nameof(DbExists_FileDoesNotExist_ReturnsFalse)}.db;";
         string path = SqliteDbConnection.GetDatabaseName(connectionString);
-        using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.DatabaseType.SQLite, connectionString);
+        using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.VelocipedeDatabaseType.SQLite, connectionString);
         if (DatabaseExists(path))
             DeleteDatabase(path);
 
@@ -44,7 +44,7 @@ public sealed class SqliteDbConnectionDbExistsTests : BaseDbConnectionDbExistsTe
         // Arrange.
         string connectionString = $"Data Source={_folderName}/{nameof(DbExists_FileExists_ReturnsTrue)}.db;";
         string path = SqliteDbConnection.GetDatabaseName(connectionString);
-        using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.DatabaseType.SQLite, connectionString);
+        using IVelocipedeDbConnection dbConnection = VelocipedeDbConnectionFactory.InitializeDbConnection(Enums.VelocipedeDatabaseType.SQLite, connectionString);
         if (DatabaseExists(path))
             DeleteDatabase(path);
         CreateDatabase(path);

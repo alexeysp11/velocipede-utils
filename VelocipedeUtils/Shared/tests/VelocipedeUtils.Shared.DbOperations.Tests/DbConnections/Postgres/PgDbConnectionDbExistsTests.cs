@@ -7,7 +7,7 @@ public sealed class PgDbConnectionDbExistsTests : BaseDbConnectionDbExistsTests
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public PgDbConnectionDbExistsTests() : base(Enums.DatabaseType.PostgreSQL)
+    public PgDbConnectionDbExistsTests() : base(Enums.VelocipedeDatabaseType.PostgreSQL)
     {
     }
 }

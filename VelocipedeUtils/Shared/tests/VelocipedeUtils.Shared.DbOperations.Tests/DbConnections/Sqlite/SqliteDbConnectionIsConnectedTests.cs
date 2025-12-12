@@ -8,7 +8,7 @@ public sealed class SqliteDbConnectionIsConnectedTests : BaseDbConnectionIsConne
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public SqliteDbConnectionIsConnectedTests() : base(DatabaseType.SQLite)
+    public SqliteDbConnectionIsConnectedTests() : base(VelocipedeDatabaseType.SQLite)
     {
         _connectionString = "Data Source=SqliteDbConnectionIsConnectedTests/SqliteDbConnectionIsConnectedTests.db;Mode=ReadWriteCreate;Cache=Shared;Foreign Keys=True;";
     }

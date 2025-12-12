@@ -16,6 +16,7 @@ public class VelocipedeConnectionStringException : VelocipedeDbConnectParamsExce
         : base(ErrorMessageConstants.IncorrectConnectionString)
     {
     }
+
     /// <summary>
     /// Constructor that includes info about inner exception, and sets the <see cref="Exception.Message"/> field to default value.
     /// </summary>
@@ -25,19 +26,15 @@ public class VelocipedeConnectionStringException : VelocipedeDbConnectParamsExce
     {
     }
 
-    /// <summary>
-    /// Constructor that sets the <see cref="Exception.Message"/> field to specified value.
-    /// </summary>
+    /// <inheritdoc/>
     public VelocipedeConnectionStringException(string message)
-        : base(message)
+        : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeConnectionStringException)))
     {
     }
 
-    /// <summary>
-    /// Constructor that includes info about inner exception, and sets the <see cref="Exception.Message"/> field to specified value.
-    /// </summary>
+    /// <inheritdoc/>
     public VelocipedeConnectionStringException(string message, Exception innerException)
-        : base(message, innerException)
+        : base(ExceptionHelper.WrapMessageIfNull(message, typeof(VelocipedeConnectionStringException)), innerException)
     {
     }
 }

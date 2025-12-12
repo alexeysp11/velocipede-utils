@@ -4,7 +4,7 @@ using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.DbConnections;
 using VelocipedeUtils.Shared.DbOperations.Enums;
-using VelocipedeUtils.Shared.DbOperations.IntegrationTests.DatabaseFixtures;
+using VelocipedeUtils.Shared.DbOperations.IntegrationTests.TestInfrastructure.DatabaseFixtures;
 
 namespace VelocipedeUtils.Shared.DbOperations.IntegrationTests.DbConnections.Base.Queries;
 
@@ -143,7 +143,7 @@ public abstract class BaseTransactionsTests : BaseDbConnectionTests
             .CommitTransaction()
             .GetTablesInDb(out List<string>? tables)
             .CloseDb();
-        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        if (dbConnection.DatabaseType == VelocipedeDatabaseType.PostgreSQL)
         {
             tableName = $"public.{tableName}";
         }
@@ -205,7 +205,7 @@ public abstract class BaseTransactionsTests : BaseDbConnectionTests
             .RollbackTransaction()
             .GetTablesInDb(out List<string>? tables)
             .CloseDb();
-        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        if (dbConnection.DatabaseType == VelocipedeDatabaseType.PostgreSQL)
         {
             tableName = $"public.{tableName}";
         }
@@ -233,7 +233,7 @@ public abstract class BaseTransactionsTests : BaseDbConnectionTests
             .OpenDb()
             .GetTablesInDb(out List<string>? tables)
             .CloseDb();
-        if (dbConnection.DatabaseType == DatabaseType.PostgreSQL)
+        if (dbConnection.DatabaseType == VelocipedeDatabaseType.PostgreSQL)
         {
             tableName = $"public.{tableName}";
         }

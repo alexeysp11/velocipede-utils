@@ -24,10 +24,10 @@ public static class IVelocipedeDbConnectionExtensions
     {
         connectionString = connection.DatabaseType switch
         {
-            DatabaseType.SQLite => SqliteDbConnection.GetConnectionString(databaseName),
-            DatabaseType.PostgreSQL => PgDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
-            DatabaseType.MSSQL => MssqlDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
-            DatabaseType.MySQL or DatabaseType.MariaDB or DatabaseType.HSQLDB or DatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
+            VelocipedeDatabaseType.SQLite => SqliteDbConnection.GetConnectionString(databaseName),
+            VelocipedeDatabaseType.PostgreSQL => PgDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
+            VelocipedeDatabaseType.MSSQL => SqlServerDbConnection.GetConnectionString(connection.ConnectionString, databaseName),
+            VelocipedeDatabaseType.MySQL or VelocipedeDatabaseType.MariaDB or VelocipedeDatabaseType.HSQLDB or VelocipedeDatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
             _ => throw new InvalidOperationException(ErrorMessageConstants.IncorrectDatabaseType),
         };
         return connection;
@@ -71,10 +71,10 @@ public static class IVelocipedeDbConnectionExtensions
     {
         dbName = connection.DatabaseType switch
         {
-            DatabaseType.SQLite => SqliteDbConnection.GetDatabaseName(connection.ConnectionString),
-            DatabaseType.PostgreSQL => PgDbConnection.GetDatabaseName(connection.ConnectionString),
-            DatabaseType.MSSQL => MssqlDbConnection.GetDatabaseName(connection.ConnectionString),
-            DatabaseType.MySQL or DatabaseType.MariaDB or DatabaseType.HSQLDB or DatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
+            VelocipedeDatabaseType.SQLite => SqliteDbConnection.GetDatabaseName(connection.ConnectionString),
+            VelocipedeDatabaseType.PostgreSQL => PgDbConnection.GetDatabaseName(connection.ConnectionString),
+            VelocipedeDatabaseType.MSSQL => SqlServerDbConnection.GetDatabaseName(connection.ConnectionString),
+            VelocipedeDatabaseType.MySQL or VelocipedeDatabaseType.MariaDB or VelocipedeDatabaseType.HSQLDB or VelocipedeDatabaseType.Oracle => throw new NotSupportedException(ErrorMessageConstants.DatabaseTypeIsNotSupported),
             _ => throw new InvalidOperationException(ErrorMessageConstants.IncorrectDatabaseType),
         };
         return connection;

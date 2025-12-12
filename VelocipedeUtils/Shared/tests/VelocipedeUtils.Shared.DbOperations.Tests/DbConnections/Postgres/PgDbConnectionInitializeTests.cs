@@ -10,7 +10,7 @@ public sealed class PgDbConnectionInitializeTests : BaseDbConnectionInitializeTe
     /// <summary>
     /// Default constructor.
     /// </summary>
-    public PgDbConnectionInitializeTests() : base(DatabaseType.PostgreSQL)
+    public PgDbConnectionInitializeTests() : base(VelocipedeDatabaseType.PostgreSQL)
     {
         _connectionString = $"Host=localhost;Port=5432;Username=postgres;Password=postgres;Database=mydatabase;";
     }

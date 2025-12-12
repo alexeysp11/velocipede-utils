@@ -1,5 +1,5 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.DbConnections;
-using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.Loops;
 
 namespace VelocipedeUtils.Shared.DbOperations.Iterators;
 

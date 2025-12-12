@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.Common;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Exceptions;
-using VelocipedeUtils.Shared.DbOperations.Models;
+using VelocipedeUtils.Shared.DbOperations.Models.QueryParameters;
 
 namespace VelocipedeUtils.Shared.DbOperations.DbConnections;
 
