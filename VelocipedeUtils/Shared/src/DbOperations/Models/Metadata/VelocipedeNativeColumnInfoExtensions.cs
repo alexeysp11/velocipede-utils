@@ -111,7 +111,7 @@ public static class VelocipedeNativeColumnInfoExtensions
             columnInfo.NumericScale = 0;
             return dbTypeConvertResult.Value.ColumnType;
         }
-        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(numeric)\s*\((\d+),(\d+)\)", DbType.VarNumeric);
+        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(numeric)\s*\((\d+),\s*(\d+)\)", DbType.VarNumeric);
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Precision;
@@ -125,7 +125,7 @@ public static class VelocipedeNativeColumnInfoExtensions
             columnInfo.NumericScale = 0;
             return dbTypeConvertResult.Value.ColumnType;
         }
-        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(decimal)\s*\((\d+),(\d+)\)", DbType.Decimal);
+        dbTypeConvertResult = ParseDbType(nativeTypeLower, @"(decimal)\s*\((\d+),\s*(\d+)\)", DbType.Decimal);
         if (dbTypeConvertResult.HasValue)
         {
             columnInfo.NumericPrecision = dbTypeConvertResult.Value.Precision;

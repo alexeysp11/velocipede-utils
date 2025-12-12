@@ -220,19 +220,28 @@ public sealed class CreateTableQueryBuilderTests
         ];
     #endregion  // Test cases
 
-    private static DbType? GetExpectedDbType(DbType? input)
+    private static List<DbType> GetExpectedDbTypes(DbType? input)
     {
+        ArgumentNullException.ThrowIfNull(input);
+
         return input switch
         {
-            DbType.SByte => DbType.Byte,
-            DbType.UInt16 => DbType.Int16,
-            DbType.UInt32 => DbType.Int32,
-            DbType.UInt64 => DbType.Int64,
-            _ => input
+            DbType.SByte or DbType.Byte => [DbType.SByte, DbType.Byte, DbType.Int16],
+            DbType.UInt16 => [DbType.UInt16, DbType.Int16],
+            DbType.Int16 => [DbType.Int16],
+            DbType.UInt32 => [DbType.UInt32, DbType.Int32],
+            DbType.Int32 => [DbType.Int32],
+            DbType.UInt64 => [DbType.UInt64, DbType.Int64],
+            DbType.Int64 => [DbType.Int64],
+            DbType.VarNumeric or DbType.Decimal => [DbType.VarNumeric, DbType.Decimal],
+            DbType.DateTime or DbType.DateTime2 or DbType.DateTimeOffset => [DbType.DateTime, DbType.DateTime2, DbType.DateTimeOffset],
+            DbType.AnsiString or DbType.AnsiStringFixedLength or DbType.String or DbType.StringFixedLength => [DbType.String],
+            DbType.Single => [DbType.Double],
+            _ => [(DbType)input]
         };
     }
 
-    [Theory(Skip = "Incorrect tests")]
+    [Theory]
     [MemberData(nameof(ColumnInfoInteger))]
     [MemberData(nameof(ColumnInfoText))]
     [MemberData(nameof(ColumnInfoBlob))]
@@ -244,7 +253,7 @@ public sealed class CreateTableQueryBuilderTests
     {
         // Arrange.
         string tableName = Guid.NewGuid().ToString();
-        DbType? expectedColumnType = GetExpectedDbType(columnInfo.ColumnType);
+        List<DbType> expectedColumnTypes = GetExpectedDbTypes(columnInfo.ColumnType);
         VelocipedeDatabaseType databaseType = columnInfo.DatabaseType;
         IDatabaseFixture fixture = _fixtureResolver.GetFixture(databaseType);
 
@@ -284,9 +293,8 @@ public sealed class CreateTableQueryBuilderTests
             .Be(databaseType);
         createdColumn.CalculatedColumnType
             .Should()
-            .NotBeNull();
-        GetExpectedDbType(createdColumn.CalculatedColumnType)
-            .Should()
-            .Be(expectedColumnType);
+            .NotBeNull()
+            .And
+            .BeOneOf(expectedColumnTypes);
     }
 }
