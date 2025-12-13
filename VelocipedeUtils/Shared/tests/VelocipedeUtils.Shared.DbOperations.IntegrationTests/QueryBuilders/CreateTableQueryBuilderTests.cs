@@ -35,188 +35,94 @@ public sealed class CreateTableQueryBuilderTests
     }
 
     #region Test cases
-    public static TheoryData<VelocipedeColumnInfo> ColumnInfoInteger => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.SByte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Byte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Int16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.UInt16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Int32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.UInt32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Int64 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.UInt64 },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.SByte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Byte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Int16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.UInt16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Int32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.UInt32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Int64 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.UInt64 },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.SByte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Byte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Int16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.UInt16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Int32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.UInt32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Int64 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.UInt64 },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoInteger(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.SByte },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Byte },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int16 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt16 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int32 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt32 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int64 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt64 },
         ];
 
-    public static TheoryData<VelocipedeColumnInfo> ColumnInfoText => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.String, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.StringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiString, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.String, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.StringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiString, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.String, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.StringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiString, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.String, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.StringFixedLength, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiString, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = 50 },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.String, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiString, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.String, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiString, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.String, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiString, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.String, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiString, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = 50 },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.String, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiString, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.String, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiString, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.String, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiString, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.String, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.StringFixedLength, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiString, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = 50 },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoText(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = -50 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = -50 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = -50 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -50 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = 50 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = 50 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = 50 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = 50 },
         ];
 
-    public static TheoryData<VelocipedeColumnInfo> ColumnInfoBlob => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Binary },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Binary },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Binary },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoBlob(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Binary },
         ];
 
-    public static TheoryData<VelocipedeColumnInfo> ColumnInfoReal => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Double },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Single },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Double },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Single },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Double },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Single },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoReal(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Double },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Single },
         ];
 
-    public static TheoryData<VelocipedeColumnInfo> ColumnInfoNumeric => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoNumeric(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 },
         ];
 
-    public static TheoryData<VelocipedeColumnInfo> ColumnInfoBoolean => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Boolean },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Boolean },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Boolean },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoCurrency(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = null },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = -1 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 0 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 2 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 4 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 5 },
         ];
 
-    public static TheoryData<VelocipedeColumnInfo> ColumnInfoDatetime => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Time },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Date },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.DateTime },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.DateTime2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.DateTimeOffset },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoBoolean(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Boolean },
+        ];
 
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Time },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Date },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.DateTime },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.DateTime2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.DateTimeOffset },
-
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Time },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Date },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.DateTime },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.DateTime2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.DateTimeOffset },
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoDatetime(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Time },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Date },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTime },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTime2 },
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset },
         ];
     #endregion  // Test cases
 
@@ -233,7 +139,7 @@ public sealed class CreateTableQueryBuilderTests
             DbType.Int32 => [DbType.Int32],
             DbType.UInt64 => [DbType.UInt64, DbType.Int64],
             DbType.Int64 => [DbType.Int64],
-            DbType.VarNumeric or DbType.Decimal => [DbType.VarNumeric, DbType.Decimal],
+            DbType.VarNumeric or DbType.Decimal or DbType.Currency => [DbType.VarNumeric, DbType.Decimal, DbType.Currency],
             DbType.DateTime or DbType.DateTime2 or DbType.DateTimeOffset => [DbType.DateTime, DbType.DateTime2, DbType.DateTimeOffset],
             DbType.AnsiString or DbType.AnsiStringFixedLength or DbType.String or DbType.StringFixedLength => [DbType.String],
             DbType.Single => [DbType.Double],
@@ -242,14 +148,62 @@ public sealed class CreateTableQueryBuilderTests
     }
 
     [Theory]
-    [MemberData(nameof(ColumnInfoInteger))]
-    [MemberData(nameof(ColumnInfoText))]
-    [MemberData(nameof(ColumnInfoBlob))]
-    [MemberData(nameof(ColumnInfoReal))]
-    [MemberData(nameof(ColumnInfoNumeric))]
-    [MemberData(nameof(ColumnInfoBoolean))]
-    [MemberData(nameof(ColumnInfoDatetime))]
-    public async Task BuildAndToString(VelocipedeColumnInfo columnInfo)
+    [MemberData(nameof(GetColumnInfoInteger), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoInteger), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoInteger), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Integer(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    [Theory]
+    [MemberData(nameof(GetColumnInfoText), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoText), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoText), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Text(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    [Theory]
+    [MemberData(nameof(GetColumnInfoBlob), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoBlob), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoBlob), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Blob(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    [Theory]
+    [MemberData(nameof(GetColumnInfoReal), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoReal), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoReal), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Real(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    [Theory]
+    [MemberData(nameof(GetColumnInfoNumeric), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoNumeric), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoNumeric), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Numeric(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+    
+    [Theory]
+    [MemberData(nameof(GetColumnInfoCurrency), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoCurrency), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoCurrency), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Currency(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    [Theory]
+    [MemberData(nameof(GetColumnInfoBoolean), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoBoolean), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoBoolean), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Boolean(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    [Theory]
+    [MemberData(nameof(GetColumnInfoDatetime), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoDatetime), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoDatetime), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Datetime(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    private async Task ValidateBuildAndToString(VelocipedeColumnInfo columnInfo)
     {
         // Arrange.
         string tableName = Guid.NewGuid().ToString();
