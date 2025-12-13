@@ -36,98 +36,98 @@ public sealed class CreateTableQueryBuilderTests
 
     #region Test cases
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoInteger(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.SByte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Byte },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt16 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt32 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int64 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt64 },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.SByte },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Byte },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int16 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt16 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int32 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt32 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Int64 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.UInt64 },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoText(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = 50 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = 50 },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = -50 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = -50 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = -50 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = -50 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.String, CharMaxLength = 50 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, CharMaxLength = 50 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiString, CharMaxLength = 50 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, CharMaxLength = 50 },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoBlob(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Binary },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Binary },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoReal(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Double },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Single },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Double },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Single },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoNumeric(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = -1, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = -1, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = null, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = null, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 0, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 0, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 10, NumericScale = 5 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 10, NumericScale = 5 },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoCurrency(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = null },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = -1 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 0 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 4 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 5 },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = null, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = -1, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 0, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = null },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = -1 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 0 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 2 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 4 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 10, NumericScale = 5 },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoBoolean(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Boolean },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Boolean },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoDatetime(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Time },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Date },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTime },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTime2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Time },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Date },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTime },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTime2 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset },
+    ];
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoGuid(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Guid },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Guid },
+    ];
     #endregion  // Test cases
 
     private static List<DbType> GetExpectedDbTypes(DbType? input)

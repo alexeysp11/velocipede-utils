@@ -326,15 +326,15 @@ public sealed class GetNativeColumnTypeTests
     }
 
     public static TheoryData<VelocipedeColumnInfo> GetColumnInfoIncorrectNumerics(VelocipedeDatabaseType databaseType) => [
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 1, NumericScale = 2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 5, NumericScale = 10 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 1, NumericScale = 2 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.VarNumeric, NumericPrecision = 5, NumericScale = 10 },
 
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 1, NumericScale = 2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 5, NumericScale = 10 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 1, NumericScale = 2 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Decimal, NumericPrecision = 5, NumericScale = 10 },
 
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 1, NumericScale = 2 },
-            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 5, NumericScale = 10 },
-        ];
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 1, NumericScale = 2 },
+        new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Currency, NumericPrecision = 5, NumericScale = 10 },
+    ];
 
     public static TheoryData<TestCaseNativeColumnType> GetColumnInfoGuid()
     {
