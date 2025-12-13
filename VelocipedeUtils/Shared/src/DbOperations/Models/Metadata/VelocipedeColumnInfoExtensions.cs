@@ -142,9 +142,8 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.Double or DbType.Single => "double precision",
 
-            DbType.VarNumeric => "numeric",
+            DbType.VarNumeric or DbType.Currency => "numeric",
             DbType.Decimal => "decimal",
-            DbType.Currency => "numeric",
 
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.ColumnType}")
         };
@@ -188,9 +187,8 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.Double or DbType.Single => "double precision",
 
-            DbType.VarNumeric => "numeric",
+            DbType.VarNumeric or DbType.Currency => "numeric",
             DbType.Decimal => "decimal",
-            DbType.Currency => "numeric",
 
             _ => throw new NotSupportedException($"Unsupported DbType for PostgreSQL: {columnInfo.ColumnType}")
         };
@@ -238,9 +236,8 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.Double or DbType.Single => "double precision",
 
-            DbType.VarNumeric => "numeric",
+            DbType.VarNumeric or DbType.Currency => "numeric",
             DbType.Decimal => "decimal",
-            DbType.Currency => "numeric",
 
             _ => throw new NotSupportedException($"Unsupported DbType for SQL Server: {columnInfo.ColumnType}")
         };
@@ -261,11 +258,14 @@ public static class VelocipedeColumnInfoExtensions
     /// <param name="baseType">Pre-calculated column base type.</param>
     /// <returns>Numeric native column type.</returns>
     /// <exception cref="InvalidOperationException">
-    /// When <see cref="VelocipedeColumnInfo.ColumnType"/> is not <see cref="DbType.VarNumeric"/>,
-    /// <see cref="DbType.Decimal"/> or <see cref="DbType.Currency"/>;
-    /// or when <paramref name="baseType"/> is not <c>"numeric"</c> or <c>"decimal"</c>.
+    /// Thrown in the following cases:
+    /// <list type="bullet">
+    ///     <item><description><see cref="VelocipedeColumnInfo.ColumnType"/> is not <see cref="DbType.VarNumeric"/>, <see cref="DbType.Decimal"/> or <see cref="DbType.Currency"/>;</description></item>
+    ///     <item><description><paramref name="baseType"/> is not <c>"numeric"</c> or <c>"decimal"</c>;</description></item>
+    ///     <item><description><see cref="VelocipedeColumnInfo.NumericScale"/> is bigger than <see cref="VelocipedeColumnInfo.NumericPrecision"/>.</description></item>
+    /// </list>
     /// </exception>
-    public static string GetNumericNativeColumnType(VelocipedeColumnInfo columnInfo, string baseType)
+    public static string GetNumericNativeColumnType(this VelocipedeColumnInfo columnInfo, string baseType)
     {
         if (columnInfo.ColumnType is not (DbType.VarNumeric or DbType.Decimal or DbType.Currency))
         {
@@ -280,6 +280,11 @@ public static class VelocipedeColumnInfoExtensions
         bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
         if (hasValidPrecision && hasValidScale)
         {
+            if (columnInfo.NumericPrecision < columnInfo.NumericScale)
+            {
+                throw new InvalidOperationException(ErrorMessageConstants.NumericScaleBiggerThanPrecision);
+            }
+
             if (columnInfo.ColumnType is DbType.Currency)
             {
                 return columnInfo.NumericScale > NumericConstants.CurrencyDefaultScale
