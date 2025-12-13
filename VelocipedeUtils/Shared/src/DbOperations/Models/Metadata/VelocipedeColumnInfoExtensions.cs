@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Globalization;
 using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
@@ -50,7 +51,7 @@ public static class VelocipedeColumnInfoExtensions
                 // MSSQL and SQLite use 0/1; PostgreSQL - true/false.
                 if (columnInfo.DatabaseType == VelocipedeDatabaseType.PostgreSQL)
                 {
-                    return value.ToString()?.ToLowerInvariant() ?? "false";
+                    return value.ToString()?.ToLowerInvariant() ?? "NULL";
                 }
                 return (bool)value ? "1" : "0";
 
@@ -66,7 +67,8 @@ public static class VelocipedeColumnInfoExtensions
             case DbType.Double:
             case DbType.Single:
             case DbType.VarNumeric:
-                return value.ToString() ?? "0";
+            case DbType.Currency:
+                return Convert.ToString(value, CultureInfo.InvariantCulture) ?? "NULL";
 
             default:
                 // Other types (e.g. Guid, Binary) may require specific handling.

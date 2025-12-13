@@ -10,6 +10,166 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Models.Metadata.VelocipedeCo
 /// </summary>
 public sealed class FormatDefaultValueTests
 {
+    #region Test cases
+    public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultNumerics(VelocipedeDatabaseType databaseType) => [
+        // Positive integers.
+        new() { DatabaseType = databaseType, ColumnType = DbType.SByte, DefaultValue = 100, Expected = "100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Byte, DefaultValue = 100, Expected = "100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int16, DefaultValue = 100, Expected = "100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt16, DefaultValue = 100, Expected = "100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int32, DefaultValue = 100, Expected = "100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt32, DefaultValue = 100, Expected = "100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int64, DefaultValue = 100, Expected = "100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt64, DefaultValue = 100, Expected = "100", },
+
+        // Positive floating point numbers.
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = 123, Expected = "123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = 123, Expected = "123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = 123, Expected = "123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = 123, Expected = "123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = 123, Expected = "123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = 99.9m, Expected = "99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = 99.9m, Expected = "99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = 99.9m, Expected = "99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = 99.9, Expected = "99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = 99.9m, Expected = "99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = 299.92m, Expected = "299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = 299.92m, Expected = "299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = 299.92m, Expected = "299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = 299.92, Expected = "299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = 299.92m, Expected = "299.92", },
+
+        // Negative integers.
+        new() { DatabaseType = databaseType, ColumnType = DbType.SByte, DefaultValue = -100, Expected = "-100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Byte, DefaultValue = -100, Expected = "-100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int16, DefaultValue = -100, Expected = "-100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt16, DefaultValue = -100, Expected = "-100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int32, DefaultValue = -100, Expected = "-100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt32, DefaultValue = -100, Expected = "-100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int64, DefaultValue = -100, Expected = "-100", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt64, DefaultValue = -100, Expected = "-100", },
+        
+        // Positive floating point numbers.
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = -123, Expected = "-123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = -123, Expected = "-123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = -123, Expected = "-123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = -123, Expected = "-123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = -123, Expected = "-123", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = -99.9m, Expected = "-99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = -99.9m, Expected = "-99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = -99.9m, Expected = "-99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = -99.9m, Expected = "-99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = -99.9m, Expected = "-99.9", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = -299.92m, Expected = "-299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = -299.92m, Expected = "-299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = -299.92m, Expected = "-299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = -299.92m, Expected = "-299.92", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = -299.92m, Expected = "-299.92", },
+
+        // Equals to 0.
+        new() { DatabaseType = databaseType, ColumnType = DbType.SByte, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Byte, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int16, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt16, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int32, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt32, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int64, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt64, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = 0, Expected = "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = 0, Expected = "0", },
+
+        // Equals to null.
+        new() { DatabaseType = databaseType, ColumnType = DbType.SByte, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Byte, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int16, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt16, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int32, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt32, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int64, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt64, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = null, Expected = "NULL", },
+
+        // Equals to DBNull.
+        new() { DatabaseType = databaseType, ColumnType = DbType.SByte, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Byte, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int16, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt16, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int32, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt32, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Int64, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.UInt64, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Currency, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.VarNumeric, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Decimal, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = DBNull.Value, Expected = "NULL", },
+    ];
+    #endregion  // Test cases
+
+    [Theory]
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_NullStringValue_ReturnsNull(VelocipedeDatabaseType dbType)
+    {
+        VelocipedeColumnInfo columnInfo = new()
+        {
+            DatabaseType = dbType,
+            ColumnName = "TestColumn",
+            ColumnType = DbType.String,
+            DefaultValue = null
+        };
+
+        string result = columnInfo.FormatDefaultValue();
+
+        result.Should().Be("NULL");
+    }
+
+    [Theory]
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_DBNullValue_ShouldReturnNullString(VelocipedeDatabaseType dbType)
+    {
+        VelocipedeColumnInfo columnInfo = new()
+        {
+            DatabaseType = dbType,
+            ColumnName = "TestColumn",
+            ColumnType = DbType.String,
+            DefaultValue = DBNull.Value
+        };
+
+        string result = columnInfo.FormatDefaultValue();
+
+        result.Should().Be("NULL");
+    }
+
+    [Theory]
+    [InlineData(VelocipedeDatabaseType.SQLite)]
+    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
+    [InlineData(VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_EmptyStringValue(VelocipedeDatabaseType dbType)
+    {
+        VelocipedeColumnInfo columnInfo = new()
+        {
+            DatabaseType = dbType,
+            ColumnName = "TestColumn",
+            ColumnType = DbType.String,
+            DefaultValue = string.Empty
+        };
+
+        string result = columnInfo.FormatDefaultValue();
+
+        result.Should().Be("''");
+    }
+
     [Theory]
     [InlineData(VelocipedeDatabaseType.SQLite)]
     [InlineData(VelocipedeDatabaseType.PostgreSQL)]
@@ -49,26 +209,22 @@ public sealed class FormatDefaultValueTests
     }
 
     [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite, DbType.Int32, 123)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL, DbType.Decimal, 456.78)]
-    [InlineData(VelocipedeDatabaseType.MSSQL, DbType.Double, 99.9)]
-    [InlineData(VelocipedeDatabaseType.SQLite, DbType.Int64, 10000000000)]
-    public void FormatDefaultValue_NumericTypes_ShouldReturnNonQuotedValue(
-        VelocipedeDatabaseType dbType,
-        DbType sqlDbType,
-        object defaultValue)
+    [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_NumericTypes(TestCaseFormatDefaultValue testCase)
     {
         VelocipedeColumnInfo columnInfo = new()
         {
-            DatabaseType = dbType,
+            DatabaseType = testCase.DatabaseType,
             ColumnName = "TestColumn",
-            ColumnType = sqlDbType,
-            DefaultValue = defaultValue
+            ColumnType = testCase.ColumnType,
+            DefaultValue = testCase.DefaultValue,
         };
 
         string result = columnInfo.FormatDefaultValue();
 
-        result.Should().Be(defaultValue.ToString());
+        result.Should().Be(testCase.Expected);
     }
 
     [Theory]
@@ -134,43 +290,5 @@ public sealed class FormatDefaultValueTests
         string result = columnInfo.FormatDefaultValue();
 
         result.Should().Be("'2023-10-27 00:00:00'");
-    }
-
-    [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_NullValue_ShouldReturnNullString(VelocipedeDatabaseType dbType)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.String,
-            DefaultValue = null
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("NULL");
-    }
-
-    [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_DBNullValue_ShouldReturnNullString(VelocipedeDatabaseType dbType)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.Int32,
-            DefaultValue = DBNull.Value
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("NULL");
     }
 }

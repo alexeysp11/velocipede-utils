@@ -1,6 +1,6 @@
 ﻿using VelocipedeUtils.Shared.DbOperations.Models.Metadata;
 
-namespace VelocipedeUtils.Shared.DbOperations.Tests.Models.Metadata;
+namespace VelocipedeUtils.Shared.DbOperations.Tests.Models.Metadata.VelocipedeColumnInfoTests;
 
 /// <summary>
 /// Test case for testing native column types.
