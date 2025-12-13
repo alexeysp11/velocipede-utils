@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using VelocipedeUtils.Shared.DbOperations.Constants;
 using VelocipedeUtils.Shared.DbOperations.Enums;
 
 namespace VelocipedeUtils.Shared.DbOperations.Models.Metadata;
@@ -143,27 +144,15 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.VarNumeric => "numeric",
             DbType.Decimal => "decimal",
-            
+            DbType.Currency => "numeric",
+
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.ColumnType}")
         };
 
-        // Numeric or decimal.
-        if (columnInfo.ColumnType is (DbType.VarNumeric or DbType.Decimal))
+        // Numeric datatypes.
+        if (columnInfo.ColumnType is DbType.VarNumeric or DbType.Decimal or DbType.Currency)
         {
-            bool hasValidPrecision = columnInfo.NumericPrecision.HasValue && columnInfo.NumericPrecision > 0;
-            bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
-            if (hasValidPrecision && hasValidScale)
-            {
-                return $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
-            }
-            else if (hasValidPrecision)
-            {
-                return $"{baseType}({columnInfo.NumericPrecision})";
-            }
-            else
-            {
-                return baseType;
-            }
+            return GetNumericNativeColumnType(columnInfo, baseType);
         }
 
         return baseType;
@@ -201,27 +190,15 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.VarNumeric => "numeric",
             DbType.Decimal => "decimal",
+            DbType.Currency => "numeric",
 
             _ => throw new NotSupportedException($"Unsupported DbType for PostgreSQL: {columnInfo.ColumnType}")
         };
 
-        // Numeric or decimal.
-        if (columnInfo.ColumnType is (DbType.VarNumeric or DbType.Decimal))
+        // Numeric datatypes.
+        if (columnInfo.ColumnType is DbType.VarNumeric or DbType.Decimal or DbType.Currency)
         {
-            bool hasValidPrecision = columnInfo.NumericPrecision.HasValue && columnInfo.NumericPrecision > 0;
-            bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
-            if (hasValidPrecision && hasValidScale)
-            {
-                return $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
-            }
-            else if (hasValidPrecision)
-            {
-                return $"{baseType}({columnInfo.NumericPrecision})";
-            }
-            else
-            {
-                return baseType;
-            }
+            return GetNumericNativeColumnType(columnInfo, baseType);
         }
 
         return baseType;
@@ -263,29 +240,69 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.VarNumeric => "numeric",
             DbType.Decimal => "decimal",
+            DbType.Currency => "numeric",
 
             _ => throw new NotSupportedException($"Unsupported DbType for SQL Server: {columnInfo.ColumnType}")
         };
 
-        // Numeric or decimal.
-        if (columnInfo.ColumnType is (DbType.VarNumeric or DbType.Decimal))
+        // Numeric datatypes.
+        if (columnInfo.ColumnType is DbType.VarNumeric or DbType.Decimal or DbType.Currency)
         {
-            bool hasValidPrecision = columnInfo.NumericPrecision.HasValue && columnInfo.NumericPrecision > 0;
-            bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
-            if (hasValidPrecision && hasValidScale)
-            {
-                return $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
-            }
-            else if (hasValidPrecision)
-            {
-                return $"{baseType}({columnInfo.NumericPrecision})";
-            }
-            else
-            {
-                return baseType;
-            }
+            return GetNumericNativeColumnType(columnInfo, baseType);
         }
 
         return baseType;
+    }
+
+    /// <summary>
+    /// Convert to numeric native column type.
+    /// </summary>
+    /// <param name="columnInfo">Column metadata.</param>
+    /// <param name="baseType">Pre-calculated column base type.</param>
+    /// <returns>Numeric native column type.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// When <see cref="VelocipedeColumnInfo.ColumnType"/> is not <see cref="DbType.VarNumeric"/>,
+    /// <see cref="DbType.Decimal"/> or <see cref="DbType.Currency"/>;
+    /// or when <paramref name="baseType"/> is not <c>"numeric"</c> or <c>"decimal"</c>.
+    /// </exception>
+    public static string GetNumericNativeColumnType(VelocipedeColumnInfo columnInfo, string baseType)
+    {
+        if (columnInfo.ColumnType is not (DbType.VarNumeric or DbType.Decimal or DbType.Currency))
+        {
+            throw new InvalidOperationException(ErrorMessageConstants.NumericNativeColumnTypeConversion);
+        }
+        if (baseType is not ("numeric" or "decimal"))
+        {
+            throw new InvalidOperationException(ErrorMessageConstants.IncorrectBaseForNumericNativeColumnType);
+        }
+
+        bool hasValidPrecision = columnInfo.NumericPrecision.HasValue && columnInfo.NumericPrecision > 0;
+        bool hasValidScale = columnInfo.NumericScale.HasValue && columnInfo.NumericScale > 0;
+        if (hasValidPrecision && hasValidScale)
+        {
+            if (columnInfo.ColumnType is DbType.Currency)
+            {
+                return columnInfo.NumericScale > NumericConstants.CurrencyDefaultScale
+                    ? $"{baseType}({columnInfo.NumericPrecision}, {NumericConstants.CurrencyDefaultScale})"
+                    : $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
+            }
+            else
+            {
+                return $"{baseType}({columnInfo.NumericPrecision}, {columnInfo.NumericScale})";
+            }
+        }
+        else
+        {
+            if (columnInfo.ColumnType is DbType.Currency)
+            {
+                return hasValidPrecision && columnInfo.NumericPrecision > NumericConstants.CurrencyDefaultScale
+                    ? $"{baseType}({columnInfo.NumericPrecision}, {NumericConstants.CurrencyDefaultScale})"
+                    : $"{baseType}({NumericConstants.CurrencyDefaultPrecision}, {NumericConstants.CurrencyDefaultScale})";
+            }
+            else
+            {
+                return hasValidPrecision ? $"{baseType}({columnInfo.NumericPrecision})" : baseType;
+            }
+        }
     }
 }

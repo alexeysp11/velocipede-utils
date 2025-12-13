@@ -30,5 +30,7 @@ public static class ErrorMessageConstants
     public const string IncorrectQueryBuilderResult = "Incorrect query builder result";
     public const string EmptyColumnInfoList = "Column info list could not be empty";
     public const string EmptyForeignKeyInfoList = "Foreign key info list could not be empty";
+    public const string NumericNativeColumnTypeConversion = "Incorrect conversion to numeric native column type";
+    public const string IncorrectBaseForNumericNativeColumnType = "Incorrect base type for numeric native column type";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
