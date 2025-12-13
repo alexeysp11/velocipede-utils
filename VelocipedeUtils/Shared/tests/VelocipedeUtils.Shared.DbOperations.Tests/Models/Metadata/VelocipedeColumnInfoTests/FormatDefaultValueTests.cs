@@ -160,6 +160,13 @@ public sealed class FormatDefaultValueTests
         new() { DatabaseType = databaseType, ColumnType = DbType.Double, DefaultValue = DBNull.Value, Expected = "NULL", },
         new() { DatabaseType = databaseType, ColumnType = DbType.Single, DefaultValue = DBNull.Value, Expected = "NULL", },
     ];
+    
+    public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultBoolean(VelocipedeDatabaseType databaseType) => [
+        new() { DatabaseType = databaseType, ColumnType = DbType.Boolean, DefaultValue = true, Expected = databaseType is VelocipedeDatabaseType.PostgreSQL ? "true" : "1", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Boolean, DefaultValue = false, Expected = databaseType is VelocipedeDatabaseType.PostgreSQL ? "false" : "0", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Boolean, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Boolean, DefaultValue = DBNull.Value, Expected = "NULL", },
+    ];
     #endregion  // Test cases
 
     [Theory]
@@ -167,63 +174,21 @@ public sealed class FormatDefaultValueTests
     [MemberData(nameof(GetTestCaseFormatDefaultStrings), parameters: VelocipedeDatabaseType.PostgreSQL)]
     [MemberData(nameof(GetTestCaseFormatDefaultStrings), parameters: VelocipedeDatabaseType.MSSQL)]
     public void FormatDefaultValue_Strings(TestCaseFormatDefaultValue testCase)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = testCase.DatabaseType,
-            ColumnName = "TestColumn",
-            ColumnType = testCase.ColumnType,
-            DefaultValue = testCase.DefaultValue,
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be(testCase.Expected);
-    }
+        => ValidateFormatDefaultValue(testCase);
 
     [Theory]
     [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.SQLite)]
     [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.PostgreSQL)]
     [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.MSSQL)]
     public void FormatDefaultValue_Numerics(TestCaseFormatDefaultValue testCase)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = testCase.DatabaseType,
-            ColumnName = "TestColumn",
-            ColumnType = testCase.ColumnType,
-            DefaultValue = testCase.DefaultValue,
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be(testCase.Expected);
-    }
+        => ValidateFormatDefaultValue(testCase);
 
     [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite, true, "1")]
-    [InlineData(VelocipedeDatabaseType.SQLite, false, "0")]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL, true, "true")]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL, false, "false")]
-    [InlineData(VelocipedeDatabaseType.MSSQL, true, "1")]
-    [InlineData(VelocipedeDatabaseType.MSSQL, false, "0")]
-    public void FormatDefaultValue_Boolean(
-        VelocipedeDatabaseType databaseType,
-        object defaultValue,
-        string expected)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = databaseType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.Boolean,
-            DefaultValue = defaultValue
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be(expected);
-    }
+    [MemberData(nameof(GetTestCaseFormatDefaultBoolean), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetTestCaseFormatDefaultBoolean), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetTestCaseFormatDefaultBoolean), parameters: VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_Boolean(TestCaseFormatDefaultValue testCase)
+        => ValidateFormatDefaultValue(testCase);
 
     [Theory]
     [InlineData(VelocipedeDatabaseType.SQLite)]
@@ -263,5 +228,25 @@ public sealed class FormatDefaultValueTests
         string result = columnInfo.FormatDefaultValue();
 
         result.Should().Be("'2023-10-27 00:00:00'");
+    }
+
+    private static void ValidateFormatDefaultValue(TestCaseFormatDefaultValue testCase)
+    {
+        // Arrange.
+        VelocipedeColumnInfo columnInfo = new()
+        {
+            DatabaseType = testCase.DatabaseType,
+            ColumnName = "TestColumn",
+            ColumnType = testCase.ColumnType,
+            DefaultValue = testCase.DefaultValue,
+        };
+
+        // Act.
+        string result = columnInfo.FormatDefaultValue();
+
+        // Assert.
+        result
+            .Should()
+            .Be(testCase.Expected);
     }
 }
