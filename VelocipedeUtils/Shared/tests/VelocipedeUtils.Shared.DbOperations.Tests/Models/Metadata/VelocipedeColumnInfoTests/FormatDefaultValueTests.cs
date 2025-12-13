@@ -11,6 +11,55 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Models.Metadata.VelocipedeCo
 public sealed class FormatDefaultValueTests
 {
     #region Test cases
+    public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultStrings(VelocipedeDatabaseType databaseType) => [
+        // String storing positive numerics.
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "100", Expected = "'100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, DefaultValue = "100", Expected = "'100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiString, DefaultValue = "100", Expected = "'100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, DefaultValue = "100", Expected = "'100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "100.28", Expected = "'100.28'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, DefaultValue = "100.28", Expected = "'100.28'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiString, DefaultValue = "100.28", Expected = "'100.28'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, DefaultValue = "100.28", Expected = "'100.28'", },
+
+        // String storing negative numerics.
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "-100", Expected = "'-100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, DefaultValue = "-100", Expected = "'-100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiString, DefaultValue = "-100", Expected = "'-100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, DefaultValue = "-100", Expected = "'-100'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "-100.28", Expected = "'-100.28'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, DefaultValue = "-100.28", Expected = "'-100.28'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiString, DefaultValue = "-100.28", Expected = "'-100.28'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, DefaultValue = "-100.28", Expected = "'-100.28'", },
+
+        // Quotes.
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "test_default_value", Expected = "'test_default_value'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "test_default_value 123", Expected = "'test_default_value 123'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "test_default_value ' 123", Expected = "'test_default_value '' 123'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "test_default_value '123/12", Expected = "'test_default_value ''123/12'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "test_default_value'123.2", Expected = "'test_default_value''123.2'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "value_with_'quote", Expected = "'value_with_''quote'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "value_with_'quote'", Expected = "'value_with_''quote'''", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "'value_with_'quote'", Expected = "'''value_with_''quote'''", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "'value_with_''quote'", Expected = "'''value_with_''''quote'''", },
+        
+        // Empty string.
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = "", Expected = "''", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = string.Empty, Expected = "''", },
+
+        // Equals to null.
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiString, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, DefaultValue = null, Expected = "NULL", },
+
+        // Equals to DBNull.
+        new() { DatabaseType = databaseType, ColumnType = DbType.String, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.StringFixedLength, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiString, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.AnsiStringFixedLength, DefaultValue = DBNull.Value, Expected = "NULL", },
+    ];
+
     public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultNumerics(VelocipedeDatabaseType databaseType) => [
         // Positive integers.
         new() { DatabaseType = databaseType, ColumnType = DbType.SByte, DefaultValue = 100, Expected = "100", },
@@ -114,105 +163,29 @@ public sealed class FormatDefaultValueTests
     #endregion  // Test cases
 
     [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_NullStringValue_ReturnsNull(VelocipedeDatabaseType dbType)
+    [MemberData(nameof(GetTestCaseFormatDefaultStrings), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetTestCaseFormatDefaultStrings), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetTestCaseFormatDefaultStrings), parameters: VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_Strings(TestCaseFormatDefaultValue testCase)
     {
         VelocipedeColumnInfo columnInfo = new()
         {
-            DatabaseType = dbType,
+            DatabaseType = testCase.DatabaseType,
             ColumnName = "TestColumn",
-            ColumnType = DbType.String,
-            DefaultValue = null
+            ColumnType = testCase.ColumnType,
+            DefaultValue = testCase.DefaultValue,
         };
 
         string result = columnInfo.FormatDefaultValue();
 
-        result.Should().Be("NULL");
-    }
-
-    [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_DBNullValue_ShouldReturnNullString(VelocipedeDatabaseType dbType)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.String,
-            DefaultValue = DBNull.Value
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("NULL");
-    }
-
-    [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_EmptyStringValue(VelocipedeDatabaseType dbType)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.String,
-            DefaultValue = string.Empty
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("''");
-    }
-
-    [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_StringValue_ShouldReturnQuotedString(VelocipedeDatabaseType dbType)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.String,
-            DefaultValue = "test_default_value"
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("'test_default_value'");
-    }
-
-    [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_StringValueWithQuote_ShouldReturnQuotedAndEscapedString(VelocipedeDatabaseType dbType)
-    {
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.String,
-            DefaultValue = "value_with_'quote'"
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("'value_with_''quote'''");
+        result.Should().Be(testCase.Expected);
     }
 
     [Theory]
     [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.SQLite)]
     [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.PostgreSQL)]
     [MemberData(nameof(GetTestCaseFormatDefaultNumerics), parameters: VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_NumericTypes(TestCaseFormatDefaultValue testCase)
+    public void FormatDefaultValue_Numerics(TestCaseFormatDefaultValue testCase)
     {
         VelocipedeColumnInfo columnInfo = new()
         {
