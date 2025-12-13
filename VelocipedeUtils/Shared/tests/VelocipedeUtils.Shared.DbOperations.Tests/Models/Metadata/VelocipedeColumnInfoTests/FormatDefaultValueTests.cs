@@ -10,6 +10,8 @@ namespace VelocipedeUtils.Shared.DbOperations.Tests.Models.Metadata.VelocipedeCo
 /// </summary>
 public sealed class FormatDefaultValueTests
 {
+    private const string DEFAULT_GUID = "b42410ee-132f-42ee-9e4f-09a6485c95b8";
+
     #region Test cases
     public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultStrings(VelocipedeDatabaseType databaseType) => [
         // String storing positive numerics.
@@ -197,6 +199,12 @@ public sealed class FormatDefaultValueTests
         new() { DatabaseType = databaseType, ColumnType = DbType.DateTime2, DefaultValue = DBNull.Value, Expected = "NULL", },
         new() { DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset, DefaultValue = DBNull.Value, Expected = "NULL", },
     ];
+
+    public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultGuid(VelocipedeDatabaseType databaseType) => [
+        new() { DatabaseType = databaseType, ColumnType = DbType.Guid, DefaultValue = DEFAULT_GUID, Expected = $"'{DEFAULT_GUID}'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Guid, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Guid, DefaultValue = DBNull.Value, Expected = "NULL", },
+    ];
     #endregion  // Test cases
 
     [Theory]
@@ -219,12 +227,19 @@ public sealed class FormatDefaultValueTests
     [MemberData(nameof(GetTestCaseFormatDefaultBoolean), parameters: VelocipedeDatabaseType.MSSQL)]
     public void FormatDefaultValue_Boolean(TestCaseFormatDefaultValue testCase)
         => ValidateFormatDefaultValue(testCase);
-        
+    
     [Theory]
     [MemberData(nameof(GetTestCaseFormatDefaultDateTime), parameters: VelocipedeDatabaseType.SQLite)]
     [MemberData(nameof(GetTestCaseFormatDefaultDateTime), parameters: VelocipedeDatabaseType.PostgreSQL)]
     [MemberData(nameof(GetTestCaseFormatDefaultDateTime), parameters: VelocipedeDatabaseType.MSSQL)]
     public void FormatDefaultValue_DateTime(TestCaseFormatDefaultValue testCase)
+        => ValidateFormatDefaultValue(testCase);
+
+    [Theory]
+    [MemberData(nameof(GetTestCaseFormatDefaultGuid), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetTestCaseFormatDefaultGuid), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetTestCaseFormatDefaultGuid), parameters: VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_Guid(TestCaseFormatDefaultValue testCase)
         => ValidateFormatDefaultValue(testCase);
 
     private static void ValidateFormatDefaultValue(TestCaseFormatDefaultValue testCase)

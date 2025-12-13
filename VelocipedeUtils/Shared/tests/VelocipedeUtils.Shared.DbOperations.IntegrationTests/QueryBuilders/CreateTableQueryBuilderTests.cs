@@ -124,6 +124,10 @@ public sealed class CreateTableQueryBuilderTests
             new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTime2 },
             new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset },
         ];
+
+    public static TheoryData<VelocipedeColumnInfo> GetColumnInfoGuid(VelocipedeDatabaseType databaseType) => [
+            new() { ColumnName = COLUMN_NAME, DatabaseType = databaseType, ColumnType = DbType.Guid },
+        ];
     #endregion  // Test cases
 
     private static List<DbType> GetExpectedDbTypes(DbType? input)
@@ -143,6 +147,7 @@ public sealed class CreateTableQueryBuilderTests
             DbType.DateTime or DbType.DateTime2 or DbType.DateTimeOffset => [DbType.DateTime, DbType.DateTime2, DbType.DateTimeOffset],
             DbType.AnsiString or DbType.AnsiStringFixedLength or DbType.String or DbType.StringFixedLength => [DbType.String],
             DbType.Single => [DbType.Double],
+            DbType.Guid => [DbType.Guid, DbType.String],
             _ => [(DbType)input]
         };
     }
@@ -201,6 +206,13 @@ public sealed class CreateTableQueryBuilderTests
     [MemberData(nameof(GetColumnInfoDatetime), parameters: VelocipedeDatabaseType.PostgreSQL)]
     [MemberData(nameof(GetColumnInfoDatetime), parameters: VelocipedeDatabaseType.MSSQL)]
     public async Task BuildAndToString_Datetime(VelocipedeColumnInfo columnInfo)
+        => await ValidateBuildAndToString(columnInfo);
+
+    [Theory]
+    [MemberData(nameof(GetColumnInfoGuid), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetColumnInfoGuid), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetColumnInfoGuid), parameters: VelocipedeDatabaseType.MSSQL)]
+    public async Task BuildAndToString_Guid(VelocipedeColumnInfo columnInfo)
         => await ValidateBuildAndToString(columnInfo);
 
     private async Task ValidateBuildAndToString(VelocipedeColumnInfo columnInfo)

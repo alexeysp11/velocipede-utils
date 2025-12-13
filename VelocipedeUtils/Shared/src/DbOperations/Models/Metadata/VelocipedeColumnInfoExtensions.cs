@@ -32,6 +32,7 @@ public static class VelocipedeColumnInfoExtensions
             case DbType.String:
             case DbType.StringFixedLength:
             case DbType.Xml:
+            case DbType.Guid:
                 return $"'{value.ToString()?.Replace("'", "''")}'";
 
             case DbType.Time:
@@ -80,7 +81,7 @@ public static class VelocipedeColumnInfoExtensions
                 return Convert.ToString(value, CultureInfo.InvariantCulture) ?? "NULL";
 
             default:
-                // Other types (e.g. Guid, Binary) may require specific handling.
+                // Other types (e.g. Binary) may require specific handling.
                 return $"'{value}'";
         }
     }
@@ -156,6 +157,8 @@ public static class VelocipedeColumnInfoExtensions
             DbType.VarNumeric or DbType.Currency => "numeric",
             DbType.Decimal => "decimal",
 
+            DbType.Guid => "text",
+
             _ => throw new NotSupportedException($"Unsupported DbType for SQLite: {columnInfo.ColumnType}")
         };
 
@@ -200,6 +203,8 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.VarNumeric or DbType.Currency => "numeric",
             DbType.Decimal => "decimal",
+
+            DbType.Guid => "uuid",
 
             _ => throw new NotSupportedException($"Unsupported DbType for PostgreSQL: {columnInfo.ColumnType}")
         };
@@ -249,6 +254,8 @@ public static class VelocipedeColumnInfoExtensions
 
             DbType.VarNumeric or DbType.Currency => "numeric",
             DbType.Decimal => "decimal",
+
+            DbType.Guid => "uniqueidentifier",
 
             _ => throw new NotSupportedException($"Unsupported DbType for SQL Server: {columnInfo.ColumnType}")
         };

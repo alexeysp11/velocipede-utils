@@ -310,6 +310,8 @@ public static class VelocipedeNativeColumnInfoExtensions
             "date" => DbType.Date,
             "time" or "time without time zone" or "time with time zone" => DbType.Time,
             "interval" => DbType.DateTime,
+
+            "uuid" => DbType.Guid,
             
             _ => DbType.Object
         };
@@ -447,6 +449,13 @@ public static class VelocipedeNativeColumnInfoExtensions
                 
             case "binary" or "varbinary" or "binary varying":
                 result = DbType.Binary;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "uniqueidentifier":
+                result = DbType.Guid;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = null;
                 columnInfo.NumericScale = null;
