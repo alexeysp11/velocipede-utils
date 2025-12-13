@@ -297,6 +297,7 @@ public static class VelocipedeNativeColumnInfoExtensions
             
             "decimal" => DbType.Decimal,
             "numeric" => DbType.VarNumeric,
+            "money" => DbType.VarNumeric,
             
             "real" or "double precision" or "float4" or "float8" => DbType.Double,
             
@@ -390,6 +391,7 @@ public static class VelocipedeNativeColumnInfoExtensions
                 break;
 
             case "numeric":
+            case "money" or "smallmoney":
                 result = DbType.VarNumeric;
                 columnInfo.CharMaxLength = null;
                 break;

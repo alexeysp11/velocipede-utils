@@ -173,7 +173,8 @@ create table {tableName} (
     value3 numeric(10,5),
     value4 decimal,
     value5 decimal(10),
-    value6 decimal(10,5)
+    value6 decimal(10,5),
+    value7 money
 )";
 
         // 2. Expected result.
@@ -187,6 +188,7 @@ create table {tableName} (
             new() { ColumnName = "value4", ColumnType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
             new() { ColumnName = "value5", ColumnType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 0, IsNullable = true },
             new() { ColumnName = "value6", ColumnType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 5, IsNullable = true },
+            new() { ColumnName = "value7", ColumnType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
         // Act & Assert.
