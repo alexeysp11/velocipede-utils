@@ -167,6 +167,36 @@ public sealed class FormatDefaultValueTests
         new() { DatabaseType = databaseType, ColumnType = DbType.Boolean, DefaultValue = null, Expected = "NULL", },
         new() { DatabaseType = databaseType, ColumnType = DbType.Boolean, DefaultValue = DBNull.Value, Expected = "NULL", },
     ];
+
+    public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultDateTime(VelocipedeDatabaseType databaseType) => [
+        // Date and time.
+        new() { DatabaseType = databaseType, ColumnType = DbType.Time, DefaultValue = new DateTime(2023, 10, 27, 15, 30, 0), Expected = "'15:30:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Date, DefaultValue = new DateTime(2023, 10, 27, 15, 30, 0), Expected = "'2023-10-27 15:30:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime, DefaultValue = new DateTime(2023, 10, 27, 15, 30, 0), Expected = "'2023-10-27 15:30:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime2, DefaultValue = new DateTime(2023, 10, 27, 15, 30, 0), Expected = "'2023-10-27 15:30:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset, DefaultValue = new DateTime(2023, 10, 27, 15, 30, 0), Expected = "'2023-10-27 15:30:00'", },
+        
+        // Only date.
+        new() { DatabaseType = databaseType, ColumnType = DbType.Time, DefaultValue = new DateTime(2023, 10, 27), Expected = "'00:00:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Date, DefaultValue = new DateTime(2023, 10, 27), Expected = "'2023-10-27 00:00:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime, DefaultValue = new DateTime(2023, 10, 27), Expected = "'2023-10-27 00:00:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime2, DefaultValue = new DateTime(2023, 10, 27), Expected = "'2023-10-27 00:00:00'", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset, DefaultValue = new DateTime(2023, 10, 27), Expected = "'2023-10-27 00:00:00'", },
+
+        // Equals to null.
+        new() { DatabaseType = databaseType, ColumnType = DbType.Time, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Date, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime2, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset, DefaultValue = null, Expected = "NULL", },
+
+        // Equals to DBNull.
+        new() { DatabaseType = databaseType, ColumnType = DbType.Time, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.Date, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTime2, DefaultValue = DBNull.Value, Expected = "NULL", },
+        new() { DatabaseType = databaseType, ColumnType = DbType.DateTimeOffset, DefaultValue = DBNull.Value, Expected = "NULL", },
+    ];
     #endregion  // Test cases
 
     [Theory]
@@ -189,46 +219,13 @@ public sealed class FormatDefaultValueTests
     [MemberData(nameof(GetTestCaseFormatDefaultBoolean), parameters: VelocipedeDatabaseType.MSSQL)]
     public void FormatDefaultValue_Boolean(TestCaseFormatDefaultValue testCase)
         => ValidateFormatDefaultValue(testCase);
-
+        
     [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_DateTime_ShouldReturnQuotedIsoFormat(VelocipedeDatabaseType dbType)
-    {
-        DateTime testDateTime = new(2023, 10, 27, 15, 30, 0);
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.DateTime,
-            DefaultValue = testDateTime
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("'2023-10-27 15:30:00'");
-    }
-
-    [Theory]
-    [InlineData(VelocipedeDatabaseType.SQLite)]
-    [InlineData(VelocipedeDatabaseType.PostgreSQL)]
-    [InlineData(VelocipedeDatabaseType.MSSQL)]
-    public void FormatDefaultValue_Date_ShouldReturnQuotedIsoFormat(VelocipedeDatabaseType dbType)
-    {
-        DateTime testDate = new(2023, 10, 27);
-        VelocipedeColumnInfo columnInfo = new()
-        {
-            DatabaseType = dbType,
-            ColumnName = "TestColumn",
-            ColumnType = DbType.Date,
-            DefaultValue = testDate
-        };
-
-        string result = columnInfo.FormatDefaultValue();
-
-        result.Should().Be("'2023-10-27 00:00:00'");
-    }
+    [MemberData(nameof(GetTestCaseFormatDefaultDateTime), parameters: VelocipedeDatabaseType.SQLite)]
+    [MemberData(nameof(GetTestCaseFormatDefaultDateTime), parameters: VelocipedeDatabaseType.PostgreSQL)]
+    [MemberData(nameof(GetTestCaseFormatDefaultDateTime), parameters: VelocipedeDatabaseType.MSSQL)]
+    public void FormatDefaultValue_DateTime(TestCaseFormatDefaultValue testCase)
+        => ValidateFormatDefaultValue(testCase);
 
     private static void ValidateFormatDefaultValue(TestCaseFormatDefaultValue testCase)
     {

@@ -34,15 +34,24 @@ public static class VelocipedeColumnInfoExtensions
             case DbType.Xml:
                 return $"'{value.ToString()?.Replace("'", "''")}'";
 
+            case DbType.Time:
+                // Dates are formatted in the universal ISO 8601 format and enclosed in quotation marks.
+                if (value is DateTime time)
+                {
+                    // This works for MSSQL and PostgreSQL.
+                    return $"'{time:HH:mm:ss}'";
+                }
+                return $"'{value}'";
+
             case DbType.Date:
             case DbType.DateTime:
             case DbType.DateTime2:
             case DbType.DateTimeOffset:
                 // Dates are formatted in the universal ISO 8601 format and enclosed in quotation marks.
-                if (value is DateTime dt)
+                if (value is DateTime dateTime)
                 {
                     // This works for MSSQL and PostgreSQL.
-                    return $"'{dt:yyyy-MM-dd HH:mm:ss}'";
+                    return $"'{dateTime:yyyy-MM-dd HH:mm:ss}'";
                 }
                 return $"'{value}'";
 
