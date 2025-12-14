@@ -4,7 +4,7 @@ using VelocipedeUtils.Shared.Office.DocFormats;
 using VelocipedeUtils.Shared.Models.Documents;
 using VelocipedeUtils.Shared.Models.Documents.Enums;
 
-namespace VelocipedeUtils.Shared.Tests.Office.DocFormats;
+namespace VelocipedeUtils.Shared.Tests.DocFormats;
 
 public sealed class BinaryConverterTest
 {
