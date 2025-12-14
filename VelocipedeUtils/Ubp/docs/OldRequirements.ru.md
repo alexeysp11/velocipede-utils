@@ -21,9 +21,9 @@
 
 Сотрудники:
 
-![employees_nofilter](../../../docs/img/examples/UnifiedBusinessPlatform/employees_nofilter.png)
+![employees_nofilter](img/Ubp.Employees.NoFilter.png)
 
 Отпуска:
 
-![vacations_nofilter](../../../docs/img/examples/UnifiedBusinessPlatform/vacations_nofilter.png)
+![vacations_nofilter](img/Ubp.Vacations.NoFilter.png)
 
