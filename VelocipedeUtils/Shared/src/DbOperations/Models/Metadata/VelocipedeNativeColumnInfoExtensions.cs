@@ -188,6 +188,13 @@ public static class VelocipedeNativeColumnInfoExtensions
                 columnInfo.NumericScale = null;
                 break;
 
+            case "xml":
+                result = DbType.Xml;
+                columnInfo.CharMaxLength = -1;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
             case "numeric":
                 result = DbType.VarNumeric;
                 columnInfo.CharMaxLength = null;
@@ -294,7 +301,9 @@ public static class VelocipedeNativeColumnInfoExtensions
             "bigint" or "bigserial" or "int8" => DbType.Int64,
             
             "text" or "varchar" or "character varying" or "character" or "char" or "bpchar" => DbType.String,
-            
+
+            "xml" => DbType.Xml,
+
             "decimal" => DbType.Decimal,
             "numeric" => DbType.VarNumeric,
             "money" => DbType.VarNumeric,
@@ -383,6 +392,13 @@ public static class VelocipedeNativeColumnInfoExtensions
             case "text" or "char" or "character" or "varchar" or "char varying" or "character varying": 
             case "ntext" or "national text" or "nchar" or "national char" or "national character" or "nvarchar" or "national char varying" or "national character varying":
                 result = DbType.String;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "xml":
+                result = DbType.Xml;
+                columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = null;
                 columnInfo.NumericScale = null;
                 break;

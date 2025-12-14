@@ -31,9 +31,15 @@ public static class VelocipedeColumnInfoExtensions
             case DbType.AnsiStringFixedLength:
             case DbType.String:
             case DbType.StringFixedLength:
-            case DbType.Xml:
             case DbType.Guid:
                 return $"'{value.ToString()?.Replace("'", "''")}'";
+
+            case DbType.Xml:
+                return columnInfo.DatabaseType switch
+                {
+                    VelocipedeDatabaseType.PostgreSQL => $"'{value.ToString()?.Replace("'", "''")}'::xml",
+                    _ => $"'{value.ToString()?.Replace("'", "''")}'"
+                };
 
             case DbType.Time:
                 // Dates are formatted in the universal ISO 8601 format and enclosed in quotation marks.
@@ -143,6 +149,8 @@ public static class VelocipedeColumnInfoExtensions
                     ? $"varchar({columnInfo.CharMaxLength})"
                     : "text",
             
+            DbType.Xml => "text",
+
             DbType.Binary => "blob",
             
             DbType.Time => "time",
@@ -189,7 +197,9 @@ public static class VelocipedeColumnInfoExtensions
                 => columnInfo.CharMaxLength.HasValue && columnInfo.CharMaxLength > 0
                     ? $"varchar({columnInfo.CharMaxLength})"
                     : "text",
-            
+
+            DbType.Xml => "xml",
+
             DbType.Binary => "bytea",
 
             DbType.Time => "time",
@@ -240,6 +250,8 @@ public static class VelocipedeColumnInfoExtensions
                 ? $"varchar({columnInfo.CharMaxLength})"
                 : "varchar(max)",
             
+            DbType.Xml => "xml",
+
             DbType.Binary => "binary",
             
             DbType.Time => "time",

@@ -291,6 +291,16 @@ public sealed class GetNativeColumnTypeTests
             { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Guid }, ExpectedNativeType = "uniqueidentifier" } },
         };
     }
+
+    public static TheoryData<TestCaseNativeColumnType> GetColumnInfoXml()
+    {
+        return new TheoryData<TestCaseNativeColumnType>
+        {
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Xml }, ExpectedNativeType = "text" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Xml }, ExpectedNativeType = "xml" } },
+            { new() { ColumnInfo = new() { ColumnName = COLUMN_NAME, DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Xml }, ExpectedNativeType = "xml" } },
+        };
+    }
     #endregion  // Test cases
 
     [Theory]
@@ -303,6 +313,7 @@ public sealed class GetNativeColumnTypeTests
     [MemberData(nameof(GetColumnInfoBoolean))]
     [MemberData(nameof(GetColumnInfoDatetime))]
     [MemberData(nameof(GetColumnInfoGuid))]
+    [MemberData(nameof(GetColumnInfoXml))]
     public void GetNativeColumnType(TestCaseNativeColumnType testCase)
     {
         VelocipedeColumnInfo columnInfo = testCase.ColumnInfo;

@@ -12,6 +12,10 @@ public sealed class FormatDefaultValueTests
 {
     private const string DEFAULT_GUID = "b42410ee-132f-42ee-9e4f-09a6485c95b8";
 
+    private const string DEFAULT_XML_DOCUMENT = "<?xml version=\"1.0\"?><book><title>Manual</title><chapter>1</chapter></book>";
+    private const string DEFAULT_XML_CONTENT = "<bar/><foo>abc</foo>";
+    private const string DEFAULT_XML_COMMENT = "<!--hello-->";
+
     #region Test cases
     public static TheoryData<TestCaseFormatDefaultValue> GetTestCaseFormatDefaultStrings(VelocipedeDatabaseType databaseType) => [
         // String storing positive numerics.
@@ -205,6 +209,26 @@ public sealed class FormatDefaultValueTests
         new() { DatabaseType = databaseType, ColumnType = DbType.Guid, DefaultValue = null, Expected = "NULL", },
         new() { DatabaseType = databaseType, ColumnType = DbType.Guid, DefaultValue = DBNull.Value, Expected = "NULL", },
     ];
+
+    public static TheoryData<TestCaseFormatDefaultValue> TestCaseFormatDefaultXml => [
+        new() { DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_DOCUMENT, Expected = $"'{DEFAULT_XML_DOCUMENT}'", },
+        new() { DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_CONTENT, Expected = $"'{DEFAULT_XML_CONTENT}'", },
+        new() { DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_COMMENT, Expected = $"'{DEFAULT_XML_COMMENT}'", },
+        new() { DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Xml, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = VelocipedeDatabaseType.SQLite, ColumnType = DbType.Xml, DefaultValue = DBNull.Value, Expected = "NULL", },
+
+        new() { DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_DOCUMENT, Expected = $"'{DEFAULT_XML_DOCUMENT}'::xml", },
+        new() { DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_CONTENT, Expected = $"'{DEFAULT_XML_CONTENT}'::xml", },
+        new() { DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_COMMENT, Expected = $"'{DEFAULT_XML_COMMENT}'::xml", },
+        new() { DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Xml, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = VelocipedeDatabaseType.PostgreSQL, ColumnType = DbType.Xml, DefaultValue = DBNull.Value, Expected = "NULL", },
+
+        new() { DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_DOCUMENT, Expected = $"'{DEFAULT_XML_DOCUMENT}'", },
+        new() { DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_CONTENT, Expected = $"'{DEFAULT_XML_CONTENT}'", },
+        new() { DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Xml, DefaultValue = DEFAULT_XML_COMMENT, Expected = $"'{DEFAULT_XML_COMMENT}'", },
+        new() { DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Xml, DefaultValue = null, Expected = "NULL", },
+        new() { DatabaseType = VelocipedeDatabaseType.MSSQL, ColumnType = DbType.Xml, DefaultValue = DBNull.Value, Expected = "NULL", },
+    ];
     #endregion  // Test cases
 
     [Theory]
@@ -240,6 +264,11 @@ public sealed class FormatDefaultValueTests
     [MemberData(nameof(GetTestCaseFormatDefaultGuid), parameters: VelocipedeDatabaseType.PostgreSQL)]
     [MemberData(nameof(GetTestCaseFormatDefaultGuid), parameters: VelocipedeDatabaseType.MSSQL)]
     public void FormatDefaultValue_Guid(TestCaseFormatDefaultValue testCase)
+        => ValidateFormatDefaultValue(testCase);
+
+    [Theory]
+    [MemberData(nameof(TestCaseFormatDefaultXml))]
+    public void FormatDefaultValue_Xml(TestCaseFormatDefaultValue testCase)
         => ValidateFormatDefaultValue(testCase);
 
     private static void ValidateFormatDefaultValue(TestCaseFormatDefaultValue testCase)
