@@ -2,7 +2,7 @@
 
 [English](README.md) | [Русский](README.ru.md)
 
-![ServiceDiscoveryArchitecture](../../docs/img/ServiceDiscoveryBpm/ServiceDiscoveryArchitecture.png)
+![ServiceDiscoveryArchitecture](../../docs/ServiceDiscoveryBpm/img/ServiceDiscoveryArchitecture.png)
 
 Algorithms for selecting an endpoint in a distributed system:
 - **Random**: A simple and effective method, but can lead to inefficient use of resources, especially if one of the instances is overloaded.
@@ -22,7 +22,7 @@ To solve this problem, it is proposed to use the `EndpointPool` class, which wil
 
 There's also the diagram that demonstrates in more detail the principle on which the dynamism of the platform is based in the context of choosing the type of client application (MVC, Blazor, WPF etc) and the data transfer protocol between backend services (WebAPI, gRPC).
 
-![layers_simplified](../../docs/img/examples/layers_simplified.png)
+![layers_simplified](../../docs/ServiceDiscoveryBpm/img/layers_simplified.png)
 
 The diagrams show separate databases for different services; in fact, the database can be either common to all services or separate (however, due to replication, all services must work with data as if it were the same database, i.e. i.e. have identical tables and records in them).
 
@@ -55,4 +55,4 @@ The corresponding classes for configuring inter-service communication can be fou
 
 ### Registration and monitoring of the services
 
-![services_registration_monitoring](../../docs/img/examples/services_registration_monitoring.png)
+![services_registration_monitoring](../../docs/ServiceDiscoveryBpm/img/services_registration_monitoring.png)
