@@ -77,6 +77,10 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     /// </summary>
     private readonly List<TestColumnInfo> _expectedCaseInsensitiveColumnInfos;
 
+    protected const string DefaultXmlDocument = "<?xml version=\"1.0\"?><book><title>Manual</title><chapter>1</chapter></book>";
+    protected const string DefaultXmlContent = "<bar/><foo>abc</foo>";
+    protected const string DefaultXmlComment = "<!--hello-->";
+
     /// <summary>
     /// Default constructor for creating <see cref="BaseGetColumnsTests"/>.
     /// </summary>
@@ -137,6 +141,7 @@ public abstract class BaseGetColumnsTests : BaseDbConnectionTests
     public abstract void GetColumns_Numeric();
     public abstract void GetColumns_Boolean();
     public abstract void GetColumns_Datetime();
+    public abstract void GetColumns_Xml();
 
     [Theory]
     [InlineData("TestModels")]

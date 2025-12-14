@@ -311,4 +311,39 @@ create table {tableName} (
         // Act & Assert.
         ValidateGetColumnsTest(sql, tableName, expected);
     }
+
+    [Fact]
+    public override void GetColumns_Xml()
+    {
+        // Arrange.
+        // 1. Table.
+        string tableName = nameof(GetColumns_Xml);
+        VelocipedeColumnInfo columnInfo2 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value2", ColumnType = DbType.Xml };
+        VelocipedeColumnInfo columnInfo3 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value3", ColumnType = DbType.Xml, DefaultValue = DefaultXmlDocument };
+        VelocipedeColumnInfo columnInfo4 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value4", ColumnType = DbType.Xml, DefaultValue = DefaultXmlContent };
+        VelocipedeColumnInfo columnInfo5 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value5", ColumnType = DbType.Xml, DefaultValue = DefaultXmlComment };
+        string sql = $@"
+create table {tableName} (
+    id integer primary key,
+    value1 text,
+    {columnInfo2.ColumnName} {columnInfo2.NativeColumnType} default {columnInfo2.FormatDefaultValue()},
+    {columnInfo3.ColumnName} {columnInfo3.NativeColumnType} default {columnInfo3.FormatDefaultValue()},
+    {columnInfo4.ColumnName} {columnInfo4.NativeColumnType} default {columnInfo4.FormatDefaultValue()},
+    {columnInfo5.ColumnName} {columnInfo5.NativeColumnType} default {columnInfo5.FormatDefaultValue()}
+)";
+
+        // 2. Expected result.
+        List<TestColumnInfo> expected =
+        [
+            new() { ColumnName = "id", ColumnType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = true },
+            new() { ColumnName = "value1", ColumnType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", ColumnType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", ColumnType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", ColumnType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", ColumnType = DbType.String, CharMaxLength = -1, NumericPrecision = null, NumericScale = null, IsNullable = true },
+        ];
+
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
+    }
 }

@@ -2,7 +2,7 @@ using System.Reflection;
 using Xunit;
 using VelocipedeUtils.Shared.Office.DocFormats.Images;
 
-namespace VelocipedeUtils.Shared.Tests.Office.DocFormats.Images;
+namespace VelocipedeUtils.Shared.Tests.DocFormats.Images;
 
 public sealed class JpegConverterTest
 {

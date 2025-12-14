@@ -162,7 +162,9 @@ create table {tableName} (
     value4 decimal,
     value5 decimal(10),
     value6 decimal(10,5),
-    value7 dec
+    value7 dec,
+    value8 money,
+    value9 smallmoney
 )";
 
         // 2. Expected result.
@@ -178,6 +180,8 @@ create table {tableName} (
             new() { ColumnName = "value5", ColumnType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 10, NumericScale = 0, IsNullable = true },
             new() { ColumnName = "value6", ColumnType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 10, NumericScale = 5, IsNullable = true },
             new() { ColumnName = "value7", ColumnType = DbType.Decimal, CharMaxLength = null, NumericPrecision = 18, NumericScale = 0, IsNullable = true },
+            new() { ColumnName = "value8", ColumnType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 19, NumericScale = 4, IsNullable = true },
+            new() { ColumnName = "value9", ColumnType = DbType.VarNumeric, CharMaxLength = null, NumericPrecision = 10, NumericScale = 4, IsNullable = true },
         ];
 
         // Act & Assert.
@@ -270,6 +274,41 @@ create table {tableName} (
             new() { ColumnName = "value15", ColumnType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
             new() { ColumnName = "value16", ColumnType = DbType.String, CharMaxLength = 55, NumericPrecision = null, NumericScale = null, IsNullable = true },
             new() { ColumnName = "value17", ColumnType = DbType.String, CharMaxLength = nationalTextColumnSize, NumericPrecision = null, NumericScale = null, IsNullable = true },
+        ];
+
+        // Act & Assert.
+        ValidateGetColumnsTest(sql, tableName, expected);
+    }
+
+    [Fact]
+    public override void GetColumns_Xml()
+    {
+        // Arrange.
+        // 1. Table.
+        string tableName = nameof(GetColumns_Xml);
+        VelocipedeColumnInfo columnInfo2 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value2", ColumnType = DbType.Xml };
+        VelocipedeColumnInfo columnInfo3 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value3", ColumnType = DbType.Xml, DefaultValue = DefaultXmlDocument };
+        VelocipedeColumnInfo columnInfo4 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value4", ColumnType = DbType.Xml, DefaultValue = DefaultXmlContent };
+        VelocipedeColumnInfo columnInfo5 = new() { DatabaseType = _fixture.DatabaseType, ColumnName = "value5", ColumnType = DbType.Xml, DefaultValue = DefaultXmlComment };
+        string sql = $@"
+create table {tableName} (
+    id integer primary key,
+    value1 xml,
+    {columnInfo2.ColumnName} {columnInfo2.NativeColumnType} default {columnInfo2.FormatDefaultValue()},
+    {columnInfo3.ColumnName} {columnInfo3.NativeColumnType} default {columnInfo3.FormatDefaultValue()},
+    {columnInfo4.ColumnName} {columnInfo4.NativeColumnType} default {columnInfo4.FormatDefaultValue()},
+    {columnInfo5.ColumnName} {columnInfo5.NativeColumnType} default {columnInfo5.FormatDefaultValue()}
+)";
+
+        // 2. Expected result.
+        List<TestColumnInfo> expected =
+        [
+            new() { ColumnName = "id", ColumnType = DbType.Int32, CharMaxLength = null, NumericPrecision = 32, NumericScale = 0, IsPrimaryKey = true, IsNullable = false },
+            new() { ColumnName = "value1", ColumnType = DbType.Xml, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value2", ColumnType = DbType.Xml, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value3", ColumnType = DbType.Xml, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value4", ColumnType = DbType.Xml, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
+            new() { ColumnName = "value5", ColumnType = DbType.Xml, CharMaxLength = null, NumericPrecision = null, NumericScale = null, IsNullable = true },
         ];
 
         // Act & Assert.

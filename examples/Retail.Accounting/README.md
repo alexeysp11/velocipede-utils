@@ -4,15 +4,15 @@
 
 You can insert information about your *purchases*. 
 
-![UseCases_Import](../../docs/img/examples/Retail.Accounting/usecases/Import.png)
+![UseCases_Import](docs/img/Import.png)
 
 You can get and insert information about your *partners*. 
 
-![UseCases_Partners](../../docs/img/examples/Retail.Accounting/usecases/Partners.png)
+![UseCases_Partners](docs/img/Partners.png)
 
 Also you can get individual statistics of your *employees* and statistics of *products* that you sold. 
 
-![UseCases_RevenuePersonal](../../docs/img/examples/Retail.Accounting/usecases/RevenuePersonal.png)
+![UseCases_RevenuePersonal](docs/img/RevenuePersonal.png)
 
 ## Prerequisits 
 

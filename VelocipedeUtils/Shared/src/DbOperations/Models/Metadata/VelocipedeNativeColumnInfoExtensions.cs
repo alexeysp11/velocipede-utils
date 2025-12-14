@@ -188,6 +188,13 @@ public static class VelocipedeNativeColumnInfoExtensions
                 columnInfo.NumericScale = null;
                 break;
 
+            case "xml":
+                result = DbType.Xml;
+                columnInfo.CharMaxLength = -1;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
             case "numeric":
                 result = DbType.VarNumeric;
                 columnInfo.CharMaxLength = null;
@@ -294,9 +301,12 @@ public static class VelocipedeNativeColumnInfoExtensions
             "bigint" or "bigserial" or "int8" => DbType.Int64,
             
             "text" or "varchar" or "character varying" or "character" or "char" or "bpchar" => DbType.String,
-            
+
+            "xml" => DbType.Xml,
+
             "decimal" => DbType.Decimal,
             "numeric" => DbType.VarNumeric,
+            "money" => DbType.VarNumeric,
             
             "real" or "double precision" or "float4" or "float8" => DbType.Double,
             
@@ -309,6 +319,8 @@ public static class VelocipedeNativeColumnInfoExtensions
             "date" => DbType.Date,
             "time" or "time without time zone" or "time with time zone" => DbType.Time,
             "interval" => DbType.DateTime,
+
+            "uuid" => DbType.Guid,
             
             _ => DbType.Object
         };
@@ -384,12 +396,20 @@ public static class VelocipedeNativeColumnInfoExtensions
                 columnInfo.NumericScale = null;
                 break;
 
+            case "xml":
+                result = DbType.Xml;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
             case "decimal":
                 result = DbType.Decimal;
                 columnInfo.CharMaxLength = null;
                 break;
 
             case "numeric":
+            case "money" or "smallmoney":
                 result = DbType.VarNumeric;
                 columnInfo.CharMaxLength = null;
                 break;
@@ -445,6 +465,13 @@ public static class VelocipedeNativeColumnInfoExtensions
                 
             case "binary" or "varbinary" or "binary varying":
                 result = DbType.Binary;
+                columnInfo.CharMaxLength = null;
+                columnInfo.NumericPrecision = null;
+                columnInfo.NumericScale = null;
+                break;
+
+            case "uniqueidentifier":
+                result = DbType.Guid;
                 columnInfo.CharMaxLength = null;
                 columnInfo.NumericPrecision = null;
                 columnInfo.NumericScale = null;

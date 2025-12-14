@@ -21,8 +21,8 @@ This project involves creating a software application that can efficiently handl
 
 Employees:
 
-![employees_nofilter](../../../docs/img/examples/UnifiedBusinessPlatform/employees_nofilter.png)
+![employees_nofilter](img/Ubp.Employees.NoFilter.png)
 
 Vacations:
 
-![vacations_nofilter](../../../docs/img/examples/UnifiedBusinessPlatform/vacations_nofilter.png)
+![vacations_nofilter](img/Ubp.Vacations.NoFilter.png)

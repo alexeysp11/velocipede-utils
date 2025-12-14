@@ -4,7 +4,7 @@ using VelocipedeUtils.Shared.Office.DocFormats.Spreadsheets;
 using VelocipedeUtils.Shared.Models.Documents;
 using VelocipedeUtils.Shared.Models.Documents.Enums;
 
-namespace VelocipedeUtils.Shared.Tests.Office.DocFormats.Spreadsheets;
+namespace VelocipedeUtils.Shared.Tests.DocFormats.Spreadsheets;
 
 public sealed class MSExcelConverterTest
 {

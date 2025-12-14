@@ -2,4 +2,4 @@
 
 Housing & Community Services
 
-![ui](../../docs/img/examples/HcsBudget/ui.png)
+![ui](docs/img/ui.png)

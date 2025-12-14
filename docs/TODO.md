@@ -1,4 +1,4 @@
-# TODO 
+# TODO
 
 ## Documentation 
 
@@ -46,14 +46,6 @@
     - [ ] Fields for authentication and authorization when interacting between microservices (for example, access token).
     - [ ] Fields for monitoring (for example, response time, number of requests).
 
-## Models
-
-- [ ] In the recipe object, you need to set a status that would show the relevance of the recipe - [ ] actually, there is already a status of the entity, which can be equal to "deleted" or "active", but in a real situation it may be important to set deadlines for relevance.
-
 ## Data representation
 
 - [ ] Data visualization: Line chart, Bar chart, Histogram, Scatter plot, Box plot, Pareto chart, Pie chart, Area chart, Tree map, Bubble chart, Stripe graphic, Control chart, Run chart, Stem-and-leaf display, Cartogram, Small multiple, Sparkline, Table, Marimekko chart. 
-
-## Architectural 
-
-- [ ] Add XML/JSON wrapper.

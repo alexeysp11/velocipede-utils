@@ -4,7 +4,7 @@ using VelocipedeUtils.Shared.Office.DocFormats.TextBased;
 using VelocipedeUtils.Shared.Models.Documents;
 using VelocipedeUtils.Shared.Models.Documents.Enums;
 
-namespace VelocipedeUtils.Shared.Tests.Office.DocFormats.TextBased;
+namespace VelocipedeUtils.Shared.Tests.DocFormats.TextBased;
 
 public sealed class MSWordConverterTest
 {
