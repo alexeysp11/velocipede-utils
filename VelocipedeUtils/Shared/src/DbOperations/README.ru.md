@@ -199,3 +199,22 @@ dbConnection
     .GetTablesInDb(out List<string>? tables)
     .CloseDb();
 ```
+
+### Построение запросов
+
+Возможно использовать интерфейс `IVelocipedeQueryBuilder` для построения запросов:
+```C#
+using IVelocipedeDbConnection dbConnection
+    = VelocipedeDbConnectionFactory.InitializeDbConnection(request.DatabaseType, request.ConnectionString);
+
+IVelocipedeQueryBuilder queryBuilder = dbConnection.GetQueryBuilder();
+string? sql = queryBuilder
+    .CreateTable(request.TableName)
+    .WithColumns(request.Columns)
+    .ToString();
+if (string.IsNullOrEmpty(sql))
+{
+    throw new InvalidOperationException("Query builder generated empty SQL");
+}
+await dbConnection.ExecuteAsync(sql);
+```

@@ -33,5 +33,6 @@ public static class ErrorMessageConstants
     public const string NumericNativeColumnTypeConversion = "Incorrect conversion to numeric native column type";
     public const string IncorrectBaseForNumericNativeColumnType = "Incorrect base type for numeric native column type";
     public const string NumericScaleBiggerThanPrecision = "Numeric scale could not be bigger than precision";
+    public const string QueryBuildeGeneratedEmptySql = "Query builder generated empty SQL";
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
 }
