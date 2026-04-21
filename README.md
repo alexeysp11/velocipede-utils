@@ -73,43 +73,6 @@ This library provides functionality for communicating with relational databases 
 
 ## Projects
 
-### [PixelTerminalUI](VelocipedeUtils/PixelTerminalUI/README.md)
-
-`PixelTerminalUI` was inspired by my experience working as a C# developer at a large IT company that operated a major online store of digital equipment. I worked in the WMS department, developing applications for internal logistics. One of the key applications was a legacy Telnet UI application used for interacting with handheld terminals (PDAs).
-
-As the company sought to modernize its development practices with CI/CD, challenges arose in building and deploying .NET Framework 4.8 applications. So we started exploring the possibilities of moving our major projects to newer .NET versions (eg .NET 6/8) and I decided to take the Telnet UI application into my area of responsibility.
-
-Intrigued by how this application achieved a full UI experience using simple characters, I decided to explore its inner workings. This led to the creation of `PixelTerminalUI`, a project aimed at reimagining the engine behind this Telnet UI application. It serves as a demonstration of how to create a character-based UI framework in modern .NET.
-
-The Telnet UI application established a persistent connection between the client and the server, which could complicate the issue of scalability and performance of the service. So, as `PixelTerminalUI` evolved, I also decided to try to use a REST API instead of Telnet/TCP and improve the session management mechanism.
-
-`PixelTerminalUI` is a completely independent project, developed in my free time and does not contain any code or confidential information from my previous employer.
-
-Example of displaying information in a console application:
-
-```
-------------------------------------
-                                    |
-                                    |
-                                    |
-                                    |
-             WELCOME TO             |
-         PIXEL TERMINAL UI          |
-                                    |
-                                    |
-                                    |
-                                    |
-                                    |
-                                    |
-                                    |
-                                    |
-....................................|
-                                    |
-                                    |
-PRESS ENTER TO CONTINUE             |
-------------------------------------
-```
-
 ### [Ubp (aka UnifiedBusinessPlatform)](VelocipedeUtils/Ubp/README.md)
 
 This project is a web application on ASP.NET MVC, designed for company management (organizational structure, employee information, and automation of key HR processes).
